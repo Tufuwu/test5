@@ -9,15 +9,15 @@ with open("README.md", "r", encoding="utf-8") as fp:
 
 
 setup(
-    name                          = "litescope",
+    name                          = "litedram",
     version                       = "2024.12",
-    description                   = "Small footprint and configurable embedded FPGA logic analyzer core",
+    description                   = "Small footprint and configurable DRAM core",
     long_description              = long_description,
     long_description_content_type = "text/markdown",
     author                        = "Florent Kermarrec",
     author_email                  = "florent@enjoy-digital.fr",
     url                           = "http://enjoy-digital.fr",
-    download_url                  = "https://github.com/enjoy-digital/litescope",
+    download_url                  = "https://github.com/enjoy-digital/litedram",
     test_suite                    = "test",
     license                       = "BSD",
     python_requires               = "~=3.7",
@@ -42,9 +42,9 @@ setup(
         "Operating System :: OS Independent",
         "Programming Language :: Python",
     ],
-    entry_points         = {
+    entry_points = {
         "console_scripts": [
-            "litescope_cli=litescope.software.litescope_cli:main",
+            "litedram_gen=litedram.gen:main",
         ],
     },
 )

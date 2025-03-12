@@ -1,18 +1,35 @@
 #
-# This file is part of LiteScope.
+# This file is part of LiteDRAM.
 #
-# Copyright (c) 2019 Florent Kermarrec <florent@enjoy-digital.fr>
+# Copyright (c) 2018-2019 Florent Kermarrec <florent@enjoy-digital.fr>
 # SPDX-License-Identifier: BSD-2-Clause
 
 import unittest
 import os
 
-from litescope.software.dump import *
 
-root_dir    = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..")
+def build_config(name):
+    errors = 0
+    os.system(f"rm -rf examples/{name}")
+    os.system(f"mkdir -p examples/{name} && cd examples/{name} && python3 ../../litedram/gen.py ../{name}.yml")
+    errors += not os.path.isfile(f"examples/{name}/build/gateware/litedram_core.v")
+    os.system(f"rm -rf examples/{name}")
+    return errors
+
 
 class TestExamples(unittest.TestCase):
+    def test_ulx3s(self):
+        errors = build_config("ulx3s")
+        self.assertEqual(errors, 0)
+
     def test_arty(self):
-        os.system(f"rm -rf {root_dir}/build")
-        os.system(f"cd {root_dir}/examples && python3 arty.py")
-        self.assertEqual(os.path.isfile(f"{root_dir}/examples/build/digilent_arty/gateware/digilent_arty.v"), True)
+        errors = build_config("arty")
+        self.assertEqual(errors, 0)
+
+    def test_nexys4ddr(self):
+        errors = build_config("nexys4ddr")
+        self.assertEqual(errors, 0)
+
+    def test_genesys2(self):
+        errors = build_config("genesys2")
+        self.assertEqual(errors, 0)

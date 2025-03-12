@@ -1,58 +1,67 @@
 ```
-                                 __   _ __      ____
-                                / /  (_) /____ / __/______  ___  ___
-                               / /__/ / __/ -_)\ \/ __/ _ \/ _ \/ -_)
-                              /____/_/\__/\__/___/\__/\___/ .__/\__/
-                                                         /_/
-                               Copyright 2015-2024 / EnjoyDigital
+                                 __   _ __      ___  ___  ___   __  ___
+                                / /  (_) /____ / _ \/ _ \/ _ | /  |/  /
+                               / /__/ / __/ -_) // / , _/ __ |/ /|_/ /
+                              /____/_/\__/\__/____/_/|_/_/ |_/_/  /_/
 
-                           A small footprint and configurable Logic Analyzer
-                                    core powered by Migen & LiteX
+                                   Copyright 2015-2024 / EnjoyDigital
+                               A small footprint and configurable DRAM core
+                                        powered by Migen & LiteX
 ```
 
-[![](https://github.com/enjoy-digital/litescope/workflows/ci/badge.svg)](https://github.com/enjoy-digital/litescope/actions) ![License](https://img.shields.io/badge/License-BSD%202--Clause-orange.svg)
+[![](https://github.com/enjoy-digital/litedram/workflows/ci/badge.svg)](https://github.com/enjoy-digital/litedram/actions) ![License](https://img.shields.io/badge/License-BSD%202--Clause-orange.svg)
 
 
 [> Intro
 --------
-LiteScope provides a small footprint and configurable embedded logic analyzer that you
-can use in your FPGA and aims to provide a free, portable and flexible
-alternative to vendor's solutions!
+LiteDRAM provides a small footprint and configurable DRAM core.
 
-LiteScope is part of LiteX libraries whose aims are to lower entry level of
+LiteDRAM is part of LiteX libraries whose aims are to lower entry level of
 complex FPGA cores by providing simple, elegant and efficient implementations
 of components used in today's SoC such as Ethernet, SATA, PCIe, SDRAM Controller...
 
 Using Migen to describe the HDL allows the core to be highly and easily configurable.
 
-LiteScope can be used as LiteX library or can be integrated with your standard
+LiteDRAM can be used as LiteX library or can be integrated with your standard
 design flow by generating the verilog rtl that you will use as a standard core.
 
 [> Features
 -----------
-- IO peek and poke with LiteScopeIO.
-- Logic analyser with LiteScopeAnalyzer:
-  - Subsampling.
-  - Data storage in Block RAM.
-  - Configurable triggers.
-- Bridges:
-  - UART <--> Wishbone (provided by LiteX)
-  - Ethernet <--> Wishbone ("Etherbone") (provided by LiteEth)
-  - PCIe <--> Wishbone (provided by LitePCIe)
-- Exports formats: .vcd, .sr(sigrok), .csv, .py, etc...
+PHY:
+  - Generic SDRAM PHY (vendor agnostic, tested on Xilinx, Altera, Lattice)
+  - Xilinx Spartan6 DDR/LPDDR/DDR2/DDR3 PHY (1:2 or 1:4 frequency ratio)
+  - Xilinx Spartan7/Artix7/Kintex7/Virtex7 DDR2/DDR3 PHY (1:2 or 1:4 frequency ratio)
+  - Xilinx Kintex/Virtex Ultrascale (Plus) DDR3/DDR4 PHY (1:4 frequency ratio)
+  - Lattice ECP5 DDR3 PHY (1:2 frequency ratio)
+  - Gowin G2A DDR3 PHY (1:2 frequency ratio)
 
-[> Proven
----------
-LiteScope has already been used to investigate issues on several commercial or
-open-source designs.
+Core:
+  - Fully pipelined, high performance.
+  - Configurable commands depth on bankmachines.
+  - Auto-Precharge.
+  - Periodic refresh/ZQ short calibration (up to 8 postponed refreshes).
+
+Frontend:
+  - Configurable crossbar (simply use crossbar.get_port() to add a new port!)
+  - Ports arbitration transparent to the user.
+  - Native, AXI-MM or Wishbone user interface.
+  - DMA reader/writer.
+  - BIST.
+  - ECC (Error-correcting code)
+
+[> FPGA Proven
+---------------
+LiteDRAM is already used in commercial and open-source designs:
+- HDMI2USB: http://hdmi2usb.tv/home/
+- NeTV2: https://www.crowdsupply.com/alphamax/netv2
+- USBSniffer: http://blog.lambdaconcept.com/doku.php?id=products:usb_sniffer
+- and others commercial designs...
 
 [> Possible improvements
 ------------------------
-- add standardized interfaces (AXI, Avalon-ST)
-- add protocols analyzers
-- add signals injection/generation
-- add storage in DRAM
-- add storage in HDD with LiteSATA core
+- add Avalon-ST interface.
+- add support for Altera devices.
+- add more documentation
 - ... See below Support and consulting :)
 
 If you want to support these features, please contact us at florent [AT]
@@ -79,24 +88,24 @@ $ python3 -m unittest test.test_name
 
 [> License
 ----------
-LiteScope is released under the very permissive two-clause BSD license. Under
-the terms of this license, you are authorized to use LiteScope for closed-source
+LiteDRAM is released under the very permissive two-clause BSD license. Under
+the terms of this license, you are authorized to use LiteDRAM for closed-source
 proprietary designs.
 Even though we do not require you to do so, those things are awesome, so please
 do them if possible:
- - tell us that you are using LiteScope
- - cite LiteScope in publications related to research it has helped
+ - tell us that you are using LiteDRAM
+ - cite LiteDRAM in publications related to research it has helped
  - send us feedback and suggestions for improvements
  - send us bug reports when something goes wrong
- - send us the modifications and improvements you have done to LiteScope.
+ - send us the modifications and improvements you have done to LiteDRAM.
 
 [> Support and consulting
 -------------------------
 We love open-source hardware and like sharing our designs with others.
 
-LiteScope is developed and maintained by EnjoyDigital.
+LiteDRAM is developed and maintained by EnjoyDigital.
 
-If you would like to know more about LiteScope or if you are already a happy
+If you would like to know more about LiteDRAM or if you are already a happy
 user and would like to extend it for your needs, EnjoyDigital can provide standard
 commercial support as well as consulting services.
 
