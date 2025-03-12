@@ -1,14 +1,23 @@
+# Python stuff
+*.py[cdo]
+
+# Editor detritus
+*.vim
+*.swp
+tags
+
+# Packaging detritus
+*.egg
+*.egg-info
 *.pyc
-.calendar.json
-.gmail.json
-/.vagrant/
-/jarvis/static/.webassets-cache/
-/jarvis/static/gen/
-/jarvis/templates/layouts/
-/inventory
-/venv/
-/venv2/
-/venv3/
-config.py
-config_*.py
-/.vscode/
+*.whl
+dist
+build
+
+# Unit test / coverage reports
+coverage
+.coverage*
+.tox
+.cache
+.pytest_cache
+.mypy_cache

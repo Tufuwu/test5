@@ -1,32 +1,32 @@
-name: ci
+# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+name: Python package
 
 on:
   push:
-    branches: [master]
+    branches: [ master ]
   pull_request:
-    branches: [master]
+    branches: [ master ]
 
 jobs:
   build:
+
     runs-on: ubuntu-latest
     strategy:
       matrix:
         python-version: ["3.9", "3.10"]
+
     steps:
     - uses: actions/checkout@v2
-    - name: install python ${{ matrix.python-version }}
+    - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
-    - name: install node
-      uses: actions/setup-node@v1
-      with:
-        node-version: 12.x
-    - name: install dependencies
+    - name: Install dependencies
       run: |
-        python3 -m pip install --upgrade pip
-        python3 -m pip install flake8
-        python3 -m pip install -r requirements.txt
-        npm install -g jshint
-    - name: run tests
-      run: make
+        python -m pip install --upgrade pip
+        make develop
+    - name: Run tests
+      run: |
+        make test
