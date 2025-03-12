@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-set -e
-
-black zen_queries
-isort zen_queries
