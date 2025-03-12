@@ -1,2 +1,0 @@
-default namespace = ""
-element foo { attribute bar { string } }

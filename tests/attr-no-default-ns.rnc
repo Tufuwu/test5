@@ -1,2 +1,0 @@
-default namespace = "https://namespace.com"
-MyEl = element elem { attribute * - utils { text } }

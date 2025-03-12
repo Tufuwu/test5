@@ -1,7 +1,0 @@
-## Represents a language
-element lang { 
-  ## English
-  "en" |
-  ## Japanese
-  "jp"
-}

@@ -1,2 +1,0 @@
-namespace eg = ""
-element eg:foo { attribute eg:bar { string } }

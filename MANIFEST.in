@@ -1,4 +1,0 @@
-include AUTHORS
-include README.rst
-include test.py
-include tests/*.rn*

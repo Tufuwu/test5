@@ -1,2 +1,0 @@
-default namespace ex = inherit
-element ex:foo { attribute ex:bar { string } }

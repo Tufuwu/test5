@@ -1,3 +1,0 @@
-default namespace = ""
-namespace eg = inherit
-element eg:foo { element bar { attribute eg:baz { string } } }

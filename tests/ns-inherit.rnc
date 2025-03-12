@@ -1,2 +1,0 @@
-namespace eg = inherit
-element eg:foo { attribute eg:bar { string } }
