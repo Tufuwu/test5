@@ -1,5 +1,0 @@
-A: B+ C;
-C: 'sec' B;
-
-terminals
-B: 'bs';

@@ -1,18 +1,2 @@
-include AUTHORS.md
-
-include CONTRIBUTING.md
-include CHANGELOG.md
-include LICENSE
-include README.rst
-
-recursive-include tests *
-recursive-exclude * __pycache__
-recursive-exclude * *.py[co]
-recursive-exclude * *.log
-recursive-exclude * *.dot
-recursive-exclude * *.pdf
-recursive-exclude * *.pstats
-recursive-exclude * *.report
-recursive-exclude * *.txt
-
-recursive-include docs *.md *.png
+recursive-include tests *.py
+recursive-include src py.typed

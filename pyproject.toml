@@ -1,90 +1,143 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
-name = "parglare"
-version = "0.18.0"
-description = "A pure Python LR/GLR parser"
+name = "apiron"
+version = "8.0.0-post.1"
+description = "apiron helps you cook a tasty client for RESTful APIs. Just don't wash it with SOAP."
 authors = [
-    {name = "Igor R. Dejanović", email = "igor.dejanovic@gmail.com"},
+    { name = "Ithaka Harbors, Inc.", email = "opensource@ithaka.org" },
 ]
-maintainers = [
-    {name = "Igor R. Dejanović", email = "igor.dejanovic@gmail.com"},
-]
-readme = "README.rst"
-license = {text = "MIT"}
-keywords = ["parser", "lr", "glr"]
 classifiers = [
-    "Development Status :: 4 - Beta",
+    "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
-    "Intended Audience :: Information Technology",
-    "Intended Audience :: Science/Research",
-    "Topic :: Software Development :: Interpreters",
-    "Topic :: Software Development :: Compilers",
+    "Topic :: Internet :: WWW/HTTP",
     "Topic :: Software Development :: Libraries :: Python Modules",
-    "License :: OSI Approved :: MIT License",
-    "Natural Language :: English",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
-    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "License :: OSI Approved :: MIT License",
+]
+license = { file = "LICENSE" }
+dynamic = ["readme"]
+dependencies = [
+    "requests>=2.11.1",
+    "urllib3>=1.26.13",
 ]
 
-requires-python = ">=3.8, <3.13"
-dependencies = [
-    "click >=7.0, <9.0"
+[project.optional-dependencies]
+docs = [
+    "sphinx>=7.2.2",
+    "sphinx-autobuild>=2021.3.14",
 ]
 
 [project.urls]
-Homepage = "https://github.com/igordejanovic/parglare"
-Repository = "https://github.com/igordejanovic/parglare"
-Changelog = "https://github.com/igordejanovic/parglare/blob/master/CHANGELOG.md"
+Repository = "https://github.com/ithaka/apiron"
+Changelog = "https://github.com/ithaka/apiron/blob/main/CHANGELOG.md"
+Documentation = "https://apiron.readthedocs.io"
+Issues = "https://github.com/ithaka/apiron/issues"
 
-[build-system]
-build-backend = "flit_core.buildapi"
-requires = ["flit_core >=3.8.0,<4"]
+[tool.setuptools.dynamic]
+readme = { file = "README.md", content-type = "text/markdown" }
 
-[tool.flit.module]
-name = "parglare"
+[tool.setuptools.packages.find]
+where = ["src"]
+exclude = ["tests*"]
 
-[tool.flit.sdist]
-exclude = ["**/.*"]
+######################
+# Tool configuration #
+######################
 
-[project.optional-dependencies]
-dev = [
+[tool.black]
+line-length = 120
+target-version = ['py39', 'py310', 'py311', 'py312', 'py313']
+
+[tool.isort]
+profile = "black"
+
+[tool.mypy]
+python_version = "3.9"
+warn_unused_configs = true
+show_error_context = true
+pretty = true
+namespace_packages = true
+check_untyped_defs = true
+
+[tool.coverage.run]
+branch = true
+source = ["apiron"]
+omit = [
+    "tests/*",
+]
+
+[tool.coverage.report]
+precision = 2
+show_missing = true
+skip_covered = true
+
+[tool.coverage.paths]
+source = [
+    "src",
+    ".tox/**/site-packages",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = ["-ra", "--strict-markers", "--cov"]
+xfail_strict = true
+
+[tool.tox]
+envlist = ["py39", "py310", "py311", "py312", "py313"]
+isolated_build = true
+
+[tool.tox.env_run_base]
+package = "wheel"
+wheel_build_env = ".pkg"
+deps = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.1.0",
+    "pytest-randomly>=3.15.0",
+]
+commands = [
+    ["pytest", { replace = "posargs", default = [], extend = true }],
+]
+
+[tool.tox.env.docs]
+extras = [
+    "docs",
+]
+commands = [
+    ["sphinx-build", "-b", "html", "docs", "{envtmpdir}/docs"]
+]
+
+[tool.tox.env.lint]
+skip_install = true
+deps = [
+    "black",
+    "isort",
     "ruff",
-    "flit",
-    "mkdocs",
-    "mike",
+]
+commands = [
+    ["ruff", "check", { replace = "posargs", default = ["src", "tests"], extend = true }],
+    ["black", { replace = "posargs", default = ["--check", "--diff", "src", "tests"], extend = true }],
+    ["isort", { replace = "posargs", default = ["--check", "--diff", "src", "tests"], extend = true }],
 ]
 
-test = [
-    "ruff",
-    "coverage",
-    "coveralls",
-    "pytest",
+[tool.tox.env.typecheck]
+deps = [
+    { replace = "ref", of = ["tool", "tox", "env_run_base", "deps"], extend = true },
+    "mypy<1.12.0",  # https://github.com/python/mypy/issues/17960
+    "typing_extensions",
+    "types-requests",
+    "types-urllib3",
 ]
-
-[project.scripts]
-pglr = "parglare.cli:pglr"
-
-[tool.ruff]
-line-length = 90
-indent-width = 4
-
-[tool.ruff.lint]
-# https://docs.astral.sh/ruff/linter/#rule-selection
-select = [
-    # pycodestyle
-    "E",
-    # Pyflakes
-    "F",
-    # pyupgrade
-    "UP",
-    # flake8-bugbear
-    "B",
-    # flake8-simplify
-    "SIM",
-    # isort
-    "I",
+commands = [
+    ["mypy", { replace = "posargs", default = ["src", "tests"], extend = true }],
 ]
+passenv = ["TERM"]
