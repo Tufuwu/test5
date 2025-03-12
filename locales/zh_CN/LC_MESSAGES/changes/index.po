@@ -1,0 +1,63 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2007-2025, the Sphinx developers
+# This file is distributed under the same license as the Sphinx package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+# Translators:
+# Izabel Wang <izabelwang@pku.edu.cn>, 2024
+# JY3, 2024
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Sphinx 8.3.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-03-02 00:54+0000\n"
+"PO-Revision-Date: 2024-07-31 00:36+0000\n"
+"Last-Translator: JY3, 2024\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/sphinx-doc/teams/15434/zh_CN/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: ../../sphinx/doc/changes/index.rst:5
+msgid "Changelog"
+msgstr "更新日志"
+
+#: ../../sphinx/CHANGES.rst:2
+msgid "Release 8.3.0 (in development)"
+msgstr ""
+
+#: ../../sphinx/CHANGES.rst:5
+msgid "Dependencies"
+msgstr "依赖"
+
+#: ../../sphinx/CHANGES.rst:8
+msgid "Incompatible changes"
+msgstr "不兼容的变更"
+
+#: ../../sphinx/CHANGES.rst:11
+msgid "Deprecated"
+msgstr "已弃用"
+
+#: ../../sphinx/CHANGES.rst:14
+msgid "Features added"
+msgstr "新增特性"
+
+#: ../../sphinx/CHANGES.rst:17
+msgid "Bugs fixed"
+msgstr "Bug 修复"
+
+#: ../../sphinx/CHANGES.rst:19
+msgid "#13392: Fix argument type for ``jieba.load_userdict()``."
+msgstr ""
+
+#: ../../sphinx/CHANGES.rst:22
+msgid "Testing"
+msgstr "测试"
+
+#: ../../sphinx/doc/changes/index.rst:22
+msgid "Prior releases"
+msgstr ""

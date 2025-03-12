@@ -1,178 +1,132 @@
-=====================
-django-thumborstorage
-=====================
+Sphinx official documentation translations
+==========================================
 
-.. image:: https://coveralls.io/repos/github/Starou/django-thumborstorage/badge.svg?branch=master
-  :target: https://coveralls.io/github/Starou/django-thumborstorage?branch=master
+|main| |test|
 
-.. image:: https://img.shields.io/pypi/v/django-thumborstorage.svg
-  :target: https://pypi.python.org/pypi/django-thumborstorage
+.. |main| image:: https://github.com/sphinx-doc/sphinx-doc-translations/actions/workflows/main.yml/badge.svg
+          :target: https://github.com/sphinx-doc/sphinx-doc-translations/actions/workflows/main.yml
+          :alt: Badge for the update status
 
-A Django custom storage for Thumbor.
+.. |test| image:: https://github.com/sphinx-doc/sphinx-doc-translations/actions/workflows/test-translations.yml/badge.svg
+          :target: https://github.com/sphinx-doc/sphinx-doc-translations/actions/workflows/test-translations.yml
+          :alt: Badge for the translation tests
 
-Provides 2 custom storages classes: ``ThumborStorage`` and ``ThumborMigrationStorage``.
+This is a project to provide Sphinx official documentation, hosted on the Read The Docs platform, in multiple languages.
 
-Use ``ThumborMigrationStorage`` on an ``Imagefield`` that started with a classic
-``FileSystemStorage`` you want to upgrade to Thumbor without migrating your old
-media. That way, Django continues to serve them from the file system until the
-image is changed.
+How the translated documentation projects are setup on RTD
+----------------------------------------------------------
 
-Install
-=======
+Instructions: https://docs.readthedocs.org/en/latest/localization.html#project-with-multiple-translations
 
-::
+Key points:
 
-    pip install django-thumborstorage
+* There is a RTD project for each language.
+* Each project needs the correct **Language** setting on the **Settings** page.
+* The parent project needs connections created to each translated project on the **Translations Settings** page.
 
-Dependencies
-''''''''''''
+.. list-table::
+   :header-rows: 1
 
-* Python 3.6+
-* Django 2.1 to 3.2
-* Requests_
-* Libthumbor_
+   * - Build Status
+     - sphinx-doc docs
+     - RTD Project
+   * - .. image:: https://readthedocs.org/projects/sphinx/badge/?version=master
+          :target: https://www.sphinx-doc.org/en/master/?badge=master
+          :alt: Documentation Status
+     - http://www.sphinx-doc.org/en
+     - https://readthedocs.org/projects/sphinx/ (Parent project)
+   * - .. image:: https://readthedocs.org/projects/sphinx-ar/badge/?version=master
+          :target: https://www.sphinx-doc.org/ar/master/?badge=master
+          :alt: Documentation Status
+     - http://www.sphinx-doc.org/ar
+     - https://readthedocs.org/projects/sphinx-ar/
+   * - .. image:: https://readthedocs.org/projects/sphinx-ca-es/badge/?version=master
+          :target: https://www.sphinx-doc.org/ca/master/?badge=master
+          :alt: Documentation Status
+     - http://www.sphinx-doc.org/ca
+     - https://readthedocs.org/projects/sphinx-ca-es/
+   * - .. image:: https://readthedocs.org/projects/sphinx-zh-cn/badge/?version=master
+          :target: https://www.sphinx-doc.org/zh_CN/master/?badge=master
+          :alt: Documentation Status
+     - http://www.sphinx-doc.org/zh-cn
+     - https://readthedocs.org/projects/sphinx-zh-cn/
+   * - .. image:: https://readthedocs.org/projects/sphinx-fr/badge/?version=master
+          :target: https://www.sphinx-doc.org/fr/master/?badge=master
+          :alt: Documentation Status
+     - http://www.sphinx-doc.org/fr
+     - https://readthedocs.org/projects/sphinx-fr/
+   * - .. image:: https://readthedocs.org/projects/sphinx-de/badge/?version=master
+          :target: https://www.sphinx-doc.org/de/master/?badge=master
+          :alt: Documentation Status
+     - http://www.sphinx-doc.org/de
+     - https://readthedocs.org/projects/sphinx-de/
+   * - .. image:: https://readthedocs.org/projects/sphinx-it-it/badge/?version=master
+          :target: https://www.sphinx-doc.org/it/master/?badge=master
+          :alt: Documentation Status
+     - http://www.sphinx-doc.org/it
+     - https://readthedocs.org/projects/sphinx-it-it/
+   * - .. image:: https://readthedocs.org/projects/sphinx-ja/badge/?version=master
+          :target: https://www.sphinx-doc.org/ja/master/?badge=master
+          :alt: Documentation Status
+     - http://www.sphinx-doc.org/ja
+     - https://readthedocs.org/projects/sphinx-ja/
+   * - .. image:: https://readthedocs.org/projects/sphinx-ko/badge/?version=master
+          :target: https://www.sphinx-doc.org/ko/master/?badge=master
+          :alt: Documentation Status
+     - http://www.sphinx-doc.org/ko
+     - https://readthedocs.org/projects/sphinx-ko/
+   * - .. image:: https://readthedocs.org/projects/sphinx-pl-pl/badge/?version=master
+          :target: https://www.sphinx-doc.org/pl/master/?badge=master
+          :alt: Documentation Status
+     - http://www.sphinx-doc.org/pl
+     - https://readthedocs.org/projects/sphinx-pl-pl/
+   * - .. image:: https://readthedocs.org/projects/sphinx-pt-br/badge/?version=master
+          :target: https://www.sphinx-doc.org/pt_BR/master/?badge=master
+          :alt: Documentation Status
+     - http://www.sphinx-doc.org/pt-br
+     - https://readthedocs.org/projects/sphinx-pt-br/
+   * - .. image:: https://readthedocs.org/projects/sphinx-doc-ru/badge/?version=master
+          :target: https://www.sphinx-doc.org/ru/master/?badge=master
+          :alt: Documentation Status
+     - http://www.sphinx-doc.org/ru
+     - https://readthedocs.org/projects/sphinx-doc-ru/
+   * - .. image:: https://readthedocs.org/projects/sphinx-sr/badge/?version=master
+          :target: https://www.sphinx-doc.org/sr/master/?badge=master
+          :alt: Documentation Status
+     - http://www.sphinx-doc.org/sr
+     - https://readthedocs.org/projects/sphinx-sr/
+   * - .. image:: https://readthedocs.org/projects/sphinx-es/badge/?version=master
+          :target: https://www.sphinx-doc.org/es/master/?badge=master
+          :alt: Documentation Status
+     - http://www.sphinx-doc.org/es
+     - https://readthedocs.org/projects/sphinx-es/
 
-Recommended:
+How to add a new language translation
+-------------------------------------
 
-* Django-thumbor_ (to manage thumbnails).
-* Thumbor_
+1. Add new language to ``locales/update.sh``:
 
-Usage
-=====
+   .. code-block:: diff
 
-settings.py
-'''''''''''
+      - LANGS='es ja'
+      + LANGS='es ja pt_BR'
 
-Add ``django_thumborstorage`` in ``INSTALLED_APPS``.
+2. Update po files:
 
-And set the following with your values:
+   .. code-block::
 
-.. code-block:: python
+      sh ./locales/update.sh
 
-    THUMBOR_SERVER = 'https://my.thumbor.server.com:8888'
-    THUMBOR_SECURITY_KEY = 'MY_SECURE_KEY'
-    # This may be a different host than THUMBOR_SERVER
-    # only reachable by your Django server.
-    THUMBOR_RW_SERVER = 'https://my.rw.thumbor.server.local:8888'
+4. Commit them
 
-models.py
-'''''''''
+5. Add new project on Read The Docs. For example, for ``pt_BR``:
 
-Just set the ``storage`` parameter in the ImageField you want to manage with Thumbor:
+   https://readthedocs.org/projects/sphinx-pt-br/
 
-.. code-block:: python
+   .. note:: If a RTD project name for a translation is already taken, create a unique project name instead.
+      For example, when ``sphinx-ru`` was taken, ``sphinx-doc-ru`` was used instead.
 
-    from django_thumborstorage.storages import ThumborStorage
+7. Add new translation project to parent project:
 
-    class Stuff(models.Model):
-        def upload_path(instance, filename):
-            return 'stuffs/%s' % filename
-        photo = models.ImageField(upload_to=upload_path,
-                                  storage=ThumborStorage(),
-                                  height_field='photo_height',
-                                  width_field='photo_width')
-        photo_height = models.IntegerField(blank=True, null=True)
-        photo_width = models.IntegerField(blank=True, null=True)
+   https://readthedocs.org/dashboard/sphinx/translations/
 
-In the code
-'''''''''''
-
-You can get the Thumbor ``uuid`` from the ``<ImageField>`` instance using:
-
-.. code-block:: python
-
-    my_stuff.photo.storage.key(my_stuff.photo.name)
-
-This is useful to ``generate_url()`` with Django-thumbor_ when original files are stored on Thumbor. Thus,
-you can pass the key as url parameter.
-
-CHANGELOG
-=========
-
-2.0.0
-'''''
-
-* Add support for Django 3.2.
-
-Possible breaking change
-------------------------
-
-The leading ``/`` in the path of the file stored in the database has been removed
-due to a breaking change introduced un Django 3.2.11.
-
-https://docs.djangoproject.com/en/4.0/releases/3.2.11/#cve-2021-45452-potential-directory-traversal-via-storage-save
-
-That release handle seamlessly both pre-2.0.0 style (*/image/...*) and
-post-2.0.0 style paths (*image/...*) so there is not need to migrate your database
-to replace */image/...* with *image/...*.
-
-
-1.13.0
-''''''
-
-* Drop support for Django < 2.1 and Python 2.7, 3.4 and 3.5
-* Use GitHub actions for CI instead of Travis.
-
-
-1.11.0
-''''''
-
-* Drop support for Django < 1.11 and Python 3.4.
-* Remove ``mock`` from dependencies.
-
-
-0.92.2
-''''''
-
-* Fix ``readonly_to_rw_url()`` to manage suffix in the urls.
-
-0.92.1
-''''''
-
-* Handle status code of the Thumbor server response when posting an image.
-
-0.92.0
-''''''
-
-* Added experimental Python 3.4 support (Thanks to *Charlie 123*.)
-* Fixed broken support for Django < 1.7 (Thanks to *Rizziepit*.)
-* Added unicode support in file names (Thanks to *Rizziepit*.)
-
-0.91.6
-''''''
-
-* Add ``storages.readonly_to_rw_url()``, a function to convert a read-only thumbor url in a rw url.
-
-0.91.5
-''''''
-
-* Use THUMBOR_SERVER to generate the original file url.
-
-Backward imcompatibilities
---------------------------
-
-* ``THUMBOR_SERVER`` and ``THUMBOR_SECURITY_KEY`` are required in settings.
-
-0.91.4
-''''''
-
-* Add ``ThumborStorage.key(name)`` to retrieve the Thumbor uuid from the name.
-
-0.91.3
-''''''
-
-Backward imcompatibilities
---------------------------
-
-* ``THUMBOR_WRITABLE_SERVER`` setting is replaced by ``THUMBOR_RW_SERVER`` since it is now used to retrieve the
-  original file.
-
-TODO
-====
-
-* PUT
-
-.. _Requests: http://www.python-requests.org/en/latest/
-.. _Thumbor: https://github.com/globocom/thumbor
-.. _Libthumbor: https://github.com/heynemann/libthumbor
-.. _Django-thumbor: https://django-thumbor.readthedocs.org/en/latest/

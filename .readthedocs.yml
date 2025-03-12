@@ -1,0 +1,23 @@
+version: 2
+sphinx:
+  configuration: sphinx/doc/conf.py
+
+build:
+  os: ubuntu-22.04
+  tools:
+    python: "3"
+  apt_packages:
+    - graphviz
+  jobs:
+    post_create_environment:
+      - cp -a locales sphinx/doc/
+
+submodules:
+  include: all
+
+python:
+  install:
+    - method: pip
+      path: sphinx
+      extra_requirements:
+        - docs

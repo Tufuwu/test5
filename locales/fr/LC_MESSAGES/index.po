@@ -1,0 +1,237 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2007-2025, the Sphinx developers
+# This file is distributed under the same license as the Sphinx package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+# Translators:
+# LAURENT Raphaël <laurent@ined.fr>, 2022
+# Jérémie Tarot <silopolis@gmail.com>, 2022
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Sphinx 8.3.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-02-24 00:54+0000\n"
+"PO-Revision-Date: 2022-07-11 02:13+0000\n"
+"Last-Translator: Jérémie Tarot <silopolis@gmail.com>, 2022\n"
+"Language-Team: French (https://app.transifex.com/sphinx-doc/teams/15434/fr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: fr\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#: ../../sphinx/doc/index.rst:130
+msgid "The Basics"
+msgstr ""
+
+#: ../../sphinx/doc/index.rst:141 ../../sphinx/doc/index.rst:148
+msgid "User guide"
+msgstr ""
+
+#: ../../sphinx/doc/index.rst:167
+msgid "Community"
+msgstr "Communauté"
+
+#: ../../sphinx/doc/index.rst:183
+msgid "Reference"
+msgstr "Références"
+
+#: ../../sphinx/doc/index.rst:3
+msgid "Sphinx"
+msgstr ""
+
+#: ../../sphinx/doc/index.rst:6
+msgid "Create intelligent and beautiful documentation with ease"
+msgstr ""
+
+#: ../../sphinx/doc/index.rst:10
+msgid "📝 Rich Text Formatting"
+msgstr ""
+
+#: ../../sphinx/doc/index.rst:13
+msgid ""
+"Author in :ref:`reStructuredText <rst-primer>` or :ref:`MyST Markdown "
+"<markdown>` to create highly structured technical documents, including "
+"tables, highlighted code blocks, mathematical notations, and more."
+msgstr ""
+
+#: ../../sphinx/doc/index.rst:18
+msgid "🔗 Powerful Cross-Referencing"
+msgstr ""
+
+#: ../../sphinx/doc/index.rst:21
+msgid ""
+"Create :ref:`cross-references <xref>` within your project, and even across "
+":ref:`different projects <ext-intersphinx>`. Include references to sections,"
+" figures, tables, citations, glossaries, code objects, and more."
+msgstr ""
+
+#: ../../sphinx/doc/index.rst:28
+msgid "📚 Versatile Documentation Formats"
+msgstr ""
+
+#: ../../sphinx/doc/index.rst:31
+msgid ""
+"Generate documentation in the preferred formats of your audience, including "
+"HTML, LaTeX (for PDF), ePub, Texinfo, :ref:`and more <builders>`."
+msgstr ""
+
+#: ../../sphinx/doc/index.rst:34
+msgid "🎨 Extensive Theme Support"
+msgstr ""
+
+#: ../../sphinx/doc/index.rst:37
+msgid ""
+"Create visually appealing documentation, with a wide choice of :ref:`built-"
+"in <builtin-themes>` and :ref:`third-party <third-party-themes>` HTML themes"
+" and the ability to customize or :ref:`create new themes <extension-html-"
+"theme>`."
+msgstr ""
+
+#: ../../sphinx/doc/index.rst:43
+msgid "🔌 Fully Extensible"
+msgstr ""
+
+#: ../../sphinx/doc/index.rst:46
+msgid ""
+"Add custom functionality, via robust :ref:`extension mechanisms <extending-"
+"sphinx>` with numerous :ref:`built-in <builtin-extensions>` and :ref:`third-"
+"party <third-party-extensions>` extensions available for tasks like creating"
+" diagrams, testing code, and more."
+msgstr ""
+
+#: ../../sphinx/doc/index.rst:53
+msgid "🛠️ Automatic API Documentation"
+msgstr ""
+
+#: ../../sphinx/doc/index.rst:56
+msgid ""
+"Generate API documentation for Python, C++ and other :ref:`software domains "
+"<usage-domains>`, manually or :ref:`automatically from docstrings <ext-"
+"autodoc>`, ensuring your code documentation stays up-to-date with minimal "
+"effort."
+msgstr ""
+
+#: ../../sphinx/doc/index.rst:62
+msgid "🌍 Internationalization (i18n)"
+msgstr ""
+
+#: ../../sphinx/doc/index.rst:65
+msgid ""
+"Add documentation :ref:`translations <intl>` multiple languages to reach a "
+"global audience."
+msgstr ""
+
+#: ../../sphinx/doc/index.rst:68
+msgid "🌟 Active Community and Support"
+msgstr ""
+
+#: ../../sphinx/doc/index.rst:71
+msgid ""
+"Benefit from an :ref:`active community <support-index>`, with numerous "
+"resources, tutorials, forums, and examples."
+msgstr ""
+
+#: ../../sphinx/doc/index.rst:85
+msgid "As used by:"
+msgstr ""
+
+#: ../../sphinx/doc/index.rst:89
+msgid "Python Logo"
+msgstr ""
+
+#: ../../sphinx/doc/index.rst:95
+msgid "Python"
+msgstr ""
+
+#: ../../sphinx/doc/index.rst:97
+msgid "Linux Logo"
+msgstr ""
+
+#: ../../sphinx/doc/index.rst:103
+msgid "Linux Kernel"
+msgstr ""
+
+#: ../../sphinx/doc/index.rst:105
+msgid "Jupyter Logo"
+msgstr ""
+
+#: ../../sphinx/doc/index.rst:111
+msgid "Project Jupyter"
+msgstr ""
+
+#: ../../sphinx/doc/index.rst:115
+msgid "See below for how to navigate Sphinx's documentation."
+msgstr "Voir ci-dessous comment naviguer dans la documentation de Sphinx."
+
+#: ../../sphinx/doc/index.rst:119
+msgid ""
+"The `Sphinx documentation Table of Contents <contents.html>`_ has a full "
+"list of this site's pages."
+msgstr ""
+"La `Table des Matières de la documentation de Sphinx <contents.html>`_ "
+"présente une liste complète des pages de ce site."
+
+#: ../../sphinx/doc/index.rst:125
+msgid "Get started"
+msgstr "Démarrer avec Sphinx"
+
+#: ../../sphinx/doc/index.rst:127
+msgid ""
+"These sections cover the basics of getting started with Sphinx, including "
+"creating and building your own documentation from scratch."
+msgstr ""
+"Ces sections couvrent les bases du démarrage avec Sphinx, incluant la "
+"création et la construction de votre propre documentation à partir de zéro."
+
+#: ../../sphinx/doc/index.rst:143
+msgid ""
+"These sections cover various topics in using and extending Sphinx for "
+"various use-cases. They are a comprehensive guide to using Sphinx in many "
+"contexts and assume more knowledge of Sphinx. If you are new to Sphinx, we "
+"recommend starting with :ref:`get-started`."
+msgstr ""
+"Ces sections couvrent divers sujets concernant l'utilisation et l'extension "
+"de Sphinx dans différents cas d'utilisation. Elles sont un guide complet à "
+"l'utilisation de Sphinx dans de nombreux contextes et supposent une plus "
+"grande connaissance de Sphinx. Si vous débutez avec Sphinx, nous vous "
+"recommandons de commencer par :ref:`get-started`."
+
+#: ../../sphinx/doc/index.rst:158
+msgid "Community guide"
+msgstr "Guide de la communauté"
+
+#: ../../sphinx/doc/index.rst:160
+msgid ""
+"Sphinx is community supported and welcomes contributions from anybody. The "
+"sections below should help you get started joining the Sphinx community as "
+"well as contributing."
+msgstr ""
+"Sphinx est supporté par sa communauté et accueille les contributions de "
+"quiconque. Les sections ci-dessous devraient vous accompagner pour rejoindre"
+" la communauté Sphinx ainsi que pour contribuer."
+
+#: ../../sphinx/doc/index.rst:164
+msgid ""
+"See the :doc:`Sphinx contributors' guide <internals/contributing>` if you "
+"would like to contribute to the project."
+msgstr ""
+"Référez-vous au :doc:`Guide du contributeur Sphinx <internals/contributing>`"
+" si vous souhaitez contribuer au projet."
+
+#: ../../sphinx/doc/index.rst:177
+msgid "Reference guide"
+msgstr "Guide de référence"
+
+#: ../../sphinx/doc/index.rst:179
+msgid ""
+"Reference documentation is more complete and programmatic in nature, it is a"
+" collection of information that can be quickly referenced. If you would like"
+" usecase-driven documentation, see :ref:`get-started` or :ref:`user-guides`."
+msgstr ""
+"La documentation de référence est plus complète et programmatique par "
+"nature, c'est une collection d'informations pouvant être rapidement "
+"référencées. Si vous souhaitez une documentation orientée cas d'utilisation,"
+" référez-vous au :ref:`get-started` ou au :ref:`user-guides`."

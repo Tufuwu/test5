@@ -1,0 +1,357 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2007-2025, the Sphinx developers
+# This file is distributed under the same license as the Sphinx package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+# Translators:
+# Takayuki SHIMIZUKAWA <shimizukawa@gmail.com>, 2024
+# Rafael Fontenelle <rffontenelle@gmail.com>, 2024
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Sphinx 8.3.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-03-01 00:55+0000\n"
+"PO-Revision-Date: 2024-07-31 00:36+0000\n"
+"Last-Translator: Rafael Fontenelle <rffontenelle@gmail.com>, 2024\n"
+"Language-Team: Portuguese (Brazil) (https://app.transifex.com/sphinx-doc/teams/15434/pt_BR/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: pt_BR\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#: ../../sphinx/doc/changes/6.2.rst:3
+msgid "Sphinx 6.2"
+msgstr "Sphinx 6.2"
+
+#: ../../sphinx/doc/changes/6.2.rst:7
+msgid "Release 6.2.1 (released Apr 25, 2023)"
+msgstr "Versão 6.2.1 (lançada em 25 abr 2023)"
+
+#: ../../sphinx/doc/changes/6.2.rst:10 ../../sphinx/doc/changes/6.2.rst:80
+msgid "Bugs fixed"
+msgstr "Erros corrigidos"
+
+#: ../../sphinx/doc/changes/6.2.rst:12
+msgid ""
+"#11355: Revert the default type of :confval:`nitpick_ignore` and "
+":confval:`nitpick_ignore_regex` to ``list``."
+msgstr ""
+"#11355: Reverte o tipo padrão de :confval:`nitpick_ignore` e "
+":confval:`nitpick_ignore_regex` para ``list``."
+
+#: ../../sphinx/doc/changes/6.2.rst:16
+msgid "Release 6.2.0 (released Apr 23, 2023)"
+msgstr "Versão 6.2.0 (lançada em 23 abr 2023)"
+
+#: ../../sphinx/doc/changes/6.2.rst:19
+msgid "Dependencies"
+msgstr "Dependências"
+
+#: ../../sphinx/doc/changes/6.2.rst:21
+msgid "Require Docutils 0.18.1 or greater."
+msgstr "Requer Docutils 0.18.1 ou posterior."
+
+#: ../../sphinx/doc/changes/6.2.rst:24
+msgid "Incompatible changes"
+msgstr "Atualizações incompatíveis"
+
+#: ../../sphinx/doc/changes/6.2.rst:26
+msgid ""
+"LaTeX: removal of some internal TeX ``\\dimen`` registers (not previously "
+"publicly documented) as per 5.1.0 code comments in ``sphinx.sty``: "
+"``\\sphinxverbatimsep``, ``\\sphinxverbatimborder``, ``\\sphinxshadowsep``, "
+"``\\sphinxshadowsize``, and ``\\sphinxshadowrule``. (refs: #11105)"
+msgstr ""
+"LaTeX: remoção de alguns registros internos ``\\dimen`` do TeX (não "
+"documentados anteriormente publicamente) conforme comentários do código "
+"5.1.0 em ``sphinx.sty``: ``\\sphinxverbatimsep``, "
+"``\\sphinxverbatimborder``, ``\\sphinxshadowsep``, ``\\sphinxshadowsize`` e "
+"``\\sphinxshadowrule``. (refs: #11105)"
+
+#: ../../sphinx/doc/changes/6.2.rst:30
+msgid ""
+"Remove ``.egg`` support from pycode ``ModuleAnalyser``; Python eggs are a "
+"now-obsolete binary distribution format"
+msgstr ""
+"Remove suporte a ``.egg`` do pycode ``ModuleAnalyser``; eggs do Python são "
+"agora um formato descontinuado de distribuição binário."
+
+#: ../../sphinx/doc/changes/6.2.rst:32
+msgid ""
+"#11089: Remove deprecated code in ``sphinx.builders.linkcheck``. Patch by "
+"Daniel Eades"
+msgstr ""
+"#11089: Remove código descontinuado em ``sphinx.builders.linkcheck``. Patch "
+"de Daniel Eades"
+
+#: ../../sphinx/doc/changes/6.2.rst:34
+msgid "Remove internal-only ``sphinx.locale.setlocale``"
+msgstr "Remove o ``sphinx.locale.setlocale`` interno"
+
+#: ../../sphinx/doc/changes/6.2.rst:37
+msgid "Deprecated"
+msgstr "Descontinuada"
+
+#: ../../sphinx/doc/changes/6.2.rst:39
+msgid "#11247: Deprecate the legacy ``intersphinx_mapping`` format"
+msgstr "#11247: Descontinua o formato legado ``intersphinx_mapping``"
+
+#: ../../sphinx/doc/changes/6.2.rst:40
+msgid ""
+"``sphinx.util.osutil.cd`` is deprecated in favour of ``contextlib.chdir``."
+msgstr ""
+"``sphinx.util.osutil.cd`` foi descontinuado em favor de "
+"``contextlib.chdir``."
+
+#: ../../sphinx/doc/changes/6.2.rst:43
+msgid "Features added"
+msgstr "Funcionalidades adicionadas"
+
+#: ../../sphinx/doc/changes/6.2.rst:45
+msgid ""
+"#11277: :rst:dir:`autoproperty` allows the return type to be specified as a "
+"type comment (e.g., ``# type: () -> int``). Patch by Bénédikt Tran"
+msgstr ""
+"#11277: :rst:dir:`autoproperty` permite que o tipo de retorno seja "
+"especificado como um comentário de tipo (por exemplo, ``# type: () -> "
+"int``). Patch de Bénédikt Tran"
+
+#: ../../sphinx/doc/changes/6.2.rst:47
+msgid ""
+"#10811: Autosummary: extend ``__all__`` to imported members for template "
+"rendering when option ``autosummary_ignore_module_all`` is set to ``False``."
+" Patch by Clement Pinard"
+msgstr ""
+"#10811: Autosummary: estende ``__all__`` para membros importados para "
+"renderização de modelo quando a opção ``autosummary_ignore_module_all`` "
+"estiver definida como ``False``. Patch de Clement Pinard"
+
+#: ../../sphinx/doc/changes/6.2.rst:50
+msgid ""
+"#11147: Add a ``content_offset`` parameter to "
+"``nested_parse_with_titles()``, allowing for correct line numbers during "
+"nested parsing. Patch by Jeremy Maitin-Shepard"
+msgstr ""
+"#11147: Adiciona um parâmetro ``content_offset`` a "
+"``nested_parse_with_titles()``, permitindo números de linha corretos durante"
+" a análise aninhada. Patch de Jeremy Maitin-Shepard"
+
+#: ../../sphinx/doc/changes/6.2.rst:53
+msgid "Update to Unicode CLDR 42"
+msgstr "Atualização para Unicode CLDR 42"
+
+#: ../../sphinx/doc/changes/6.2.rst:54
+msgid "Add a ``--jobs`` synonym for ``-j``. Patch by Hugo van Kemenade"
+msgstr ""
+"Adiciona um sinônimo ``--jobs`` para ``-j``. Patch de Hugo van Kemenade"
+
+#: ../../sphinx/doc/changes/6.2.rst:55
+msgid ""
+"LaTeX: a command ``\\sphinxbox`` for styling text elements with a (possibly "
+"rounded) box, optional background color and shadow, has been added. See "
+":ref:`sphinxbox`. (refs: #11224)"
+msgstr ""
+"LaTeX: um comando ``\\sphinxbox`` para estilizar elementos de texto com uma "
+"caixa (possivelmente arredondada), cor de fundo opcional e sombra, foi "
+"adicionado. Veja :ref:`sphinxbox`. (refs: #11224)"
+
+#: ../../sphinx/doc/changes/6.2.rst:58
+msgid ""
+"LaTeX: add ``\\sphinxstylenotetitle``, ..., ``\\sphinxstylewarningtitle``, "
+"..., for an extra layer of mark-up freeing up ``\\sphinxstrong`` for other "
+"uses. See :ref:`latex-macros`. (refs: #11267)"
+msgstr ""
+"LaTeX: adiciona ``\\sphinxstylenotetitle``, ..., "
+"``\\sphinxstylewarningtitle``, ..., para uma camada extra de marcação, "
+"liberando ``\\sphinxstrong`` para outros usos. Veja :ref:`latex-macros`. "
+"(refs: #11267)"
+
+#: ../../sphinx/doc/changes/6.2.rst:61
+msgid ""
+"LaTeX: :dudir:`note`, :dudir:`hint`, :dudir:`important` and :dudir:`tip` can"
+" now each be styled as the other admonitions, i.e. possibly with a "
+"background color, individual border widths and paddings, possibly rounded "
+"corners, and optional shadow.  See :ref:`additionalcss`. (refs: #11234)"
+msgstr ""
+"LaTeX: :dudir:`note`, :dudir:`hint`, :dudir:`important` e :dudir:`tip` agora"
+" cada um pode ser estilizado como as outras advertências, ou seja, "
+"possivelmente com uma cor de fundo, larguras de borda e preenchimentos "
+"individuais, possivelmente cantos arredondados e sombra opcional. Veja "
+":ref:`additionalcss`. (refs: #11234)"
+
+#: ../../sphinx/doc/changes/6.2.rst:65
+msgid ""
+"LaTeX: admonitions and :dudir:`topic` (and :dudir:`contents <table-of-"
+"contents>`) directives, and not only :rst:dir:`code-block`, support ``box-"
+"decoration-break=slice``."
+msgstr ""
+"LaTeX: admonições e diretivas :dudir:`topic` (e :dudir:`contents <table-of-"
+"contents>`), e não apenas :rst:dir:`code-block`, dão suporte a ``box-"
+"decoration-break=slice``."
+
+#: ../../sphinx/doc/changes/6.2.rst:68
+msgid ""
+"LaTeX: let rounded boxes support up to 4 distinct border-widths (refs: "
+"#11243)"
+msgstr ""
+"LaTeX: permite que caixas arredondadas suportem até 4 larguras de borda "
+"distintas (refs: #11243)"
+
+#: ../../sphinx/doc/changes/6.2.rst:69
+msgid ""
+"LaTeX: new options ``noteTextColor``, ``noteTeXextras`` et al. See "
+":ref:`additionalcss`."
+msgstr ""
+"LaTeX: novas opções ``noteTextColor``, ``noteTeXextras`` e outras. Veja "
+":ref:`additionalcss`."
+
+#: ../../sphinx/doc/changes/6.2.rst:71
+msgid "LaTeX: support elliptical corners in rounded boxes. (refs: #11254)"
+msgstr ""
+"LaTeX: suporte a cantos elípticos em caixas arredondadas. (refs: #11254)"
+
+#: ../../sphinx/doc/changes/6.2.rst:72
+msgid ""
+"#11150: Include source location in highlighting warnings, when lexing fails."
+" Patch by Jeremy Maitin-Shepard"
+msgstr ""
+"#11150: Inclui o local da fonte em avisos de realce, quando a lexagem "
+"falhar. Patch de Jeremy Maitin-Shepard"
+
+#: ../../sphinx/doc/changes/6.2.rst:74
+msgid ""
+"#11281: Support for :confval:`imgmath_latex` ``= 'tectonic'`` or ``= "
+"'xelatex'``.  Patch by Dimitar Dimitrov"
+msgstr ""
+"#11281: Suporte a :confval:`imgmath_latex` ``= 'tectonic'`` ou ``= "
+"'xelatex'``. Patch de Dimitar Dimitrov"
+
+#: ../../sphinx/doc/changes/6.2.rst:76
+msgid ""
+"#11109, #9643: Add :confval:`python_display_short_literal_types` option for "
+"condensed rendering of ``Literal`` types."
+msgstr ""
+"#11109, #9643: Adiciona a opção "
+":confval:`python_display_short_literal_types`  para renderização condensada "
+"de tipos ``Literal``."
+
+#: ../../sphinx/doc/changes/6.2.rst:82
+msgid ""
+"#11079: LaTeX: figures with align attribute may disappear and strangely "
+"impact following lists"
+msgstr ""
+"#11079: LaTeX: figuras com atributo align podem desaparecer e impactar "
+"estranhamente as listas seguintes"
+
+#: ../../sphinx/doc/changes/6.2.rst:84
+msgid ""
+"#11093: LaTeX: fix \"multiply-defined references\" PDF build warnings when "
+"one or more reST labels directly precede an :rst:dir:`py:module` or "
+":rst:dir:`automodule` directive. Patch by Bénédikt Tran (picnixz)"
+msgstr ""
+"#11093: LaTeX: corrige avisos de construção de PDF \"multiply-defined "
+"references\" quando um ou mais rótulos de reST precedem diretamente uma "
+"diretiva :rst:dir:`py:module` ou :rst:dir:`automodule`. Patch de Bénédikt "
+"Tran (picnixz)"
+
+#: ../../sphinx/doc/changes/6.2.rst:87
+msgid ""
+"#11110: LaTeX: Figures go missing from latex pdf if their files have the "
+"same base name and they use a post transform.  Patch by aaron-cooper"
+msgstr ""
+"#11110: LaTeX: Figuras desaparecem do PDF do LaTeX se seus arquivos tiverem "
+"o mesmo nome base e usarem uma transformação de post. Patch de Aaron-Cooper"
+
+#: ../../sphinx/doc/changes/6.2.rst:89
+msgid ""
+"LaTeX: fix potential color leak from shadow to border of rounded boxes, if "
+"shadow color is set but border color is not"
+msgstr ""
+"LaTeX: corrige vazamento potencial de cor da sombra para a borda de caixas "
+"arredondadas, se a cor da sombra estiver definida, mas a cor da borda não "
+"estiver"
+
+#: ../../sphinx/doc/changes/6.2.rst:91
+msgid ""
+"LaTeX: fix unintended 1pt upwards vertical shift of code blocks frames "
+"respective to contents (when using rounded corners)"
+msgstr ""
+"LaTeX: corrige deslocamento vertical não intencional de 1pt para cima dos "
+"quadros de blocos de código em relação ao conteúdo (ao usar cantos "
+"arredondados)"
+
+#: ../../sphinx/doc/changes/6.2.rst:93
+msgid ""
+"#11235: LaTeX: added ``\\color`` in topic (or admonition) contents may cause"
+" color leak to the shadow and border at a page break"
+msgstr ""
+"#11235: LaTeX: adicionado ``\\color`` no conteúdo do tópico (ou advertência)"
+" pode causar vazamento de cor na sombra e na borda em uma quebra de página"
+
+#: ../../sphinx/doc/changes/6.2.rst:95
+msgid ""
+"#11264: LaTeX: missing space before colon after \"Voir aussi\" for "
+":rst:dir:`seealso` directive in French"
+msgstr ""
+"#11264: LaTeX: faltando espaço antes dos dois pontos após \"Voir aussi\" "
+"para a diretiva :rst:dir:`seealso` em francês"
+
+#: ../../sphinx/doc/changes/6.2.rst:97
+msgid ""
+"#11268: LaTeX: longtable with left alignment breaks out of current list "
+"indentation context in PDF.  Thanks to picnixz."
+msgstr ""
+"#11268: LaTeX: longtable com alinhamento à esquerda sai do contexto de recuo"
+" da lista atual em PDF. Graças a picnixz."
+
+#: ../../sphinx/doc/changes/6.2.rst:99
+msgid ""
+"#11274: LaTeX: external links are not properly escaped for "
+"``\\sphinxupquote`` compatibility"
+msgstr ""
+"#11274: LaTeX: links externos não são escapados corretamente para "
+"compatibilidade com ``\\sphinxupquote``"
+
+#: ../../sphinx/doc/changes/6.2.rst:101
+msgid ""
+"#11147: Fix source file/line number info in object description content and "
+"in other uses of ``nested_parse_with_titles``.  Patch by Jeremy Maitin-"
+"Shepard."
+msgstr ""
+"#11147: Corrige informações de número de linha/arquivo fonte no conteúdo da "
+"descrição do objeto e em outros usos de ``nested_parse_with_titles``. Patch "
+"de Jeremy Maitin-Shepard."
+
+#: ../../sphinx/doc/changes/6.2.rst:103
+msgid ""
+"#11192: Restore correct parallel search index building. Patch by Jeremy "
+"Maitin-Shepard"
+msgstr ""
+"#11192: Restaura a construção correta do índice de pesquisa paralela. Patch "
+"de Jeremy Maitin-Shepard"
+
+#: ../../sphinx/doc/changes/6.2.rst:105
+msgid "Use the new Transifex ``tx`` client"
+msgstr "Usa o novo cliente Transifex ``tx``"
+
+#: ../../sphinx/doc/changes/6.2.rst:108
+msgid "Testing"
+msgstr "Testes"
+
+#: ../../sphinx/doc/changes/6.2.rst:110
+msgid "Fail testing when any Python warnings are emitted"
+msgstr "Falha no teste quando quaisquer avisos do Python são emitidos"
+
+#: ../../sphinx/doc/changes/6.2.rst:111
+msgid ""
+"Migrate remaining ``unittest.TestCase`` style test functions to pytest style"
+msgstr ""
+"Migra as funções de teste restantes no estilo ``unittest.TestCase`` para o "
+"estilo pytest"
+
+#: ../../sphinx/doc/changes/6.2.rst:112
+msgid "Remove tests that rely on setuptools"
+msgstr "Remove os testes que dependem de setuptools"
