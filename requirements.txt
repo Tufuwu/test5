@@ -1,5 +1,5 @@
 certifi==2020.12.5
-chardet==4.0.0
+chardet==5.2.0
 cssselect==1.1.0
 idna==2.9
 lxml==4.8.0
