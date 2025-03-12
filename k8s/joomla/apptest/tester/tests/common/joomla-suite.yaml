@@ -1,0 +1,20 @@
+actions:
+
+- name: Check Home page
+  bashTest:
+    script: curl -L "http://${APP_INSTANCE_NAME}-joomla-svc"
+    expect:
+      stdout:
+        contains: 'Home'
+      exitCode:
+        equals: 0
+
+- name: Check Admin page
+  bashTest:
+    script: curl -L "http://${APP_INSTANCE_NAME}-joomla-svc/administrator"
+    expect:
+      stdout:
+        contains: 'Joomla! - Administration'
+      exitCode:
+        equals: 0
+

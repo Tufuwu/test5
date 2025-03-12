@@ -1,0 +1,15 @@
+jenkins:
+  image:
+    repo: null
+    tag: null
+  persistence:
+    storageClass: null
+    size: 8Gi
+
+metrics:
+  exporter:
+    enabled: false
+
+tls:
+  base64EncodedPrivateKey: null
+  base64EncodedCertificate: null

@@ -1,0 +1,122 @@
+x-google-marketplace:
+  schemaVersion: v2
+  applicationApiVersion: v1beta1
+  publishedVersion: "$TAG"
+  publishedVersionMetadata:
+    releaseNote: >-
+      A regular update.
+    releaseTypes:
+      - Feature
+    recommended: false
+
+  images:
+    '':
+      properties:
+        controller.image.repo:
+          type: REPO_WITH_REGISTRY
+        controller.image.tag:
+          type: TAG
+    dashboard:
+      properties:
+        dashboard.image.repo:
+          type: REPO_WITH_REGISTRY
+        dashboard.image.tag:
+          type: TAG
+  clusterConstraints:
+    resources:
+    - replicas: 1
+      requests:
+        cpu: 100m
+        memory: 500Mi
+      affinity:
+        simple NodeAffinity:
+          type: REQUIRE_ONE_NODE_PER_REPLICA
+          minimumNodeCount: 1
+    istio:
+      type: OPTIONAL
+properties:
+  name:
+    type: string
+    x-google-marketplace:
+      type: NAME
+  namespace:
+    type: string
+    x-google-marketplace:
+      type: NAMESPACE
+  dashboard.replicas:
+    type: integer
+    title: Dashboard replicas
+    description: Number of replicas of the Nuclio dashboard
+    default: 1
+    minimum: 1
+  registry.pushPullUrl:
+    type: string
+    default: null
+    title: Registry push and pull URL
+    description: "This URL will be used for storing images which have been built by Nuclio. If you are using Container Registry, note that the login URL is different from the push/pull URL. For example: gcr.io/[PROJECT_ID]/nuclio-images"
+  registry.secretName:
+    type: string
+    default: null
+    title: Docker credentials secret name
+    description: Name of the Secret which contains login credentials for the Docker registry. To create this, follow the steps in the README.
+  nuclio.serviceAccountName:
+    type: string
+    title: Nuclio Controller Service Account
+    x-google-marketplace:
+      type: SERVICE_ACCOUNT
+      serviceAccount:
+        description: Service account used by Nuclio Controller and Dashboard StatefulSets
+        roles:
+        - type: ClusterRole
+          rulesType: CUSTOM
+          rules:
+            - apiGroups: ["nuclio.io"]
+              resources: ["nucliofunctions", "nuclioprojects", "nucliofunctionevents", "nuclioapigateways"]
+              verbs: ["*"]
+            - apiGroups: [""]
+              resources: ["services", "configmaps", "pods", "pods/log", "events", "secrets"]
+              verbs: ["*"]
+            - apiGroups: ["apps", "extensions"]
+              resources: ["deployments"]
+              verbs: ["*"]
+            - apiGroups: ["extensions","networking.k8s.io"]
+              resources: ["ingresses"]
+              verbs: ["*"]
+            - apiGroups: ["autoscaling"]
+              resources: ["horizontalpodautoscalers"]
+              verbs: ["*"]
+            - apiGroups: ["metrics.k8s.io", "custom.metrics.k8s.io"]
+              resources: ["*"]
+              verbs: ["*"]
+            - apiGroups: ["batch"]
+              resources: ["jobs", "cronjobs"]
+              verbs: ["*"]
+            - apiGroups: [""]
+              resources: ["endpoints","nodes"]
+              verbs: ["get","list"]
+            - apiGroups: ["apiextensions.k8s.io"]
+              resources: ["customresourcedefinitions"]
+              verbs: ["get","list","create"]
+  CDRJobServiceAccount:
+    type: string
+    title: CRD deployer Service Account
+    x-google-marketplace:
+      type: SERVICE_ACCOUNT
+      serviceAccount:
+        description: Service account used by Nuclio CRD deployer Job
+        roles:
+        - type: ClusterRole
+          rulesType: CUSTOM
+          rules:
+            - apiGroups: ["apiextensions.k8s.io"]
+              resources: ["customresourcedefinitions"]
+              verbs: ["get","list","create","patch"]
+  deployerHelm.image:
+    type: string
+    x-google-marketplace:
+      type: DEPLOYER_IMAGE
+
+required:
+- name
+- namespace
+- dashboard.replicas

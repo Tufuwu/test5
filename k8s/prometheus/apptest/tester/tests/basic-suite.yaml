@@ -1,0 +1,33 @@
+actions:
+
+- name: Wait 60s to let Prometheus collect metrics
+  bashTest:
+    script: |-
+      sleep 60
+    expect:
+      exitCode:
+        equals: 0
+
+- name: Prometheus UI is available
+  bashTest:
+    script: |-
+      curl -s -f "${PROMETHEUS_URL}/graph"
+    expect:
+      stdout:
+        contains: <title>Prometheus Time Series Collection and Processing Server</title>
+
+- name: Prometheus metrics for its own StatefulSets are available
+  bashTest:
+    script: |-
+      query="kube_statefulset_replicas\{app_kubernetes_io_name=\"${APP_INSTANCE_NAME}\"\}"
+      metrics_found="$(curl -s "${PROMETHEUS_URL}/api/v1/query?query=${query}" \
+        | jq '.data.result' | jq length)"
+      if [[ "${metrics_found}" -gt 0 ]]; then
+        echo "OK - Prometheus StatefulSets metrics found"
+      else
+        echo "FAIL - no Prometheus StatefulSets metrics found"
+      fi
+    expect:
+      stdout:
+        equals: OK - Prometheus StatefulSets metrics found
+

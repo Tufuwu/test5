@@ -1,0 +1,21 @@
+postgresql:
+  image:
+    repo: null
+    tag: null
+  persistence:
+    size: '10Gi'
+    storageClass: null
+  serviceAccount: null
+  exposePublicService: false
+exporter:
+  image: null
+db:
+  password: null
+metrics:
+  image: null
+  exporter:
+    enabled: false
+tls:
+  enabled: true
+  base64EncodedPrivateKey: null
+  base64EncodedCertificate: null

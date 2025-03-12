@@ -1,0 +1,21 @@
+Chef/Style/CommentFormat:
+  Enabled: false
+
+Chef/Correctness/TmpPath:
+  Enabled: false
+
+Chef/Style/FileMode:
+  Enabled: false
+
+Style/WordArray:
+  Enabled: false
+
+Chef/Modernize/CronDFileOrTemplate:
+  Enabled: false
+
+# TODO(armadom): Fix code and remove the rule.
+Chef/RedundantCode/NamePropertyIsRequired:
+ Enabled: false
+
+Chef/Correctness/MetadataMissingVersion:
+  Enabled: false

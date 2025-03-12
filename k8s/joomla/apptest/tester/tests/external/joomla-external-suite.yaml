@@ -1,0 +1,20 @@
+actions:
+
+- name: Check Home page
+  bashTest:
+    script: curl -L "http://${EXTERNAL_IP}"
+    expect:
+      stdout:
+        contains: 'Home'
+      exitCode:
+        equals: 0
+
+
+- name: Site address should be 200 OK (external IP) (TLS)
+  bashTest:
+    script: curl -f -k "https://${EXTERNAL_IP}"
+    expect:
+      stdout:
+        contains: 'Home'
+      exitCode:
+        equals: 0

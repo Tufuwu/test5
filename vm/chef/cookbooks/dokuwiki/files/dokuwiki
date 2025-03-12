@@ -1,0 +1,40 @@
+#!/bin/bash -eu
+#
+# Copyright 2023 Google Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+source /opt/c2d/c2d-utils || exit 1
+
+declare -r dokuwiki_admin_password="$(get_attribute_value "dokuwiki-admin-password")"
+
+export ADMIN_PASS_HASH=$(echo -n "${dokuwiki_admin_password}" | md5sum | awk '{print $1}')
+export ADMIN_EMAIL="$(get_attribute_value "dokuwiki-admin-email")"
+
+declare -r dokuwiki_config_folder="/var/www/html/conf"
+declare -r auth_config_template="${dokuwiki_config_folder}/users.auth.php.template"
+declare -r auth_config="${dokuwiki_config_folder}/users.auth.php"
+
+# Apply auth config file
+if [[ -f "${auth_config_template}" ]]; then
+  envsubst < "${auth_config_template}" > "${auth_config}"
+  rm "${auth_config_template}"
+else
+  >&2 echo "Auth template does not exist."
+  if [[ ! -f "${auth_config}" ]]; then
+    >&2 echo "Auth config also does not exist. Quitting..."
+    exit 1
+  fi
+fi
+
+>&2 echo "Finished!"

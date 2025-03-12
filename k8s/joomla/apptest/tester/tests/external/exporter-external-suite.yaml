@@ -1,0 +1,9 @@
+actions:
+
+- name: Check server status
+  bashTest:
+    script: curl -L "http://${EXTERNAL_IP}/server-status"
+    expect:
+      stdout:
+        contains: '403 Forbidden''
+

@@ -1,6 +1,2 @@
+.build/
 *.pyc
-utils/cache*
-.project
-.pydevproject
-.settings
-__pycache__

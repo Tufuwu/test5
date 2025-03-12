@@ -1,0 +1,53 @@
+x-google-marketplace:
+  schemaVersion: v2
+
+  applicationApiVersion: v1beta1
+
+  publishedVersion: "$TAG"
+  publishedVersionMetadata:
+    releaseNote: >-
+      A regular update.
+    releaseTypes:
+      - Feature
+    recommended: false
+
+  images:
+    '':
+      properties:
+        memcached.image.repo:
+          type: REPO_WITH_REGISTRY
+        memcached.image.tag:
+          type: TAG
+    prometheus-to-sd:
+      properties:
+        metrics.image:
+          type: FULL
+
+properties:
+  name:
+    type: string
+    x-google-marketplace:
+      type: NAME
+  namespace:
+    type: string
+    x-google-marketplace:
+      type: NAMESPACE
+  memcached.replicas:
+    type: integer
+    title: Replicas
+    description: The number of Pods in the solution
+    default: 3
+    minimum: 1
+    maximum: 11
+  metrics.exporter.enabled:
+    type: boolean
+    title: Enable Stackdriver Metrics Exporter
+    description: Your GCP project should have Stackdriver enabled. For non-GCP clusters,
+      export of metrics to Stackdriver is not supported yet
+    default: false
+
+required:
+- name
+- namespace
+- memcached.replicas
+- metrics.exporter.enabled
