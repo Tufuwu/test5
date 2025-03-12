@@ -1,37 +1,18 @@
-name: CI
-on: push
+name: Trigger docs build
+on:
+  push:
+  schedule:
+    - "0 0 * * 1"
 jobs:
-  run:
+  trigger:
+    name: Trigger webhook
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-        - python: '3.9'
-        - python: '3.9'
-        - python: '3.9'
-        - python: '3.9'
-        - python: '3.9'
+    env:
+      readthedocs_token: ${{ secrets.readthedocs_token }}
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python }}
-      - name: Get packages
-
+      - if: ${{ env.readthedocs_token != '' }}
         run: |
-          python3 --version
-          sudo apt-get install gfortran
-          sudo apt-get install libhdf5-dev
-      - name: Install 
-        run: |
-          ( cd libcdf && make build && sudo make install )
-          ( cd qdipole && ./configure && make build && sudo make install )
-          pip3 install scipy
-          pip3 install ./eoxmagmod/
-      - name: Scripts
-        run: |
-          pip3 list
-          mkdir -p ./test && cd ./test
-          pip3 show -f eoxmagmod
-          python3 -c 'import eoxmagmod' && python3 -m unittest discover -p '[a-z]*.py' -v eoxmagmod
+          curl -s -X POST \
+            -d "branches=${{ github.ref_name }}" \
+            -d "token=${{ env.readthedocs_token }}" \
+            https://readthedocs.org/api/v2/webhook/nethserver-devel/49560/
