@@ -1,3 +1,0 @@
-RT=5050
-ZK=`cat /etc/mesos/zk`
-CLUSTER=muchos_mesos

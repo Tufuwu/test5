@@ -1,49 +1,35 @@
-<!--
-Licensed to the Apache Software Foundation (ASF) under one or more
-contributor license agreements.  See the NOTICE file distributed with
-this work for additional information regarding copyright ownership.
-The ASF licenses this file to You under the Apache License, Version 2.0
-(the "License"); you may not use this file except in compliance with
-the License.  You may obtain a copy of the License at
+# Guidance on how to contribute
 
-    http://www.apache.org/licenses/LICENSE-2.0
+> By submitting a pull request or filing a bug, issue, or feature request,
+> you are agreeing to comply with this waiver of copyright interest.
+> Details can be found in our [LICENSE](LICENSE).
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
--->
 
-# Contributors Guide
+There are two primary ways to help:
+ - Using the issue tracker, and
+ - Changing the code-base.
 
-If you believe that you have found a bug, please search for an existing [issue](https://github.com/apache/fluo-muchos/issues) to see if it has already been reported. For simple changes, its ok to just submit a pull request without an issue.
 
-## Muchos Testing
+## Using the issue tracker
 
-Muchos has unit tests. To run them, first install required packages:
-```
-    pip install -r ./lib/requirements.txt
-```
-The following command runs the unit tests:
-```
-    nose2 -v -B
-```
+Use the issue tracker to suggest feature requests, report bugs, and ask questions.
+This is also a great way to connect with the developers of the project as well
+as others who are interested in this solution.
 
-## Before you submit a PR
+Use the issue tracker to find ways to contribute. Find a bug or a feature, mention in
+the issue that you will take on that effort, then follow the _Changing the code-base_
+guidance below.
 
-If you are modifying any of the Python code in this project, please use [Black](https://github.com/psf/black) to enforce that Python code found under the [lib](https://github.com/apache/fluo-muchos/tree/main/lib) folder is formatted correctly. Before submitting a PR, please ensure that you have used Black to format the code with max line length set to 79 as below (it is to be run from the repo root):
-```
-black lib --line-length 79
-```
 
-The [CI](https://github.com/apache/fluo-muchos/tree/main/.github/workflows/ci.yaml) for this project runs tools to detect common coding issues with Python and Ansible files. Rather than wait for the CI to flag any issues with your work, please run the [cibuild](https://github.com/apache/fluo-muchos/tree/main/scripts/cibuild) script on your dev machine, which in turn runs the following tools:
-- [flake8](https://github.com/pycqa/flake8) to validate that the Python code in the project conforms to known good practices.
-- [Ansible-lint](https://github.com/ansible/ansible-lint/) prior to submitting a PR. This will ensure that you align with known good practices. Please also review the guidance on [false positives](https://docs.ansible.com/ansible-lint/rules/rules.html#false-positives-skipping-rules) from Ansible-lint.
+## Changing the code-base
 
-Please ensure that you address issues flagged by the above CI build script before creating a PR.
+Generally speaking, you should fork this repository, make changes in your
+own fork, and then submit a pull request. All new code should have associated
+unit tests that validate implemented features and the presence or lack of defects.
+Additionally, the code should follow any stylistic and architectural guidelines
+prescribed by the project. In the absence of such guidelines, mimic the styles
+and patterns in the existing code-base.
 
-## Review
-
-- We welcome reviews from anyone. Any committer can approve and merge the changes.
-- Reviewers will likely have questions and comments. They may use terms such as those in [RFC2119](https://tools.ietf.org/html/rfc2119).
+### Contribution guidelines
+ - Your code should follow PEP 8 -- Style Guide for Python Code
+ - Your changes should be covered by unit-tests
