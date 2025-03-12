@@ -1,5 +1,0 @@
-[tool.vendorize]
-target = "_vendor"
-packages = [
-    "six==1.10",
-]
