@@ -1,22 +1,47 @@
-docs:
-	. venv/bin/activate; cd docs; sphinx-build source build; deactivate
+# Non released dlt-daemon version based on 2.18.10
+LIBDLT_VERSION=v2.18.10
 
-# Reminder: To run tests locally against several OS/Python combos, run `act`
-test:
-	venv/bin/python setup.py test
+IMAGE=python-dlt/python-dlt-unittest
+TAG?=latest
+DK_CMD=docker run --rm -v $(shell pwd):/pydlt -w /pydlt
+TEST_ARGS?="-e py3,lint"
 
+.PHONY: all
+all:
+	@echo "python-dlt testing commands, libdlt version: ${LIBDLT_VERSION}"
+	@echo "  make unit-test       -- Run unit tests with tox (Run 'make build-image' the first time)"
+	@echo "  make build-image     -- Build docker image for the usage of 'make unit-test'"
+	@echo "  make clean           -- Remove all temporary files"
+
+.PHONY: unit-test
+unit-test:
+	${DK_CMD} ${IMAGE}:${TAG} tox ${TEST_ARGS}
+
+.PHONY: lint
+lint:
+	${DK_CMD} ${IMAGE}:${TAG} tox -e lint
+
+.PHONY: build-image
+build-image:
+	docker build --build-arg LIBDLT_VERSION=${LIBDLT_VERSION} \
+		--tag ${IMAGE}:${TAG} .
+	docker build --build-arg LIBDLT_VERSION=${LIBDLT_VERSION} \
+		--tag ${IMAGE}:${LIBDLT_VERSION} .
+
+.PHONY: bash
+bash:
+	${DK_CMD} -it ${IMAGE}:${TAG}
+
+.PHONY: clean
 clean:
-	- rm -rf docs/build
-	- rm -rf dist
-
-dist:
-	- rm dist/*
-	python setup.py sdist bdist_wheel
-
-upload-test:
-	twine upload --repository-url https://test.pypi.org/legacy/ dist/*
-
-upload:
-	twine upload dist/*
-
-.PHONY: docs test clean dist upload-test upload
+ifeq (,$(wildcard /.dockerenv))
+	${DK_CMD} ${IMAGE}:${TAG} make clean
+else
+	find . -name "__pycache__" | xargs -n1 rm -rf
+	find . -name "*.pyc" | xargs -n1 rm -rf
+	rm -rf .coverage
+	rm -rf *.egg-info
+	rm -rf .eggs
+	rm -rf junit_reports
+	rm -rf .tox
+endif

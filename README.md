@@ -1,128 +1,143 @@
-# reprexpy
+# python-dlt
 
-> Render **repr**oducible **ex**amples of Python code for posting to GitHub/Stack Overflow (port of R package `reprex`)
+python-dlt is a thin Python ctypes wrapper around libdlt functions. It was
+primarily created for use with BMW's test execution framework. However,
+the implementation is independent and the API makes few assumptions about
+the intended use.
 
-[![Build](https://github.com/crew102/reprexpy/actions/workflows/build.yml/badge.svg)](https://github.com/crew102/reprexpy/actions/workflows/build.yml)
-[![Documentation Status](https://readthedocs.org/projects/reprexpy/badge/?version=latest)](https://reprexpy.readthedocs.io/en/latest/?badge=latest)
-[![PyPI version](https://img.shields.io/pypi/v/reprexpy.svg)](https://pypi.org/project/reprexpy/)
+Note: This is only tested with libdlt version v2.18.8 and v2.18.10,
+later versions might require adaptations. The package will not support previous libdlt
+versions from python-dlt v2.0. Also only GENIVI DLT daemon produced traces
+have been tested.
 
-`reprexpy` is a Python package that renders **repr**oducible **ex**amples (also known as [reprexes](https://twitter.com/romain_francois/status/530011023743655936) or [minimal working examples (MWEs)](https://en.wikipedia.org/wiki/Minimal_Working_Example)) to a format suitable for posting to GitHub or Stack Overflow. It's a port of the R package [reprex](https://github.com/tidyverse/reprex).
+## Design
 
-## Installation
+The code is split up into 3 primary components:
 
-You can get the stable version from PyPI:
+* The `core`: This subpackage provides the major chunk of ctypes wrappers for
+  the structures defined in libdlt. It abstracts out the libdlt structures for use
+  by the rest of python-dlt. Classes defined here ideally should *not* be used
+  outside of python-dlt. The module `core_base.py` provides the default
+  implementation of the classes and the other `core_*.py` modules provide the
+  overrides for the version specific implementations of libdlt. The correct version
+  specific implementation will be loaded automatically at runtime. (the logic for
+  this is in `core/__init__.py`)
 
-```
-pip install reprexpy
-```
+* The python interface classes: These are defined in `dlt.py`. Most of the
+  classes here derive from their corresponding ctypes class definitions from
+  `core` and provide a more python friendly api/access to the underlying C/ctypes
+  implementations. Ideally, python code using `python-dlt` would use these classes
+  rather than the base classes in `core`.
 
-Or the development version from GitHub:
+* API for tools: This is the component that provides common interfaces required
+  by the tools that use `python-dlt`, like the `DLTBroker`, 'DLTLifecycle' etc. These
+  classes do not have equivalents in libdlt and were created based on usage
+  requirements (and as such make assumptions about the manner in which they would
+  be used).
 
-```
-pip install git+https://github.com/crew102/reprexpy.git
-```
+If you're reading this document to work on the core or the python classes, it
+would be a good idea to first understand the design of libdlt itself. This is
+fairly well documented (look under the `doc/` directory of the `dlt-deamon` code
+base). Of course the best reference is the code itself. `dlt-daemon` is written
+in C and is a pretty well laid out, straight forward (ie: not many layers of
+abstractions), small code base. Makes for good bedtime reading.
 
-## A basic example
+The rest of this document will describe and demonstrate some of the design of
+the external API of python-dlt.
 
-Let's say you want to know if there's a way to flatten lists in Python without using list comprehension, so you create the following MWE to post to SO (MWE inspired by [this SO question](https://stackoverflow.com/questions/952914/making-a-flat-list-out-of-list-of-lists-in-python)):
+The classes most relevant for users of python-dlt possibly are `DLTClient`,
+`DLTFile`, `DLTMessage`, `DLTBroker`. The names hopefully make their purpose
+evident.
 
-```python
-# i know that you can flatten a list in python using list comprehension:
-l = [[1, 2, 3], [4, 5, 6], [7], [8, 9]]
-[item for sublist in l for item in sublist]
+Here are examples of some interesting ways to use these classes:
 
-# but i'd like to know if there's another way. i tried this but i got an error:
-import functools
-functools.reduce(lambda x, y: x.extend(y), l)
-```
-
-You'd like to include the outputs of running the above code into the example itself, to show people what you're seeing in your console:
-
-```python
-# i know that you can flatten a list in python using list comprehension:
-l = [[1, 2, 3], [4, 5, 6], [7], [8, 9]]
-[item for sublist in l for item in sublist]
-#> [1, 2, 3, 4, 5, 6, 7, 8, 9]
-
-# but i'd like to know if there's another way. i tried this but i got an error:
-import functools
-functools.reduce(lambda x, y: x.extend(y), l)
-#> Traceback (most recent call last):
-#>  File "<stdin>", line 1, in <module>
-#>  File "<stdin>", line 1, in <lambda>
-#> AttributeError: 'NoneType' object has no attribute 'extend'
-```
-
-You could run the code in your console and copy/paste the outputs into your example. That can be a pain, though, especially if you have a lot of outputs to copy. An easier way is to use `reprex()`:
-
-![](https://raw.githubusercontent.com/crew102/reprexpy/master/docs/source/gifs/basic-example.gif)
-
-When you run `reprex()`, your MWE is run inside an IPython kernel. The outputs from running your code (including errors) are captured and displayed alongside the code itself. Details on the IPython session are also given at the end of your example by calling `SessionInfo()` (more on this later).
-
-## Including `matplotlib` plots
-
-`reprex()` makes it easy to include `matplotlib` plots in your reprexes. It does this by uploading the plots to imgur and including inline links to them in your example. For example, let's say you have the following MWE that you want to post to GitHub:
+* DLTFile and DLTMessage::
 
 ```python
-import matplotlib.pyplot as plt
-
-data = [1, 2, 3, 4]
-
-# i'm creating a plot here
-plt.plot(data);
-plt.ylabel('some numbers');
-plt.show()
-plt.close()
-
-# another plot
-plt.plot(data);
-plt.xlabel('more numbers');
-plt.show()
-plt.close()
+    >>> from dlt import dlt
+    >>> # DLTFile object can be obtained by loading a trace file
+    >>> d = dlt.load("high_full_trace.dlt")
+    >>> d.generate_index()      # Read the whole trace file and generate its index
+    >>> print(d.counter_total)  # number of DLT messages in the file
+    ...
+    >>> print(d[0])             # messages can be indexed
+    ...
+    >>> for msg in d:           # DLTFile object is iterable
+    ...     print(msg.apid)             # DLTMessage objects have all the attrs
+    ...     print(msg.payload_decoded)  # one might expect from a DLT frame
+    ...     print(msg)          # The str() of the DLTMessage closely matches the
+    ...                         # output of dlt-receive
+    >>> d[0] == d[-1]           # DLTMessage objects can be compared to each other
+    >>> d.compare(dict(apid="SYS", citd="JOUR")) # ...or can be compared to an
+    ...                                          # dict of attributes
+    >>> import pickle
+    >>> pickle.dumps(d[0])      # DLTMessage objects are (de)serializable using
+    ...                         # the pickle protocol (this is to enable sharing
+    ...                         # of the DLTMessage in a multiprocessing
+    ...                         # environment)
 ```
 
-You can prepare this reprex for posting to GitHub using `reprex()`:
 
-![](https://raw.githubusercontent.com/crew102/reprexpy/master/docs/source/gifs/plotting.gif)
-
-## `SessionInfo()`
-
-You may have noticed in the previous two examples that a section called "Session info" is added to the end of your reprex by default (note, this is no longer the case in version 0.2.0 and above). This section uses the `SessionInfo()` function to include details about the IPython kernel that was used to run your reprex, as well as the version numbers of relevant third-party packages used in your example. Note that you can call `SessionInfo()` outside of reprexes, so long as you're using an IPython kernel (e.g., when inside an IPython terminal or Jupyter notebook):
+* DLTClient and DLTBroker::
 
 ```python
-import pandas
-import requests
-import numpy
-
-from reprexpy import SessionInfo
-SessionInfo()
-#> Session info --------------------------------------------------------------------
-#> Date: 2018-08-27
-#> Platform: Darwin-17.7.0-x86_64-i386-64bit (64-bit)
-#> Python: 3.5
-#> Packages ------------------------------------------------------------------------
-#> numpy==1.15.0
-#> pandas==0.23.4
-#> reprexpy==0.1.0
-#> requests==2.19.1
+    >>> from dlt import dlt
+    >>> c = dlt.DLTClient(servIP="127.0.0.1")   # Only initializes the client
+    >>> c.connect()                      # ...this connects
+    >>> dlt.dltlib.dlt_receiver_receive(ctypes.byref(client.receiver), DLT_RECEIVE_SOCKET)  # receives data
+    >>> c.read_message()                 # reads a single DLTMessage from received data  and returns it
+    >>>
+    >>> # more interesting is the DLTBroker class...
+    >>> # - create an instance that initializes a DLTClient. Accepts a filename
+    >>> #   where DLT traces would be stored
+    >>> broker = DLTBroker(ip_address="127.0.0.1", filename='/tmp/testing_log.dlt')
+    >>> # needs to be started and stopped explicitly and will create a run a
+    >>> # DLTClient instance in a new *process*.
+    >>> broker.start()
+    >>> broker.stop()
+    >>>
+    >>> # Usually, used in conjunction with the DLTContext class from mtee
+    >>> from mtee.testing.connectors.connector_dlt import DLTContext
+    >>> broker = DLTBroker(ip_address="127.0.0.1", filename="/tmp/testing_log.dlt", verbose=True)
+    >>> ctx = DLTContext(broker, filters=[("SYS", "JOUR")])
+    >>> broker.start()
+    >>> print(ctx.wait_for(count=10))
+    >>>
 ```
 
-## Render code examples for docstrings
+## Design of DLTBroker
 
-Creating code examples to insert into docstrings is a breeze with `reprex()`. For example, let's say you want to include an example for the following function:
+The DLTBroker abstracts out the management of 2 (multiprocessing) queues:
 
-```python
-def are_dogs_awesome():
-    r"""Are dogs awesome?
+* The `message_queue`: This queue receives *all* messages from the DLT daemon
+  (via a DLTClient instance, running as a separate process, code in
+  `dlt.dlt_broker_handlers.DLTMessageHandler`) and stores them to a
+  trace file.
 
-    Examples
-    --------
+* The `filter_queue`: This queue instructs the `DLTMessageHandler` which
+  messages would be interesting at runtime, to be filtered and returned (for
+  example, via a request from `DLTContext`). This is run as a separate thread in
+  the `DLTBroker` process. The code for this is in
+  `dlt.dlt_broker_handlers.DLTContextHandler`.
 
+## Running tox on a local machine
 
-    """
-    return 'Yep'
+In order to run tox command for this repository, please perform the following:
+
+1. Build a docker image from the `Dockerfile` provided using:
+
+```commandline
+$ docker build -t python-dlt -f Dockerfile .
 ```
 
-Just `reprex()` your example and paste the result into your docstring:
+2. Run the tox in the docker container using:
 
-![](https://raw.githubusercontent.com/crew102/reprexpy/master/docs/source/gifs/sphinx.gif)
+```commandline
+$ docker run -it --rm --volume $(pwd):/workspace python-dlt /bin/sh -xc "tox -e py3,lint"
+```
+
+3. [Special Case] Getting an interactive shell inside the docker container to run arbitrary commands:
+
+```commandline
+$ docker run -it --rm --volume $(pwd):/workspace --entrypoint sh python-dlt
+```
