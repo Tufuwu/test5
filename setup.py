@@ -1,41 +1,68 @@
-from setuptools import find_packages, setup
+from os import path
+from setuptools import setup, find_packages
+
+this_directory = path.abspath(path.dirname(__file__))
+
+with open(path.join(this_directory, 'README.md')) as f:
+    long_description = f.read()
+
+
+DISTNAME = 'lexpy'
+AUTHOR = 'Abhishek Singh'
+MAINTAINER = 'Abhishek Singh'
+MAINTAINER_EMAIL = 'abhishek.singh20141@gmail.com'
+DESCRIPTION = 'Python package for lexicon'
+LICENSE = 'GNU GPLv3'
+URL = 'https://github.com/aosingh/lexpy'
+VERSION = '1.1.0'
+
+PACKAGES = ['lexpy']
+
+
+classifiers = [
+    'Development Status :: 5 - Production/Stable',
+    'Intended Audience :: Education',
+    'Intended Audience :: Developers',
+    'Intended Audience :: Science/Research',
+    'Topic :: Text Processing :: Linguistic',
+    'Topic :: Text Processing :: Indexing',
+    'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
+    'Programming Language :: Python :: 3.7',
+    'Programming Language :: Python :: 3.8',
+    'Programming Language :: Python :: 3.9',
+    'Programming Language :: Python :: 3.10',
+    'Programming Language :: Python :: 3.11',
+    'Programming Language :: Python :: 3.12',
+    'Operating System :: POSIX :: Linux',
+    'Operating System :: Unix',
+    'Operating System :: Microsoft :: Windows',
+    'Operating System :: MacOS'
+]
+keywords = 'trie suffix-trees lexicon directed-acyclic-word-graph dawg'
+
+project_urls = {"Documentation": "https://github.com/aosingh/lexpy",
+                "Source":  "https://github.com/aosingh/lexpy",
+                "Bug Tracker": "https://github.com/aosingh/lexpy/issues",
+                "CI": "https://github.com/aosingh/lexpy/actions",
+                "Release Notes": "https://github.com/aosingh/lexpy/releases",
+                "License": "https://github.com/aosingh/lexpy/blob/main/LICENSE"}
 
 setup(
-    name='amlrt_project',
-    version='3.2.0',
-    packages=find_packages(include=['amlrt_project', 'amlrt_project.*']),
-    python_requires='>=3.11',
-    install_requires=[
-        'aim==3.18.1; os_name!="nt"',
-        'comet-ml==3.39.3',
-        'flake8==4.0.1',
-        'flake8-docstrings==1.6.0',
-        'gitpython==3.1.27',
-        'jupyter==1.0.0',
-        'jinja2==3.1.2',
-        'myst-parser==2.0.0',
-        'omegaconf==2.3.0',
-        'orion>=0.2.4.post1',
-        'pyyaml==6.0',
-        'pytest==7.1.2',
-        'pytest-cov==3.0.0',
-        'pytorch_lightning==2.2.1',
-        'pytype==2024.2.27',
-        'sphinx==7.2.6',
-        'sphinx-autoapi==3.0.0',
-        'sphinx-rtd-theme==1.3.0',
-        'sphinxcontrib-napoleon==0.7',
-        'sphinxcontrib-katex==0.9.9',
-        'tensorboard==2.16.2',
-        'tqdm==4.64.0',
-        'torch==2.2.1',
-        'torchvision==0.17.1',
-    ],
-    entry_points={
-        'console_scripts': [
-            'amlrt_project_train=amlrt_project.train:main',
-            'amlrt_project_eval=amlrt_project.evaluate:main',
-            'amlrt_project_merge_configs=amlrt_project.utils.config_utils:main'
-        ],
-    }
+    name=DISTNAME,
+    long_description=long_description,
+    long_description_content_type='text/markdown',
+    author=AUTHOR,
+    author_email=MAINTAINER_EMAIL,
+    maintainer=MAINTAINER,
+    maintainer_email=MAINTAINER_EMAIL,
+    description=DESCRIPTION,
+    license=LICENSE,
+    url=URL,
+    project_urls=project_urls,
+    version=VERSION,
+    packages=find_packages(exclude=("tests",)),
+    package_dir={'lexpy': 'lexpy'},
+    include_package_data=True,
+    classifiers=classifiers,
+    keywords=keywords.split(),
 )

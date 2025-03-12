@@ -1,39 +1,33 @@
-name: unit-tests
-on:
-  # Trigger the workflow on push or pull request,
-  # but only for the main/develop branch
-  push:
-    branches:
-      - master
-      - develop
-  pull_request:
-    branches:
-      - master
-      - develop
+name: lexpy
+on: push
+
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  unittests:
+    name: lexpy unitests
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, windows-latest, ubuntu-latest, ubuntu-latest]
+        python-version: ["3.9", "3.10"]
+
     steps:
-    - uses: actions/checkout@v2
-    - name: python-{{ cookiecutter.python_version }}
-      uses: actions/setup-python@v2
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Setup Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
       with:
-        python-version: {{ cookiecutter.python_version }}
-    - name: install-dependencies
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install Dependencies
       run: |
-        python -m pip install --upgrade pip
-        pip install flake8 pytest
+        python3 -m pip install --upgrade pip setuptools
         pip install -e .
-    - name: flake8
+        pip install coverage
+
+    - name: Run Unittests
       run: |
-        config/hooks/pre-commit
-    - name: print env
-      run: |
-        env
-    - name: pytest_and_coverage
-      run: |
-        pytest --cov={{cookiecutter.project_slug}}
-    - name: end2end-toyexp
-      run: |
-        cd examples/local
-        sh run.sh
+        coverage run -m unittest discover -s lexpy/tests
+        coverage combine
+        coverage report -m
