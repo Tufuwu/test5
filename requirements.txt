@@ -1,0 +1,6 @@
+-e .
+
+# dev dependencies
+black; python_version >= '3.6.0'
+wheel
+build
