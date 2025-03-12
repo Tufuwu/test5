@@ -1,0 +1,11 @@
+Red-DiscordBot
+cachetools~=5.0
+charset_normalizer~=3.1
+emoji~=1.2
+gidgethub~=5.0
+ipykernel~=5.4
+ipyparallel
+jedi<0.16.0
+pillow~=9.1
+rlapi==0.7.0a1
+tornado>=6.1

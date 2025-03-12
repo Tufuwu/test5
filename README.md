@@ -1,88 +1,88 @@
-# Welcome to the OWASP Cheat Sheet Series
+**⚠️ All branches starting with `unfinished-cogs/` come with limited support and might not fully work.**<br>
+If you use any "unfinished" cog, message me on Discord to get info about breaking changes that may affect you.
 
-[![OWASP Flagship](https://img.shields.io/badge/owasp-flagship%20project-48A646.svg)](https://www.owasp.org/index.php/OWASP_Project_Inventory#tab=Flagship_Projects)
-[![Creative Commons License](https://img.shields.io/github/license/OWASP/CheatSheetSeries)](https://creativecommons.org/licenses/by-sa/4.0/ "CC BY-SA 4.0")
+---
 
-Welcome to the official repository for the Open Worldwide Application Security Project® (OWASP) Cheat Sheet Series project. The project focuses on providing good security practices for builders in order to secure their applications.
+# JackCogs
 
-In order to read the cheat sheets and **reference** them, use the project [official website](https://cheatsheetseries.owasp.org). The project details can be viewed on the [OWASP main website](https://owasp.org/www-project-cheat-sheets/) without the cheat sheets.
+[![Sponsor on GitHub](https://img.shields.io/github/sponsors/Jackenmen?logo=github)](https://github.com/sponsors/Jackenmen)
+[![Build Status](https://travis-ci.com/Jackenmen/JackCogs.svg?branch=wip/cleaning-code-v3)](https://travis-ci.com/Jackenmen/JackCogs/branches)
+[![Code style: black](https://github.com/Jackenmen/JackCogs/workflows/black/badge.svg)](https://github.com/ambv/black)
+[![Red cogs](https://img.shields.io/badge/Red--DiscordBot-cogs-red.svg)](https://github.com/Cog-Creators/Red-DiscordBot/tree/V3/develop)
+[![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
 
-:triangular_flag_on_post: Markdown files are the working sources and aren't intended to be referenced in any external documentation, books or websites.
+Cogs created by Jakub Kuczys (also known as Jackenmen on GitHub and Discord) for [Red-DiscordBot](https://github.com/Cog-Creators/Red-DiscordBot). Red-DiscordBot is a multipurpose bot for Discord developed by Twentysix26 and the Core Developer team. Feel free to create issues, if you want to see some function in one of my cogs. If you see a bug in one of my cogs, do that as well ;)
 
-## Cheat Sheet Series Team
+If you're developer, you can also send pull requests and I will happily merge your commits, if it doesn't conflict with anything developed before.
 
-### Project Leaders
+Also I suggest to join [Red - Cog Support server](https://discord.gg/GET4DVk) and if you will ever need help with any of my cogs, just mention me (@Jackenmen) on #support_othercogs channel.
 
-- [Jim Manico](https://github.com/jmanico)
-- [Jakub Maćkowski](https://github.com/mackowski)
+# Cogs in this repo
 
-### Core Team
+* **autogist** - Auto-upload files with configured extension sent by users to gist.github.com.
+* **banmessage** - Send message on ban in a chosen channel. Supports images!
+* **categoryhelp** - Command for getting help for category that ignores case-sensitivity.
+* **emojiinfo** - Get information about emojis and see how to use them in your code.
+* **linkwarner** - Remove messages containing links and warn users for it.
+* **mee6rank** - Get detailed information about your Mee6 rank.
+* **membercount** - Get count of all members + humans and bots separately.
+* **modroles** - Allow moderators without manage roles permission to assign configured roles to users.
+* **nitrorole** - Welcome new nitro boosters and/or give them a special role!
+* **qupyter** - Run IPython kernel within Red and connect to it with Jupyter Console. This is a development tool.
+* **rlstats** - Get your Rocket League stats with a single command! Needs access to Rocket League API which is currently in closed beta.
+* **rssnotifier** - Get role and/or user mentions about feed updates. This cog requires RSS cog from aikaterna-cogs repo to work.
+* **shell** - Run shell commands on bot's system from Discord.
+* **voicetools** - Various tools to make voice channels better!
 
-- [Kevin W. Wall](https://github.com/kwwall)
-- [Shlomo Zalman Heigh](https://github.com/szh)
+# Installation
 
-## Chat With Us
+> These are cogs for [Red-DiscordBot V3](https://github.com/Cog-Creators/Red-DiscordBot/tree/V3/develop).
+You need to have a working instance of Red V3 in order to install these cogs.
 
-We're easy to find on Slack:
+*[p] is your prefix.*
 
-1. Join the OWASP Group Slack with this [invitation link](https://owasp.org/slack/invite).
-2. Join the [#cheatsheets channel](https://owasp.slack.com/messages/C073YNUQG).
+* Make sure Downloader is loaded:<br>
+  `[p]load downloader`
 
-Feel free to ask questions, suggest ideas, or share your best recipes.
+* Add the repo to your bot:<br>
+  `[p]repo add JackCogs https://github.com/Jackenmen/JackCogs`
 
-## Contributions, Feature Requests, and Feedback
+* Install the cogs you want:<br>
+  `[p]cog install JackCogs <cog_name>`
 
-We are actively inviting new contributors! To start, please read the [contribution guide](CONTRIBUTING.md).
+* Load installed cogs:<br>
+  ``[p]load <cog_name>``
 
-This project is only possible thanks to the work of many dedicated volunteers. Everyone is encouraged to help in ways large and small. Here are a few ways you can help:
+# Credits
 
-- Read the current content and help us fix any spelling mistakes or grammatical errors.
-- Choose an existing [issue](https://github.com/OWASP/CheatSheetSeries/issues) on GitHub and submit a pull request to fix it.
-- Open a new issue to report an opportunity for improvement.
+Twentysix26 and everyone else who has contributed to Red Bot.
 
-### Automated Build
+Redjumpman and PaddoInWonderlands, for this neat readme file template :D
 
-This [link](https://cheatsheetseries.owasp.org/bundle.zip) allows you to download a build (ZIP archive) of the offline website.
+# License
 
-### Local Build [![pyVersion3x](https://img.shields.io/badge/python-3.x-blue.svg)](https://www.python.org/downloads/)
+Please see [LICENSE file](LICENSE) for details. In short, this project is open source and you are free to modify and use my work as long as you credit me.
 
-The OWASP Cheat Sheet Series website can be built and tested locally by issuing the following commands:
+---
 
-```sh
-make install-python-requirements
-make generate-site
-make serve  # Binds port 8000
-```
+This project bundles fonts from [Roboto family](https://fonts.google.com/specimen/Roboto) which is distributed on Apache License 2.0
 
-### Container Build
+This project bundles fonts from [Animo family](https://fonts.google.com/specimen/Arimo) which is distributed under the Apache License 2.0.
 
-The OWASP Cheat Sheet Series website can be built and tested locally inside a container by issuing the following commands:
+This project bundles fonts from [DejaVu family](https://github.com/dejavu-fonts/dejavu-fonts) which is distributed under a Free license.
 
-#### Docker
+This project bundles fonts from [Poppins family](https://fonts.google.com/specimen/Poppins) which is distributed under the Open Font License.
 
-```sh
-docker build -t cheatsheetseries .
-docker run --name cheatsheetseries -p 8000:8000 cheatsheetseries
-```
+This project bundles screenshot done by reddit user [CastleintheMist](https://www.reddit.com/user/CastleintheMist/).
 
-#### Podman
+This project bundles Steam, Playstation and Xbox logos from [Ionicons icon set](https://ionicons.com/) which is released under the MIT License.
 
-```sh
-podman build -t cheatsheetseries .
-podman run --name cheatsheetseries -p 8000:8000 localhost/cheatsheetseries
-```
+This project bundles Nintendo Switch logo from [Remix Icon icon set](https://remixicon.com/) which is released under the Apache License 2.0.
 
-## Contributors
+All brand icons are trademarks of their respective owners. The use of these trademarks does not indicate endorsement of the trademark holder by me, nor vice versa.
 
-- **From 2014 to 2018:** [V1](CONTRIBUTOR-V1.md) - Initial version of the project hosted on the [OWASP WIKI](https://wiki.owasp.org).
-- **From 2019:** [V2](https://github.com/OWASP/CheatSheetSeries/graphs/contributors) - Hosted on [GitHub](https://github.com/OWASP/CheatSheetSeries).
+---
 
-## Special thanks
-
-A special thank you to the following people for their help provided during the migration:
-
-- [Dominique Righetto](https://github.com/righettod): For his special leadership and guidance.
-- [Elie Saad](https://github.com/ThunderSon): For valuable help in updating the OWASP Wiki links for all the migrated cheat sheets and for years of leadership and other project support.
-- [Jakub Maćkowski](https://github.com/mackowski): For valuable help in updating the OWASP Wiki links for all the migrated cheat sheets.
-
-Open Worldwide Application Security Project and OWASP are registered trademarks of the OWASP Foundation, Inc.
+> Jakub Kuczys &nbsp;&middot;&nbsp;
+> GitHub [@Jackenmen](https://github.com/Jackenmen)
