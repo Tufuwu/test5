@@ -1,55 +1,27 @@
-++++++++++++++++++++++++++
-Python C API compatibility
-++++++++++++++++++++++++++
+##########################
+The Python Benchmark Suite
+##########################
 
-.. image:: https://github.com/python/pythoncapi-compat/actions/workflows/build.yml/badge.svg
-   :alt: Build status of pythoncapi-compat on GitHub Actions
-   :target: https://github.com/python/pythoncapi-compat/actions
+.. image:: https://img.shields.io/pypi/v/pyperformance.svg
+   :alt: Latest pyperformance release on the Python Cheeseshop (PyPI)
+   :target: https://pypi.python.org/pypi/pyperformance
 
-The ``pythoncapi-compat`` project can be used to write a C or C++ extension
-supporting a wide range of Python versions with a single code base.  It is made
-of the ``pythoncapi_compat.h`` header file and the ``upgrade_pythoncapi.py``
-script.
+.. image:: https://github.com/python/pyperformance/actions/workflows/main.yml/badge.svg
+   :alt: Build status of pyperformance on GitHub Actions
+   :target: https://github.com/python/pyperformance/actions
 
-``upgrade_pythoncapi.py`` requires Python 3.6 or newer.
+The ``pyperformance`` project is intended to be an authoritative source of
+benchmarks for all Python implementations. The focus is on real-world
+benchmarks, rather than synthetic benchmarks, using whole applications when
+possible.
 
-See the `documentation at ReadTheDocs
-<https://pythoncapi-compat.readthedocs.io/en/latest/>`_
-for more details.
+* `pyperformance documentation <http://pyperformance.readthedocs.io/>`_
+* `pyperformance GitHub project <https://github.com/python/pyperformance>`_
+  (source code, issues)
+* `Download pyperformance on PyPI <https://pypi.python.org/pypi/pyperformance>`_
 
-Getting started
-===============
+pyperformance is not tuned for PyPy yet: use the `PyPy benchmarks project
+<https://foss.heptapod.net/pypy/benchmarks>`_ instead to measure PyPy
+performances.
 
-To upgrade a specific file::
-
-    python3 upgrade_pythoncapi.py module.c
-
-To upgrade all C/C++ files in a directory::
-
-    python3 upgrade_pythoncapi.py src/
-
-Select operations
------------------
-
-To only replace ``op->ob_type`` with ``Py_TYPE(op)``, select the ``Py_TYPE``
-operation with::
-
-    python3 upgrade_pythoncapi.py -o Py_TYPE module.c
-
-Or the opposite, to apply all operations but leave ``op->ob_type`` unchanged,
-deselect the ``Py_TYPE`` operation with::
-
-    python3 upgrade_pythoncapi.py -o all,-Py_TYPE module.c
-
-Download pythoncapi_compat.h
-----------------------------
-
-If you want to ``pythoncapi_compat.h`` to your code base, use the
-``upgrade_pythoncapi.py`` tool to fetch it::
-
-    python3 upgrade_pythoncapi.py --download PATH
-
-
-This project is distributed under the `Zero Clause BSD (0BSD) license
-<https://opensource.org/licenses/0BSD>`_ and is covered by the `PSF Code of
-Conduct <https://www.python.org/psf/codeofconduct/>`_.
+pyperformance is distributed under the MIT license.

@@ -1,5 +1,26 @@
-build
+# Python cached bytecode files
+*.pyc
+*.pyo
+*.pyd
+
+# Temporary files, usually created by text editors (vim)
 *.swp
-tests/build/
-*.py[cod]
-__pycache__
+*~
+
+# Created by setup.py sdist
+build/
+dist/
+pyperformance.egg-info/
+
+# Created by the pyperformance script
+venv/
+.venvs/
+
+# Create during tests
+pyperformance/tests/data/cpython/
+
+# Created by the tox program
+.tox/
+
+# coverage
+.coverage
