@@ -1,7 +1,0 @@
-[tool.black]
-target-version = ['py37']
-extend-exclude = 'migrations'
-
-[tool.isort]
-profile = 'black'
-skip = 'migrations'

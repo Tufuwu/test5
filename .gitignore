@@ -1,68 +1,85 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
+# Backup files left behind by the Emacs editor.
+*~
 
-# C extensions
-*.so
+# Lock files used by the Emacs editor.
+.\#*
 
-# Distribution / packaging
-.Python
-.env
-env/
-.venv
-venv/
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-*.egg-info/
-.installed.cfg
-*.egg
+# emacs auto recovery files from aborted edits
+\#*\#
 
-# PyInstaller
-#  Usually these files are written by a python script from a template
-#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+#use ful for stashing files
+*.orig
+*.keep
+
+# Temporary files used by the vim editor.
+.*.swp
+.swp
+
+# A hidden file created by the Mac OS X Finder.
+.DS_Store
+
+# Image thumbnail database created by windows
+Thumbs.db
+
+# Various files created by Visual Studio
+*.sln
+*.suo
+*.vcproj
+*.user*
+#*.rc
+*.ncb
+*.pch
+*.dep
+*.idb
+*.exp
+*.res
 *.manifest
-*.spec
+*.ilk
+*.pdb
+*.def
+Release
+Debug
+BuildLog.htm
 
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
-
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*,cover
-tests/media/
-coverage_html_report/
-
-# Translations
-*.mo
-*.pot
-
-# Django stuff:
-*.log
-
-# Sphinx documentation
-docs/_build/
-
-# PyBuilder
-target/
-
-# IDEs
+# PyCharm project folder
 .idea/
-*.sw[po]
-test-sqlite
-venv
+
+# Various files and folders created by CMake
+CMakeFiles
+CMakeScripts
+CMakeCache.txt
+*.cmake
+*.dir
+ALL_BUILD*
+
+# Various Qt files
+ui_*
+moc_*
+qrc_*
+
+# Misc files
+*.svn
+*.a
+*.o
+*.obj
+*.lib
+*.exe
+*.dll
+*.a
+*.app
+*.xcodeproj
+*.pbxbtree
+*.pbxindex
+*.build
+*.smp
+*.pl
+*.pyc
+*.pyo
+*.orig
+*.bak
+*.rar
+OpenCandy
+tags
+build
+dist
+src/css_parser.egg-info
