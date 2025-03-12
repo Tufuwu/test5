@@ -1,6 +1,13 @@
-/venv/
 *.pyc
-pyreferrer.egg-info/
-.python-version
-.tox/
+quantities.egg-info
+build
+_build
+dist
+.project
+.pydevproject
+.settings
+.idea
+.*cache/
+_version.py
 MANIFEST
+.venv
