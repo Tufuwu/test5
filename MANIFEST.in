@@ -1,6 +1,3 @@
-include LICENSE
-include README.rst
-recursive-include docs *
-recursive-include example *
-recursive-include flask_peewee *
-prune docs/_build
+include README.md
+include stopwords.txt
+recursive-include scripts *

@@ -1,43 +1,51 @@
-import sys
-from setuptools import setup, find_packages
+import os
 
-requirements = ['Flask', 'werkzeug', 'jinja2', 'peewee>=3.0.0', 'wtforms', 'wtf-peewee']
-if sys.version_info[:2] < (2, 6):
-    requirements.append('simplejson')
+from setuptools import find_packages
+from setuptools import setup
+
+
+cur_dir = os.path.dirname(__file__)
+readme = os.path.join(cur_dir, 'README.md')
+if os.path.exists(readme):
+    with open(readme) as fh:
+        long_description = fh.read()
+else:
+    long_description = ''
 
 setup(
-    name='flask-peewee',
-    version='3.0.6',
-    url='http://github.com/coleifer/flask-peewee/',
-    license='MIT',
+    name='walrus',
+    version=__import__('walrus').__version__,
+    description='walrus',
+    long_description=long_description,
     author='Charles Leifer',
     author_email='coleifer@gmail.com',
-    description='Peewee integration for flask',
+    url='http://github.com/coleifer/walrus/',
+    install_requires=['redis>=3.0.0'],
     packages=find_packages(),
-    package_data = {
-        'flask_peewee': [
-            'static/*/*.css',
-            'static/*/*.js',
-            'static/*/*.gif',
-            'static/*/*.png',
-            'templates/*.html',
-            'templates/*/*.html',
-            'templates/*/*/*.html',
-            'tests/*.html',
-            'tests/*/*.html',
+    package_data={
+        'walrus': [
+            'scripts/*',
+            'stopwords.txt',
         ],
     },
-    zip_safe=False,
-    platforms='any',
-    install_requires=requirements,
     classifiers=[
-        'Environment :: Web Environment',
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
-        'License :: OSI Approved :: BSD License',
+        'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
-        'Topic :: Software Development :: Libraries :: Python Modules'
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
     ],
-    test_suite='runtests.runtests',
+    test_suite='walrus.tests',
 )
