@@ -1,17 +1,20 @@
-name: Tests
+name: Running unittests
+
 on:
   push:
-    branches-ignore:
-      - 'private/**'
+    branches: [ master ]
   pull_request:
-    branches-ignore:
-      - 'private/**'
+    branches: [ master ]
+
 jobs:
   build:
+
     runs-on: ubuntu-latest
     strategy:
       matrix:
         python-version: ["3.9", "3.10"]
+        django: ["2.2", "3.0", "3.1"]
+
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
@@ -20,7 +23,13 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
-        pip install -r requirements.txt
-    - name: Run make check
+        python -m pip install --upgrade pip
+        pip install -r requirements-tests.txt
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Linting
+      run: flake8
+    - name: Run unittests
+      env:
+        TOX_ENV: py${{ matrix.python-version}}-django${{ matrix.django }}
       run: |
-        make check
+        tox -e $TOX_ENV
