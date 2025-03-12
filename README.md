@@ -1,182 +1,107 @@
-# //build directory for GN-based projects
+# Cerberus
+Guardian of Kubernetes and OpenShift Clusters
 
-This project provides a work-in-progress standalone version of the toolchains and configs used by the Chromium project.
+![Cerberus logo](media/logo_assets/full_color/over_light_background/cerberus-logo_small-color-light-full-horizontal.png)
 
-## Supported platforms
+Cerberus watches the Kubernetes/OpenShift clusters for dead nodes, system component failures/health and exposes a go or no-go signal which can be consumed by other workload generators or applications in the cluster and act accordingly.
 
-The toolchains have been tested on the following platforms:
+### Workflow
+![Cerberus workflow](media/cerberus-workflow.png)
 
-* Windows (MSVC 2013/2015/2017/2019/2022, Clang 3.8 - 17.0)
-* FreeBSD (GCC 6, Clang 11)
-* Linux (GCC 6, Clang 3.8)
-* OS X (Xcode 7.3.1)
 
-The [testsrc](https://github.com/timniederhausen/gn-build/tree/testsrc)
-branch contains the test/example project used by the CI tests.
+### Installation
+Instructions on how to setup, configure and run Cerberus can be found at [Installation](docs/installation.md).
 
-## Reference
 
-### Basic variables
 
-All variables described here are build args and can be overridden in the user's
-`args.gn` file.
+### What Kubernetes/OpenShift components can Cerberus monitor?
+Following are the components of Kubernetes/OpenShift that Cerberus can monitor today, we will be adding more soon.
 
-#### [`//build/config/BUILDCONFIG.gn`](config/BUILDCONFIG.gn)
+Component                            | Description                                                                                                      | Working
+-----------------------------------  | ---------------------------------------------------------------------------------------------------------------- | ------------------------- |
+Nodes                                | Watches all the nodes including masters, workers as well as nodes created using custom MachineSets               | :heavy_check_mark:        |
+Namespaces                           | Watches all the pods including containers running inside the pods in the namespaces specified in the config      | :heavy_check_mark:        |
+Cluster Operators                    | Watches all Cluster Operators                                                                                    | :heavy_check_mark:        |
+Masters Schedulability               | Watches and warns if masters nodes are marked as schedulable                                                     | :heavy_check_mark:        |
+Routes                               | Watches specified routes                                                                                         | :heavy_check_mark:        |
+CSRs                                 | Warns if any CSRs are not approved                                                                               | :heavy_check_mark:        |
+Critical Alerts                      | Warns the user on observing abnormal behavior which might effect the health of the cluster                       | :heavy_check_mark:        |
+Bring your own checks                | Users can bring their own checks and Ceberus runs and includes them in the reporting as wells as go/no-go signal | :heavy_check_mark:        |
 
-(these variables are available everywhere)
+An explanation of all the components that Cerberus can monitor are explained [here](docs/config.md)
 
-* `is_debug` (default: true): Toggle between debug and release builds.
-* `is_clang` (default: false): Favor Clang over the platform default (GCC/MSVC).
-* `is_official_build` (default: !is_debug): Set to enable the official build
-  level of optimization. This enables an additional level of optimization above
-  release (!is_debug).
-* `external` (default: "//external"): Label of the external projects directory.
-  By convention, all 3rd-party projects should end up in this directory, so they
-  can depend on each other (e.g. $external/mysql_connector -> $external/zlib)
+### How does Cerberus report cluster health?
+Cerberus exposes the cluster health and failures through a go/no-go signal, report and metrics API.
 
-#### [`//build/toolchain/clang.gni`](toolchain/clang.gni)
+#### Go or no-go signal
+When the cerberus is configured to run in the daemon mode, it will continuosly monitor the components specified, runs a light weight http server at http://0.0.0.0:8080 and publishes the signal i.e True or False depending on the components status. The tools can consume the signal and act accordingly.
 
-* `use_lld` (default: false): Use the new LLD linker.
-  This requires `is_clang` to be true.
-* `clang_base_path` (default: ""): The path of your Clang installation folder
-  (without /bin). If you use Clang on Windows, you are required to set this,
-  as the Clang installation isn't automatically detected.
+#### Report
+The report is generated in the run directory and it contains the information about each check/monitored component status per iteration with timestamps. It also displays information about the components in case of failure. Refer [report](docs/example_report.md) for example.
 
-#### [`//build/toolchain/compiler_version.gni`](toolchain/compiler_version.gni)
+You can use the "-o <file_path_name>" option to change the location of the created report
 
-* `gcc_version` (default: auto-detected): Version of the GCC compiler.
-  **Note:** Auto-detection is toolchain-specific and happens only if GCC is the
-  active compiler. <br>
-  Format: `major` * 10000 + `minor` * 100 + `patchlevel`
-* `clang_version` (default: auto-detected): Version of the Clang compiler.
-  **Note:** Auto-detection is toolchain-specific and happens only if Clang is
-  the active compiler. <br>
-  Format: `major` * 10000 + `minor` * 100 + `patchlevel`
-* `msc_ver` (default: auto-detected): Value of the _MSC_VER variable.
-  See https://msdn.microsoft.com/en-us/library/b0084kay.aspx.
-  **Note:** Auto-detection happens only when targeting Windows.
-* `msc_full_ver` (default: auto-detected): Value of the _MSC_FULL_VER variable.
-  See https://msdn.microsoft.com/en-us/library/b0084kay.aspx.
-  **Note:** Auto-detection happens only when targeting Windows.
+#### Metrics API
+Cerberus exposes the metrics including the failures observed during the run through an API. Tools consuming Cerberus can query the API to get a blob of json with the observed failures to scrape and act accordingly. For example, we can query for etcd failures within a start and end time and take actions to determine pass/fail for test cases or report whether the cluster is healthy or unhealthy for that duration.
 
-### Windows toolchain
+- The failures in the past 1 hour can be retrieved in the json format by visiting http://0.0.0.0:8080/history.
+- The failures in a specific time window can be retrieved in the json format by visiting http://0.0.0.0:8080/history?loopback=<interval>.
+- The failures between two time timestamps, the failures of specific issues types and the failures related to specific components can be retrieved in the json format by visiting http://0.0.0.0:8080/analyze url. The filters have to be applied to scrape the failures accordingly.
 
-#### [`//build/toolchain/win/settings.gni`](toolchain/win/settings.gni)
 
-* `visual_studio_version` (default: "latest"): Desired version of Visual Studio.
-  If `visual_studio_path` is set, this must be the version of the VS installation
-  at the `visual_studio_path`.
 
-  Use "2013" for Visual Studio 2013 or "latest" for automatically choosing the
-  highest version (`visual_studio_path` must be unset in this case).
-* `visual_studio_path` (default: auto-detected): The path of your MSVC installation.
-  If this is set you must set visual_studio_version as well.
-  Autodetected based on `visual_studio_version`.
-* `windows_sdk_version` (default: auto-detected): Windows SDK version to use.
-  Can either be a full Windows 10 SDK number (e.g. 10.0.10240.0),
-  "8.1" for the Windows 8.1 SDK or "default" for the default SDK selected by VS.
-* `clang_msc_ver` (default: auto-detected): MSVC version `clang-cl` will report
-  in `_MSC_VER`.
+### Slack integration
+Cerberus supports reporting failures in slack. Refer [slack integration](docs/slack.md) for information on how to set it up.
 
-### POSIX toolchain
 
-This is the default toolchain for POSIX operating systems,
-which is used for all POSIX systems that don't have special toolchains.
 
-#### [`//build/toolchain/posix/settings.gni`](toolchain/posix/settings.gni)
+### Node Problem Detector
+Cerberus also consumes [node-problem-detector](https://github.com/kubernetes/node-problem-detector) to detect various failures in Kubernetes/OpenShift nodes. More information on setting it up can be found at [node-problem-detector](docs/node-problem-detector.md)
 
-* `gcc_cc` (default: gcc): Path of the GCC C compiler executable.
-  Does not have to be absolute.
-* `gcc_cxx` (default: g++): Path of the GCC C++ compiler executable.
-  Does not have to be absolute.
-* `clang_cc` (default: clang): Path of the Clang C compiler executable.
-  Does not have to be absolute. **Note:** If `clang_base_path` is set,
-  the default will be `clang_base_path/bin/clang`.
-* `clang_cxx` (default: clang++): Path of the Clang C++ compiler executable.
-  Does not have to be absolute. **Note:** If `clang_base_path` is set,
-  the default will be `clang_base_path/bin/clang++`.
 
-### Mac/iOS toolchain
 
-#### [`//build/toolchain/mac/settings.gni`](toolchain/mac/settings.gni)
+### Bring your own checks
+Users can add additional checks to monitor components that are not being monitored by Cerberus and consume it as part of the go/no-go signal.  This can be accomplished by placing relative paths of files containing additional checks under custom_checks in config file. All the checks should be placed within the main function of the file. If the additional checks need to be considered in determining the go/no-go signal of Cerberus, the main function can return a boolean value for the same. Having a dict return value of the format {'status':status, 'message':message} shall send signal to Cerberus along with message to be displayed in slack notification. However, it's optional to return a value.
+Refer to [example_check](https://github.com/openshift-scale/cerberus/blob/master/custom_checks/custom_check_sample.py) for an example custom check file.
 
-* `use_system_xcode` (default: true): Use the system install of Xcode for tools
-  like ibtool, libtool, etc. This does not affect the compiler. When this
-  variable is false, targets will instead use a hermetic install of Xcode.
-* `hermetic_xcode_path` (default: ""): The path to the hermetic install of
-  Xcode. Only relevant when use_system_xcode = false.
-* `use_xcode_clang` (default: true): Compile with Xcode version of clang
-  instead of hermetic version shipped with the build. If `true`,
-  `clang_base_path` needs to be set.
-* `enable_dsyms` (default: true): Produce dSYM files for targets that are
-  configured to do so. dSYM generation is controlled globally as it is a
-  linker output (produced via the `//build/toolchain/mac/linker_driver.py`.
-  Enabling this will result in all shared library, loadable module, and
-  executable targets having a dSYM generated.
-* `enable_stripping` (default: `is_official_build`): Strip symbols from linked
-  targets by default. If this is enabled, the //build/config/mac:strip_all
-  config will be applied to all linked targets. If custom stripping parameters
-  are required, remove that config from a linked target and apply custom
-  `-Wcrl,strip` flags. See //build/toolchain/mac/linker_driver.py for more
-  information.
 
-#### [`//build/toolchain/mac/mac_sdk.gni`](toolchain/mac/mac_sdk.gni)
+### Alerts
+Monitoring metrics and alerting on abnormal behavior is critical as they are the indicators for clusters health. Information on supported alerts can be found at [alerts](docs/alerts.md).
 
-* `mac_sdk_min` (default: "10.10"): Minimum supported version of the Mac SDK.
-* `mac_deployment_target` (default: "10.9"): Minimum supported version of OSX.
-* `mac_sdk_path` (default: ""): Path to a specific version of the Mac SDK, not
-  including a slash at the end. If empty, the path to the lowest version
-  greater than or equal to `mac_sdk_min` is used.
-* `mac_sdk_name` (default: "macosx"): The SDK name as accepted by xcodebuild.
 
-#### [`//build/toolchain/mac/ios_sdk.gni`](toolchain/mac/ios_sdk.gni)
 
-* `ios_sdk_path` (default: ""): Path to a specific version of the iOS SDK, not
-  including a slash at the end. When empty this will use the default SDK based
-  on the value of use_ios_simulator.
+### Use cases
+There can be number of use cases, here are some of them:
+- We run tools to push the limits of Kubernetes/OpenShift to look at the performance and scalability. There are a number of instances where system components or nodes start to degrade, which invalidates the results and the workload generator continues to push the cluster until it is unrecoverable.
 
-  SDK properties (required when `ios_sdk_path` is non-empty):
+- When running chaos experiments on a kubernetes/OpenShift cluster, they can potentially break the components unrelated to the targeted components which means that the chaos experiment won't be able to find it. The go/no-go signal can be used here to decide whether the cluster recovered from the failure injection as well as to decide whether to continue with the next chaos scenario.
 
-  * `ios_sdk_name`: The SDK name as accepted by xcodebuild.
-  * `ios_sdk_version`
-  * `ios_sdk_platform`
-  * `ios_sdk_platform_path`
-  * `xcode_version`
-  * `xcode_build`
-  * `machine_os_build`
 
-* `ios_deployment_target` (default: "9.0"): Minimum supported version of OSX.
 
-### Android toolchain
+### Tools consuming Cerberus
+- [Benchmark Operator](https://github.com/cloud-bulldozer/benchmark-operator): The intent of this Operator is to deploy common workloads to establish a performance baseline of Kubernetes cluster on your provider. Benchmark Operator consumes Cerberus to determine if the cluster was healthy during the benchmark run. More information can be found at [cerberus-integration](https://github.com/cloud-bulldozer/benchmark-operator#cerberus-integration).
 
-#### [`//build/toolchain/android/settings.gni`](toolchain/android/settings.gni)
+- [Kraken](https://github.com/openshift-scale/kraken/): Tool to inject deliberate failures into Kubernetes/OpenShift clusters to check if it is resilient. Kraken consumes Cerberus to determine if the cluster is healthy as a whole in addition to the targeted component during chaos testing. More information can be found at [cerberus-integration](https://github.com/openshift-scale/kraken#kraken-scenario-passfail-criteria-and-report).
 
-* `android_ndk_root` (default: "$external/android_tools/ndk"):
-  Path of the Android NDK.
-* `android_ndk_version` (default: "r12b"): NDK Version string.
-* `android_ndk_major_version` (default: 12): NDK Major version.
-* `android_sdk_root` (default: "$external/android_tools/sdk"):
-  Path of the Android SDK.
-* `android_sdk_version` (default: "24"): Android SDK version.
-* `android_sdk_build_tools_version` (default: "24.0.2"):
-  Version of the Build Tools contained in the SDK.
-* `android_libcpp_lib_dir` (default: ""): Libc++ library directory.
-  Override to use a custom libc++ binary.
-* `use_order_profiling` (default: false): Adds intrumentation to each function.
-  Writes a file with the order that functions are called at startup.
 
-## Recommended workflow
 
-Fork this repo and add it as a submodule/subtree/`DEPS`-entry to your project.
-This way you can modify every part of the `//build` directory while still being
-able to easily merge upstream changes (e.g. support for new GN features that
-you don't want to implement yourself.)
+### Blogs and other useful resources
+- https://www.openshift.com/blog/openshift-scale-ci-part-4-introduction-to-cerberus-guardian-of-kubernetes/openshift-clouds
+- https://www.openshift.com/blog/reinforcing-cerberus-guardian-of-openshift/kubernetes-clusters
 
-To ease sharing/composition of projects using this `//build` repo,
-it is recommended that you refrain from modifying large parts of the toolchains/configs.
-If changes are necessary, consider contributing them back ;)
 
-For more complex projects, it might be feasible to use a custom build-config file
-that just `import()s` [`//build/config/BUILDCONFIG.gn`](config/BUILDCONFIG.gn) and then overrides
-the defaults set inside `BUILDCONFIG.gn`. There's also GN's `default_args` scope, which can be used
-to provide project-specific argument overrides.
+
+### Contributions
+We are always looking for more enhancements, fixes to make it better, any contributions are most welcome. Feel free to report or work on the issues filed on github.
+
+[More information on how to Contribute](docs/contribute.md)
+
+### Community
+Key Members(slack_usernames): paige, rook, mffiedler, mohit, dry923, rsevilla, ravi
+* [**#sig-scalability on Kubernetes Slack**](https://kubernetes.slack.com)
+* [**#forum-perfscale on CoreOS Slack**](https://coreos.slack.com)
+
+
+
+### Credits
+Thanks to Mary Shakshober ( https://github.com/maryshak1996 ) for designing the logo.

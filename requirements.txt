@@ -1,0 +1,11 @@
+setuptools
+pyyaml>=5.4.1
+requests
+kubernetes
+datetime
+configparser
+aiohttp
+slack_sdk
+pyfiglet
+prometheus_api_client
+coverage
