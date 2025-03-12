@@ -1,38 +1,25 @@
-name: Kazoo Awesome Release
+name: CI
 
-on: [push]
+on:
+  - push
+  - pull_request
 
 jobs:
-  build-and-release:
-    name: Build and release Kazoo to Pypi
+  build:
     runs-on: ubuntu-latest
-    steps:
-    - name: Handle the code
-      uses: actions/checkout@v2
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.10"]
 
-    - name: Set up Python 3.9
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
-        python-version: 3.9
-
-    - name: Install pypa/build
-      run: >-
-        python -m
-        pip install
-        build
-        --user
-
-    - name: Build a binary wheel and a source tarball
-      run: >-
-        python -m
-        build
-        --sdist
-        --wheel
-        --outdir dist/
-        .
-
-    - name: Publish Kazoo to PyPI
-      if: startsWith(github.ref, 'refs/tags')
-      uses: pypa/gh-action-pypi-publish@master
-      with:
-        password: ${{ secrets.PYPI_API_TOKEN }}
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install tox tox-gh-actions
+    - name: Test with tox
+      run: tox
