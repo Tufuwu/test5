@@ -1,0 +1,120 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2022, Open Ownership
+# This file is distributed under the same license as the Beneficial Ownership Data Standard package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+# Translators:
+# Amy Guy <amy.guy@opendataservices.coop>, 2022
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Beneficial Ownership Data Standard 0.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-04-13 16:06+0100\n"
+"PO-Revision-Date: 2022-04-05 16:56+0000\n"
+"Last-Translator: Amy Guy <amy.guy@opendataservices.coop>, 2022\n"
+"Language-Team: Russian (https://www.transifex.com/OpenDataServices/teams/95583/ru/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#: ../../schema/conformance.rst:4 fa86385f302c47d48f244d76e08e1ad4
+msgid "Conformance and validation"
+msgstr "Соответствие и валидация"
+
+#: ../../schema/conformance.rst:7 9832dc18c4ab47b7b8bf59e7e87e9b85
+msgid "Conformance statement"
+msgstr "Запись о соответствии"
+
+#: ../../schema/conformance.rst:9 236a25f3365b467e9483e771ff90175f
+msgid ""
+"A conforming implementation **may** use only a subset of this "
+"specification’s terms."
+msgstr ""
+"В имплементации, соответствующей требованиям, **может** использоваться "
+"только подмножество терминов данной спецификации."
+
+#: ../../schema/conformance.rst:10 52759ddf82c942639b29339503d65f52
+msgid ""
+"It **must not** use terms from outside this specification’s terms where this"
+" specification’s terms would suffice."
+msgstr ""
+"В ней **не должны** использоваться термины, не являющиеся терминами данной "
+"спецификации, в случае если терминов данной спецификации достаточно."
+
+#: ../../schema/conformance.rst:11 86e5a648b2f44935821bcf97232e9172
+msgid ""
+"It **may** use terms from outside this specification’s terms where this "
+"specification’s terms are insufficient."
+msgstr ""
+"В ней **могут** использоваться термины, не являющиеся терминами данной "
+"спецификации, в случае если терминов данной спецификации недостаточно."
+
+#: ../../schema/conformance.rst:12 013aba4143e0446b8179d73bba48090d
+msgid ""
+"Its usage of this specification’s terms **must** be consistent with the "
+"semantics of those terms."
+msgstr ""
+"Использование в ней терминов из данной спецификации **должно** "
+"соответствовать семантике этих терминов."
+
+#: ../../schema/conformance.rst:13 dcd8514b554744e68ecd9d1c5936892f
+msgid ""
+"If an implementation serializes to JSON, its serializations **must** "
+"validate against this specification’s JSON Schema."
+msgstr ""
+"Если выполняются сериализации имплементации в JSON, то такие сериализации "
+"**должны** пройти валидацию на основе Схемы JSON данной спецификации."
+
+#: ../../schema/conformance.rst:15 ee67bf9843fc41dfab33ceb8296abdee
+msgid ""
+"(Statement `adapted from Popolo Project specification "
+"<http://www.popoloproject.com/specs/#conformance>`_)"
+msgstr ""
+"(Запись `адаптирована на основе спецификации Проекта Popolo "
+"<http://www.popoloproject.com/specs/#conformance>`_)"
+
+#: ../../schema/conformance.rst:18 cc242d03bc1e4359a721501d160569bb
+msgid "Extending the schema"
+msgstr "Расширение схемы"
+
+#: ../../schema/conformance.rst:20 a6d4d72837844508b57506c944477091
+msgid ""
+"Publishers providing additional properties in their implementations are "
+"encouraged to `document these in the project issue tracker "
+"<https://github.com/openownership/data-standard/issues/>`_ with the "
+"'extensions' tag, and to re-use `other publisher's extensions "
+"<https://github.com/openownership/data-"
+"standard/issues?q=is%3Aissue+label%3Aextension>`_ where possible."
+msgstr ""
+"Издателям, предоставляющим дополнительные свойства в своих имплементациях, "
+"рекомендуется `документировать их в системе отслеживания ошибок проекта "
+"<https://github.com/openownership/data-standard/issues/>`_ с тегом "
+"'extensions', а также повторно использовать `расширения другого издателя "
+"<https://github.com/openownership/data-"
+"standard/issues?q=is%3Aissue+label%3Aextension>`_ в случаях, когда это "
+"возможно."
+
+#: ../../schema/conformance.rst:23 5a5de54b110a40b5a213d6068c0f8437
+msgid "Validation"
+msgstr "Валидация"
+
+#: ../../schema/conformance.rst:25 31c27a093bd04a7684c5f25f1fa5f6aa
+msgid ""
+"Validation of BODS data can be carried out using the `BODS Data Review Tool "
+"<https://datareview.openownership.org/>`_."
+msgstr ""
+"Валидация данных СДБВ может осуществляться при помощи `Средства анализа "
+"данных СДБВ <https://datareview.openownership.org/>`_."
+
+#: ../../schema/conformance.rst:27 a4554004e4a041b6baa8da65a20bc5e0
+msgid ""
+"The current schema includes minimal validation requirements, and should be "
+"treated as a guide to data structure, rather than a full validation schema."
+msgstr ""
+"Нынешняя схема предусматривает минимальные требования к валидации, и ее "
+"следует рассматривать скорее как руководство к структуре данных, а не как "
+"полную схему валидации."

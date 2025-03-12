@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:bods",
+  "$vocabulary": {
+    "https://json-schema.org/draft/2020-12/vocab/core": true,
+    "https://json-schema.org/draft/2020-12/vocab/applicator": true,
+    "https://json-schema.org/draft/2020-12/vocab/unevaluated": true,
+    "https://json-schema.org/draft/2020-12/vocab/validation": true,
+    "https://json-schema.org/draft/2020-12/vocab/meta-data": true,
+    "https://json-schema.org/draft/2020-12/vocab/format-annotation": true,
+    "https://json-schema.org/draft/2020-12/vocab/content": true
+  },
+  "allOf": [
+    { "$ref": "https://json-schema.org/draft/2020-12/schema" }
+  ],
+  "properties":
+  {
+    "codelist": {
+      "$comment": "A BODS schema property.",
+      "title": "Codelist",
+      "description": "The filename of a .csv in the BO Data Standard which defines the allowed values for this property.",
+      "type": "string"
+    },
+    "openCodelist": {
+      "$comment": "A BODS schema property.",
+      "title": "Open Codelist",
+      "description": "If true, the property can contain values beyond what is defined in the codelist in the BO Data Standard. If false,the property is restricted to only the values defined in the codelist.",
+      "type": "boolean",
+      "default": false
+    },
+    "version": {
+      "$comment": "A BODS schema property.",
+      "type": "string"
+    },
+    "propertyOrder": {
+      "$comment": "A BODS schema property.",
+      "title": "Property Order",
+      "description": "The order in which properties should be displayed for optimised user experience. Properties whose values are not objects or arrays should be listed first.",
+      "type": "integer"
+    }
+  }
+}

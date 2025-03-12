@@ -1,0 +1,111 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Open Ownership
+# This file is distributed under the same license as the Beneficial Ownership Data Standard package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+# Translators:
+# Amy Guy <amy.guy@opendataservices.coop>, 2022
+# Agustina De Luca, 2022
+# Carmen Edery, 2024
+# María Renée Briozzo Mitchell, 2024
+# Renzo Lavin <renlavin@gmail.com>, 2024
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Beneficial Ownership Data Standard 0.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-05-10 16:04+0000\n"
+"PO-Revision-Date: 2022-04-05 16:56+0000\n"
+"Last-Translator: Renzo Lavin <renlavin@gmail.com>, 2024\n"
+"Language-Team: Spanish (https://app.transifex.com/OpenDataServices/teams/95583/es/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: es\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#: ../../index.rst:2 fc13bceebec2410c8e7da1650e465254
+msgid "Beneficial Ownership Data Standard (v0.4)"
+msgstr "Estándar de datos sobre beneficiarios finales (v0.4)"
+
+#: ../../index.rst:4 bcdb8d77de3240b5baa001a40c5abd3d
+msgid ""
+"The Beneficial Ownership Data Standard (BODS) is an open standard providing "
+"guidance for collecting, sharing and using high-quality beneficial ownership"
+" data."
+msgstr ""
+"El Estándar de datos sobre beneficiarios finales (BODS) es un estándar "
+"abierto que ofrece orientación para recopilar, compartir y usar datos de "
+"beneficiarios finales de alta calidad."
+
+#: ../../index.rst:6 be031c1dc1de4bcaa66bffd88cb94668
+msgid ""
+"It is developed by `Open Ownership <https://www.openownership.org/>`_, a "
+"non-profit organisation focused on beneficial ownership transparency, in "
+"partnership with `Open Data Services <https://opendataservices.coop/>`_. "
+"Find out more about the :doc:`governance of BODS <../about/governance>` and "
+"how to get involved."
+msgstr ""
+"Es elaborado por `Open Ownership <https://www.openownership.org/>`_, una "
+"organización sin fines de lucro que se enfoca en la transparencia de "
+"beneficiarios finales, en asociación con `Open Data Services "
+"<https://opendataservices.coop/>`_. Puede encontrar más información sobre la"
+" :doc:`gobernanza del BODS <../about/governance>` y cómo participar."
+
+#: ../../index.rst:12 7739934b9f874808beded5af7cecba37
+msgid "Introduction"
+msgstr "Introducción"
+
+#: ../../index.rst:14 343e893d4203453f9c519acaee081119
+msgid ""
+"Learn about beneficial ownership and why a standardised format for data is "
+"important."
+msgstr ""
+"Conozca más sobre beneficiarios finales y por qué es importante un formato "
+"estandarizado para los datos."
+
+#: ../../index.rst:18 66a86c7baa804b929aaa415db155db3e
+msgid ":ref:`What is beneficial ownership? <primer>`"
+msgstr ":ref:`¿Qué significa beneficiario final? <primer>`"
+
+#: ../../index.rst:22 85dfef5cf3824d3ab341ee16465a3b28
+msgid ":ref:`What is the data standard? <whatisbods>`"
+msgstr ":ref:`¿Qué es el estándar de datos? <whatisbods>`"
+
+#: ../../index.rst:26 f3879e8d222740548009cab83cfa2fb1
+msgid ":ref:`About the standard's development <about>`"
+msgstr ":ref:`Acerca de la elaboración del estándar <about>`"
+
+#: ../../index.rst:30 a573902516874d6c910ef104fb8629f6
+msgid ""
+"`Open Ownership's work, team and purpose "
+"<https://www.openownership.org/en/about/>`_"
+msgstr ""
+"`Trabajo, equipo y propósito de Open Ownership "
+"<https://www.openownership.org/en/about/>`_"
+
+#: ../../index.rst:37 704368b0b86949e89d71b4dff5107a86
+msgid "For Developers"
+msgstr "Para desarrolladores"
+
+#: ../../index.rst:39 112a08938c1a4fffa55f657e1ee94707
+msgid "Understand how to package up and release beneficial ownership data."
+msgstr ""
+"Comprenda cómo construir y publicar datos sobre beneficiarios finales."
+
+#: ../../index.rst:43 1b4bc18d796a4789912aaa35c7d666dd
+msgid ":ref:`Key Concepts <key-concepts>`"
+msgstr ":ref:`Conceptos clave <key-concepts>`"
+
+#: ../../index.rst:47 fc9de6820145423f88cc6b492e87f101
+msgid ":ref:`Modelling requirements  <modelling-requirements>`"
+msgstr ":ref:`Requisitos de modelado  <modelling-requirements>`"
+
+#: ../../index.rst:51 310da8c541ba4a7597ddc9149f955f6b
+msgid ":ref:`Schema browser <schema-browser>`"
+msgstr ":ref:`Navegador del esquema <schema-browser>`"
+
+#: ../../index.rst:55 635fe9d295bb42c6b14c5d13413302a2
+msgid ":ref:`System requirements <system-requirements>`"
+msgstr ":ref:`Requisitos del sistema <system-requirements>`"

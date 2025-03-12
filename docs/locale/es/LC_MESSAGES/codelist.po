@@ -1,0 +1,1219 @@
+# Translations template for PROJECT.
+# Copyright (C) 2024 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+# 
+# Translators:
+# Amy Guy <amy.guy@opendataservices.coop>, 2022
+# Carlos Hames, 2022
+# Agustina De Luca, 2022
+# Stephen Abbott Pugh <stephen@openownership.org>, 2022
+# Carmen Edery, 2024
+# María Renée Briozzo Mitchell, 2024
+# Renzo Lavin <renlavin@gmail.com>, 2024
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2024-05-10 16:05+0000\n"
+"PO-Revision-Date: 2022-04-05 16:56+0000\n"
+"Last-Translator: Renzo Lavin <renlavin@gmail.com>, 2024\n"
+"Language-Team: Spanish (https://app.transifex.com/OpenDataServices/teams/95583/es/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.14.0\n"
+"Language: es\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#: schema/codelists/addressType.csv schema/codelists/annotationMotivation.csv
+#: schema/codelists/directOrIndirect.csv schema/codelists/entitySubtype.csv
+#: schema/codelists/entityType.csv schema/codelists/interestType.csv
+#: schema/codelists/nameType.csv schema/codelists/personType.csv
+#: schema/codelists/recordStatus.csv schema/codelists/recordType.csv
+#: schema/codelists/securitiesIdentifierSchemes.csv
+#: schema/codelists/sourceType.csv schema/codelists/unspecifiedReason.csv
+msgid "code"
+msgstr "código"
+
+#: schema/codelists/addressType.csv schema/codelists/annotationMotivation.csv
+#: schema/codelists/directOrIndirect.csv schema/codelists/entitySubtype.csv
+#: schema/codelists/entityType.csv schema/codelists/interestType.csv
+#: schema/codelists/nameType.csv schema/codelists/personType.csv
+#: schema/codelists/recordStatus.csv schema/codelists/recordType.csv
+#: schema/codelists/securitiesIdentifierSchemes.csv
+#: schema/codelists/sourceType.csv schema/codelists/unspecifiedReason.csv
+msgid "title"
+msgstr "título"
+
+#: schema/codelists/addressType.csv schema/codelists/annotationMotivation.csv
+#: schema/codelists/directOrIndirect.csv schema/codelists/entitySubtype.csv
+#: schema/codelists/entityType.csv schema/codelists/interestType.csv
+#: schema/codelists/nameType.csv schema/codelists/personType.csv
+#: schema/codelists/recordStatus.csv schema/codelists/recordType.csv
+#: schema/codelists/securitiesIdentifierSchemes.csv
+#: schema/codelists/sourceType.csv schema/codelists/unspecifiedReason.csv
+msgid "description"
+msgstr "descripción"
+
+#. title
+#: schema/codelists/addressType.csv:1
+msgid "Place of birth"
+msgstr "Lugar de nacimiento"
+
+#. description
+#: schema/codelists/addressType.csv:1
+msgid ""
+"The place where a person was born. A town (in the `address` field) and "
+"`country` may be sufficient information. This MUST only apply to the "
+"`placeOfBirth` field for natural persons."
+msgstr ""
+"Lugar donde una persona nació. Una ciudad (en el campo `address`) y un país "
+"(en `country`) pueden ser información suficiente. Esto solo DEBE aplicarse "
+"al campo `placeOfBirth` para personas físicas."
+
+#. title
+#: schema/codelists/addressType.csv:2
+msgid "Residential address"
+msgstr "Domicilio residencial"
+
+#. description
+#: schema/codelists/addressType.csv:2
+msgid ""
+"An address where someone lives. This MUST only apply to natural persons."
+msgstr ""
+"Una dirección donde alguien vive. Esto solo DEBE aplicarse a personas "
+"físicas."
+
+#. title
+#: schema/codelists/addressType.csv:3
+msgid "Registered address"
+msgstr "Domicilio inscripto"
+
+#. description
+#: schema/codelists/addressType.csv:3
+msgid ""
+"An official address for delivering statutory mail and legal notices which "
+"must be provided to company registers. This MUST only apply to entities."
+msgstr ""
+"Dirección oficial para entregar correo reglamentario y avisos legales que "
+"deben proporcionarse a registros de empresas. Esto solo DEBE aplicarse a las"
+" entidades."
+
+#. title
+#: schema/codelists/addressType.csv:4
+msgid "Service address"
+msgstr "Domicilio de contacto"
+
+#. description
+#: schema/codelists/addressType.csv:4
+msgid ""
+"An address which can be used as an alternative to a residential address for "
+"the purpose of receiving post. This MUST only apply to natural persons."
+msgstr ""
+"Dirección que puede usarse como alternativa a una dirección residencial para"
+" recibir correo. Esto solo DEBE aplicarse a personas físicas."
+
+#. title
+#: schema/codelists/addressType.csv:5
+msgid "Alternative address"
+msgstr "Domicilio alternativo"
+
+#. description
+#: schema/codelists/addressType.csv:5
+msgid ""
+"An address provided in addition to the primary address for this entity or "
+"person that is neither a service nor a registered address."
+msgstr ""
+"Domicilio consignado como complemento del domicilio principal de la entidad "
+"o persona que no es ni un domicilio de contacto ni un domicilio inscripto."
+
+#. title
+#: schema/codelists/addressType.csv:6
+msgid "Business address"
+msgstr "Domicilio comercial"
+
+#. description
+#: schema/codelists/addressType.csv:6
+msgid "A place where the entity conducts its business."
+msgstr "Lugar en donde la entidad realiza sus actividades."
+
+#. title
+#: schema/codelists/annotationMotivation.csv:1
+msgid "Commenting"
+msgstr "Comentarios"
+
+#. description
+#: schema/codelists/annotationMotivation.csv:1
+msgid ""
+"The description field provides contextual comments for a field, object or "
+"statement."
+msgstr ""
+"El campo de descripción proporciona comentarios contextuales sobre un campo,"
+" un objeto o un enunciado."
+
+#. title
+#: schema/codelists/annotationMotivation.csv:2
+msgid "Correcting"
+msgstr "Correcciones"
+
+#. description
+#: schema/codelists/annotationMotivation.csv:2
+msgid ""
+"The value of this field, object or statement has been corrected, using the "
+"method in the description field or from the original value given in the "
+"description field."
+msgstr ""
+"El valor de este campo, objeto o enunciado se ha corregido utilizando el "
+"método señalado en el campo de descripción o a partir del valor original "
+"indicado en el campo de descripción."
+
+#. title
+#: schema/codelists/annotationMotivation.csv:3
+msgid "Identifying"
+msgstr "Identificación"
+
+#. description
+#: schema/codelists/annotationMotivation.csv:3
+msgid ""
+"The value of this field, object or statement has been augmented or processed"
+" for the purpose of identifying natural persons or legal entities, using the"
+" method in the description field."
+msgstr ""
+"El valor de este campo, objeto o enunciado se ha ampliado o procesado a los "
+"efectos de identificar a personas físicas o entidades jurídicas, utilizando "
+"el método señalado en el campo de descripción."
+
+#. title
+#: schema/codelists/annotationMotivation.csv:4
+msgid "Linking"
+msgstr "Vinculación"
+
+#. description
+#: schema/codelists/annotationMotivation.csv:4
+msgid ""
+"The description explains how linked material relates to the field, object or"
+" statement. A URL to linked material MUST be provided in the `url` field."
+msgstr ""
+"La descripción explica de qué modo el material vinculado se relaciona con el"
+" campo, el objeto o el enunciado. En el campo `url` DEBE indicarse un URL "
+"del material vinculado."
+
+#. title
+#: schema/codelists/annotationMotivation.csv:5
+msgid "Transformation"
+msgstr "Transformación"
+
+#. description
+#: schema/codelists/annotationMotivation.csv:5
+msgid ""
+"The values of this field, object or statement have been changed from their "
+"original form using the method in the description field. The transformed "
+"representation may be provided in the `transformedContent` field."
+msgstr ""
+"La forma original de los valores de este campo, objeto o enunciado se ha "
+"cambiado utilizando el método señalado en el campo de descripción. La "
+"representación transformada puede indicarse en el campo "
+"`transformedContent`."
+
+#. title
+#: schema/codelists/directOrIndirect.csv:1
+msgid "Direct"
+msgstr "Directa"
+
+#. description
+#: schema/codelists/directOrIndirect.csv:1
+msgid "The interest is held directly."
+msgstr "La participación se ejerce de forma directa."
+
+#. title
+#: schema/codelists/directOrIndirect.csv:2
+msgid "Indirect"
+msgstr "Indirecta"
+
+#. description
+#: schema/codelists/directOrIndirect.csv:2
+msgid ""
+"The interest is held through one or more intermediate entities (including "
+"arrangements)."
+msgstr ""
+"La participación se ejerce a través de una o más entidades intermedias "
+"(incluidas las estructuras jurídicas)."
+
+#. title
+#: schema/codelists/directOrIndirect.csv:3
+msgid "Unknown"
+msgstr "Desconocida"
+
+#. description
+#: schema/codelists/directOrIndirect.csv:3
+msgid "The interest may be direct or indirect."
+msgstr "La participación puede ser directa o indirecta."
+
+#. title
+#: schema/codelists/entitySubtype.csv:1
+msgid "Government department"
+msgstr "Departamento de gobierno"
+
+#. description
+#: schema/codelists/entitySubtype.csv:1
+msgid ""
+"An element of government with executive responsibilities. These terms are "
+"often used to designate such a body: ministry, department, bureau or office."
+" This MUST be used with `entityType.type` 'stateBody'."
+msgstr ""
+"Elemento del gobierno con responsabilidades ejecutivas. Estos términos "
+"suelen usarse para designar a un órgano: ministro, departamento, agencia u "
+"oficina. Esto DEBE usarse con `entityType.type` 'stateBody'."
+
+#. title
+#: schema/codelists/entitySubtype.csv:2
+msgid "State Agency"
+msgstr "Agencia estatal"
+
+#. description
+#: schema/codelists/entitySubtype.csv:2
+msgid ""
+"A body overseeing or administering elements of public policy. State agencies"
+" may have responsibilities which are devolved from government departments or"
+" from the state's legislative body. This MUST be used with `entityType.type`"
+" 'stateBody."
+msgstr ""
+"Órgano que supervisa o administra elementos de la política pública. Las "
+"agencias estatales pueden tener responsabilidades transferidas de los "
+"departamentos gubernamentales o del órgano legislativo del estado. Esto DEBE"
+" usarse con `entityType.type` 'stateBody."
+
+#. title
+#: schema/codelists/entitySubtype.csv:3
+msgid "Other"
+msgstr "Otro"
+
+#. description
+#: schema/codelists/entitySubtype.csv:3
+msgid "Any other type of entity."
+msgstr "Otro tipo de entidad."
+
+#. title
+#: schema/codelists/entitySubtype.csv:4
+msgid "Trust"
+msgstr "Fideicomiso"
+
+#. description
+#: schema/codelists/entitySubtype.csv:4
+msgid ""
+"A trust or trust like arrangement. An arrangement where a settlor transfers "
+"ownership of assets to trustees to control for the benefit of beneficiaries."
+" This MUST be used with `entityType.type` 'arrangement' or 'legalEntity'."
+msgstr ""
+"Fideicomiso o estructura jurídica similar a un fideicomiso. Una estructura "
+"jurídica en la que un fideicomitente transfiere la titularidad de activos a "
+"fiduciarios para que controlen el beneficio de los beneficiarios. Esto DEBE "
+"usarse con `entityType.type` 'arrangement' o 'legalEntity'."
+
+#. title
+#: schema/codelists/entitySubtype.csv:5
+msgid "Nomination"
+msgstr "Mandato"
+
+#. description
+#: schema/codelists/entitySubtype.csv:5
+msgid ""
+"An agreement where a nominator instructs a nominee to act on their behalf in"
+" a specified capacity. This MUST be used with `entityType.type` "
+"'arrangement'."
+msgstr ""
+"Acuerdo jurídico en el que un mandante ordena a un mandatario que actúe en "
+"su nombre en una capacidad específica. Esto DEBE usarse con "
+"`entityType.type` 'arrangement'."
+
+#. title
+#: schema/codelists/entityType.csv:1
+msgid "Registered Entity"
+msgstr "Entidad Inscripta"
+
+#. description
+#: schema/codelists/entityType.csv:1
+msgid ""
+"A legal entity created through an act of official registration. In most "
+"cases, registered entities have an officially issued identifier."
+msgstr ""
+"Entidad jurídica creada mediante un acto de inscripción oficial. En la "
+"mayoría de los casos, las entidades inscriptas tienen un identificador "
+"emitido oficialmente."
+
+#. title
+#: schema/codelists/entityType.csv:2
+msgid "Legal entity"
+msgstr "Entidad jurídica"
+
+#. description
+#: schema/codelists/entityType.csv:2
+msgid ""
+"A body with distinct legal personality, such as an international institution"
+" or statutory corporation, but which is not otherwise uniquely identified in"
+" some official register."
+msgstr ""
+"Un organismo con personalidad jurídica distinta, como una institución "
+"internacional o una corporación estatutaria, pero que no está identificado "
+"de manera única en algún registro oficial."
+
+#. title
+#: schema/codelists/entityType.csv:3
+msgid "Arrangement"
+msgstr "Estructura jurídica"
+
+#. description
+#: schema/codelists/entityType.csv:3
+msgid ""
+"A legal arrangement, agreement, contract or other mechanism via which one or"
+" more natural or legal persons can associate to exert ownership or control "
+"over an entity. Parties to an arrangement have no other form of collective "
+"legal identity."
+msgstr ""
+"Estructura jurídica, acuerdo, contrato u otro mecanismo a través del cual "
+"una o más personas físicas o jurídicas pueden asociarse para ejercer "
+"titularidad o control sobre una entidad. Las partes de una estructura "
+"jurídica no tienen otras formas de identidad legal colectiva."
+
+#. title
+#: schema/codelists/entityType.csv:4
+msgid "Anonymous entity"
+msgstr "Entidad anónima"
+
+#. description
+#: schema/codelists/entityType.csv:4
+msgid ""
+"An entity that has been identified, but for which identifying information is"
+" being withheld. The reason for non-disclosure should be given in the "
+"accompanying `unspecifiedEntityDetails` field."
+msgstr ""
+"Entidad que ha sido identificada, pero cuya información identificatoria se "
+"retiene. El motivo de la no divulgación debe indicarse en el campo "
+"`unspecifiedEntityDetails` que lo acompaña."
+
+#. title
+#: schema/codelists/entityType.csv:5
+msgid "Unknown entity"
+msgstr "Entidad desconocida"
+
+#. description
+#: schema/codelists/entityType.csv:5
+msgid "An entity that has not been identified."
+msgstr "Entidad que no ha sido identificada."
+
+#. title
+#: schema/codelists/entityType.csv:6
+msgid "State"
+msgstr "Estado"
+
+#. description
+#: schema/codelists/entityType.csv:6
+msgid ""
+"A country, nation or community with legal sovereignty within a territory."
+msgstr ""
+"Un país, nación o comunidad con soberanía legal dentro de un territorio."
+
+#. title
+#: schema/codelists/entityType.csv:7
+msgid "State body"
+msgstr "Organismo estatal"
+
+#. description
+#: schema/codelists/entityType.csv:7
+msgid "A core administrative or legislative unit within a state's apparatus."
+msgstr ""
+"Una unidad central administrativa o legislativa dentro del aparato de un "
+"estado."
+
+#. title
+#: schema/codelists/interestType.csv:1
+msgid "Shareholding"
+msgstr "Participación accionaria"
+
+#. description
+#: schema/codelists/interestType.csv:1
+msgid "An economic interest in an entity gained by holding shares."
+msgstr ""
+"Participación económica en una entidad obtenida mediante la tenencia de "
+"acciones."
+
+#. title
+#: schema/codelists/interestType.csv:2
+msgid "Voting rights"
+msgstr "Derechos de voto"
+
+#. description
+#: schema/codelists/interestType.csv:2
+msgid ""
+"A controlling interest in an entity gained by holding shares. Defined as the"
+" right of shareholders to vote on matters of corporate policy, including "
+"decisions on the makeup of the board of directors, issuing securities, "
+"initiating corporate actions and making substantial changes in the "
+"corporation's operations."
+msgstr ""
+"Participación controlante en una entidad obtenida mediante la tenencia de "
+"acciones. Se define como el derecho de los accionistas a votar en asuntos de"
+" política empresarial, incluidas las decisiones sobre la composición del "
+"directorio, la emisión de títulos, la adopción de medidas societarias y la "
+"implementación de cambios sustanciales en las operaciones de la empresa."
+
+#. title
+#: schema/codelists/interestType.csv:3
+msgid "Appointment of board"
+msgstr "Designación del órgano de administración"
+
+#. description
+#: schema/codelists/interestType.csv:3
+msgid ""
+"A controlling interest in an entity. Defined as the absolute right to "
+"appoint members of the board of directors."
+msgstr ""
+"Participación controlante en una entidad. Se define como el derecho absoluto"
+" de designar a los miembros del directorio."
+
+#. title
+#: schema/codelists/interestType.csv:4
+msgid "Other influence or control"
+msgstr "Otro tipo de influencia o control"
+
+#. description
+#: schema/codelists/interestType.csv:4
+msgid ""
+"Any influence or control in an entity that is distinct from being a "
+"shareholder, having voting rights or having the absolute right to appoint to"
+" the board."
+msgstr ""
+"Cualquier influencia o control en una entidad que sea distinta de ser "
+"accionista, tener derechos de voto o tener el derecho absoluto de nombrar al"
+" órgano de administración."
+
+#. title
+#: schema/codelists/interestType.csv:5
+msgid "Senior managing official"
+msgstr "Gerente de alto rango"
+
+#. description
+#: schema/codelists/interestType.csv:5
+msgid ""
+"A controlling interest in an entity gained by employment. Defined as the "
+"person who exercises control over the management of the entity."
+msgstr ""
+"Participación controlante en una entidad obtenida por medio de un cargo. Se "
+"define como la persona que ejerce control sobre la gestión de la entidad."
+
+#. title
+#: schema/codelists/interestType.csv:6
+msgid "Settlor"
+msgstr "Fideicomitente"
+
+#. description
+#: schema/codelists/interestType.csv:6
+msgid ""
+"A person who, either actually or by operation of law, creates a trust. They "
+"may be referred to by other names such as a trustor, a grantor or a donor. "
+"This should also be used for a person with a settlor-equivalent role in any "
+"legal arrangement that is similar to a trust."
+msgstr ""
+"Persona que, de forma real o conforme a la ley, crea un fideicomiso. Puede "
+"hacerse referencia a ella con otros nombres como fiduciante, cedente o "
+"donante. Este término también debe usarse para una persona con un rol "
+"equivalente al del fideicomitente en cualquier estructura jurídica similar a"
+" un fideicomiso."
+
+#. title
+#: schema/codelists/interestType.csv:7
+msgid "Trustee"
+msgstr "Fiduciario"
+
+#. description
+#: schema/codelists/interestType.csv:7
+msgid ""
+"A person who administers a trust for the benefit of a third party and in "
+"whom the legal title of the trust property is vested either by declaration "
+"of the settlor or by operation of law. This should also be used for a person"
+" with a trustee-equivalent role in any legal arrangement that is similar to "
+"a trust."
+msgstr ""
+"Persona que administra un fideicomiso para beneficio de un tercero y a quien"
+" se confiere el título legal de la propiedad fiduciaria, ya sea por "
+"declaración del fideicomitente o conforme a la ley. Este término también "
+"debe usarse para una persona con un rol equivalente al de un fiduciario en "
+"cualquier estructura jurídica similar a un fideicomiso."
+
+#. title
+#: schema/codelists/interestType.csv:8
+msgid "Protector"
+msgstr "Curador"
+
+#. description
+#: schema/codelists/interestType.csv:8
+msgid ""
+"A person appointed to protect the interests or wishes of the settlor, "
+"providing influence and guidance to the trustee who administers the trust. "
+"This should also be used for a person with a protector-equivalent role in "
+"any legal arrangement that is similar to a trust."
+msgstr ""
+"Persona designada para proteger los intereses o deseos del fideicomitente, "
+"ofreciendo influencia y orientación al fiduciario que administra el "
+"fideicomiso. Este término también debe usarse para una persona con un rol "
+"equivalente al de un curador en cualquier estructura jurídica similar a un "
+"fideicomiso."
+
+#. title
+#: schema/codelists/interestType.csv:9
+msgid "Beneficiary of a legal arrangement"
+msgstr "Beneficiario de una estructura jurídica legal"
+
+#. description
+#: schema/codelists/interestType.csv:9
+msgid ""
+"A person who benefits from a trust or other legal arrangement's holdings or "
+"activities."
+msgstr ""
+"Persona que se beneficia de un fideicomiso o de propiedades o actividades de"
+" otra estructura jurídica."
+
+#. title
+#: schema/codelists/interestType.csv:10
+msgid "Rights to surplus assets on dissolution"
+msgstr "Derechos sobre activos remanentes en caso de disolución"
+
+#. description
+#: schema/codelists/interestType.csv:10
+msgid ""
+"The right to a share in the amount of an asset or resource that exceeds the "
+"portion that is utilized upon the winding up of an entity."
+msgstr ""
+"El derecho a una parte del monto de un activo o recurso que exceda la "
+"porción utilizada al momento de la liquidación de una entidad."
+
+#. title
+#: schema/codelists/interestType.csv:11
+msgid "Rights to receive profits or income"
+msgstr "Derechos a percibir ganancias o ingresos"
+
+#. description
+#: schema/codelists/interestType.csv:11
+msgid ""
+"An economic interest in an entity. Defined as beneficial ownership rights "
+"beyond those otherwise implied by ownership structures that are granted by "
+"contract."
+msgstr ""
+"Interés económico en una entidad. Se definen como los derechos de los "
+"beneficiarios finales más allá de los que se encuentran de algún otro modo "
+"implícitos en las estructuras de titularidad que se otorgan por contrato."
+
+#. title
+#: schema/codelists/interestType.csv:12
+msgid "Rights granted by contract"
+msgstr "Derechos otorgados por contrato"
+
+#. description
+#: schema/codelists/interestType.csv:12
+msgid "An interest that is granted by contract."
+msgstr "Participación que se otorga por contrato."
+
+#. title
+#: schema/codelists/interestType.csv:13
+msgid "Conditional rights granted by contract"
+msgstr "Derechos condicionales otorgados por contrato"
+
+#. description
+#: schema/codelists/interestType.csv:13
+msgid "An interest that exists only if some contractual condition is met."
+msgstr "Un interés que existe sólo si se cumple alguna condición contractual."
+
+#. title
+#: schema/codelists/interestType.csv:14
+msgid "Control via company rules or articles"
+msgstr "Control a través de reglas o artículos de la empresa."
+
+#. description
+#: schema/codelists/interestType.csv:14
+msgid ""
+"Control of an entity gained through a provision in company articles or by "
+"shareholder agreement."
+msgstr ""
+"Control de una entidad obtenido a través de una disposición en los estatutos"
+" de la empresa o por convenio de los accionistas."
+
+#. title
+#: schema/codelists/interestType.csv:15
+msgid "Control by legal framework"
+msgstr "Control por marco legal"
+
+#. description
+#: schema/codelists/interestType.csv:15
+msgid ""
+"Control of an entity gained through a legal framework, such as a combination"
+" of legislation (primary and secondary). This type of interest is created by"
+" governments and legislators in order to establish and guide agencies and "
+"entities linked to the state."
+msgstr ""
+"Control de una entidad obtenido a través de un marco legal, como una "
+"combinación de legislación (primaria y secundaria). Este tipo de interés es "
+"creado por los gobiernos y legisladores con el fin de establecer y orientar "
+"las agencias y entidades vinculadas al estado."
+
+#. title
+#: schema/codelists/interestType.csv:16
+msgid "Board member"
+msgstr "Miembro del órgano de administración"
+
+#. description
+#: schema/codelists/interestType.csv:16
+msgid ""
+"One of a group of people constituted as the strategic decision-making body "
+"of an organization."
+msgstr ""
+"Uno de un grupo de personas constituido como el órgano de toma de decisiones"
+" estratégicas de una organización."
+
+#. title
+#: schema/codelists/interestType.csv:17
+msgid "Board chair"
+msgstr "Presidente del órgano de administración"
+
+#. description
+#: schema/codelists/interestType.csv:17
+msgid ""
+"The person holding the most power and authority on the board of directors."
+msgstr ""
+"La persona que posee el mayor grado de poder y autoridad en el órgano de "
+"administración."
+
+#. title
+#: schema/codelists/interestType.csv:18
+msgid "Unknown interest"
+msgstr "Interés desconocido"
+
+#. description
+#: schema/codelists/interestType.csv:18
+msgid ""
+"The interestedParty is known to have an interest in the subject of this "
+"Relationship Statement, but the nature of the interest is unknown."
+msgstr ""
+"La parte interesada es conocida por tener interés en el sujeto de este "
+"enunciado sobre relación, pero la naturaleza del interés es desconocida."
+
+#. title
+#: schema/codelists/interestType.csv:19
+msgid "Unpublished interest"
+msgstr "Interés no publicado"
+
+#. description
+#: schema/codelists/interestType.csv:19
+msgid "The nature of this interest is known but is not published."
+msgstr "La naturaleza de este interés se conoce pero no se publica."
+
+#. title
+#: schema/codelists/interestType.csv:20
+msgid "Enjoyment and use of assets"
+msgstr "Goce y uso de los bienes"
+
+#. description
+#: schema/codelists/interestType.csv:20
+msgid "The use of assets belonging to an entity."
+msgstr "Uso de activos que pertenecen a una entidad."
+
+#. title
+#: schema/codelists/interestType.csv:21
+msgid "Right to profit or income from assets"
+msgstr "Derecho al beneficio o ingresos de los activos"
+
+#. description
+#: schema/codelists/interestType.csv:21
+msgid ""
+"The right to derive profits, income or both from assets belonging to an "
+"entity."
+msgstr ""
+"Derecho a obtener ganancias, ingresos o ambos a partir de activos que "
+"pertenecen a una entidad."
+
+#. title
+#: schema/codelists/interestType.csv:22
+msgid "Nominee"
+msgstr "Mandatario"
+
+#. description
+#: schema/codelists/interestType.csv:22
+msgid ""
+"A person who agrees to act on behalf of the nominator in a specified "
+"capacity."
+msgstr ""
+"Persona que acepta actuar en nombre del mandante en una capacidad "
+"especificada."
+
+#. title
+#: schema/codelists/interestType.csv:23
+msgid "Nominator"
+msgstr "Mandante"
+
+#. description
+#: schema/codelists/interestType.csv:23
+msgid ""
+"A person who instructs a nominee to act on their behalf in a specified "
+"capacity."
+msgstr ""
+"Persona que ordena a un mandatario actuar en su nombre en una capacidad "
+"especificada."
+
+#. title
+#: schema/codelists/nameType.csv:1
+msgid "Legal name"
+msgstr "Nombre legal"
+
+#. description
+#: schema/codelists/nameType.csv:1
+msgid ""
+"A name that identifies the person for legal, administrative and other "
+"official purposes. A person's legal name will usually be the one that is "
+"found on official government documents."
+msgstr ""
+"Nombre que identifica a la persona a efectos legales, administrativos y "
+"demás efectos de naturaleza oficial. El nombre legal de una persona es por "
+"lo general el que aparece en los documentos oficiales gubernamentales."
+
+#. title
+#: schema/codelists/nameType.csv:2
+msgid "Translation of name"
+msgstr "Traducción del nombre"
+
+#. description
+#: schema/codelists/nameType.csv:2
+msgid "A translation of the person's legal name in a different language."
+msgstr "Traducción del nombre legal de la persona en un idioma diferente."
+
+#. title
+#: schema/codelists/nameType.csv:3
+msgid "Transliteration of name"
+msgstr "Transliteración del nombre"
+
+#. description
+#: schema/codelists/nameType.csv:3
+msgid "A transliteration of the person's legal name in a different script."
+msgstr "Transliteración del nombre legal de la persona en un texto diferente."
+
+#. title
+#: schema/codelists/nameType.csv:4
+msgid "Former name"
+msgstr "Nombre anterior"
+
+#. description
+#: schema/codelists/nameType.csv:4
+msgid "A name that the person has used in the past."
+msgstr "Nombre que una persona ha utilizado en el pasado."
+
+#. title
+#: schema/codelists/nameType.csv:5
+msgid "Alternative name"
+msgstr "Nombre alternativo"
+
+#. description
+#: schema/codelists/nameType.csv:5
+msgid ""
+"Another name that the person is known by. This might be an alias, a nickname"
+" or a name that the person is also known as (aka)."
+msgstr ""
+"Otro nombre por el que se conoce a la persona. Puede ser un alias, un "
+"sobrenombre o un nombre con el que también se conoce a la persona."
+
+#. title
+#: schema/codelists/nameType.csv:6
+msgid "Birth name"
+msgstr "Nombre de nacimiento"
+
+#. description
+#: schema/codelists/nameType.csv:6
+msgid "The legal name of the person at birth."
+msgstr "El nombre legal de la persona al nacer."
+
+#. title
+#: schema/codelists/personType.csv:1
+msgid "Known person"
+msgstr "Persona conocida"
+
+#. description
+#: schema/codelists/personType.csv:1
+msgid ""
+"A natural person who has been identified, and information such as names, "
+"identifiers or biographical information can be provided about them."
+msgstr ""
+"Persona física que ha sido identificada, y sobre quien puede brindarse "
+"información como nombre, identificadores o información biográfica."
+
+#. title
+#: schema/codelists/personType.csv:2
+msgid "Anonymous person"
+msgstr "Persona anónima"
+
+#. description
+#: schema/codelists/personType.csv:2
+msgid ""
+"A natural person who has been identified, but identifying information is "
+"being withheld. The reason for non-disclosure should be given in the "
+"accompanying `unspecifiedPersonDetails` field."
+msgstr ""
+"Persona física que ha sido identificada, pero se retiene información "
+"identificatoria. El motivo de la no divulgación debería indicarse en el "
+"campo `unspecifiedPersonDetails` que lo acompaña."
+
+#. title
+#: schema/codelists/personType.csv:3
+msgid "Unknown person"
+msgstr "Persona desconocida"
+
+#. description
+#: schema/codelists/personType.csv:3
+msgid "A natural person whose identity has not been discovered or confirmed."
+msgstr "Persona física cuya identidad no ha sido descubierta o confirmada."
+
+#. title
+#: schema/codelists/recordStatus.csv:1
+msgid "New Record"
+msgstr "Nuevo registro"
+
+#. description
+#: schema/codelists/recordStatus.csv:1
+msgid ""
+"This is the first Statement published pertaining to the record referenced by"
+" `recordId`."
+msgstr ""
+"Este es el primer enunciado publicado perteneciente al registro con "
+"referencia `recordId`."
+
+#. title
+#: schema/codelists/recordStatus.csv:2
+msgid "Updated Record"
+msgstr "Registro actualizado"
+
+#. description
+#: schema/codelists/recordStatus.csv:2
+msgid ""
+"This Statement updates information published in a prior Statement pertaining"
+" to the record referenced by `recordId`."
+msgstr ""
+"Este enunciado actualiza información publicada en un enunciado anterior "
+"perteneciente al registro con referencia `recordId`."
+
+#. title
+#: schema/codelists/recordStatus.csv:3
+msgid "Closed Record"
+msgstr "Registro cerrado"
+
+#. description
+#: schema/codelists/recordStatus.csv:3
+msgid ""
+"This is the final Statement published pertaining to the record referenced by"
+" `recordId`."
+msgstr ""
+"Este es el enunciado final publicado perteneciente al registro con "
+"referencia `recordId`."
+
+#: schema/codelists/recordType.csv
+msgid "technical note"
+msgstr "nota técnica"
+
+#. title
+#: schema/codelists/recordType.csv:1
+msgid "Person"
+msgstr "Persona"
+
+#. description
+#: schema/codelists/recordType.csv:1
+msgid ""
+"The Record Details in this Statement contain information about a natural "
+"person at a particular point in time."
+msgstr ""
+"Los detalles de registro de este enunciado contienen información sobre una "
+"persona física en un momento particular."
+
+#. technical note
+#: schema/codelists/recordType.csv:1
+msgid ""
+"The recordDetails object should be validated using the Person Record schema."
+msgstr ""
+"El objeto recordDetails debe validarse con el esquema Registro de personas."
+
+#. title
+#: schema/codelists/recordType.csv:2
+msgid "Entity"
+msgstr "Entidad"
+
+#. description
+#: schema/codelists/recordType.csv:2
+msgid ""
+"The Record Details in this Statement contain information that identifies and"
+" describes an entity at a particular point in time."
+msgstr ""
+"Los detalles de registro de este enunciado contienen información que "
+"identifica y describe a una entidad en un momento particular."
+
+#. technical note
+#: schema/codelists/recordType.csv:2
+msgid ""
+"The recordDetails object should be validated using the Entity Record schema."
+msgstr ""
+"El objeto recordDetails debe validarse con el esquema Registro de entidades."
+
+#. title
+#: schema/codelists/recordType.csv:3
+msgid "Relationship"
+msgstr "Relación"
+
+#. description
+#: schema/codelists/recordType.csv:3
+msgid ""
+"The Record Details in this Statement describe the interests held by an "
+"interested party in a subject (an entity) at a particular point in time."
+msgstr ""
+"Los detalles de registro de este enunciado describen los intereses de una "
+"parte interesada en un sujeto (entidad) en momento particular."
+
+#. technical note
+#: schema/codelists/recordType.csv:3
+msgid ""
+"The recordDetails object should be validated using the Relationship Record "
+"schema."
+msgstr ""
+"El objeto recordDetails debe validarse con el esquema Registro de "
+"relaciones."
+
+#. title
+#: schema/codelists/securitiesIdentifierSchemes.csv:1
+msgid "International Securities Identification Number (ISIN)"
+msgstr "Número Internacional de Identificación de Valores (ISIN)"
+
+#. description
+#: schema/codelists/securitiesIdentifierSchemes.csv:1
+msgid ""
+"Scheme for unique identification of securities internationally. Securities "
+"are issued 12-character identifiers. Full details of the scheme are "
+"specified by ISO 6166."
+msgstr ""
+"Esquema de identificación único de valores a nivel internacional. Los "
+"valores se emiten con identificadores de 12 caracteres. Los detalles "
+"completos del esquema se especifican en la norma ISO 6166."
+
+#. title
+#: schema/codelists/securitiesIdentifierSchemes.csv:2
+msgid "Financial Instrument Global identifier (FIGI)"
+msgstr "Identificador Global de Instrumentos Financieros (FIGI)"
+
+#. description
+#: schema/codelists/securitiesIdentifierSchemes.csv:2
+msgid ""
+"Scheme for unique identification of securities internationally. Securities "
+"are issued 12-character identifiers. Full details of the scheme are "
+"specified as an Object Management Group standard: "
+"https://www.omg.org/spec/FIGI/."
+msgstr ""
+"Esquema de identificación única de valores a nivel internacional. Los "
+"valores se emiten con identificadores de 12 caracteres. Los detalles "
+"completos del esquema se especifican como un estándar del grupo de gestión "
+"de objetos: https://www.omg.org/spec/FIGI/."
+
+#. title
+#: schema/codelists/securitiesIdentifierSchemes.csv:3
+msgid ""
+"Committee on Uniform Securities Identification Procedures (CUSIP) Number"
+msgstr ""
+"Número del Comité de Procedimientos Uniformes de Identificación de Valores "
+"(CUSIP)"
+
+#. description
+#: schema/codelists/securitiesIdentifierSchemes.csv:3
+msgid ""
+"Scheme for unique identification of securites in North America. Securities "
+"are issued 9-character identifiers. The scheme is managed by the American "
+"Bankers Association and specified as ANSI X9.6."
+msgstr ""
+"Esquema para la identificación única de valores en América del Norte. Los "
+"valores se emiten con identificadores de 9 caracteres. El esquema es "
+"administrado por la Asociación de Banqueros Estadounidenses y se especifica "
+"como ANSI X9.6."
+
+#. title
+#: schema/codelists/securitiesIdentifierSchemes.csv:4
+msgid "CUSIP International Numbering System (CINS)"
+msgstr "Sistema Internacional de Numeración (CINS) de CUSIP"
+
+#. description
+#: schema/codelists/securitiesIdentifierSchemes.csv:4
+msgid ""
+"Scheme for unique identification of securities issued outside North America."
+" Securities are issued 9-character identifiers. The scheme is managed by the"
+" American Bankers Association and specified as ANSI X9.6."
+msgstr ""
+"Esquema de identificación única de valores emitidos fuera de América del "
+"Norte. Los valores se emiten con identificadores de 9 caracteres. El esquema"
+" es administrado por la Asociación de Banqueros Estadounidenses y se "
+"especifica como ANSI X9.6."
+
+#. title
+#: schema/codelists/sourceType.csv:1
+msgid "Self declaration"
+msgstr "Autodeclaración"
+
+#. description
+#: schema/codelists/sourceType.csv:1
+msgid ""
+"The information was provided by the person or entity referred to from "
+"`declarationSubject`, or by their authorised representative."
+msgstr ""
+"La información fue proporcionada por la persona o entidad a la que se hace "
+"referencia en `declarationSubject` o por su representante autorizado."
+
+#. title
+#: schema/codelists/sourceType.csv:2
+msgid "Official register"
+msgstr "Registro oficial"
+
+#. description
+#: schema/codelists/sourceType.csv:2
+msgid "The information was taken from an official register."
+msgstr "La información fue recogida de un registro oficial."
+
+#. title
+#: schema/codelists/sourceType.csv:3
+msgid "Third party"
+msgstr "Tercera parte"
+
+#. description
+#: schema/codelists/sourceType.csv:3
+msgid ""
+"The information was provided by a third party, not directly related to the "
+"person, entity or interests described by this statement."
+msgstr ""
+"La información fue proporcionada por un tercero, no directamente relacionado"
+" con la persona, la entidad o los intereses descritos en este enunciado."
+
+#. title
+#: schema/codelists/sourceType.csv:4
+msgid "Primary research"
+msgstr "Investigación primaria"
+
+#. description
+#: schema/codelists/sourceType.csv:4
+msgid ""
+"The information was provided as a result of research into primary sources."
+msgstr ""
+"La información se obtuvo como resultado de la investigación de fuentes "
+"primarias."
+
+#. title
+#: schema/codelists/sourceType.csv:5
+msgid "Verified"
+msgstr "Verificada"
+
+#. description
+#: schema/codelists/sourceType.csv:5
+msgid ""
+"The information has been verified through the process documented in the "
+"associated description."
+msgstr ""
+"La información se ha verificado mediante el proceso documentado en la "
+"descripción asociada."
+
+#. title
+#: schema/codelists/unspecifiedReason.csv:1
+msgid "No beneficial owners"
+msgstr "Sin beneficiarios finales"
+
+#. description
+#: schema/codelists/unspecifiedReason.csv:1
+msgid ""
+"There are no beneficial owners who need to disclose ownership according to "
+"the rules under which this statement is made."
+msgstr ""
+"No existen beneficiarios finales que deban divulgar su titularidad en virtud"
+" de las normas conforme a las cuales se hace este enunciado."
+
+#. title
+#: schema/codelists/unspecifiedReason.csv:2
+msgid "Subject unable to confirm or identify beneficial owner"
+msgstr "Sujeto incapaz de confirmar o identificar al beneficiario final"
+
+#. description
+#: schema/codelists/unspecifiedReason.csv:2
+msgid ""
+"The subject of this Relationship Statement has, as the disclosing party, "
+"been unwilling or unable to confirm the existence identify a beneficial "
+"owner."
+msgstr ""
+"Como parte divulgadora, el sujeto de este enunciado sobre relación no ha "
+"estado dispuesto o no ha sido capaz de confirmar la existencia que "
+"identifica a un beneficiario final."
+
+#. title
+#: schema/codelists/unspecifiedReason.csv:3
+msgid "Interested party has not provided information"
+msgstr "La parte interesada no ha proporcionado información"
+
+#. description
+#: schema/codelists/unspecifiedReason.csv:3
+msgid ""
+"The interested party in this Relationship Statement has not provided enough "
+"information to identify or confirm the identity of the beneficial owner."
+msgstr ""
+"La parte interesada de este enunciado sobre relación no ha brindado "
+"suficiente información para identificar o confirmar la identidad del "
+"beneficiario final."
+
+#. title
+#: schema/codelists/unspecifiedReason.csv:4
+msgid "Subject exempt from disclosure"
+msgstr "Sujeto exento de divulgación"
+
+#. description
+#: schema/codelists/unspecifiedReason.csv:4
+msgid ""
+"The subject of this Relationship Statement is not required to disclose its "
+"beneficial owner."
+msgstr ""
+"El sujeto de este enunciado sobre relación no tiene la obligación de revelar"
+" a su beneficiario final."
+
+#. title
+#: schema/codelists/unspecifiedReason.csv:5
+msgid "Interested party exempt from disclosure"
+msgstr "Parte interesada exenta de divulgación"
+
+#. description
+#: schema/codelists/unspecifiedReason.csv:5
+msgid ""
+"The interested party in this Relationship Statement is exempt from having "
+"their identity disclosed."
+msgstr ""
+"La parte interesada de este enunciado sobre relación está exenta de la "
+"divulgación de su identidad."
+
+#. title
+#: schema/codelists/unspecifiedReason.csv:6
+msgid "Unknown reason"
+msgstr "Motivo desconocido"
+
+#. description
+#: schema/codelists/unspecifiedReason.csv:6
+msgid "The reason an interested party cannot be provided is not known."
+msgstr ""
+"Se desconoce el motivo por el cual no se puede indicar una parte interesada."
+
+#. title
+#: schema/codelists/unspecifiedReason.csv:7
+msgid "Information unknown to the publisher of the data"
+msgstr "Información desconocida por el publicador de los datos."
+
+#. description
+#: schema/codelists/unspecifiedReason.csv:7
+msgid ""
+"A publisher does not have access to information on this person or entity. "
+"This should not generally be used in situations where one party has the "
+"responsibility to provide such information."
+msgstr ""
+"El publicador no tiene acceso a la información sobre esta persona o entidad."
+" En general, no debería utilizarse en situaciones en las que una parte tenga"
+" la responsabilidad de suministrar esa información."

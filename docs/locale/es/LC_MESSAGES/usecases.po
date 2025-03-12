@@ -1,0 +1,549 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2017, OpenOwnership
+# This file is distributed under the same license as the Beneficial Ownership Data Standard package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+# Translators:
+# Amy Guy <amy.guy@opendataservices.coop>, 2022
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Beneficial Ownership Data Standard 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-02-14 16:55+0000\n"
+"PO-Revision-Date: 2022-04-05 16:56+0000\n"
+"Last-Translator: Amy Guy <amy.guy@opendataservices.coop>, 2022\n"
+"Language-Team: Spanish (https://www.transifex.com/OpenDataServices/teams/95583/es/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: es\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: ../../usecases.rst:2 27225bd080e14905b80857caf5de62f4
+msgid "Use cases"
+msgstr "Casos de uso"
+
+#: ../../usecases.rst:4 a56b704e4fe741168db0785f110e2e2f
+msgid ""
+"The Beneficial Ownership Data Standard beta has been designed with reference"
+" to the requirements of eight use-cases:"
+msgstr ""
+"La versión beta del Estándar de Datos sobre Beneficiarios Finales ha sido "
+"diseñada en relación con los requisitos de ocho casos de uso:"
+
+#: ../../usecases.rst:7 ../../usecases.rst:30 b9ba23e9acfc4642befca4181ac1b5a7
+#: b62d5e3839c1477a88ccbe3de36f3bb6
+msgid "Data supply"
+msgstr "Suministro de datos"
+
+#: ../../usecases.rst:8 b40c377295d34ff697280f7e25fe7639
+msgid "Public Registers of Beneficial Ownership"
+msgstr "Registros públicos de Beneficiarios Finales"
+
+#: ../../usecases.rst:9 1c0d95cd14304fd993e8d00277b88549
+msgid "Self-submitted data"
+msgstr "Datos autopresentados"
+
+#: ../../usecases.rst:10 4c5c480b2fa14a51ae5ac3d79772be53
+msgid "Third-party submitted data"
+msgstr "Datos presentados por terceras partes"
+
+#: ../../usecases.rst:11 9c6bfe202c6946d3ab74fa187d042a8a
+msgid "Self-published data"
+msgstr "Datos autopublicados"
+
+#: ../../usecases.rst:13 ../../usecases.rst:119
+#: 41b6d6bd02734517a0bb0deb381a728c dba7626ba3a24e16aa745adc82a77c08
+msgid "Data use"
+msgstr "Uso de los datos"
+
+#: ../../usecases.rst:14 e94e2a1f86804934b37eef6a80908613
+msgid "Procurement & onboarding screening and audit"
+msgstr "Auditorías y evaluaciones de contrataciones e incorporaciones"
+
+#: ../../usecases.rst:15 86abce3f8c2f4aa19d7eca14f8109897
+msgid "General investigations"
+msgstr "Investigaciones generales"
+
+#: ../../usecases.rst:16 0d8721d7a30941438104b11bbd4dcc75
+msgid "Data-led investigations"
+msgstr "Investigaciones basadas en datos"
+
+#: ../../usecases.rst:17 2b6945d62410429c85663840c374bc3f
+msgid "Data validation"
+msgstr "Validación de datos"
+
+#: ../../usecases.rst:19 3455c50ca890449fb43c2f95a8529301
+msgid "These use cases are described below."
+msgstr "Más abajo se describen estos casos de uso."
+
+#: ../../usecases.rst:23 acf4d247beda4e868ceeea460e1dcc49
+msgid ""
+"A full analysis of how far the needs of these use cases are met will take "
+"place as part of progress towards a 1.0 Release Candidate of the standard."
+msgstr ""
+"Como parte de los avances hacia la versión 1.0 Candidata a Lanzamiento del "
+"estándar, se realizará un análisis completo de hasta qué punto se satisfacen"
+" las necesidades de estos casos de uso."
+
+#: ../../usecases.rst:25 7071f9539cd94c938c4382b751688b7f
+msgid ""
+"This page builds on the `use case consultation document "
+"<https://docs.google.com/document/d/1s1qqFAK3cDjTGAlCaQvPOb8KzKkssn9xu2HzWeY6amE/edit#>`__"
+" published in December 2016."
+msgstr ""
+"Esta página se sirve del `documento de consulta de casos de uso "
+"<https://docs.google.com/document/d/1s1qqFAK3cDjTGAlCaQvPOb8KzKkssn9xu2HzWeY6amE/edit#>`__"
+" publicado en diciembre de 2016."
+
+#: ../../usecases.rst:32 ef412eb9d4c748b3a1d17c500cab908b
+msgid ""
+"*The following cases sketch out ways in which open beneficial ownership data"
+" might be published.*"
+msgstr ""
+"*Los siguientes casos esbozan distintas maneras en que podrían publicarse "
+"datos abiertos sobre beneficiarios finales.*"
+
+#: ../../usecases.rst:36 6be575f02b17478c82559995f49dda63
+msgid "S1: Public Registers of Beneficial Ownership"
+msgstr "S1: Registros Públicos de Beneficiarios Finales"
+
+#: ../../usecases.rst:38 15a9f6ec31684dd0b41aa3a30212849a
+msgid ""
+"A government or other body creating a public register of beneficial "
+"ownership may want to publish that information as open data that others can "
+"draw on and re-use. This may include publishing bulk data, or providing an "
+"API on the data."
+msgstr ""
+"Un gobierno u otro ente involucrado en la creación de un registro público de"
+" beneficiarios finales podría tener interés en publicar esa información como"
+" datos abiertos que otros puedan aprovechar y reutilizar. Ello podría "
+"incluir el publicar datos en bloque o proporcionar una API sobre los datos."
+
+#: ../../usecases.rst:43 b60c349c38d1456c9c12f820104209c6
+msgid ""
+"The data that the register should contain is likely to be determined by "
+"national legislation, and there may be existing national guidance on how to "
+"develop open data services or APIs."
+msgstr ""
+"Es probable que la legislación nacional determine los datos que debería "
+"contener el registro, y puede ser que existan pautas orientadoras nacionales"
+" sobre cómo desarrollar servicios de datos abiertos o una API."
+
+#: ../../usecases.rst:47 21cc5f71375b4fa2892d693802aed214
+msgid ""
+"Organisations building a register may also be interested in using the "
+"standard to help design their internal data models and data collection "
+"processes."
+msgstr ""
+"A las organizaciones involucradas en la creación de un registro también "
+"podría interesarles utilizar el estándar como ayuda para el diseño de sus "
+"procesos de recopilación de datos y sus modelos de datos internos."
+
+#: ../../usecases.rst:51 af4bbbc1a53e4c44aa5d25a0298d3dac
+msgid ""
+"Possible examples of this case may include the UK Register of Persons of "
+"Significant Control, the Ukraine Beneficial Ownership Register, the planned "
+"register of beneficial ownership in France, and sector-specific registers "
+"from the Extractives Industry Transparency Initiative."
+msgstr ""
+"Como posibles ejemplos de este caso, cabe citar el Registro de Personas con "
+"Control Significativo del Reino Unido, el Registro de Beneficiarios Finales "
+"de Ucrania, el registro de beneficiarios finales previsto en Francia, y los "
+"registros de sectores específicos de la Iniciativa para la Transparencia de "
+"las Industrias Extractivas."
+
+#: ../../usecases.rst:57 2b88a747cdbe4950ad0faea312229f70
+msgid "S2: Self-submitted data"
+msgstr "S2: Datos autopresentados"
+
+#: ../../usecases.rst:59 77a76d6136234675a85aa3ffa5f42087
+msgid ""
+"An individual or an organisation may make use of online tools to self-report"
+" beneficial ownership information."
+msgstr ""
+"Un individuo o una organización puede utilizar herramientas en línea para "
+"declarar información sobre sí misma relativa al carácter de beneficiario "
+"final."
+
+#: ../../usecases.rst:62 207f84c17f5145ba97efc8f36c6ca25b
+msgid ""
+"For example, `Who Controls It <http://alpha.whocontrolsit.com/>`__ was a "
+"proof-of-concept Beneficial Ownership platform (a precursor to "
+"OpenOwnership.org), designed to test some of the UI issues in the submission"
+" of beneficial ownership data, allowing users to declare their own ownership"
+" of a company, or to report on the ownership structure of a company."
+msgstr ""
+"Por ejemplo, `Who Controls It <http://alpha.whocontrolsit.com/>`__ era una "
+"prueba de concepto de una plataforma sobre beneficiarios finales (precursora"
+" de OpenOwnership.org), diseñada para someter a prueba algunas cuestiones de"
+" la interfaz de usuario en la presentación de datos sobre beneficiarios "
+"finales, que permitía a los usuarios declarar su condición de propietarios "
+"de una empresa, o informar sobre la estructura de titularidad de una "
+"empresa."
+
+#: ../../usecases.rst:69 10492e258ecd43968fd7948d9735b98a
+msgid ""
+"There are many complex cases a comprehensive system should be able to deal "
+"with, including:"
+msgstr ""
+"Hay muchos casos complejos de los que un sistema integral debería ser capaz "
+"de encargarse, entre ellos:"
+
+#: ../../usecases.rst:72 7b857ce234f34c5197f9dc46dfa01c1e
+msgid ""
+"Recording economics interests, but without control (e.g. 1% of a mining "
+"company, which may be valuable, but give little shareholder power);"
+msgstr ""
+"Registrar las participaciones económicas, pero sin control (p. ej. el 1 % de"
+" una empresa minera, que puede ser valioso, pero otorgar poco poder de "
+"accionista);"
+
+#: ../../usecases.rst:76 14d9df71918c4801b58b11c0e0836e5b
+msgid ""
+"Mutual funds, that separate control (the fund manager) from the economic "
+"interest (the entities that put the money in);"
+msgstr ""
+"Fondos mutuos, que separan el control (el administrador del fondo) de la "
+"participación económica (las entidades que aportan el dinero);"
+
+#: ../../usecases.rst:79 7a9c67041b814691815368a85f3577a0
+msgid ""
+"`Bonds, preference shares and other investments "
+"<http://www.investopedia.com/terms/p/preference-shares.asp>`__ that don’t "
+"give control, but do give economic interests. Note that sometimes they may "
+"have *some* control, such as veto rights, e.g. over mergers or asset sales;"
+msgstr ""
+"`Bonos, acciones preferentes y otras inversiones "
+"<http://www.investopedia.com/terms/p/preference-shares.asp>`__ que no "
+"otorgan control, pero sí participaciones económicas. Nótese que a veces "
+"pueden conllevar *algún* control, tal como derechos de veto, p. ej. sobre "
+"fusiones o ventas de activos;"
+
+#: ../../usecases.rst:85 cf13c099609b4f4ebb8b75e03d4af872
+msgid ""
+"Control via nominees, particularly when a nominee may act for a number of "
+"different parties in control of the same company;"
+msgstr ""
+"Control a través de testaferros, en particular cuando un testaferro puede "
+"representar los intereses de distintas partes que controlan una misma "
+"empresa;"
+
+#: ../../usecases.rst:88 314571d31b8445f0a986f5d1bcb4034b
+msgid "Contractual control limited to a particular set of circumstances."
+msgstr ""
+"Control de naturaleza contractual limitado a un conjunto específico de "
+"circunstancias."
+
+#: ../../usecases.rst:90 249ddcae973a4c7e9f3d0b69f917a8a5
+msgid ""
+"The designers of systems capturing self-submitted data may want to use the "
+"standard to express the data they have already collected, and to plan the "
+"collection of other data in future."
+msgstr ""
+"Los diseñadores de sistemas que registran datos autopresentados podría tener"
+" interés en utilizar el estándar para volcar los datos que ya han reunido, y"
+" para planificar la recopilación de otros datos en el futuro."
+
+#: ../../usecases.rst:95 207d3b2ec45445e48272042b9540644a
+msgid "S3: Third-party submitted data"
+msgstr "S3: Datos presentados por terceras partes"
+
+#: ../../usecases.rst:97 c3cfe3a458624f408b2cc3eae6be28e8
+msgid ""
+"Researchers, journalists or corporate information services may use filings, "
+"reports and other materials to build up structured data about beneficial "
+"ownership."
+msgstr ""
+"Los investigadores, periodistas o servicios de información corporativa "
+"pueden recurrir a información presentada oficialmente, informes y demás "
+"materiales para generar datos estructurados sobre beneficiarios finales."
+
+#: ../../usecases.rst:101 10bbfc8cc6bb4e8fbe96352a11a29d9d
+msgid ""
+"They may wish to share this data for others to re-use, but with suitable "
+"caveats about the sourcing of the data."
+msgstr ""
+"Podría interesarles compartir estos datos para que otros los reutilicen, "
+"pero advirtiendo adecuadamente sobre la procedencia de los datos."
+
+#: ../../usecases.rst:105 ce85650ca16f4b85b96f1f2c4ca9b59c
+msgid "S4: Self-published data"
+msgstr "S4: Datos autopublicados"
+
+#: ../../usecases.rst:107 1a7a2e1cbdde4c39b64788fbe0088075
+msgid ""
+"Companies may wish to publish structured data about their own beneficial "
+"ownership on their own websites. This data could be manually curated, or "
+"might come from internal information systems. They may be interested in "
+"doing this to avoid having to manually enter the information into different "
+"systems, so would want the data to be able to be read directly into "
+"platforms like OpenOwnership."
+msgstr ""
+"Las empresas podrían tener interés en publicar datos estructurados en sus "
+"propios sitios web acerca de sus propios beneficiarios finales. Podría ser "
+"el caso que estos datos hayan sido purgados manualmente, o que provengan de "
+"sistemas de información internos. Podría interesarles hacerlo para evitar "
+"tener que encargarse del ingreso manual de la información en diferentes "
+"sistemas, por lo que preferirían que los datos pudieran ser leídos "
+"directamente en plataformas como OpenOwnership."
+
+#: ../../usecases.rst:114 347a41e9f42d4439b5336896d02ba226
+msgid ""
+"The data may be periodically updated at a single URL, or have regular "
+"releases of data published as part of an annual reporting process, each time"
+" at a new URL."
+msgstr ""
+"Los datos pueden actualizarse periódicamente en un solo URL, o bien "
+"publicarse regularmente como parte de un proceso anual de presentación de "
+"información, utilizando un nuevo URL en cada ocasión."
+
+#: ../../usecases.rst:121 dafa306b18b2494899c7c029e1240743
+msgid ""
+"*The following cases look at different ways in which stakeholders may wish "
+"to make use of beneficial ownership data.*"
+msgstr ""
+"*Los siguientes casos presentan diferentes formas en las que a las partes "
+"interesadas podría interesarles hacer uso de los datos sobre beneficiarios "
+"finales.*"
+
+#: ../../usecases.rst:125 fb3233e1947b44918461a5add4d42640
+msgid "U1: Procurement & onboarding screening and audit"
+msgstr "U1: Auditorías y evaluaciones de contrataciones e incorporaciones"
+
+#: ../../usecases.rst:127 f9df92f7a4c042f488ea7f6c2f55fb5b
+msgid ""
+"There are a variety of cases related to onboarding, by which we mean the "
+"process of establishing relationships with new partners: typically new "
+"clients or suppliers (but also joint venture partners, licensees, Mergers & "
+"Acquisitions etc). Each of these new relationships exposes the onboarding "
+"entity (e.g. government, bank, multinational corporation, etc) to risk (e.g."
+" financial risk, reputational risk, FCPA/Bribery Act risk, sanctions "
+"breaches, etc.), and so they need to understand about the entity being "
+"onboarded."
+msgstr ""
+"Existe una variedad de casos relacionados con la labor de incorporación, "
+"entendiendo por ello el proceso de establecer relaciones con nuevos socios: "
+"por lo general, clientes o proveedores nuevos (pero también socios de "
+"empresas conjuntas, licenciatarios, fusiones y adquisiciones, etc.). Cada "
+"una de estas nuevas relaciones expone a la entidad incorporante (p. ej. "
+"gobiernos, bancos, empresas multinacionales, etc.) a determinados riesgos "
+"(p. ej. riesgos financieros, riesgos reputacionales, riesgos relativos a la "
+"Ley sobre Prácticas Corruptas en el Extranjero (FCPA)/Ley sobre Sobornos , "
+"violaciones de sanciones, etc.), por lo cual necesitan entender la entidad "
+"que se incorpora."
+
+#: ../../usecases.rst:136 d0ae8a2a6efc4f23b05e0ff9fddbc7c9
+msgid ""
+"Information of ownership and control is typically collected by onboarding "
+"entities who then assess the validity of information provided by cross "
+"checking with supplementary data available in open sources. In high value / "
+"high risk transactions, third parties are often employed to support due "
+"diligence processes. Onboarding entities are looking for red flags (e.g. "
+"whether the company is connected with Politically Exposed Persons or has "
+"earned negative media), and for confidence that there are no red flags they "
+"are missing (e.g. that a Beneficial Owner is connected with a company on a "
+"sanctions list). Following an assessment of risks, an informed judgement "
+"call typically determines whether new partnerships or transactions meet the "
+"policy requirements of the business."
+msgstr ""
+"Las entidades incorporantes suelen recopilar información sobre la "
+"titularidad y el control, y luego evalúan la validez de la información "
+"proporcionada mediante una verificación cruzada con datos complementarios "
+"disponibles en fuentes abiertas. En las transacciones de alto valor/alto "
+"riesgo, se suele recurrir a terceros para apoyar los procesos de debida "
+"diligencia. Las entidades incorporantes buscan señales de alerta (p. ej. si "
+"la empresa está vinculada a personas expuestas políticamente o si tiene una "
+"imagen negativa en los medios de comunicación) y sentirse confiadas de que "
+"no hay señales de alerta que se les hayan pasado por alto (p. ej. que un "
+"beneficiario final esté vinculada con una empresa incluida en una lista de "
+"sanciones). Tras una evaluación de riesgos, normalmente se adopta una "
+"determinación con criterio donde se resuelve si las nuevas alianzas o "
+"transacciones cumplen o no los requisitos de la política de la empresa."
+
+#: ../../usecases.rst:148 d600383dc25d439a8a68b549d4054fcd
+msgid ""
+"As part of an onboarding process, beneficial ownership information might be "
+"integrated alongside other ‘Know Your Customer/Client’ information and "
+"systems. In some cases, having access to documentary evidence to back up "
+"each piece of information given from a beneficial ownership dataset will be "
+"important."
+msgstr ""
+"En un proceso de incorporación, la información sobre beneficiarios finales "
+"podría integrarse junto con otros sistemas e información sobre \"Conocer al "
+"propio cliente\". En algunos casos, será importante tener acceso a pruebas "
+"documentales que respalden cada información proporcionada a partir de un "
+"conjunto de datos de beneficiarios finales."
+
+#: ../../usecases.rst:154 00dec630af2c4c2c8151ec6ef88258a4
+msgid ""
+"Example user story: *A procurement officer at a multilateral development "
+"bank has to approve the application of a new supplier. They need to ensure "
+"that the company is not on sanctions lists, that the ‘beneficial owners’ are"
+" not PEPs, and that they are not on debarment lists.*"
+msgstr ""
+"Ejemplo de historia de un usuario: *Un encargado de contrataciones de un "
+"banco multilateral de desarrollo tiene que aprobar la solicitud de un nuevo "
+"proveedor. Debe asegurarse de que esa empresa no figure en listas de "
+"sanciones, que los \"beneficiarios finales\" no sean PEP, y que no estén en "
+"listas de sujetos inhabilitados*."
+
+#: ../../usecases.rst:160 1e309b825def43ffa43af6903d4b94f4
+msgid "U2: General investigations"
+msgstr "U2: Investigaciones generales"
+
+#: ../../usecases.rst:162 920a70461acb4e25a29cbb4c83493b72
+msgid ""
+"There are a number of parties that need to investigate specific companies or"
+" individuals (as opposed to doing data-led investigations/mappings)."
+msgstr ""
+"Existen diversas partes que necesitan investigar a empresas o individuos "
+"específicos (en lugar de hacer mapeos/investigaciones con base en datos)."
+
+#: ../../usecases.rst:166 53a988155067436eb6c09488c47ab09c
+msgid "These include:"
+msgstr "Podemos mencionar a las siguientes:"
+
+#: ../../usecases.rst:168 4bd8a049031d46bfb8dacc2792eabcb7
+msgid ""
+"**Journalists** - researching stories on a particular company, individual or"
+" group of companies"
+msgstr ""
+"**Periodistas** que investigan historias sobre una empresa, individuo o "
+"grupo de empresas en particular"
+
+#: ../../usecases.rst:171 8239d6d543bf4b9789e6dcc9a9376ad5
+msgid "**NGO anti-corruption investigation** - finding leads, following them"
+msgstr ""
+"**Investigación sobre corrupción por parte de una ONG** con el objeto de "
+"encontrar pistas y seguirlas"
+
+#: ../../usecases.rst:173 76a8bd30564948cca6e3ae8e595f69d4
+msgid ""
+"**Law enforcement** - looking to establish a clear evidence base, and "
+"seeking to establish proof of intent"
+msgstr ""
+"**Organismos de la fuerza pública**, en busca de conformar una base "
+"probatoria clara y acreditar la intencionalidad"
+
+#: ../../usecases.rst:176 d429264d258748eb8312ffc088adb7a7
+msgid ""
+"**Asset recovery** - recovering money/assets that are due to a client, for "
+"example Stolen Assets, proceeds of fraud, or assets hidden in divorce "
+"settlements"
+msgstr ""
+"**Recuperación de activos**, a fin de recuperar dinero/activos que le "
+"corresponden a un cliente: por ejemplo, bienes robados, lo producido "
+"mediante acciones fraudulentas, o bienes ocultos en acuerdos de divorcio."
+
+#: ../../usecases.rst:180 83f8b20fef7b414dabd019aa3129da10
+msgid ""
+"In many ways the processes around such investigations are very similar, and "
+"are less dependent on on who is doing the investigation, and more about the "
+"resources that they have. For example some professional investigative "
+"journalists and even NGOs will have access to proprietary datasets, whereas "
+"many law enforcement officers won’t; some lawyers performing asset recovery "
+"will be able to ask the courts to expose otherwise hidden data (e.g. dollar "
+"transactions). Nevertheless, all are looking for leads they can follow, and "
+"in particular public leads (in the case of journalists, or NGOs this is "
+"possibly all they have access to or can afford; in the case of law "
+"enforcement, lying in public proves intent)."
+msgstr ""
+"En muchos sentidos, los procesos que rodean a esas investigaciones son muy "
+"similares y dependen menos de quién hace la investigación y más de los "
+"recursos de los que disponen. Por ejemplo, algunos periodistas de "
+"investigación profesionales e incluso ONG tienen acceso a conjuntos de datos"
+" propietarios, mientras que muchos agentes de la fuerza pública no; algunos "
+"abogados encargados de la recuperación de activos pueden pedir a los "
+"tribunales que expongan datos que de otro modo estarían ocultos (por "
+"ejemplo, transacciones en dólares). Sin embargo, todos buscan pistas que "
+"puedan seguir, y en particular pistas públicas (en el caso de los "
+"periodistas, o de las ONG, esto posiblemente sea lo único a lo que tengan "
+"acceso o que puedan permitirse; en el caso de los organismos de la fuerza "
+"pública, mentir en público demuestra la intencionalidad)."
+
+#: ../../usecases.rst:192 8f903fb157f741f7b36513327d175b12
+msgid ""
+"Tax and accounting investigations are similar, but may be more focused on "
+"corporate structures and direct relationships rather than indirect and "
+"ultimate relationships"
+msgstr ""
+"Las investigaciones tributarias y contables son similares, pero es posible "
+"que se centren más en las estructuras societarias y las relaciones directas "
+"que en las relaciones indirectas y últimas."
+
+#: ../../usecases.rst:196 4577b9988bfb485bad35036cc79622b3
+msgid ""
+"Example user story: *A journalist is investigating a politician including "
+"looking at known associates and companies, in both the home country and "
+"other jurisdictions.*"
+msgstr ""
+"Ejemplo de historia de un usuario: *Un periodista investiga a un político, "
+"incluidos ciertos socios y empresas conocidos, tanto en el país de origen "
+"como en otras jurisdicciones.*"
+
+#: ../../usecases.rst:201 753f54894f974c78bc162407e12e915e
+msgid "U3: Data-led investigations"
+msgstr "U3: Investigaciones basadas en datos"
+
+#: ../../usecases.rst:203 68eadd5271774b12b7aeea263076da3c
+msgid ""
+"As well as targeted and general purpose investigations, where there is a "
+"specific target for the investigation or a lead that is being pursued, there"
+" are also data-led investigations, which work by analysis or mining the data"
+" as a whole, or combining the data with other datasets. Examples would be "
+"mapping beneficial ownership data to procurement data (for conflict of "
+"interest mapping), as well as mapping to similar data such as shareholder "
+"data from company registers."
+msgstr ""
+"Además de las investigaciones con objetivos específicos y generales, en las "
+"que hay la investigación presenta un propósito específico o una pista que se"
+" persigue, también hay investigaciones basadas en datos, que funcionan "
+"analizando o explorando los datos en su conjunto, o combinando los datos con"
+" otros conjuntos de datos. Ejemplos de ello serían el mapeo de los datos "
+"sobre beneficiarios finales con los datos sobre contrataciones (para relevar"
+" conflictos de intereses), así como el mapeo con otros datos similares, como"
+" los datos sobre los accionistas de los registros de las empresas."
+
+#: ../../usecases.rst:211 46b4cd6d533f4eaa9586b8a8ddbcd577
+msgid ""
+"To give an example user story: *Data journalists wish to find anomalies "
+"between beneficial ownership disclosures and other public records, to "
+"identify lies*"
+msgstr ""
+"Para poner un ejemplo de la historia de un usuario: *Los periodistas "
+"especializados en datos desean encontrar anomalías entre las divulgaciones "
+"sobre beneficiarios finales y otros registros públicos, para identificar las"
+" falsedades*."
+
+#: ../../usecases.rst:216 ab387d945cd04611856629f4f8d587a2
+msgid "U4: Data validation"
+msgstr "U4: Validación de datos"
+
+#: ../../usecases.rst:218 bf032f1c534e480880e5084635a40be9
+msgid ""
+"Systems collecting beneficial ownership data can benefit from checking the "
+"data they receive against data from other systems. In existing work, there "
+"have been cases where reports under the EITI templates have not matched with"
+" reports to the UK Register of Persons with Significant Control."
+msgstr ""
+"Los sistemas que recopilan datos sobre beneficiarios finales pueden sacar "
+"provecho de comparar los datos que reciben con los de otros sistemas. Se han"
+" registrado casos en los que los informes elaborados según las plantillas "
+"del EITI no han coincidido con los informes del Registro de Personas con "
+"Control Significativo del Reino Unido. "
+
+#: ../../usecases.rst:224 7b602659476a43828a2e851b0d761e7e
+msgid ""
+"To give an example user story: *National EITI groups may wish to check "
+"reported information against data from national beneficial ownership "
+"registers where those exist, and to be able to address inaccuracies with the"
+" reporting parties. *"
+msgstr ""
+"Para poner un ejemplo de la historia de un usuario: *Los grupos nacionales "
+"del EITI podrían tener interés en corroborar la información presentada en "
+"función de los datos de los registros nacionales de beneficiarios finales, "
+"cuando los haya, y en poder abordar las inexactitudes con las partes "
+"informantes.*"

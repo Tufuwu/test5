@@ -1,18 +1,15 @@
-*.pyc
-.vagrant
-*.egg-info
-build
-.tox
-flycheck-*
-flycheck_*
-dist
-.eggs
-.coverage
-.env
-.cache
-.DS_Store
-htmlcov
-TAGS
-AUTHORS
-ChangeLog
-.vscode
+# sphinx build folder
+_build
+# translated schema build folder
+_build_schema
+.ve
+node_modules
+*~
+*.swp
+*.pytest_cache*
+*.mo
+/schema/testing
+tx
+tests/__pycache__/
+src/
+.tx/*bak
