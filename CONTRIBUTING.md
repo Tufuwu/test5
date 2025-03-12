@@ -1,27 +1,38 @@
-# How to Report an Issue
-
-If you would like to report a problem you find when using `you-get`, please open a [Pull Request](https://github.com/soimort/you-get/pulls), which should include:
-
-1. A detailed description of the encountered problem;
-2. At least one commit, addressing the problem through some unit test(s).
-   * Examples of good commits: [#2675](https://github.com/soimort/you-get/pull/2675/files), [#2680](https://github.com/soimort/you-get/pull/2680/files), [#2685](https://github.com/soimort/you-get/pull/2685/files)
-
-PRs that fail to meet the above criteria may be closed summarily with no further action.
-
-A valid PR will remain open until its addressed problem is fixed.
+# Contributing
 
 
+Contributions to the the Dokku open source project are highly welcome!
+For general hints see the project-wide [contributing guide](https://github.com/dokku/.github/blob/master/CONTRIBUTING.md).
 
-# 如何汇报问题
+## Codebase overview
 
-为了防止对 GitHub Issues 的滥用，本项目不接受一般的 Issue。
+ * The role's directory layout follows [standard Ansible practices](https://galaxy.ansible.com/docs/contributing/creating_role.html#roles).
+ * Besides the yaml-based ansible instructions, the role includes several new Ansible *modules* in the `library/` folder (e.g. `dokku_app`).
+ * The `README.md` of this repository is auto-generated: do *not* edit it directly.  
+   In order to update it, run `make generate`.
 
-如您在使用 `you-get` 的过程中发现任何问题，请开启一个 [Pull Request](https://github.com/soimort/you-get/pulls)。该 PR 应当包含：
+## Setting up a test environment
 
-1. 详细的问题描述；
-2. 至少一个 commit，其内容是**与问题相关的**单元测试。**不要通过随意修改无关文件的方式来提交 PR！**
-   * 有效的 commit 示例：[#2675](https://github.com/soimort/you-get/pull/2675/files), [#2680](https://github.com/soimort/you-get/pull/2680/files), [#2685](https://github.com/soimort/you-get/pull/2685/files)
+This role is tested using [molecule](https://molecule.readthedocs.io/en/latest/).
+Setting up a test environment involves the following steps:
 
-不符合以上条件的 PR 可能被直接关闭。
+ * Install [docker](https://www.docker.com/)
+ * Install [python](https://www.python.org/)
+ * (optional) Create a python virtual environment
+ * Run `pip install -r  requirements.txt`
+ * Run `pre-commit install`
+ * Run `make generate`
 
-有效的 PR 将会被一直保留，直至相应的问题得以修复。
+After this, you'll be able to test any changes made to the role using:
+
+```
+molecule test
+```
+This will ensure that:
+
+  * the role adheres to coding standards (via `yamllint`, `ansible-lint`, `flake8` and `black` pre-commit hooks)
+  * the role runs fine (with default parameters)
+  * the role is idempotent (with default parameters)
+  * any tests defined in `molecule/default/verify.yml` pass
+
+In addition to local testing, continuous integration tests on a selection of Ubuntu and Debian versions are run on any pull request.

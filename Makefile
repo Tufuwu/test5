@@ -1,33 +1,22 @@
-.PHONY: default i test clean all html rst build install release
-
-default: i
-
-i:
-	@(cd src; python -i -c 'import you_get; print("You-Get %s\n>>> import you_get" % you_get.version.__version__)')
-
-test:
-	(cd src; python -m unittest discover -s ../tests)
-
+.PHONY: clean
 clean:
-	zenity --question
-	rm -fr build/ dist/ src/*.egg-info/
-	find . | grep __pycache__ | xargs rm -fr
-	find . | grep .pyc | xargs rm -f
+	rm -f README.md defaults/main.yml ../dokku.tar.gz
 
-all: build
+.PHONY: release
+release: generate
+	cd .. && tar -zcvf dokku-$(shell cat meta/main.yml | grep version | head -n 1 | cut -d':' -f2 | xargs).tar.gz dokku
 
-html:
-	pandoc README.md > README.html
+.PHONY: generate
+generate: clean README.md defaults/main.yml ansible-role-requirements.yml
 
-rst:
-	pandoc -s -t rst README.md > README.rst
+.PHONY: README.md
+README.md:
+	bin/generate
 
-build:
-	python -m build
+.PHONY: defaults/main.yml
+defaults/main.yml:
+	bin/generate
 
-install:
-	python -m pip install .
-
-release: build
-	@echo 'Upload new version to PyPI using:'
-	@echo '	twine upload --sign dist/you_get-VERSION*'
+.PHONY: ansible-role-requirements.yml
+ansible-role-requirements.yml:
+	bin/generate
