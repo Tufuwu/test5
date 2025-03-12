@@ -1,158 +1,344 @@
-# Jaro Winkler Distance
+# duecredit
 
-<div align="center">
 
-![PyPI - Version](https://img.shields.io/pypi/v/pyjarowinkler?style=flat-square)
-![License](https://img.shields.io/github/license/nap/jaro-winkler-distance?style=flat-square)
-![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pyjarowinkler?style=flat-square)
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/nap/jaro-winkler-distance/push.yml?branch=main&style=flat-square)
+[![Build Status](https://travis-ci.org/duecredit/duecredit.svg?branch=master)](https://travis-ci.org/duecredit/duecredit)
+[![Coverage Status](https://coveralls.io/repos/duecredit/duecredit/badge.svg)](https://coveralls.io/r/duecredit/duecredit)
+[![DOI](https://zenodo.org/badge/DOI/110.5281/zenodo.3376260.svg)](https://doi.org/10.5281/zenodo.3376260)
+[![PyPI version fury.io](https://badge.fury.io/py/duecredit.svg)](https://pypi.python.org/pypi/duecredit/)
 
-</div>
+duecredit is being conceived to address the problem of inadequate
+citation of scientific software and methods, and limited visibility of
+donation requests for open-source software.
 
-This module finds a non-euclidean distance or similarity between two strings.
+It provides a simple framework (at the moment for Python only) to
+embed publication or other references in the original code so they are
+automatically collected and reported to the user at the necessary
+level of reference detail, i.e. only references for actually used
+functionality will be presented back if software provides multiple
+citeable implementations.
 
-Jaro and [Jaro-Winkler](https://www.census.gov/content/dam/Census/library/working-papers/1991/adrm/rr91-9.pdf) equations provides a score between two short strings where errors are more prone at the end of the string. Jaro's equation measure is the weighted sum of the percentage of matching and transposed characters from each string. Winkler's factor adds weight in Jaro's formula to increase the calculated measure when there is a sequence of characters (a prefix) in both strings.
+## Installation
 
-This version is based on the [original C implementation of strcmp95](https://web.archive.org/web/20100227020019/http://www.census.gov/geo/msb/stand/strcmp.c) implementation but does not attempt to normalize characters that are similar to the eyes (e.g.: `O` vs `0`).
+Duecredit is easy to install via pip, simply type:
 
- * Impact of the prefix is limited to 4 characters, as originally defined by Winkler.
- * Input strings are not modified beyond whitespace trimming.
- * In-word whitespace and characters case will **optionally** impact score.
- * Returns a floating point number rounded to the desired decimals (defaults to `2`) using Python's [`round`](https://docs.python.org/3/library/functions.html#round).
- * Consider usual [floating point arithmetic](https://docs.python.org/3/tutorial/floatingpoint.html#tut-fp-issues) characteristics when working with this module.
+ `pip install duecredit`
 
-## Implementation
+## Examples
 
-The complexity of this algoritme resides in finding the `matching` and `transposed` characters. That is because of the interpretation of what are the `matching` conditions and the definition of `transposed`. Definitions of those two will make the score vary between implementations of this algorithme.
+### To cite the modules and methods you are using
 
-Here is how `matching` and `transposed` are defined in this module:
+You can already start "registering" citations using duecredit in your
+Python modules and even registering citations (we call this approach "injections")
+for modules that do not (yet) use duecredit.  duecredit will remain an optional
+dependency, i.e. your software will work correctly even without duecredit installed.
 
-* A character of the first string at position `N` is `matching` if found at position `N` or within `distance` on either side in the second string.
-* The `distance` is calculated using the rounded down length of the longest string divided by two minus one.
-* Characters in the first string are matched only once against characters of the second string.
-* Two characters are `transposed` if they previously matched and aren't at the same position in the matching character subset.
-* Decimals are rounded according to the scientific method.
-
-**TODO**: Implementation should be refactored to use Python's [Decimal](https://docs.python.org/3.13/library/decimal.html) module from the standard library. This module was introduced in Python 3.9.
-
-### Example
-
-Calculate the Jaro Winkler similarity ($sim_{w}$) between `PENNSYLVANIA` and `PENNCISYLVNIA`:
-
-$$
-s_{1}=\text{PENNSYLVANIA} \qquad\text{and}\qquad s_{2}=\text{PENNCISYLVNIA}
-$$
-
+For example, list citations of the modules and methods `yourproject` uses with a few simple commands:
+```bash
+cd /path/to/yourmodule # for ~/yourproject
+cd yourproject # change directory into where the main code base is
+python -m duecredit yourproject.py
 ```
-    P E N N C I S Y L V N I A
-  ┌-─────────────────────────
-P │ 1          ╎
-E │   1          ╎
-N │     1          ╎
-N │       1          ╎           Symbols '╎' represent the sliding windows
-S │             1      ╎        boundary in the second string where we look
-Y │ ╎             1      ╎           for the first string's character.
-L │   ╎             1      ╎
-V │     ╎             1                   d = 5 in this example.
-A │       ╎                 1
-N │         ╎           1
-I │           ╎           1
-A │             ╎
+Or you can also display them in BibTex format, using:
+```bash
+duecredit summary --format=bibtex
 ```
+See this gif animation for a better illustration:
+![Example](examples/duecredit_example.gif)
 
-$$
-\begin{split}
-   d &= \left\lfloor {\max(12, 13) \over 2} \right\rfloor - 1 \newline
-     &= 5 \newline
-\end{split}
-\qquad
-   \text{ and }
-\qquad
-\begin{split}
-   |s_{1}| &= 12 \newline
-   |s_{2}| &= 13 \newline
-\end{split}
-\qquad
-   \text{ and }
-\qquad
-\begin{split}
-   \ell &= 4 \newline
-      m &= 11 \newline
-      t &= 3 \newline
-      p &= 0.1 \newline
-\end{split}
-$$
 
-Considering the input parameters calculated above:
+### To let others cite your software
 
-$$
-\begin{split}
-   sim_{j} &=\begin{cases}
-               0 & \text{if } m = 0 \newline
-               {1 \over 3} \times \left({m \over |s_{1}|} + {m \over |s_{2}|} + {{m - t} \over m} \right) & \text{otherwise}
-             \end{cases} \newline
-           &={1 \over 3} \times \left({11 \over 12} + {11 \over 13} + {{11 - 3} \over 11}\right) \newline
-           &= 0.83003108003 \newline
-\end{split}
-\qquad
-   \text{then}
-\qquad
-\begin{split}
-   sim_{w} &= sim_{j} + \ell \times p \times (1 - sim_{j}) \newline
-           &= 0.83003108003 + 4 \times 0.1 \times (1 - 0.83003108003) \newline
-           &= 0.89801864801 \newline
-\end{split}
-$$
 
-We found that the $\lceil sim_{w} \rceil$ is $0.9$.
+For using duecredit in your software
 
-## Usage
+1. Copy `duecredit/stub.py` to your codebase, e.g.
 
-```python
-from pyjarowinkler import distance
+        wget -q -O /path/tomodule/yourmodule/due.py \
+          https://raw.githubusercontent.com/duecredit/duecredit/master/duecredit/stub.py
 
-distance.get_jaro_similarity("PENNSYLVANIA", "PENNCISYLVNIA", decimals=12)
-# 0.830031080031
-distance.get_jaro_winkler_similarity("PENNSYLVANIA", "PENNCISYLVNIA", decimals=12)
-# 0.898018648019
-distance.get_jaro_distance("hello", "haloa", decimals=4)
-# 0.2667
-distance.get_jaro_similarity("hello", "haloa", decimals=2)
-# 0.73
-distance.get_jaro_winkler_distance("hello", "Haloa", scaling=0.1, ignore_case=False)
-# 0.4
-distance.get_jaro_winkler_distance("hello", "HaLoA", scaling=0.1, ignore_case=True)
-# 0.24
-distance.get_jaro_winkler_similarity("hello", "haloa", decimals=2)
-# 0.76
-```
 
-## Contribute
+    **Note** that it might be better to avoid naming it duecredit.py to avoid shadowing
+    installed duecredit.
 
-You need to have installed [`asdf`](https://asdf-vm.com/) on your system. Then, running the commands below will setup your environment with the project's optional (dev) requirements and create the python virtual environment necessary to run test, lint, and build steps.
+2. Then use `duecredit` import due and necessary entries in your code as
 
-Typical order of execution is as follow:
+        from .due import due, Doi, BibTeX
 
-```shell
-$ cd ./jaro-winkler-distance
-$ asdf install
-$ pip install '.[dev]'
-$ hatch python install 3.13 3.12 3.11 3.10 3.9
-$ hatch env create
-```
+    To provide a generic reference for the entire module just use e.g.
 
-Other helpful commands:
+         due.cite(Doi("1.2.3/x.y.z"), description="Solves all your problems", path="magicpy")
 
-* `hatch test`
-* `hatch fmt`
-* `hatch env show`
-* `hatch run test:unit`
-* `hatch run test:all`
-* `hatch run lint:all`
+    By default, the added reference does not show up in the summary report (but see the
+    `User-view` section below). If your reference is to a core package and you find that it
+    should be listed in the summary then set `cite_module=True` (see [here](https://github.com/duecredit/duecredit/blob/master/duecredit/collector.py#L35) for a complete
+    description of the arguments)
 
-## Release
+         due.cite(Doi("1.2.3/x.y.z"), description="The Answer to Everything", path="magicpy", cite_module=True)
 
-```shell
-$ ./release.sh help
-Usage: release.sh [help|major|minor|patch]
-```
+    Similarly, to provide a direct reference for a function or a method, use the `dcite` decorator (by default
+    this decorator sets cite_module=True)
+
+         @due.dcite(Doi("1.2.3/x.y.z"), description="Resolves constipation issue")
+         def pushit():
+             ...
+
+    You can easily obtain a DOI for your software using Zenodo.org and a few other DOI providers.
+
+References can also be entered as BibTeX entries
+
+        due.cite(BibTeX("""
+                @article{mynicearticle,
+                title={A very cool paper},
+                author={Happy, Author and Lucky, Author},
+                journal={The Journal of Serendipitous Discoveries}
+                }
+                """),
+                description="Solves all your problems", path="magicpy")
+
+## Now what
+
+### Do the due
+
+Once you obtained the references in the duecredit output, include them in in the references section of your paper or software.
+
+### Add injections for other existing modules
+
+We hope that eventually this somewhat cruel approach will not be necessary. But
+until other packages support duecredit "natively" we have provided a way to "inject"
+citations for modules and/or functions and methods via injections: citations will be
+added to the corresponding functionality upon those modules import.
+
+All injections are collected under
+[duecredit/injections](https://github.com/duecredit/duecredit/tree/master/duecredit/injections).
+See any file there with `mod_` prefix for a complete example. But
+overall it is just a regular Python module defining a function
+`inject(injector)` which will then add new entries to the injector,
+which will in turn add those entries to the duecredit whenever the
+corresponding module gets imported.
+
+
+## User-view
+
+
+By default `duecredit` does exactly nothing -- all decorators do not
+decorate, all `cite` functions just return, so there should be no fear
+that it would break anything. Then whenever anyone runs their analysis
+which uses your code and sets `DUECREDIT_ENABLE=yes` environment
+variable or uses `python -m duecredit`, and invokes any of the cited
+function/methods, at the end of the run all collected bibliography
+will be presented to the screen and pickled into `.duecredit.p` file
+in the current directory or to your `DUECREDIT_FILE` environment setting:
+
+    $> python -m duecredit examples/example_scipy.py
+    I: Simulating 4 blobs
+    I: Done clustering 4 blobs
+
+    DueCredit Report:
+    - Scientific tools library / numpy (v 1.10.4) [1]
+    - Scientific tools library / scipy (v 0.14) [2]
+      - Single linkage hierarchical clustering / scipy.cluster.hierarchy:linkage (v 0.14) [3]
+
+    2 packages cited
+    0 modules cited
+    1 function cited
+
+    References
+    ----------
+
+    [1] Van Der Walt, S., Colbert, S.C. & Varoquaux, G., 2011. The NumPy array: a structure for efficient numerical computation. Computing in Science & Engineering, 13(2), pp.22–30.
+    [2] Jones, E. et al., 2001. SciPy: Open source scientific tools for Python.
+    [3] Sibson, R., 1973. SLINK: an optimally efficient algorithm for the single-link cluster method. The Computer Journal, 16(1), pp.30–34.
+
+
+Incremental runs of various software would keep enriching that file.
+Then you can use `duecredit summary` command to show that information
+again (stored in `.duecredit.p` file) or export it as a BibTeX file
+ready for reuse, e.g.:
+
+    $> duecredit summary --format=bibtex
+    @article{van2011numpy,
+            title={The NumPy array: a structure for efficient numerical computation},
+            author={Van Der Walt, Stefan and Colbert, S Chris and Varoquaux, Gael},
+            journal={Computing in Science \& Engineering},
+            volume={13},
+            number={2},
+            pages={22--30},
+            year={2011},
+            publisher={AIP Publishing}
+            }
+    @Misc{JOP+01,
+          author =    {Eric Jones and Travis Oliphant and Pearu Peterson and others},
+          title =     {{SciPy}: Open source scientific tools for {Python}},
+          year =      {2001--},
+          url = "http://www.scipy.org/",
+          note = {[Online; accessed 2015-07-13]}
+        }
+    @article{sibson1973slink,
+            title={SLINK: an optimally efficient algorithm for the single-link cluster method},
+            author={Sibson, Robin},
+            journal={The Computer Journal},
+            volume={16},
+            number={1},
+            pages={30--34},
+            year={1973},
+            publisher={Br Computer Soc}
+        }
+
+
+and if by default only references for "implementation" are listed, we
+can enable listing of references for other tags as well (e.g. "edu"
+depicting instructional materials -- textbooks etc. on the topic):
+
+    $> DUECREDIT_REPORT_TAGS=* duecredit summary
+
+    DueCredit Report:
+    - Scientific tools library / numpy (v 1.10.4) [1]
+    - Scientific tools library / scipy (v 0.14) [2]
+      - Hierarchical clustering / scipy.cluster.hierarchy (v 0.14) [3, 4, 5, 6, 7, 8, 9]
+      - Single linkage hierarchical clustering / scipy.cluster.hierarchy:linkage (v 0.14) [10, 11]
+
+    2 packages cited
+    1 module cited
+    1 function cited
+
+    References
+    ----------
+
+    [1] Van Der Walt, S., Colbert, S.C. & Varoquaux, G., 2011. The NumPy array: a structure for efficient numerical computation. Computing in Science & Engineering, 13(2), pp.22–30.
+    [2] Jones, E. et al., 2001. SciPy: Open source scientific tools for Python.
+    [3] Sneath, P.H. & Sokal, R.R., 1962. Numerical taxonomy. Nature, 193(4818), pp.855–860.
+    [4] Batagelj, V. & Bren, M., 1995. Comparing resemblance measures. Journal of classification, 12(1), pp.73–90.
+    [5] Sokal, R.R., Michener, C.D. & University of Kansas, 1958. A Statistical Method for Evaluating Systematic Relationships, University of Kansas.
+    [6] Jain, A.K. & Dubes, R.C., 1988. Algorithms for clustering data, Prentice-Hall, Inc..
+    [7] Johnson, S.C., 1967. Hierarchical clustering schemes. Psychometrika, 32(3), pp.241–254.
+    [8] Edelbrock, C., 1979. Mixture model tests of hierarchical clustering algorithms: the problem of classifying everybody. Multivariate Behavioral Research, 14(3), pp.367–384.
+    [9] Fisher, R.A., 1936. The use of multiple measurements in taxonomic problems. Annals of eugenics, 7(2), pp.179–188.
+    [10] Gower, J.C. & Ross, G., 1969. Minimum spanning trees and single linkage cluster analysis. Applied statistics, pp.54–64.
+    [11] Sibson, R., 1973. SLINK: an optimally efficient algorithm for the single-link cluster method. The Computer Journal, 16(1), pp.30–34.
+
+The `DUECREDIT_REPORT_ALL` flag allows one to output all the references
+for the modules that lack objects or functions with citations.
+Compared to the previous example, the following output additionally
+shows a reference for scikit-learn since `example_scipy.py` uses
+an uncited function from that package.
+
+    $> DUECREDIT_REPORT_TAGS=* DUECREDIT_REPORT_ALL=1 duecredit summary
+
+    DueCredit Report:
+    - Scientific tools library / numpy (v 1.10.4) [1]
+    - Scientific tools library / scipy (v 0.14) [2]
+      - Hierarchical clustering / scipy.cluster.hierarchy (v 0.14) [3, 4, 5, 6, 7, 8, 9]
+      - Single linkage hierarchical clustering / scipy.cluster.hierarchy:linkage (v 0.14) [10, 11]
+    - Machine Learning library / sklearn (v 0.15.2) [12]
+
+    3 packages cited
+    1 module cited
+    1 function cited
+
+    References
+    ----------
+
+    [1] Van Der Walt, S., Colbert, S.C. & Varoquaux, G., 2011. The NumPy array: a structure for efficient numerical computation. Computing in Science & Engineering, 13(2), pp.22–30.
+    [2] Jones, E. et al., 2001. SciPy: Open source scientific tools for Python.
+    [3] Sneath, P.H. & Sokal, R.R., 1962. Numerical taxonomy. Nature, 193(4818), pp.855–860.
+    ...
+
+## Tags
+
+
+You are welcome to introduce new tags specific to your citations but we hope
+that for consistency across projects, you would use the following tags
+
+- `implementation` (default) — an implementation of the cited method
+- `reference-implementation` — the original implementation (ideally by
+  the authors of the paper) of the cited method
+- `another-implementation` — some other implementation of
+   the method, e.g. if you would like to provide a citation for another
+   implementation of the method you have implemented in your code and for
+   which you have already provided `implementation` or
+   `reference-implementation` tag
+- `use` — publications demonstrating a worthwhile noting use of the
+  method
+- `edu` — tutorials, textbooks and other materials useful to learn
+  more about cited functionality
+- `donate` — should be commonly used with URL entries to point to the
+  websites  describing how to contribute some funds to the referenced
+  project
+- `funding` — to point to the sources of funding which provided support
+  for a given functionality implementation and/or method development
+- `dataset` - for datasets
+
+## Ultimate goals
+
+
+### Reduce demand for prima ballerina projects
+
+**Problem**: Scientific software is often developed to gain citations for
+original publication through the use of the software implementing it.
+Unfortunately, such an established procedure discourages contributions
+to existing projects and fosters new projects to be developed from
+scratch.
+
+**Solution**: With easy ways to provide all-and-only relevant references
+for used functionality within a large(r) framework, scientific
+developers will prefer to contribute to already existing projects.
+
+**Benefits**: As a result, scientific developers will immediately benefit
+from adhering to proper development procedures (codebase structuring,
+testing, etc) and already established delivery and deployment channels
+existing projects already have.  This will increase efficiency and
+standardization of scientific software development, thus addressing
+many (if not all) core problems with scientific software development
+everyone likes to bash about (reproducibility, longevity, etc.).
+
+### Adequately reference core libraries
+
+**Problem**: Scientific software often, if not always, uses 3rd party
+libraries (e.g., NumPy, SciPy, atlas) which might not even be visible
+at the user level.  Therefore they are rarely referenced in the
+publications despite providing the fundamental core for solving a
+scientific problem at hand.
+
+**Solution**: With automated bibliography compilation for all used
+libraries, such projects and their authors would get a chance to
+receive adequate citability.
+
+**Benefits**: Adequate appreciation of the scientific software
+developments.  Coupled with a solution for "prima ballerina" problem,
+more contributions will flow into the core/foundational projects
+making new methodological developments readily available to even wider
+audiences without proliferation of the low quality scientific software.
+
+
+## Similar/related projects
+
+[sempervirens](https://github.com/njsmith/sempervirens) -- *an
+experimental prototype for gathering anonymous, opt-in usage data for
+open scientific software*.  Eventually, in duecredit we aim either to
+provide similar functionality (since we are collecting such
+information as well) or just interface/report to sempervirens.
+
+[citepy](https://github.com/clbarnes/citepy) -- Easily cite software libraries using information from automatically gathered from their package repository.
+
+## Currently used by
+
+This is a running list of projects that use DueCredit natively. If you
+are using DueCredit, or plan to use it, please consider sending a pull
+request and add your project to this list. Thanks to
+[@fedorov](https://github.com/fedorov) for the idea.
+
+- [PyMVPA](http://www.pymvpa.org)
+- [fatiando](https://github.com/fatiando/fatiando)
+- [Nipype](https://github.com/nipy/nipype)
+- [QInfer](https://github.com/QInfer/python-qinfer)
+- [shablona](https://github.com/uwescience/shablona)
+- [gfusion](https://github.com/mvdoc/gfusion)
+- [pybids](https://github.com/INCF/pybids)
+- [Quickshear](https://github.com/nipy/quickshear)
+- [meqc](https://github.com/emdupre/meqc)
+- [MDAnalysis](https://www.mdanalysis.org)
+- [bctpy](https://github.com/aestrivex/bctpy)
+- [TorchIO](https://github.com/fepegar/torchio)
+- [BIDScoin](https://github.com/Donders-Institute/bidscoin)
+
+Last updated 2024-02-23.
