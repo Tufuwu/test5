@@ -1,21 +1,44 @@
-name: CI
+name: tests
 
 on:
-  - push
-  - pull_request
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
 
 jobs:
-  test-build:
-    uses: nextstrain/.github/.github/workflows/pathogen-repo-ci.yaml@master
-    with:
-      build-args: all_regions -j 2 --profile nextstrain_profiles/nextstrain-ci
+  build:
 
-  test-cram:
+    name: Run tests
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.9", "3.10"]
+
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v3
-        with:
-          python-version: "3.9"
-      - run: pip install cram nextstrain-augur
-      - run: cram --shell=/bin/bash tests/sanitize-metadata.t
+    - uses: actions/checkout@v3
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install flake8 mypy pytest
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+    - name: Run tests with pytest
+      run: |
+        python -m pytest -v
+
+    - name: Lint with flake8
+      run: |
+        python -m flake8 . --count --statistics
+    
+    - name: Run mypy
+      run: |
+        python -m mypy --strict simple_pid

@@ -1,79 +1,15 @@
-# Files created by the pipeline, which we want to keep out of git
-# (or at least out of _this_ git repo).
-benchmarks/
-logs/
-results/
+venv/
+docs/build
+__pycache__/
+*.egg-info/
+.eggs/
+dist/
 build/
-auspice/
-data/*
-defaults/colors.tsv
-defaults/colors_*.tsv
-stats.json
-
-# common analysis directory names
-ncov-tutorial/
-my-ncov-analyses/
-
-# old analysis directory
-my_profiles/*
-!my_profiles/README.md
-
-# Downloaded remote files from sources we expect
-/nextstrain-ncov-private/
-/nextstrain-data/
-/data.nextstrain.org/
-
-# Sensitive environment variables
-environment*
-
-# Snakemake state dir
-/.snakemake
-snakemake_log
-
-# Local config overrides
-/config_local.yaml
-
-# For Python #
-##############
-*.pyc
+.pytest_cache/
 .tox/
-.cache/
-
-# Compiled source #
-###################
-*.com
-*.class
-*.dll
-*.exe
-*.o
-*.so
-
-# OS generated files #
-######################
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-Icon?
-ehthumbs.db
-Thumbs.db
-*~
-
-# IDE generated files #
-######################
+*.pyc
+.idea/
 .vscode/
-
-narratives/*pdf
-
-
-# metadata / new seqs scripts
-scripts/curate_metadata/inputs_new_sequences/
-scripts/curate_metadata/output_curate_metadata/
-scripts/curate_metadata/outputs_new_sequences/
-scripts/curate_metadata/config_curate_metadata/geoLocationRules.txt
-scripts/curate_metadata/config_curate_metadata/manualAnnotationRules.txt
-
-
-# SLURM log files
-slurm-*.out
+.envrc
+build.sh
+total_downloads.py

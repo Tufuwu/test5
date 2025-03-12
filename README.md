@@ -1,58 +1,51 @@
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/nextstrain/ncov)](https://github.com/nextstrain/ncov/releases)
-[![See recent changes](https://img.shields.io/badge/changelog-See%20recent%20changes-blue)](https://docs.nextstrain.org/projects/ncov/en/latest/reference/change_log.html)
+# simple-pid
 
-# About
+[![Tests](https://github.com/m-lundberg/simple-pid/actions/workflows/run-tests.yml/badge.svg)](https://github.com/m-lundberg/simple-pid/actions?query=workflow%3Atests)
+[![PyPI](https://img.shields.io/pypi/v/simple-pid.svg)](https://pypi.org/project/simple-pid/)
+[![Read the Docs](https://img.shields.io/readthedocs/simple-pid.svg)](https://simple-pid.readthedocs.io/)
+[![License](https://img.shields.io/github/license/m-lundberg/simple-pid.svg)](https://github.com/m-lundberg/simple-pid/blob/master/LICENSE.md)
+[![Downloads](https://static.pepy.tech/badge/simple-pid/month)](https://pepy.tech/project/simple-pid)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-This repository analyzes viral genomes using [Nextstrain](https://nextstrain.org) to understand how SARS-CoV-2, the virus that is responsible for the COVID-19 pandemic, evolves and spreads.
+A simple and easy to use PID controller in Python. If you want a PID controller without external dependencies that just works, this is for you! The PID was designed to be robust with help from [Brett Beauregards guide](http://brettbeauregard.com/blog/2011/04/improving-the-beginners-pid-introduction/).
 
-We maintain a number of publicly-available builds, visible at [nextstrain.org/ncov](https://nextstrain.org/ncov).
+Usage is very simple:
 
-[See our change log for details about backwards-incompatible or breaking changes to the workflow](https://docs.nextstrain.org/projects/ncov/en/latest/reference/change_log.html).
+```python
+from simple_pid import PID
+pid = PID(1, 0.1, 0.05, setpoint=1)
 
-Visit [the workflow documentation](https://docs.nextstrain.org/projects/ncov) for tutorials and reference material.
+# Assume we have a system we want to control in controlled_system
+v = controlled_system.update(0)
 
-## Download formatted datasets
+while True:
+    # Compute new output from the PID according to the systems current value
+    control = pid(v)
+    
+    # Feed the PID output to the system and get its current value
+    v = controlled_system.update(control)
+```
 
-The hCoV-19 / SARS-CoV-2 genomes were generously shared via GISAID. We gratefully acknowledge the Authors, Originating and Submitting laboratories of the genetic sequence and metadata made available through GISAID on which this research is based.
 
-In order to download the GISAID data to run the analysis yourself, please see [this guide](https://docs.nextstrain.org/projects/ncov/en/latest/analysis/data-prep.html).
-> Please note that `data/metadata.tsv` is no longer included as part of this repo. However, we provide continually-updated, pre-formatted metadata & fasta files for download through GISAID.
+## Installation
+To install, run:
 
-## Read previous Situation Reports
+```
+python -m pip install simple-pid
+```
 
-We issued weekly Situation Reports for the first ~5 months of the pandemic. You can find the Reports and their translations [here](https://nextstrain.org/ncov-sit-reps).
 
-## FAQs
+## Documentation
+Documentation, including a user guide and complete API reference, can be found [here](https://simple-pid.readthedocs.io/).
 
-- Can't find your sequences in Nextstrain? Check [here](./docs/data_faq.md) for common reasons why your sequences may not be appearing.
-You can also use [clades.nextstrain.org](https://clades.nextstrain.org/) to perform some basic quality control on your sequences. If they are flagged by this tool, they will likely be excluded by our pipeline.
-- For information about how clades are defined, and the currently named clades, please see [here](./docs/naming_clades.md). To assign clades to your own sequences, you can use our clade assignment tool at [clades.nextstrain.org](https://clades.nextstrain.org/).
 
-## Bioinformatics notes
+## Tests
+This project has a test suite using [`pytest`](https://docs.pytest.org/). To run the tests, install `pytest` and run:
 
-Site numbering and genome structure uses [Wuhan-Hu-1/2019](https://www.ncbi.nlm.nih.gov/nuccore/MN908947) as reference. The phylogeny is rooted relative to early samples from Wuhan. Temporal resolution assumes a nucleotide substitution rate of [8 &times; 10^-4 subs per site per year](http://virological.org/t/phylodynamic-analysis-176-genomes-6-mar-2020/356). There were SNPs present in the nCoV samples in the first and last few bases of the alignment that were masked as likely sequencing artifacts.
+```
+pytest -v
+```
 
-# Contributing
 
-We welcome contributions from the community! Please note that we strictly adhere to the [Contributor Covenant Code of Conduct](https://github.com/nextstrain/.github/blob/master/CODE_OF_CONDUCT.md).
-
-### Contributing to software or documentation
-
-Please see our [Contributor Guide](https://github.com/nextstrain/.github/blob/master/CONTRIBUTING.md) to get started!
-
-### Contributing data
-
-**Please note that we automatically pick up any SARS-CoV-2 data that is submitted to GISAID.**
-
-If you're a lab and you'd like to get started sequencing, please see:
-* [Protocols from the ARTIC network](https://www.protocols.io/groups/artic/publications)
-* [Funding opportunities for sequencing efforts](https://twitter.com/firefoxx66/status/1242147905768751106)
-* Or, if these don't meet your needs, [get in touch](mailto:hello@nextstrain.org)
-
----
-
-# Get in touch
-
-To report a bug, error, or feature request, please [open an issue](https://github.com/nextstrain/ncov/issues).
-
-For questions, head over to the [discussion board](https://discussion.nextstrain.org/); we're happy to help!
+## License
+Licensed under the [MIT License](https://github.com/m-lundberg/simple-pid/blob/master/LICENSE.md).
