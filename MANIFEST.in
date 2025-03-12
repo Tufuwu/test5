@@ -1,5 +1,8 @@
+# Include the license file
 include LICENSE
-include README.rst
-include django_yubin/management/commands/sample.pdf
-recursive-include docs *
-recursive-include django_yubin/templates *
+
+# Include readme file
+include README.md
+
+# Include citation file
+include CITATION.cff
