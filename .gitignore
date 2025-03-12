@@ -1,67 +1,79 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
+# Files created by the pipeline, which we want to keep out of git
+# (or at least out of _this_ git repo).
+benchmarks/
+logs/
+results/
+build/
+auspice/
+data/*
+defaults/colors.tsv
+defaults/colors_*.tsv
+stats.json
 
-# C extensions
+# common analysis directory names
+ncov-tutorial/
+my-ncov-analyses/
+
+# old analysis directory
+my_profiles/*
+!my_profiles/README.md
+
+# Downloaded remote files from sources we expect
+/nextstrain-ncov-private/
+/nextstrain-data/
+/data.nextstrain.org/
+
+# Sensitive environment variables
+environment*
+
+# Snakemake state dir
+/.snakemake
+snakemake_log
+
+# Local config overrides
+/config_local.yaml
+
+# For Python #
+##############
+*.pyc
+.tox/
+.cache/
+
+# Compiled source #
+###################
+*.com
+*.class
+*.dll
+*.exe
+*.o
 *.so
 
-# Distribution / packaging
-.Python
-env/
-./build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-*.egg-info/
-.installed.cfg
-*.egg
-.eggs
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
+*~
 
-# PyInstaller
-#  Usually these files are written by a python script from a template
-#  before PyInstaller builds the exe, so as to inject date/other infos into it.
-*.manifest
-*.spec
+# IDE generated files #
+######################
+.vscode/
 
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
+narratives/*pdf
 
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.coverage
-.cache
-nosetests.xml
-coverage.xml
 
-# Translations
-*.mo
-*.pot
-*.po~
+# metadata / new seqs scripts
+scripts/curate_metadata/inputs_new_sequences/
+scripts/curate_metadata/output_curate_metadata/
+scripts/curate_metadata/outputs_new_sequences/
+scripts/curate_metadata/config_curate_metadata/geoLocationRules.txt
+scripts/curate_metadata/config_curate_metadata/manualAnnotationRules.txt
 
-# Django stuff:
-*.log
 
-# Sphinx documentation
-docs/_build/
-
-# PyBuilder
-target/
-
-# JS stuff:
-node_modules
-/static/dist
-/frontend/webpack-stats.json
-/frontend/yarn.lock
-coverage
-/modoboa_radicale/static
-
-# Dev stuff:
-.ropeproject
+# SLURM log files
+slurm-*.out
