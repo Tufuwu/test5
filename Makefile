@@ -1,10 +1,18 @@
-test: test_lint test_unit test_integration
+.PHONY: check
+check:
+	flake8 ./pybsn/ ./bin/* --count --max-complexity=20 --max-line-length=127 --show-source --statistics
 
-test_lint:
-	pre-commit run --all-files --show-diff-on-failure
+.PHONY: coverage
+coverage:
+	coverage run --omit */*-packages/* -m unittest discover -v
 
-test_unit:
-	pytest -vvv --cov-report term-missing --cov=cartography tests/unit
+.PHONY: coverage-report
+coverage-report:
+	coverage report
 
-test_integration:
-	pytest -vvv --cov-report term-missing --cov=cartography tests/integration
+.PHONY: install-deps
+install-deps:
+	# for development, consider running in a pipenv/venv
+	python -m pip install --upgrade pip
+	python -m pip install coverage flake8
+	python -m pip install -r requirements.txt

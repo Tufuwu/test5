@@ -1,24 +1,15 @@
-*~
+# Compiled python modules.
 *.pyc
-*.pyo
-*.pyt
-*.pytc
-*.egg-info
-.*.swp
-.DS_Store
-/venv*
-.venv/
-.cache/
-build/
-.idea/
-.coverage
-.mypy_cache
-*.vscode
-.compose
-generated
-dist/
-.local
-cartography/_version.py
-uv.lock
-.cursor-server
-.gitconfig
+
+# vim tmp files
+*.swp
+
+# Setuptools distribution folder.
+/dist/
+/build/
+
+# Python egg metadata, regenerated from source files by setuptools.
+/*.egg-info
+
+# Generated Coverage reports
+*.coverage
