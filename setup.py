@@ -1,46 +1,32 @@
-#!/usr/bin/env python
-import os, sys
-from setuptools import setup, find_packages
+#!/usr/bin/env python3
+import sys
+try:
+  from setuptools import setup
+except ImportError:
+  from distutils.core import setup
 
+if sys.version_info < (3,4):
+    sys.exit("Python 3.4+ is required; you are using %s" % sys.version)
 
-with open('README.rst', 'r') as f:
-    long_description = f.read()
-
-# Dynamically calculate the version based on swingtime.VERSION.
-version=__import__('swingtime').get_version()
-
-setup(
-    name='django-swingtime',
-    url='https://github.com/dakrauth/django-swingtime',
-    author='David A Krauth',
-    author_email='dakrauth@gmail.com',
-    description='A Django calendaring application.',
-    version=version,
-    long_description=long_description,
-    long_description_content_type='text/x-rst',
-    platforms=['any'],
-    license='MIT License',
-    python_requires='>=3.10, <4',
-    install_requires=['Django>=4.2,<5.2', 'python-dateutil>=2.8.2'],
-    extras_require={
-        'test': ['tox', 'coverage', 'pytest-django', 'pytest', 'pytest-cov', 'flake8'],
-        'docs': ["sphinx", "sphinx-rtd-theme"]
-    },
-    classifiers=[
-        'Development Status :: 5 - Production/Stable',
-        'Environment :: Web Environment',
-        'Framework :: Django',
-        'Framework :: Django :: 4.2',
-        'Framework :: Django :: 5.0',
-        'Framework :: Django :: 5.1',
-        'License :: OSI Approved :: MIT License',
-        'Programming Language :: Python',
-        'Programming Language :: Python :: 3.10',
-        'Programming Language :: Python :: 3.11',
-        'Programming Language :: Python :: 3.12',
-        'Topic :: Office/Business :: Scheduling',
-    ],
-    packages=find_packages(),
-    package_data={'swingtime': ['locale/*/*/*.*',]},
-    zip_safe=False,
-)
+setup(name="aztec_code_generator",
+      version="0.11",
+      description='Aztec Code generator in Python',
+      long_description=open('README.md').read(),
+      long_description_content_type='text/markdown',
+      author='Dmitry Alimov',
+      author_email="dvalimov@gmail.com",
+      maintainer='Daniel Lenski',
+      maintainer_email='dlenski@gmail.com',
+      install_requires=open('requirements.txt').readlines(),
+      extras_require={
+          "Image": [
+              "pillow>=3.0,<6.0; python_version < '3.5'",
+              "pillow>=3.0,<8.0; python_version >= '3.5' and python_version < '3.6'",
+              "pillow>=8.0; python_version >= '3.6'",
+          ]
+      },
+      tests_require=open('requirements-test.txt').readlines(),
+      license='MIT',
+      url="https://github.com/dlenski/aztec_code_generator",
+      py_modules=["aztec_code_generator"],
+      )
