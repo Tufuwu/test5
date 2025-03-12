@@ -1,122 +1,86 @@
-# InfluxAlchemy
+# hypothesis-jsonschema
 
-![pypi](https://img.shields.io/pypi/v/influxalchemy?color=yellow&logo=python&logoColor=eee&style=flat-square)
-![python](https://img.shields.io/pypi/pyversions/influxalchemy?logo=python&logoColor=eee&style=flat-square)
-[![pytest](https://img.shields.io/github/actions/workflow/status/amancevice/influxalchemy/pytest.yml?logo=github&style=flat-square)](https://github.com/amancevice/influxalchemy/actions/workflows/pytest.yml)
-[![coverage](https://img.shields.io/codeclimate/coverage/amancevice/influxalchemy?logo=code-climate&style=flat-square)](https://codeclimate.com/github/amancevice/influxalchemy/test_coverage)
-[![maintainability](https://img.shields.io/codeclimate/maintainability/amancevice/influxalchemy?logo=code-climate&style=flat-square)](https://codeclimate.com/github/amancevice/influxalchemy/maintainability)
+A [Hypothesis](https://hypothesis.readthedocs.io) strategy for generating data
+that matches some [JSON schema](https://json-schema.org/).
 
-Query InfluxDB using SQLAlchemy-style syntax
+[Here's the PyPI page.](https://pypi.org/project/hypothesis-jsonschema/)
 
-## Installation
+## API
 
-```bash
-pip install influxalchemy
-```
-
-## Usage
+The public API consists of just one function: `hypothesis_jsonschema.from_schema`,
+which takes a JSON schema and returns a strategy for allowed JSON objects.
 
 ```python
-import influxdb
-import influxalchemy
+from hypothesis import given
+
+from hypothesis_jsonschema import from_schema
+
+
+@given(from_schema({"type": "integer", "minimum": 1, "exclusiveMaximum": 10}))
+def test_integers(value):
+    assert isinstance(value, int)
+    assert 1 <= value < 10
+
+
+@given(
+    from_schema(
+        {"type": "string", "format": "card"},
+        # Standard formats work out of the box.  Custom formats are ignored
+        # by default, but you can pass custom strategies for them - e.g.
+        custom_formats={"card": st.sampled_from(EXAMPLE_CARD_NUMBERS)},
+    )
+)
+def test_card_numbers(value):
+    assert isinstance(value, str)
+    assert re.match(r"^\d{4} \d{4} \d{4} \d{4}$", value)
+
+
+@given(from_schema({}, allow_x00=False, codec="utf-8").map(json.dumps))
+def test_card_numbers(payload):
+    assert isinstance(payload, str)
+    assert "\0" not in payload  # use allow_x00=False to exclude null characters
+    # If you want to restrict generated strings characters which are valid in
+    # a specific character encoding, you can do that with the `codec=` argument.
+    payload.encode(codec="utf-8")
 ```
 
-### Define InfluxAlchemy Measurements
+For more details on property-based testing and how to use or customise
+strategies, [see the Hypothesis docs](https://hypothesis.readthedocs.io/).
 
-```python
-class Widgets(influxalchemy.Measurement):
-    __measurement__ = 'widgets'
+JSONSchema drafts 04, 05, and 07 are fully tested and working.
+As of version 0.11, this includes resolving non-recursive references!
 
 
-class Wombats(influxalchemy.Measurement):
-    __measurement__ = 'wombats'
-```
+## Supported versions
 
-The class-attribute `__measurement__` can be omitted and will default to the class name if absent.
+`hypothesis-jsonschema` requires Python 3.6 or later.
+In general, 0.x versions will require very recent versions of all dependencies
+because I don't want to deal with compatibility workarounds.
 
-### Open InfluxAlchemy Connection
+`hypothesis-jsonschema` may make backwards-incompatible changes at any time
+before version 1.x - that's what semver means! - but I've kept the API surface
+small enough that this should be avoidable.  The main source of breaks will be
+if or when schema that never really worked turn into explicit errors instead
+of generating values that don't quite match.
 
-```python
-db = influxdb.DataFrameClient(database="example")
-flux = influxalchemy.InfluxAlchemy(db)
-```
+You can [sponsor me](https://github.com/sponsors/Zac-HD) to get priority
+support, roadmap input, and prioritized feature development.
 
-## Query InfluxDB
 
-### Query Single Measurement
+## Contributing to `hypothesis-jsonschema`
 
-```python
-# SELECT * FROM widgets;
-flux.query(Widgets)
-```
+We love external contributions - and try to make them both easy and fun.
+You can [read more details in our contributing guide](https://github.com/Zac-HD/hypothesis-jsonschema/blob/master/CONTRIBUTING.md),
+and [see everyone who has contributed on GitHub](https://github.com/Zac-HD/hypothesis-jsonschema/graphs/contributors).
+Thanks, everyone!
 
-### Query Ad Hoc Measurement
 
-```python
-# SELECT * from /.*/;
-flux.query(influxalchemy.Measurement.new("/.*/"))
-```
+### Changelog
 
-### Select Fields of Measurement
+Patch notes [can be found in `CHANGELOG.md`](https://github.com/Zac-HD/hypothesis-jsonschema/blob/master/CHANGELOG.md).
 
-```python
-# SELECT tag1, field2 FROM widgets;
-flux.query(Widgets.tag1, Widgets.field2)
-```
 
-### Query Across Measurements
-
-```python
-# SELECT * FROM /widgets|wombats/;
-flux.query(Widgets | Wombats)
-```
-
-### Filter Tags
-
-```python
-# SELECT * FROM widgets WHERE tag1 = 'fizz';
-flux.query(Widgets).filter(Widgets.tag1 == "fizz")
-```
-
-### Filter Tags with 'like'
-
-```python
-# SELECT * FROM widgets WHERE tag1 =~ /z$/;
-flux.query(Widgets).filter(Widgets.tag1.like("/z$/"))
-```
-
-### Chain Filters
-
-```python
-clause1 = Widgets.tag1 == "fizz"
-clause2 = Widgets.tag2 == "buzz"
-
-# SELECT * FROM widgets WHERE tag1 = 'fizz' AND tag2 = 'buzz';
-flux.query(Widgets).filter(clause1 & clause2)
-
-# SELECT * FROM widgets WHERE tag1 = 'fizz' OR tag2 = 'buzz';
-flux.query(Widgets).filter(clause1 | clause2)
-```
-
-### Group By
-
-```python
-# SELECT * FROM widgets GROUP BY time(1d);
-flux.query(Widgets).group_by("time(1d)")
-
-# SELECT * FROM widgets GROUP BY tag1;
-flux.query(Widgets).group_by(Widgets.tag1)
-```
-
-### Time
-
-```python
-# SELECT * FROM widgets WHERE (time > now() - 7d);
-flux.query(Widgets).filter(Widgets.time > "now() - 7d")
-
-# SELECT * FROM widgets WHERE time >= '2016-01-01' AND time <= now() - 7d;
-d = date(2016, 1, 1)
-flux.query(Widgets).filter(Widgets.time.between(d, "now() - 7d"))
-```
-
-Note that naive datetime object will be assumed in UTC timezone.
+### Security contact information
+To report a security vulnerability, please use the
+[Tidelift security contact](https://tidelift.com/security).
+Tidelift will coordinate the fix and disclosure.
