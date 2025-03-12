@@ -1,4 +1,8 @@
-# Blocklist start
-lakefs*
-umbraco*
-# Blocklist end
+.idea
+build
+.eggs
+.cache
+.coverage
+pyCEC.egg-info
+dist
+__pycache__

@@ -1,5 +1,0 @@
-{
-      "yaml.schemas": {
-        "/home/runner/work/hacktoberfest-swag/hacktoberfest-swag/.jsonschema": ["/participants/**/*.yml"]
-      }
-}
