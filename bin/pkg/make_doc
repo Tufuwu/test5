@@ -1,0 +1,58 @@
+#!/usr/bin/python
+
+from __future__ import print_function
+
+import importlib
+import os
+import sys
+
+path = os.path.join(os.path.dirname(__file__), "..", "..", "opensvc")
+sys.path.insert(0, path)
+
+from env import Env
+import daemon.events
+from utilities.drivers import load_drivers
+
+
+def main(fmt="text"):
+    print("* update service templates")
+    from core.objects.svcdict import KEYS, SECTIONS, DATA_SECTIONS
+    load_drivers(SECTIONS + DATA_SECTIONS)
+    KEYS.write_templates(fmt=fmt)
+
+    print("* update user templates")
+    from core.objects.usrdict import KEYS
+    KEYS.write_templates(fmt=fmt)
+
+    print("* update secret templates")
+    from core.objects.secdict import KEYS
+    KEYS.write_templates(fmt=fmt)
+
+    print("* update configmap templates")
+    from core.objects.cfgdict import KEYS
+    KEYS.write_templates(fmt=fmt)
+
+    print("* update nscfg templates")
+    from core.objects.nscfgdict import KEYS
+    KEYS.write_templates(fmt=fmt)
+
+    print("* update cluster templates")
+    from core.objects.ccfgdict import KEYS
+    KEYS.write_templates(fmt=fmt)
+
+    print("* update node templates")
+    from core.node.nodedict import KEYS
+    KEYS.write_templates(fmt=fmt)
+
+    print("* update daemon events")
+    dpath = os.path.join(Env.paths.pathdoc, "daemon.events")
+    print("write %s" % dpath)
+    with open(dpath, "w") as f:
+        f.write(daemon.events.doc())
+
+if __name__ == "__main__":
+    try:
+       fmt = sys.argv[1]
+    except:
+       fmt = "text"
+    main(fmt=fmt)

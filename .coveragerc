@@ -1,0 +1,29 @@
+[report]
+exclude_lines =
+    pragma: no cover
+    if __name__ == .__main__.:
+    def __repr__
+    if 0:
+    if False:
+
+omit =
+    /usr/local/lib/*
+    lib/tests/*
+    lib/aenum/*
+    lib/colorama/*
+    lib/h2/*
+    lib/hpack/*
+    lib/hyper/*
+    lib/hyperframe/*
+    lib/json_delta/*
+    lib/jsonpath_ng/*
+    lib/jwt/*
+    lib/ply/*
+    lib/pyaes/*
+    lib/rfc3986/*
+    lib/tabulate.py
+    lib/wmi.py
+    lib/ipaddress.py
+    opensvc/foreign/*
+    opensvc/tests/*
+    /home/travis/virtualenv/*

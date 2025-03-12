@@ -1,0 +1,149 @@
+#!/usr/bin/env python
+
+from __future__ import print_function
+
+import sys
+import os
+import shutil
+import importlib
+
+pathsvc = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..'))
+pathlib = os.path.join(pathsvc, "opensvc")
+pathtmp = os.path.join(pathsvc, "tmp", "agent.commands")
+opthash = {}
+
+sys.path = [pathlib] + sys.path
+
+if os.path.exists(pathtmp):
+    shutil.rmtree(pathtmp)
+os.makedirs(pathtmp)
+
+def section_pname(prog, name):
+    return prog + ".section." + name.lower().replace(" ", "_")
+
+def action_pname(prog, section_name, action_name):
+    return prog + ".action." + section_name.lower().replace(" ", "_") + "." + action_name.lower().replace(" ", "_")
+
+def option_pname(prog, name):
+    return prog + ".option." + name
+
+def write_sections(prog, parser):
+    for name, data in parser.actions.items():
+        write_section(prog, name, data, parser)
+
+def write_section(prog, name, data, parser):
+    pname = section_pname(prog, name)
+    buff = ".. _%s:\n\n" % pname 
+
+    title = ""
+    title += "%s\n" % name
+    title += (len(title) - 1) * "+" + "\n\n"
+
+    buff += title
+
+    buff += ".. toctree::\n"
+    buff += "   :maxdepth: 1\n\n"
+    for action_name in sorted(data.keys()):
+        action_data = data[action_name]
+        buff += "   %s\n" % action_pname(prog, name, action_name)
+        write_action(prog, name, action_name, action_data, parser)
+
+    buff += "\n"
+
+    fpath = os.path.join(pathtmp, pname+".rst")
+    print("write", fpath)
+    with open(fpath, "w") as f:
+        f.write(buff)
+
+def prog2om(prog):
+    kind = prog.replace("mgr", "")
+    return "om " + kind
+
+def write_action(prog, section_name, action_name, action_data, parser):
+    pname = action_pname(prog, section_name, action_name)
+    buff = ".. _%s:\n\n" % pname 
+
+    title = ":cmd:`%s %s`\n" % (prog2om(prog), action_name.replace("_", " "))
+    title += (len(title) - 1) * "-" + "\n\n"
+
+    buff += title
+    buff += action_data["msg"] + "\n"
+
+    buff += "\n"
+
+    options = list(action_data.get("options", []))
+    if parser.global_options:
+        options += parser.global_options
+    for option in sorted(options, key=lambda x:str(x._short_opts+x._long_opts)):
+        buff += fmt_option(prog, option)
+
+    buff += "\n"
+
+    fpath = os.path.join(pathtmp, pname+".rst")
+    print("write", fpath)
+    with open(fpath, "w") as f:
+        f.write(buff)
+
+def fmt_option(prog, option):
+    buff = ""
+
+    opts = []
+    for opt in option._short_opts:
+        if option.action == "store":
+            opts += [opt, "VAL"]
+        else:
+            opts += [opt]
+
+    for opt in option._long_opts:
+        if option.action == "store":
+            opts += ["%s=<%s>" % (opt, option.type)]
+        else:
+            opts += [opt]
+
+    title = ":opt:`"
+    title += ", ".join(opts)
+    title += "`\n"
+    title += (len(title) - 1) * "+" + "\n\n"
+
+    buff += title
+
+    for line in option.help.splitlines():
+        buff += "\t%s\n" % line
+
+    buff += "\n"
+
+    return buff
+
+def write(prog, parser):
+    write_sections(prog, parser)
+
+    buff = ""
+
+    title = "%s\n" % prog2om(prog)
+    title += (len(title) - 1) * "*" + "\n\n"
+    buff += title
+
+    buff += ".. toctree::\n"
+    buff += "   :maxdepth: 2\n"
+    buff += "   :glob:\n\n"
+    buff += "   %s.section.*\n\n" % prog
+
+    fpath = os.path.join(pathtmp, prog+".rst")
+    print("write", fpath)
+    with open(fpath, "w") as f:
+        f.write(buff)
+
+def do(kind):
+    prog = kind
+    mod = importlib.import_module("commands.%s.parser" % prog)
+    classname = prog.capitalize() + "OptParser"
+    parser = getattr(mod, classname)()
+    write(prog, parser)
+
+if __name__ == "__main__":
+    do("node")
+    do("svc")
+    do("vol")
+    do("sec")
+    do("cfg")
+    do("nscfg")

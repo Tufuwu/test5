@@ -1,0 +1,141 @@
+#!/usr/bin/env bash
+
+PATH_SCRIPT="$(cd $(/usr/bin/dirname $(type -p -- $0 || echo $0));pwd)"
+. $PATH_SCRIPT/makelib.sh
+
+TBZ=$CHROOT/opensvc-$VERSION.$RELEASE.tbz
+CHROOT=$CHROOT/opensvc-$VERSION.$RELEASE
+DISTFILES_D=/usr/ports/distfiles
+TAR=opensvc-$VERSION.$RELEASE.tar.gz
+
+prepare_chroot || exit 1
+
+cd $CHROOT/.. || exit 1
+
+[[ ! -d $DISTFILES_D ]] && mkdir -p $DISTFILES_D
+
+tar czf $DISTFILES_D/$TAR opensvc-$VERSION.$RELEASE || exit 1
+
+cat - <<EOF >Makefile
+# New ports collection makefile for:   opensvc
+# Date created:        $(date +"%d %B %Y")
+# Whom:                opensvc
+#
+# \$FreeBSD$
+#
+
+PORTNAME=      opensvc
+PORTVERSION=   $VERSION.$RELEASE
+CATEGORIES=    sysutils
+MASTER_SITES=  https://repo.opensvc.com/tgz
+
+MAINTAINER=    admin@opensvc.com
+COMMENT=       $SUMMARY
+LICENSE=	GPLv2
+
+#MAN1=          svcmgr.3
+#MANCOMPRESSED= yes
+
+USES=python:2.6+
+DEST_DIR=      /
+PREFIX=        /
+NO_BUILD=      yes
+SUB_FILES=	pkg-install pkg-deinstall
+
+do-install:
+	\${CP} -a \${WRKSRC}/* \${STAGEDIR}/
+
+.include <bsd.port.mk>
+
+EOF
+
+[[ ! -d $CHROOT/../files ]] && mkdir -p $CHROOT/../files
+
+cat - <<-EOF >$CHROOT/../files/pkg-install.in
+#!/bin/sh
+#
+# $FreeBSD$
+#
+
+case \$2 in
+	PRE-INSTALL)
+		echo ""
+		;;
+	POST-INSTALL)
+		echo "===> post-installation for \$1"
+                mkdir -p /etc/opensvc /var/log/opensvc /var/tmp/opensvc /var/lib/opensvc /var/lib/opensvc/lock
+                cp -f /usr/share/opensvc/bin/init/opensvc.init.FreeBSD /usr/local/etc/rc.d/opensvc
+                if [ ! -f /etc/defaults/opensvc ]; then
+                    cp -f /usr/share/opensvc/bin/init/opensvc.defaults.parameters /etc/defaults/opensvc
+                fi
+		echo ""
+		echo "If you want to enable OpenSVC at boot time, please use the command below :"
+		echo "# sysrc -f /etc/rc.conf.d/opensvc opensvc_enable=YES"
+		echo ""
+		;;
+	*)
+		exit 64
+		;;
+esac
+
+exit 0
+
+EOF
+
+cat - <<-EOF >$CHROOT/../files/pkg-deinstall.in
+#!/bin/sh
+#
+# $FreeBSD$
+#
+
+case \$2 in
+        DEINSTALL)
+                echo ""
+                ;;
+        POST-DEINSTALL)
+                echo "===> post-deinstallation for \$1"
+                rm -f /usr/local/etc/rc.d/opensvc
+                echo ""
+                if [ -f /etc/rc.conf.d/opensvc ]; then
+                    echo "You may want to remove file /etc/rc.conf.d/opensvc manually"
+                fi
+                echo ""
+                if [ -f /etc/defaults/opensvc ]; then
+                    echo "You may want to remove file /etc/defaults/opensvc manually"
+                fi
+                echo ""
+                ;;
+        *)
+                exit 64
+                ;;
+esac
+
+exit 0
+
+EOF
+
+cat - <<-EOF >pkg-descr
+$DESCRIPTION
+
+WWW: https://www.opensvc.com/
+EOF
+
+cd $CHROOT
+find etc usr var -type f -o -type l >../pkg-plist
+find etc usr var -type d | sed "s/^/@dir /" >>../pkg-plist
+cd ..
+
+make makesum
+make package
+
+GENPKGNAME=$(ls -1rt $CHROOT/.. | grep opensvc | tail -1)
+echo
+echo "Package is located here : "
+echo "=>  $CHROOT/../${GENPKGNAME}"
+echo
+
+[ -x $PATH_SCRIPT/release_tbz ] && {
+	$PATH_SCRIPT/release_tbz $TBZ || exit 1
+}
+
+exit 0

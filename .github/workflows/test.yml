@@ -1,75 +1,65 @@
-name: "CI"
+name: OpenSVC agent CI
+on: [push]
 
-on:
-  pull_request:
-    branches:
-      - "*"
-  push:
-    branches:
-      - "main"
-      - "master"
+branches:    
+  - master
+  - b2.0
+  - b2.1
 
 jobs:
-  test:
-    runs-on: "ubuntu-latest"
-
+  ci:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - python-version: 3.9
+            PYTEST_EXTRA_ARGS: ""
+          - python-version: 3.9
+            PYTEST_EXTRA_ARGS: "--cov"
+        
     steps:
-      - uses: "actions/checkout@v2"
+      - name: Checkout opensvc
+        uses: actions/checkout@v2
 
-      - name: "Set up Python 3.8"
-        uses: "actions/setup-python@v1"
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
         with:
-          python-version: "3.9"
+          python-version: ${{ matrix.python-version }}
 
-      - name: "Install dependencies"
+      - name: Install system dependencies
         run: |
-          pip3 install flake8 Flask==1.1.2
-          pip3 install -e .
+          sudo apt-get update
+          sudo apt-get -y install procps
 
-      - name: "Lint code base"
+      - name: Install python dependencies
         run: |
-          flake8 .
+          pip install -r test-requirements.txt
 
-      - name: "Run test suite"
+      - name: Run pytest
+        run: sudo $(which pytest) ${{ PYTEST_EXTRA_ARGS }} -m "ci"
+
+      - name: Run pylint
+        env:
+          PYTHONPATH: opensvc
+          OPENSVC_CI_EXTRA_TIME_OSVCD_STARTUP: 25
+        run: pylint -E opensvc/*py opensvc/commands opensvc/core opensvc/daemon opensvc/drivers opensvc/utilities
+
+      - name: Run codecov
+        if: ${{ success() }}
         run: |
-          cd tests/example_app
-          export FLASK_APP=example.app
+          pip install codecov
+          codecov
 
-          ls -laR example/static/ | wc -l
-          | grep -q "26"
-          && (echo "File count before compiling test: pass" && exit 0)
-          || (echo "File count before compiling test: fail" && exit 1)
-
-          flask digest compile
-          && ls -laR example/static/ | wc -l
-          | grep -q "36"
-          && (echo "File count after compiling test: pass" && exit 0)
-          || (echo "File count after compiling test: fail" && exit 1)
-
-          grep -q "js/modules/hello.js" example/static/cache_manifest.json
-          && (echo "Cache manifest has nested file test: pass" && exit 0)
-          || (echo "Cache manifest has nested file test: fail" && exit 1)
-
-          grep -q "js/modules/hello-d41d8cd98f00b204e9800998ecf8427e.js" example/static/cache_manifest.json
-          && (echo "Cache manifest has digested file test: pass" && exit 0)
-          || (echo "Cache manifest has digested file test: fail" && exit 1)
-
-          flask run &
-          sleep 5
-          && curl http://localhost:5000
-          | grep -q 'https://cdn.example.com/static/css/app-d41d8cd98f00b204e9800998ecf8427e.css'
-          && (echo 'Stylesheet is md5 tagged test: pass' && exit 0)
-          || (echo 'Stylesheet is md5 tagged test: fail' && exit 1)
-
-          flask digest clean
-          && ls -laR example/static/ | wc -l
-          | grep -q "26"
-          && (echo "File count after cleaning test: pass" && exit 0)
-          || (echo "File count after cleaning test: fail" && exit 1)
-
-          flask run -p 5001 &
-          sleep 5
-          && curl http://localhost:5001
-          | grep -q 'https://cdn.example.com/static/js/app.js'
-          && (echo 'Javascript is not md5 tagged test: pass' && exit 0)
-          || (echo 'Javascript is not md5 tagged test: fail' && exit 1)
+  slack-workflow-status:
+    if: always()
+    name: Post Workflow Status To Slack
+    needs:
+      - ci
+    runs-on: ubuntu-latest
+    steps:
+      - name: Slack Workflow Notification
+        uses: Gamesight/slack-workflow-status@master
+        with:
+          repo_token: ${{secrets.GITHUB_TOKEN}}
+          slack_webhook_url: ${{secrets.SLACK_WEBHOOK_URL}}
+          icon_emoji: ':poop:'

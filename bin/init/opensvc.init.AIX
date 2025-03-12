@@ -1,0 +1,24 @@
+#!/bin/ksh
+
+DEFAULTS="/etc/default/opensvc"
+OSVC_ROOT_PATH="/usr/share/opensvc"
+
+# Include opensvc defaults if available
+[ -r "$DEFAULTS" ] && . "$DEFAULTS"
+
+case $1 in
+start)
+	${OSVC_ROOT_PATH}/bin/om daemon start
+	${OSVC_ROOT_PATH}/bin/om node pushasset
+	;;
+stop)
+	${OSVC_ROOT_PATH}/bin/om daemon shutdown
+	;;
+status)
+        ${OSVC_ROOT_PATH}/bin/om daemon running
+	;;
+restart)
+        ${OSVC_ROOT_PATH}/bin/om daemon restart
+	;;
+esac
+

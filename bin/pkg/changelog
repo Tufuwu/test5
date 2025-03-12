@@ -1,0 +1,33 @@
+# variables users can override in the defaults file
+OSVC_PYTHON="python"
+OSVC_PYTHON_ARGS=""
+
+if [ -r "/etc/defaults/opensvc" ]
+then
+	# FreeBSD, Darwin
+	. "/etc/defaults/opensvc"
+elif [ -r "/etc/default/opensvc" ]
+then
+	# Debian-like, Tru64, SunOS and HP-UX
+	. "/etc/default/opensvc"
+elif [ -r "/etc/sysconfig/opensvc" ]
+then
+	# Red Hat-like
+	. "/etc/sysconfig/opensvc"
+elif [ -r "/etc/conf.d/opensvc" ]
+then
+	# Alpine, Gentoo
+	. "/etc/conf.d/opensvc"
+elif [ -r "/etc/rc.config.d/opensvc" ]
+then
+	# AIX
+	. "/etc/rc.config.d/opensvc"
+fi
+
+PATH_SCRIPT="$(cd $(/usr/bin/dirname $(type -p -- $0 || echo $0));pwd)"
+
+LAST=$(git describe --abbrev=0 --tags)
+COMMITS=${1:-$LAST..HEAD}
+echo COMMITS=$COMMITS
+
+$OSVC_PYTHON $PATH_SCRIPT/changelog.py --commits $COMMITS --verbose

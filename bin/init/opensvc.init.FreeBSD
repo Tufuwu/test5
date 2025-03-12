@@ -1,0 +1,51 @@
+#!/bin/sh
+#
+
+# PROVIDE: opensvc
+# REQUIRE: LOGIN FILESYSTEMS sshd cleanvar
+# KEYWORD: shutdown
+
+. /etc/rc.subr
+
+name="opensvc"
+desc="OpenSVC agent"
+rcvar=${name}_enable
+
+start_cmd="opensvc_start"
+restart_cmd="opensvc_restart"
+stop_cmd="opensvc_stop"
+status_cmd="opensvc_status"
+extra_commands="status"
+
+DEFAULTS="/etc/defaults/opensvc"
+OSVC_ROOT_PATH="/usr/share/opensvc"
+
+# Include opensvc defaults if available
+[ -r "$DEFAULTS" ] && . "$DEFAULTS"
+
+opensvc_start()
+{
+        echo "OpenSVC daemon start"
+        ${OSVC_ROOT_PATH}/bin/om daemon start
+        ${OSVC_ROOT_PATH}/bin/om node pushasset
+}
+
+opensvc_restart()
+{
+        echo "OpenSVC daemon restart"
+        ${OSVC_ROOT_PATH}/bin/om daemon restart
+}
+
+opensvc_stop()
+{
+        echo "OpenSVC daemon shutdown"
+        ${OSVC_ROOT_PATH}/bin/om daemon shutdown
+}
+
+opensvc_status()
+{
+        ${OSVC_ROOT_PATH}/bin/om daemon running
+}
+
+load_rc_config $name
+run_rc_command "$1"

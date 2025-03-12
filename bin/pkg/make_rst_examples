@@ -1,0 +1,73 @@
+#!/usr/bin/env python
+
+from __future__ import print_function
+import sys
+import os
+
+pathsvc = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..'))
+pathlib = os.path.join(pathsvc, "opensvc")
+
+sys.path.insert(0, pathlib)
+
+from env import Env
+import core.objects.svcdict
+from utilities.drivers import load_drivers
+
+load_drivers(core.objects.svcdict.SECTIONS + core.objects.svcdict.DATA_SECTIONS)
+
+
+def generate_examples(fmt="text"):
+    dpath = Env.paths.pathdoc
+    if fmt == "rst":
+        dpath = os.path.join(Env.paths.pathtmp, "rst")
+    svc_key = core.objects.svcdict.KEYS
+
+    for section in svc_key.sections:
+        svc_type_key = svc_key[str(section)].getkey("type", None)
+        if svc_type_key is None:
+            continue
+        svc_types = svc_type_key.candidates
+        if svc_types is None:
+            svc_types = [None]
+        for svc_type in svc_types:
+            if svc_type is None:
+                fpath = os.path.join(dpath, "template.service."+section+".example")
+            else:
+                fpath = os.path.join(dpath, "template.service."+section+"."+svc_type+".example")
+            s = "Simplest configuration:"
+            if fmt == "rst":
+                u = "\n\n::\n\n\tsvcmgr -s <svcname> set"
+            else:
+                u = "\n\nCommand line:\n\n\tsvcmgr -s <svcname> set"
+            if fmt == "rst":
+                s += ":"
+            s += "\n\n\t[" + section + "#0]\n"
+            if svc_type:
+                s += "\ttype = " + svc_type + "\n"
+                u += " --kw " + section + "#0.type=" + svc_type
+            for svc_k in sorted(svc_key[section].getkeys(svc_type)):
+                if svc_k is not None and svc_k.required:
+                    s += "\t" + svc_k.keyword + " = " + svc_k.example + "\n"
+                    u += " --kw " + section + "#0." + svc_k.keyword + "=" + svc_k.example
+            svc_provkeys = svc_key[section].getprovkeys(svc_type)
+            if svc_provkeys:
+                s += "\t;for provisioning\n"
+                for key_prov in sorted(svc_provkeys):
+                    if key_prov.required:
+                        s += "\t" + key_prov.keyword + " = " + key_prov.example + "\n"
+                        u += " --kw " + section + "#0." + key_prov.keyword + "=" + key_prov.example
+            u += "\n\n"
+            print("write", fpath) 
+            with open(fpath, "w") as f:
+                f.write(s)
+                f.write(u)
+
+
+if __name__ == "__main__":
+    if len(sys.argv) == 2:
+        fmt = sys.argv[1]
+    else:
+        fmt = "text"
+    
+    generate_examples(fmt=fmt)
+
