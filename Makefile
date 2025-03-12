@@ -1,20 +1,25 @@
-# Minimal makefile for Sphinx documentation
-#
+all: test build
 
-# You can set these variables from the command line.
-SPHINXOPTS    = -w _build/warnings_and_errors.log
-SPHINXBUILD   = sphinx-build
-SPHINXPROJ    = colcon
-SOURCEDIR     = .
-BUILDDIR      = _build
+build: .venv
+	pipenv run flit build
 
-# Put it first so that "make" without argument is like "make help".
-help:
-	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+clean:
+	rm -rf dist
 
-.PHONY: help Makefile
+ipython:
+	pipenv run ipython
 
-# Catch-all target: route all unknown targets to Sphinx using the new
-# "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
-%: Makefile
-	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+publish: test build
+	git diff HEAD --quiet
+	pipenv run flit publish
+
+test: .venv
+	pipenv run black --check influxalchemy tests
+	pipenv run pytest
+
+.PHONY: all build clean ipython publish test
+
+Pipfile.lock .venv: Pipfile
+	mkdir -p .venv
+	pipenv install --dev
+	touch .venv

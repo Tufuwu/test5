@@ -1,36 +1,42 @@
-name: colcon.readthedocs.org
+name: pytest
 
-on: [push]
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+  schedule:
+    - cron: "11 21 * * *"
 
 jobs:
-  build:
-
+  pytest:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.9", "3.10"]
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python
-      uses: actions/setup-python@v1
-      with:
-        python-version: 3.9
-    - name: Install dependencies
-      run: |
-        sudo apt update && sudo apt install -y enchant
-        python -m pip install --upgrade setuptools
-        python -m pip install --upgrade doc8 pyenchant sphinx-rtd-theme sphinxcontrib-spelling
-    - name: Check spelling
-      # show list of misspelled words
-      run: |
-        make spelling
-        cat "_build/spelling/output.txt"
-    - name: Build documentation
-      run: |
-        make html
-    - name: Lint generated documentation
-      run: |
-        doc8 --max-line-length 999 index.rst developer/ migration/ user/ -v
-    - name: Spelling errors fail the build
-      # fail the build in case of any misspelled words
-      run: |
-        cat "_build/spelling/output.txt"
-        if [[ -s "_build/spelling/output.txt" ]]; then false; fi
+
+      - uses: actions/checkout@v1
+
+      - uses: actions/setup-python@v1
+        with:
+          ruby-version: ${{ matrix.python }}
+
+      - name: Setup code climate
+        uses: amancevice/code-climate-action@v0
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+        with:
+          command: before-build
+
+      - run: pip install . flake8 pytest pytest-cov
+      - run: flake8
+      - run: pytest
+
+      - name: Send coverage
+        uses: amancevice/code-climate-action@v0
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+        with:
+          command: after-build

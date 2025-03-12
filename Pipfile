@@ -1,0 +1,19 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[dev-packages]
+black = "*"
+flit = "*"
+ipdb = "*"
+ipython = "*"
+pandas = "*"
+pytest = "*"
+pytest-cov = "*"
+
+[packages]
+influxdb = ">= 5.0"
+pytz = ">= 2018.3"
+requests = ">= 2.20"
+six = ">= 1.11"
