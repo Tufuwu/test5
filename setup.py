@@ -1,68 +1,47 @@
-#!/usr/bin/env python3
-#
-# Copyright (c) 2016 Grigori Goronzy <greg@chown.ath.cx>
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
-#
 
-import stcgal
-from setuptools import setup, find_packages
+import os
+try:
+    from setuptools import setup
+except ImportError:
+    from distutils.core import setup
+import platform
 
-with open("doc/PyPI.md", "r") as fh:
-    long_description = fh.read()
 
-setup(
-    name = "stcgal",
-    version = stcgal.__version__,
-    packages = find_packages(exclude=["doc", "tests"]),
-    install_requires = ["pyserial>=3.0", "tqdm>=4.0.0"],
-    extras_require = {
-        "usb": ["pyusb>=1.0.0"]
-    },
-    entry_points = {
-        "console_scripts": [
-            "stcgal = stcgal.frontend:cli",
-        ],
-    },
-    description = "STC MCU ISP flash tool",
-    long_description = long_description,
-    long_description_content_type = "text/markdown",
-    keywords = "stc mcu microcontroller 8051 mcs-51",
-    url = "https://github.com/grigorig/stcgal",
-    author = "Grigori Goronzy",
-    author_email = "greg@kinoho.net",
-    license = "MIT License",
-    platforms = "any",
-    classifiers = [
-        "Development Status :: 5 - Production/Stable",
-        "Environment :: Console",
-        "Intended Audience :: Developers",
-        "License :: OSI Approved :: MIT License",
-        "Operating System :: POSIX",
-        "Operating System :: Microsoft :: Windows",
-        "Operating System :: MacOS",
-        "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.5",
-        "Programming Language :: Python :: 3.6",
-        "Topic :: Software Development :: Embedded Systems",
-        "Topic :: Software Development",
-    ],
-    test_suite = "tests",
-    tests_require = ["PyYAML"],
-)
+cmdclass = {}
+
+install_requires = ['future',
+                    'dataset == 0.8']
+
+
+readthedocs = os.environ.get('READTHEDOCS') == 'True'
+
+if not readthedocs:
+    if not platform.python_implementation() == "PyPy":
+        install_requires += ['numpy >= 1.10.2']
+        if ('APPVEYOR' not in os.environ) or ('TRAVIS' not in os.environ):
+            install_requires += ['pandas >= 0.17.1',
+                                 'bokeh == 0.12.16',
+                                 'tornado']
+
+
+version = '0.9.7b0'
+
+
+setup(name='abcEconomics',
+      version=version,
+      author='Davoud Taghawi-Nejad',
+      author_email='Davoud@Taghawi-Nejad.de',
+      description='Agent-Based Complete Economy modelling platform',
+      url='https://github.com/AB-CE/abce.git',
+      package_dir={'abcEconomics': 'abcEconomics',
+                   'abcEconomics.agents': 'abcEconomics/agents',
+                   'abcEconomics.contracts': 'abcEconomics/contracts',
+                   'abcEconomics.logger': 'abcEconomics/logger',
+                   'abcEconomics.scheduler': 'abcEconomics/scheduler'
+                   },
+      packages=['abcEconomics'],
+      long_description=open('README.rst').read(),
+      setup_requires=['setuptools>=18.0', 'cython'],
+      install_requires=install_requires,
+      include_package_data=True,
+      cmdclass=cmdclass)
