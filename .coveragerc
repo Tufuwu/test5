@@ -1,6 +1,0 @@
-[run]
-omit =
-    tests/*
-    command_log/migrations/*
-    .tox/*
-    .venv/*
