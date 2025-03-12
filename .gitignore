@@ -1,40 +1,28 @@
-*.7z
-*.so
-*.whl
-*.pyc
-**/*.idea/*
-*/*.wm-hell*
-public-apis/
-*/docs/wm-*
-*/*/build-*.txt
-build-*.txt
-**/*wm-shell*
-*/*/*.egg-info/
-**/*.egg-info/
-**/build/
-**/dist/
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
 
-sink_service/build/
-python_transport/docs/source/api/*
+# Distribution / packaging
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
 
-public/
-packets/
-release/
+# Docs
+docs/_build
 
-.pre-commit-config.yaml
-.flake8
-.clang*
-.ci/manifest/*
-.ci/_repo/*
-.pylintrc
-dev-requirements.txt
-
-.repo/*
-_repo/*
-python_transport/docs/source/api/
-container/wm_gateway.env
-container/common/wm_transport_service.yml
-tests/services/wait-for-it/*
-**/*.private*
-.ci/_repo*
-sink_service.log
+# Test results
+htmlcov
+.coverage

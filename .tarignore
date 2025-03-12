@@ -1,7 +1,0 @@
-*.git*
-*/.git*
-*/build-*.txt
-*/utils*
-*/*tmp
-*/*~
-**~
