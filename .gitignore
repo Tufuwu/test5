@@ -1,4 +1,9 @@
-*.pyc
-*.swp
-db.sqlite3
-vagrant/.vagrant/
+/.db.sqlite3
+*.py[cod]
+__pycache__/
+*-info/
+count.py
+/build/
+/dist/
+.venv*
+venv*

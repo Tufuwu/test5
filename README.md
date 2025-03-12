@@ -1,144 +1,143 @@
-# Welcome!
+## pigar
 
-Tramcar is a _multi-site_, _self-hosted_ __job board__ built using
-[Django](https://www.djangoproject.com/).  This project is still in its infancy,
-but we welcome your involvement to help us get Tramcar ready for production
-installs.
+[![](https://img.shields.io/github/actions/workflow/status/damnever/pigar/ci.yml?branch=main&style=flat-square)](https://github.com/damnever/pigar/actions) [![](https://img.shields.io/pypi/v/pigar.svg?style=flat-square)](https://pypi.org/project/pigar)
 
-## Features
 
-* Host multiple job boards on the same instance using Django's "sites" framework
-* Allow free or paid job postings, with paid postings using Stripe Checkout for payment processing
-* Automatically tweet job details when a post is activated
-* Automatically expire jobs after an admin-defined period
-* E-mail notifications alert the admin when a post is made and the job owner when their job has expired
-* Job posts support Markdown for creating rich text descriptions and application information
-* Send weekly Mailchimp e-mail containing list of jobs posted in last 7 days
+- Generating requirements.txt for Python project.
+   - Handling the difference between different Python versions.
+   - Jupyter notebook (`*.ipynb`) support.
+   - Including the import statements/magic from ``exec``/``eval``/``importlib``, doctest of docstring, etc.
+- Searching ditributions(packages) by the top level import/module names.
+- Checking the latest versions of requirements.
 
-## Installation
+**NOTE**: [Pipenv or other tools](https://packaging.python.org/tutorials/managing-dependencies/#managing-dependencies) is recommended for improving your development flow.
 
-First, clone and install dependencies.  This requires python 3.5, pip, and
-virtualenv to already be installed.
 
+### Installation
+
+`pigar` can run on Python 3.7+.
+
+To install it with `pip`, use:
 ```
-$ git clone https://github.com/tramcar/tramcar
-$ cd tramcar
-$ virtualenv .venv
-$ source .venv/bin/activate
-(.venv) $ pip install -r requirements.txt
+[sudo] pip install pigar
 ```
-
-Tramcar defaults `SECRET_KEY` in `tramcar/settings.py` to an empty string
-which will prevent Django from starting up.  This is done to ensure that
-deployers do not accidentally deploy with a default value.  Before proceeding,
-set a unique value for `SECRET_KEY` in `tramcar/settings.py`.  If you have `pwgen`
-installed, simply do this:
-
+To install it with ``conda``, use:
 ```
-$ RANDOM_PWD=$(pwgen -s 50 1)
-$ sed -i.bak "s/^SECRET_KEY = ''$/SECRET_KEY = '$RANDOM_PWD'/g" tramcar/settings.py
+conda install -c conda-forge pigar
+```
+To get the newest code from GitHub:
+```
+pip install git+https://github.com/damnever/pigar.git@[main or other branch] --upgrade
 ```
 
-Now, apply database migrations, create an admin user, and start the
-development server:
+### Usage
 
-```
-(.venv) $ python manage.py migrate
-(.venv) $ python manage.py createsuperuser
-Username (leave blank to use 'root'): admin
-Email address: admin@tramcar.org
-Password:
-Password (again):
-Superuser created successfully.
-```
+- `pigar` can consider most kinds of complicated situations(see [FAQ](#faq)). For example, `pigar v1` has [py2_requirements.txt](https://github.com/damnever/pigar/blob/c68d372fba4a6f98228ec3cf8e273f59d68d0e3c/py2_requirements.txt) and [py3_requirements.txt](https://github.com/damnever/pigar/blob/c68d372fba4a6f98228ec3cf8e273f59d68d0e3c/py3_requirements.txt) for different Python versions.
 
-The default site has a domain of `example.com`, this will need to be changed to
-`localhost` for development testing or to whatever live domain you will be
-using in production.  For example, to test Tramcar locally, issue the following
-command:
+    ```
+    # Generate requirements.txt for current directory.
+    $ pigar generate
 
-```
-(.venv) $ sqlite3 db.sqlite3 "UPDATE django_site SET domain='localhost' WHERE name='example.com';"
-```
+    # Generating requirements.txt for given directory in given file.
+    $ pigar gen -f ../dev-requirements.txt ../
+    ```
 
-## Fixtures
+    `pigar gen --with-referenced-comments` can list all files which referenced the package/distribution(the line numbers for Jupyter notebook may be a bit confusing), for example:
+    ```
+    # project/foo.py: 2,3
+    # project/bar/baz.py: 2,7,8,9
+    foobar == 3.3.3
+    ```
 
-We have a fixtures file in `job_board/fixtures/countries.json`, which you can
-load into your database by running the following:
+    If the requirements.txt is overwritten, ``pigar`` will show the difference between the old and the new, use `--dont-show-differences` to disable it.
 
-```
-(.venv) $ python manage.py loaddata countries.json
-```
+    **NOTE**, `pigar` will search the packages/distributions in local environment first, then it will do further analysis and search missing packages/distributions on PyPI.
 
-This will save you having to import your own list of countries.  However, be
-aware that any changes made to the `job_board_country` table will be lost if
-you re-run the above.
+    See also: [EXPERIMENTAL FEATURES](https://github.com/damnever/pigar#experimental-features).
 
-## Start Tramcar
+- If you do not know the import name that belongs to a specific distribution (more generally, does `Import Error: xxx` drive you crazy?), such as `bs4` which may come from `beautifulsoup4` or `MySQLdb` which could come from `mysql-python`, try searching for it:
 
-To run Tramcar in a development environment, you can now start it using the
-light-weight development web server:
+    ```
+    $ pigar search bs4 MySQLdb
+    ```
 
-```
-(.venv) $ python manage.py runserver
-```
+- Checking for the latest version:
 
-To run Tramcar using Apache2 and mod_wsgi, see the
-[following](https://github.com/tramcar/tramcar/wiki/Production-Deployment-Notes)
-for more information.
+    ```
+    # Specify a requirements file.
+    $ pigar check -f ./requirements.txt
 
-## Final Steps
+    # Or, you can let pigar searching all *requirements.txt in the current directory
+    # level by itself.
+    $ pigar check
+    ```
 
-At this point, Tramcar should be up and running and ready to be used.  Before
-you can create a company and job, log into <http://localhost:8000/admin> using
-the username and password defined above.  Once in, click Categories under
-JOB_BOARD and add an appropriate category for the localhost site.
+- More:
 
-That's it!  With those steps completed, you can now browse
-<http://localhost:8000> to create a new company, and then post a job with that
-newly created company.
+  TIP: `pigar` accepts a prefix for a command, such as `pigar gen`, `pigar c`.
+   ```
+   pigar --help
+   ```
 
-(If deploying with a non-localhost domain, replace `localhost` above with
-the domain you are using)
 
-## Job Expiration
+### EXPERIMENTAL FEATURES
 
-Jobs can be expired manually by logging in as an admin user and then clicking
-the `Expire` button under `Job Admin` when viewing a given job.  A simpler
-solution is to run this instead:
+- `requirement-annotations`
 
-```
-(.venv) $ python manage.py expire
-```
+    Some packages may require optional packages/distributions to be installed depending on your usage. To make `pigar` a little bit more useful, use `pigar generate --enable-feature requirement-annotations` in conjunction with comments following the format below:
+    ```python
+    import foo # pigar: required-imports=import_name_bar,import_name_baz
+    import foo # pigar: required-packages=package-name-bar,package-name-baz # Extra comments are allowed.
+    foo(features=['bar', 'baz']) # pigar: required-distributions=package-name-bar,package-name-baz
+    ```
+    If you find the comment intrusive, you can extract those comments into a separate Python file and delete it as needed, for example, 'pigar_annotations.py'.
 
-The above will scan through all jobs across all sites and expire out any jobs
-older than the site's `expire_after` value.  Ideally, the above should be
-scheduled with cron so that jobs are expired in a consistent manner.
 
-## Mailshot Automation
+### FAQ
 
-If a site has `mailchimp_username`, `mailchimp_api_key`, and `mailchimp_list_id`
-set, run the following to create and send a Mailchimp campaign containing a list
-of all jobs posted in the last 7 days:
+<details>
+  <summary>
+  Is `pigar` a dependency management tool?
+  </summary>
 
-```
-(.venv) $ python manage.py send_mailshot
-```
+**No.** I've thought about this many times, but there is too much dirty work to be done to make `pigar`'s way reliable.
 
-Again, cron the above to run once a week so that these campaigns are built and
-sent automatically.
+I like the way `pigar` does the job, but sadly, `pigar` does a bad job of managing dependencies, `pigar` is more like a tool to assist an old project to migrate to a new development workflow.
+</details>
 
-If you're unsure what the `mailchimp_list_id` is for the list in question,
-populate `mailchimp_username` and `mailchimp_api_key` for the site and then run
-the following command to display all lists on this site's MailChimp account:
+<details>
+  <summary>
+  (1) Why does `pigar` show multiple packages/distributions for the same import name?
 
-```
-(.venv) $ python manage.py display_lists <site_domain>
-```
+  (2) Why does `pigar` generate different packages/distributions for the same import name in different environment?
+  </summary>
 
-The value under the ID column for the associated list is what should get
-assigned to `mailchimp_list_id`.
+`pigar` can not handle those situations gracefully, you may need to remove the duplicate packages in requirements.txt manually, or select one of them when `pigar` asks you.
+Install the required packages/distributions(remove others) in local environment should fix it as well.
 
-## Support
+Related issues: [#32](https://github.com/damnever/pigar/issues/32), [#68](https://github.com/damnever/pigar/issues/68), [#75](https://github.com/damnever/pigar/issues/75#issuecomment-605639825).
+</details>
 
-Found a bug or need help with installation?  Please feel free to create an [issue](https://github.com/tramcar/tramcar/issues/new) and we will assist as soon as possible.
+<details>
+  <summary>
+  Why can't `pigar` find the packages/distributions that have not been explicit import?
+  </summary>
+
+Some frameworks may use some magic to import the modules for users automatically, and `pigar` can not handle it, you may need to fix it manually or use the [EXPERIMENTAL FEATURES](https://github.com/damnever/pigar#experimental-features).
+
+Related issues: [#33](https://github.com/damnever/pigar/issues/33), [#103](https://github.com/damnever/pigar/issues/103)
+</details>
+
+
+### More
+
+`pigar` does not use regular expressions in such a violent way. Instead, it uses AST, which is a better method for extracting imported names from arguments of `exec`/`eval`/`importlib`, doctest of docstring, etc. However, `pigar` can not solve all the tricky problems, see [FAQ](https://github.com/damnever/pigar#faq).
+
+Also, `pigar` can detect the difference between different Python versions. For example, you can find `concurrent.futures` from the Python 3.2 standard library, but you will need install `futures` in earlier versions of Python to get `concurrent.futures`, this is not a hardcode.
+
+If you have any issues or suggestions, [please submit an issue on GitHub](https://github.com/damnever/pigar/issues). [**All contributions are appreciated!**](https://github.com/damnever/pigar/graphs/contributors)
+
+
+### LICENSE
+
+[The BSD 3-Clause License](https://github.com/damnever/pigar/blob/master/LICENSE)

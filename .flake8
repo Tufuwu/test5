@@ -1,6 +1,0 @@
-[flake8]
-exclude =
-    .venv,
-    job_board/migrations,
-    tramcar/settings.py,
-    vagrant/settings.py
