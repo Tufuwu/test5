@@ -1,0 +1,5 @@
+requests
+cryptography
+libvirt-python
+lxml
+monotonic

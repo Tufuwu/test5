@@ -1,4 +1,8 @@
+*.gz
 *.pyc
-build/
-*.egg-info/
-dist/
+*.sw[po]
+*~
+*.egg
+*.egg-info
+tests/.venv
+tests/results.xml

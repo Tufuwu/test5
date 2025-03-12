@@ -1,74 +1,75 @@
-#!/usr/bin/env python
-#
-# Copyright 2012, Google Inc.
-# All rights reserved.
-#
-# Redistribution and use in source and binary forms, with or without
-# modification, are permitted provided that the following conditions are
-# met:
-#
-#     * Redistributions of source code must retain the above copyright
-# notice, this list of conditions and the following disclaimer.
-#     * Redistributions in binary form must reproduce the above
-# copyright notice, this list of conditions and the following disclaimer
-# in the documentation and/or other materials provided with the
-# distribution.
-#     * Neither the name of Google Inc. nor the names of its
-# contributors may be used to endorse or promote products derived from
-# this software without specific prior written permission.
-#
-# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-# A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-# OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-# DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-# THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+from distutils.core import setup, Command
+from distutils.command.sdist import sdist as _sdist
+import subprocess
+import time
 
-"""Set up script for pywebsocket3.
-"""
+VERSION = '0.19.0'
+RELEASE = '0'
 
-from __future__ import absolute_import
-from __future__ import print_function
-from setuptools import setup, Extension
-import sys
+datafiles = [('share/man/man1', ['man/oz-install.1', 'man/oz-generate-icicle.1',
+                                 'man/oz-customize.1',
+                                 'man/oz-cleanup-cache.1']),
+             ('share/man/man5', ['man/oz-examples.5'])
+             ]
 
-_PACKAGE_NAME = 'pywebsocket3'
+class sdist(_sdist):
+    """ custom sdist command, to prep oz.spec file for inclusion """
 
-# Build and use a C++ extension for faster masking. SWIG is required.
-_USE_FAST_MASKING = False
+    def run(self):
+        global VERSION
+        global RELEASE
 
-# This is used since python_requires field is not recognized with
-# pip version 9.0.0 and earlier
-if sys.hexversion < 0x020700f0:
-    print('%s requires Python 2.7 or later.' % _PACKAGE_NAME, file=sys.stderr)
-    sys.exit(1)
+        # Create a development release string for later use
+        git_head = subprocess.Popen("git log -1 --pretty=format:%h",
+                                    shell=True,
+                                    stdout=subprocess.PIPE).communicate()[0].strip()
+        date = time.strftime("%Y%m%d%H%M%S", time.gmtime())
+        git_release = "%sgit%s" % (date, git_head.decode())
 
-if _USE_FAST_MASKING:
-    setup(ext_modules=[
-        Extension('pywebsocket3/_fast_masking',
-                  ['pywebsocket3/fast_masking.i'],
-                  swig_opts=['-c++'])
-    ])
+        # Expand macros in oz.spec.in and create oz.spec
+        spec_in = open('oz.spec.in', 'r')
+        spec = open('oz.spec', 'w')
+        for line in spec_in.readlines():
+            if "@VERSION@" in line:
+                line = line.replace("@VERSION@", VERSION)
+            elif "@RELEASE@" in line:
+                # If development release, include date+githash in %{release}
+                if RELEASE.startswith('0'):
+                    RELEASE += '.' + git_release
+                line = line.replace("@RELEASE@", RELEASE)
+            spec.write(line)
+        spec_in.close()
+        spec.close()
 
-setup(
-    author='Yuzo Fujishima',
-    author_email='yuzo@chromium.org',
-    description='Standalone WebSocket Server for testing purposes.',
-    long_description=('pywebsocket3 is a standalone server for '
-                      'the WebSocket Protocol (RFC 6455). '
-                      'See pywebsocket3/__init__.py for more detail.'),
-    license='See LICENSE',
-    name=_PACKAGE_NAME,
-    packages=[_PACKAGE_NAME, _PACKAGE_NAME + '.handshake'],
-    python_requires='>=2.7',
-    install_requires=['six'],
-    url='https://github.com/GoogleChromeLabs/pywebsocket3',
-    version='4.0.2',
-)
+        # Run parent constructor
+        _sdist.run(self)
 
-# vi:sts=4 sw=4 et
+class pytest(Command):
+    user_options = []
+    def initialize_options(self): pass
+    def finalize_options(self): pass
+    def run(self):
+        try:
+            errno = subprocess.call('py.test-3 tests --verbose --tb=short --junitxml=tests/results.xml'.split())
+        except OSError as e:
+            if e.errno == 2:
+                raise OSError(2, "No such file or directory: py.test")
+            raise
+        raise SystemExit(errno)
+
+setup(name='oz',
+      version=VERSION,
+      description='Oz automated installer',
+      author='Chris Lalancette',
+      author_email='clalancette@gmail.com',
+      license='LGPLv2',
+      url='http://github.com/clalancette/oz',
+      package_dir={'oz': 'oz'},
+      package_data={'oz': ['auto/*', '*.rng']},
+      packages=['oz'],
+      scripts=['oz-install', 'oz-generate-icicle', 'oz-customize',
+               'oz-cleanup-cache'],
+      cmdclass={'sdist': sdist,
+                'test' : pytest },
+      data_files = datafiles,
+      )
