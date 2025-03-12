@@ -1,47 +1,29 @@
-ARG PYTHON_IMAGE_TAG=latest
+FROM ubuntu:20.04
+RUN apt-get update && apt-get -y update
+RUN apt-get install -y build-essential python3.6 python3-pip python3-dev
+RUN pip3 -q install pip --upgrade
 
-FROM python:${PYTHON_IMAGE_TAG}  AS image_stage
+COPY notebooks/notebook_requirements.txt ./
 
-ARG APP_TAG="1.0.3"
+RUN pip3 install --no-cache notebook && \
+    pip3 install numpy && \
+    pip3 install -r notebook_requirements.txt
 
-LABEL \
-  org.label-schema.build-date=Now \
-  org.label-schema.maintainer="m1ha@carrotquest.io" \
-  org.label-schema.schema-version="1.0.0-rc1" \
-  org.label-schema.vcs-ref="v${APP_TAG}" \
-  org.label-schema.vcs-url="https://github.com/carrotquest/django-clickhouse" \
-  org.label-schema.vendor="Carrot quest" \
-  org.label-schema.version="${APP_TAG}"
 
-ENV APP_UID ${APP_UID:-1000}
-ENV APP_GID ${APP_GID:-1000}
-ENV APP_NAME ${APP_NAME:-"app"}
+ARG NB_USER=user
+ARG NB_UID=1000
+ENV USER ${NB_USER}
+ENV NB_UID ${NB_UID}
+ENV HOME /home/${NB_USER}
 
-# Configure utf-8 locales to make sure Python correctly handles unicode filenames
-# Configure pip local path to copy data from pip_stage
-ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 DJANGO_SETTINGS_MODULE=tests.settings PYTHONUSERBASE=/pip PATH=/pip/bin:$PATH
+RUN adduser --disabled-password \
+    --gecos "Default user" \
+    --uid ${NB_UID} \
+    ${NB_USER}
 
-RUN set -eu && \
-  groupadd --gid "${APP_GID}" "app" && \
-  useradd --uid ${APP_UID} --gid ${APP_GID} --create-home --shell /bin/bash -d /app app && \
-  mkdir -p /pip && \
-  chmod  755 /app /pip && \
-  chown -R ${APP_UID}:${APP_GID} /app /pip
 
-WORKDIR /app/src
+USER $NB_USER
 
-# Install dependencies
-# set -eu "breaks" pipeline on first error
-COPY ./requirements-test.txt /app/requirements-test.txt
-RUN --mount=type=cache,target=/root/.cache/pip \
-  set -eu && \
-  python3 -m pip install --upgrade pip setuptools wheel  && \
-  python3 -m pip install --upgrade --requirement /app/requirements-test.txt
+COPY --chown=1000:100 . Pandora
 
-COPY . /app/src
-
-RUN python3 setup.py -q install --user
-
-USER ${APP_UID}
-
-CMD ["python3", "runtests.py"]
+WORKDIR /Pandora

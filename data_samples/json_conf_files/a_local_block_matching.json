@@ -1,0 +1,28 @@
+{
+  "input": {
+    "left": {
+      "img": "./left.png",
+      "disp": [-60, 0]
+    },
+    "right": {
+      "img": "./right.png"
+    }
+  },
+  "pipeline": {
+    "matching_cost": {
+      "matching_cost_method": "zncc",
+      "window_size": 5,
+      "subpix": 4
+    },
+    "disparity": {
+      "disparity_method": "wta",
+      "invalid_disparity": "NaN"
+    },
+    "refinement": {
+      "refinement_method": "quadratic"
+    },
+    "validation" : {
+      "validation_method": "cross_checking_accurate"
+    }
+  }
+}

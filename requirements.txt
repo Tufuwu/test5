@@ -1,6 +1,0 @@
-celery
-Django (>=1.7)
-infi.clickhouse-orm
-pytz; python_version < '3.3'
-statsd
-typing; python_version < '3.5'
