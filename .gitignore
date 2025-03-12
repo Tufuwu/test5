@@ -1,3 +1,13 @@
+*.pyc
+*.egg-info
+.coverage
+.tox/
+/MANIFEST
 /build/
-/venv/
-__pycache__
+/dist/
+/sandbox/
+/tags
+virtualenv
+
+# PyCharm
+.idea
