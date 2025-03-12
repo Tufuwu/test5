@@ -1,37 +1,52 @@
-name: Tests
+name: Linux FoxPuppet Tests
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-
+    pull_request:
+      # Sequence of patterns matched against refs/heads
+      branches:
+        - main
+env:
+  MOZ_HEADLESS: 1
 jobs:
-  build:
+  lint:
+    runs-on: ubuntu-latest
+    name: FoxPuppet Linting
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+      - name: Run Tests
+        shell: bash
+        run: make install_poetry lint
+  test:
+    needs: lint
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        python-version: ["3.9", "3.10"]
+        firefox: ['latest-beta', 'latest-devedition', 'latest-nightly', 'latest-esr', 'latest']
+    name: FoxPuppet Firefox Tests
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup firefox
+        id: setup-firefox
+        uses: browser-actions/setup-firefox@v1
         with:
-          python-version: ${{ matrix.python-version }}
+          firefox-version: ${{ matrix.firefox }}
       - run: |
-          npm install -g elm
-          pip install tox
-      - name: Run Tox
-        run: |
-          if [[ "${{ matrix.python-version }}" == "3.7" ]]; then
-            if [[ "${{ github.event_name }}" == "push" ]]; then
-              echo "Running tests for cover and black"
-              tox -e cover
-              tox -e black
-            else
-              tox
-            fi
-          else
-            tox
-          fi
-      - name: Coveralls
-        if: success() && github.event_name == 'push' && matrix.python-version == '3.7'
-        run: coveralls
+          echo Installed firefox versions: ${{ steps.setup-firefox.outputs.firefox-version }}
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+      - name: Run Tests
+        shell: bash
+        run: make install_poetry test
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() }}
+        with:
+          name:  HTML Test Report on firefox v${{ matrix.firefox }}
+          path: /home/runner/work/FoxPuppet/FoxPuppet/results/report.html
