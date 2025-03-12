@@ -1,78 +1,296 @@
-# Library Updater
-![Kodi Version](https://img.shields.io/endpoint?url=https%3A%2F%2Fweberjr.com%2Fkodi-shield%2Fversion%2Frobweber%2Fxbmclibraryautoupdate%2Fmatrix%2Ftrue%2Ftrue) ![Total Downloads](https://img.shields.io/endpoint?url=https%3A%2F%2Fweberjr.com%2Fkodi-shield%2Fdownloads%2Fmatrix%2Fservice.libraryautoupdate%2F1.2.4) [![Build Status](https://img.shields.io/github/actions/workflow/status/robweber/xbmclibraryautoupdate/addon-checker.yml)](https://github.com/robweber/xbmclibraryautoupdate/actions/workflows/addon-checker.yml) [![License](https://img.shields.io/github/license/robweber/xbmclibraryautoupdate)](https://github.com/robweber/xbmclibraryautoupdate/blob/master/LICENSE.txt) [![PEP8](https://img.shields.io/badge/code%20style-pep8-orange.svg)](https://www.python.org/dev/peps/pep-0008/)
+checkQC
+=======
+[![Build Status](https://travis-ci.org/Molmed/checkQC.svg?branch=master)](https://travis-ci.org/Molmed/checkQC)
+[![codecov](https://codecov.io/gh/Molmed/checkQC/branch/master/graph/badge.svg)](https://codecov.io/gh/Molmed/checkQC)
+[![PyPI](https://img.shields.io/pypi/v/checkqc.svg)](https://pypi.python.org/pypi/checkQC)
+[![Conda](https://img.shields.io/conda/v/bioconda/checkqc)](https://anaconda.org/bioconda/checkqc)
+[![Documentation Status](https://readthedocs.org/projects/checkqc/badge/?version=latest)](http://checkqc.readthedocs.io/en/latest/?badge=latest)
+[![DOI](http://joss.theoj.org/papers/10.21105/joss.00556/status.svg)](https://doi.org/10.21105/joss.00556)
 
-The Library Updater will update your music and/or video libraries according to times specified by you. Please note that this is just a fancy timer that calls out to the normal Kodi Library Scanning functions. All of the processes associated with scanning are all handed off to Kodi.
+More documentation is available at [http://checkqc.readthedocs.io/](http://checkqc.readthedocs.io/en/latest/)
 
-_Thanks to pkscuot for several small tweaks to this addon!_
+CheckQC is a program designed to check a set of quality criteria against an Illumina runfolder.
 
-## Settings
+This is useful as part of a pipeline, where one needs to evaluate a set of quality criteria after demultiplexing. CheckQC is fast, and
+should finish within a few seconds. It will warn if there are problems breaching warning criteria, and will emit a non-zero exit status if it finds
+any errors, thus making it easy to stop further processing if the run that is being evaluated needs troubleshooting.
 
-Be aware that settings are visible based on the [Kodi Settings Level](https://kodi.wiki/view/Settings) set. Levels higher than Standard (Advanced or Expert) are designated next to that setting.
+CheckQC has been designed to be modular, and exactly which "qc handlers" are executed with which parameters for a specific run type (i.e. machine
+type and run length) is determined by a configuration file.
 
-### General Settings:
+Instrument types supported in checkQC are the following:
+ - HiSeqX
+ - HiSeq2500
+ - iSeq
+ - MiSeq
+ - NovaSeq
+ - NovaSeq X Plus
 
-* Startup Delay - if an update should run on startup (dependent on the time the last update has ran) this will delay it from running for a few minutes to allow other XBMC process to function.
-* Show Notifications - shows notifications when the updater will run again
-* Run During Playback - should the addon run a scheduled scan when you are playing media (yes/no)
-* Only run when idle - restricts the scanning process to when the screensaver is active
-* Check if sources exist before scan - checks if the sources are online before starting the scan process. For single source scans it will check only that source. ![Settings Level Advanced](https://img.shields.io/badge/-advanced-blue)
-* Disable Manual Run Prompt - disables the dialog box when selecting Manual Run and just goes right to the library update ![Settings Level Advanced](https://img.shields.io/badge/-advanced-blue)
+Install instructions
+--------------------
+CheckQC requires **Python 3.10**. CheckQC can be installed with pip.
 
-### Video Settings:
+```
+pip install checkqc
+```
 
-Enabling this will turn on scanning for the Video Library. This is the same as calling "Update Library" from within the Video menus of Kodi. There are a few options you can tweak regarding how often you want the scanner to run. Read the section on Timer Options for more information.
+Alternatively it can be installed with conda using the bioconda channel:
 
-__Custom Paths__ ![Settings Level Expert](https://img.shields.io/badge/-expert-blue)
+```
+conda install -c bioconda checkqc
+```
 
-Custom paths are a special advanced feature for the Video library. It allows you to specify different schedules for individual paths in your library. This editor is limited to the Cron style syntax for scheduling. The path you select must already be in the video database and have content selected. The path must also match your source path exactly.
+Running CheckQC
+---------------
 
-### Music Settings
+After installing CheckQC you can run it by specifying the path to the runfolder you want to
+analyze like this:
 
-Enabled this will turn on scanning for the Music Library. This is the same as calling "Update Library" from within the Music menus of Kodi. The options here are identical to the Video Settings above. Read the section on Timer Options for more information.
+```
+checkqc <RUNFOLDER>
+```
 
-### Timer Options:
+This will use the default configuration file packaged with CheckQC if you want to specify
+your own custom file, you can do so by adding a path to the config like this:
 
-For both Video and Music library scanning there are two types of timers to choose from.
+```
+checkqc --config_file <path to your config> <RUNFOLDER>
+```
 
-__Standard Timer__
+When CheckQC starts and no path to the config file is specified it will give you
+the path to where the default file is located on your system, if you want a template
+that you can customize according to your own needs.
 
-Specify an interval to run the library update process. It will be launched every X hours within the interval unless on of the conditions specified by you as been met (don't run during media playback, etc) in which case it will be run at the next earliest convenience.
+When you run CheckQC you can expect to see output similar to this:
 
-__Advanced Timer__ ![Settings Level Advanced](https://img.shields.io/badge/-advanced-blue)
+```
+checkqc  tests/resources/170726_D00118_0303_BCB1TVANXX/
+INFO     ------------------------
+INFO     Starting checkQC (1.1.2)
+INFO     ------------------------
+INFO     Runfolder is: tests/resources/170726_D00118_0303_BCB1TVANXX/
+INFO     No config file specified, using default config from /home/MOLMED/johda411/workspace/checkQC/checkQC/default_config/config.yaml.
+INFO     Run summary
+INFO     -----------
+INFO     Instrument and reagent version: hiseq2500_rapidhighoutput_v4
+INFO     Read length: 125-125
+INFO     Enabled handlers and their config values were:
+INFO            ClusterPFHandler Error=unknown Warning=180
+INFO            Q30Handler Error=unknown Warning=80
+INFO            ErrorRateHandler Error=unknown Warning=2
+INFO            ReadsPerSampleHandler Error=90 Warning=unknown
+INFO            UndeterminedPercentageHandler Error=10 Warning=unknown
+WARNING  QC warning: Cluster PF was to low on lane 1, it was: 117.93 M
+WARNING  QC warning: Cluster PF was to low on lane 7, it was: 122.26 M
+WARNING  QC warning: Cluster PF was to low on lane 8, it was: 177.02 M
+ERROR    Fatal QC error: Number of reads for sample Sample_pq-27 was too low on lane 7, it was: 6.893 M
+ERROR    Fatal QC error: Number of reads for sample Sample_pq-28 was too low on lane 7, it was: 7.104 M
+INFO     Finished with fatal qc errors and will exit with non-zero exit status.
+```
 
-Specify a cron expression to use as an interval for the update process. By default the expression will run at the top of every hour. More advanced expressions can be configured such as:
+The program will summarize the type of run it has identified and output any warnings and/or errors in finds.
+If any qc errors were found the CheckQC will output a non-zero exit status. This means it can easily be used to
+decide if a further steps should run or not, e.g. in a workflow.
+
+In addition to the normal output CheckQC has a json mode, enabled by adding `--json` to the commandline.
+This outputs the results normally shown in the log as json on `stdout` (while the log itself is written to `stderr`),
+so that this can either be written to a file, or redirected to other programs which can parse the data further.
+In this example we use the python json tool to pretty print the json output:
+
+```
+checkqc --json tests/resources/170726_D00118_0303_BCB1TVANXX/  | python -m json.tool
+INFO     ------------------------
+INFO     Starting checkQC (1.1.2)
+INFO     ------------------------
+INFO     Runfolder is: tests/resources/170726_D00118_0303_BCB1TVANXX/
+INFO     No config file specified, using default config from /home/MOLMED/johda411/workspace/checkQC/checkQC/default_config/config.yaml.
+INFO     Run summary
+INFO     -----------
+INFO     Instrument and reagent version: hiseq2500_rapidhighoutput_v4
+INFO     Read length: 125-125
+INFO     Enabled handlers and their config values were:
+INFO     	ClusterPFHandler Error=unknown Warning=180
+INFO     	Q30Handler Error=unknown Warning=80
+INFO     	ErrorRateHandler Error=unknown Warning=2
+INFO     	ReadsPerSampleHandler Error=90 Warning=unknown
+INFO     	UndeterminedPercentageHandler Error=10 Warning=unknown
+WARNING  QC warning: Cluster PF was to low on lane 1, it was: 117.93 M
+WARNING  QC warning: Cluster PF was to low on lane 7, it was: 122.26 M
+WARNING  QC warning: Cluster PF was to low on lane 8, it was: 177.02 M
+ERROR    Fatal QC error: Number of reads for sample Sample_pq-27 was too low on lane 7, it was: 6.893 M
+ERROR    Fatal QC error: Number of reads for sample Sample_pq-28 was too low on lane 7, it was: 7.104 M
+INFO     Finished with fatal qc errors and will exit with non-zero exit status.
+{
+    "exit_status": 1,
+    "ClusterPFHandler": [
+        {
+            "type": "warning",
+            "message": "Cluster PF was to low on lane 1, it was: 117.93 M",
+            "data": {
+                "lane": 1,
+                "lane_pf": 117929896,
+                "threshold": 180
+            }
+        },
+        {
+            "type": "warning",
+            "message": "Cluster PF was to low on lane 7, it was: 122.26 M",
+            "data": {
+                "lane": 7,
+                "lane_pf": 122263375,
+                "threshold": 180
+            }
+        },
+        {
+            "type": "warning",
+            "message": "Cluster PF was to low on lane 8, it was: 177.02 M",
+            "data": {
+                "lane": 8,
+                "lane_pf": 177018999,
+                "threshold": 180
+            }
+        }
+    ],
+    "ReadsPerSampleHandler": [
+        {
+            "type": "error",
+            "message": "Number of reads for sample Sample_pq-27 was too low on lane 7, it was: 6.893 M",
+            "data": {
+                "lane": 7,
+                "number_of_samples": 12,
+                "sample_id": "Sample_pq-27",
+                "sample_reads": 6.893002,
+                "threshold": 90
+            }
+        },
+        {
+            "type": "error",
+            "message": "Number of reads for sample Sample_pq-28 was too low on lane 7, it was: 7.104 M",
+            "data": {
+                "lane": 7,
+                "number_of_samples": 12,
+                "sample_id": "Sample_pq-28",
+                "sample_reads": 7.10447,
+                "threshold": 90
+            }
+        }
+    ],
+    "run_summary": {
+        "instrument_and_reagent_type": "hiseq2500_rapidhighoutput_v4",
+        "read_length": "125-125",
+        "handlers": [
+            {
+                "handler": "ClusterPFHandler",
+                "error": "unknown",
+                "warning": 180
+            },
+            {
+                "handler": "Q30Handler",
+                "error": "unknown",
+                "warning": 80
+            },
+            {
+                "handler": "ErrorRateHandler",
+                "error": "unknown",
+                "warning": 2
+            },
+            {
+                "handler": "ReadsPerSampleHandler",
+                "error": 90,
+                "warning": "unknown"
+            },
+            {
+                "handler": "UndeterminedPercentageHandler",
+                "error": 10,
+                "warning": "unknown"
+            }
+        ]
+    }
+}
+```
+
+Running CheckQC as a webservice
+-------------------------------
+
+In addition to running like a commandline application, CheckQC can be run as a simple webservice.
+
+To run it you simply need to provide the path to a directory where runfolders that you want to
+be able to check are located. This is given as `MONITOR_PATH` below. There are also a number
+of optional arguments that can be passed to the service.
+
+```
+$ checkqc-ws --help
+Usage: checkqc-ws [OPTIONS] MONITOR_PATH
+
+Options:
+  --port INTEGER     Port which checkqc-ws will listen to (default: 9999).
+  --config PATH      Path to the checkQC configuration file (optional)
+  --log_config PATH  Path to the checkQC logging configuration file (optional)
+  --debug            Enable debug mode.
+  --help             Show this message and exit.
 
 ```
 
-    .--------------- minute (0 - 59)
-    |   .------------ hour (0 - 23)
-    |   |   .--------- day of month (1 - 31)
-    |   |   |   .------ month (1 - 12) or Jan, Feb ... Dec
-    |   |   |   |  .---- day of week (0 - 6) or Sun(0 or 7)
-    V   V   V   V  V
-    *   *   *   *  *
+Once the webserver is running you can query the `/qc/` endpoint and get any errors and warnings back as json.
+Here is an example how to query the endpoint, and what type of results it will return:
+
 ```
-
-Example:
-1. 0 */5 ** 1-5 - runs update every five hours Monday - Friday
-2. 0,15,30,45 0,15-18 * * * - runs update every quarter hour during midnight hour and 3pm-6pm
-
-
-Read up on cron (http://en.wikipedia.org/wiki/Cron) for more information on how to create these expressions
-
-### Cleaning the Library:
-
-Cleaning the Music/Video Libraries is not enabled by default. If you choose to do this you can select from a few options to try and reduce the likelyhood that a DB clean wile hose your database.
-
-* Library to Clean - You can clean your video library, music library, or both.
-* Prompt User Before Cleaning - you must confirm that you want to clean the library before it will happen. Really only useful for "After Update" as a condition. ![Settings Level Advanced](https://img.shields.io/badge/-advanced-blue)
-* Frequency - There are several frequency options.
-  * "After Update" will run a clean immediately following a scan on the selected library.
-  * The Day/Week/Month options will schedule a clean task to happen. Cleaning the Video Library is hardcoded for midnight and the music library at 2am. Weekly updates occur on Sunday and Monthly updates occur on the first of each month - these values are hardcoded.
-  * You can also choose to enter a custom cron timer for video and music library cleaning. These work the same as any of the other cron timers for the other schedules.
-
-## Contributing
-
-If you're having issues with this addon there are two main places to look. The first is the addon thread on [the Kodi Forums](https://forum.kodi.tv/showthread.php?tid=119520). This is where you can ask general questions regarding functionality. If you're having a legitimate issue, such as an error message, you can [create an Issue](https://github.com/robweber/xbmclibraryautoupdate/issues) for it in this repository.
-
-Pull Requests are welcome if you want to dig around in the code to fix issues or add functionality. Please submit them using [the usual workflow](https://guides.github.com/introduction/flow/index.html). Additionally you can help keep languages files up to date by visiting [the Weblate page](https://kodi.weblate.cloud/projects/kodi-add-ons-services/service-xbmclibraryautoupdate/) for this addon and updating untranslated strings. Changes to Weblate will automatically create PRs to this repository. This is a great way to contribute if you're not a coder!
+$ curl -s -w'\n' localhost:9999/qc/170726_D00118_0303_BCB1TVANXX | python -m json.tool
+{
+    "ClusterPFHandler": [
+        {
+            "data": {
+                "lane": 1,
+                "lane_pf": 117929896,
+                "threshold": 180
+            },
+            "message": "Cluster PF was to low on lane 1, it was: 117.93 M",
+            "type": "warning"
+        },
+        {
+            "data": {
+                "lane": 7,
+                "lane_pf": 122263375,
+                "threshold": 180
+            },
+            "message": "Cluster PF was to low on lane 7, it was: 122.26 M",
+            "type": "warning"
+        },
+        {
+            "data": {
+                "lane": 8,
+                "lane_pf": 177018999,
+                "threshold": 180
+            },
+            "message": "Cluster PF was to low on lane 8, it was: 177.02 M",
+            "type": "warning"
+        }
+    ],
+    "ReadsPerSampleHandler": [
+        {
+            "data": {
+                "lane": 7,
+                "number_of_samples": 12,
+                "sample_id": "Sample_pq-27",
+                "sample_reads": 6.893002,
+                "threshold": 90
+            },
+            "message": "Number of reads for sample Sample_pq-27 was too low on lane 7, it was: 6.893 M",
+            "type": "warning"
+        },
+        {
+            "data": {
+                "lane": 7,
+                "number_of_samples": 12,
+                "sample_id": "Sample_pq-28",
+                "sample_reads": 7.10447,
+                "threshold": 90
+            },
+            "message": "Number of reads for sample Sample_pq-28 was too low on lane 7, it was: 7.104 M",
+            "type": "warning"
+        }
+    ],
+    "exit_status": 0,
+    "version": "1.1.0"
+}
+```
