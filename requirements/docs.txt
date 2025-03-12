@@ -1,1 +1,0 @@
-sphinx_celery>=2.1.3

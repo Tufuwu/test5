@@ -1,210 +1,135 @@
-=====================================================================
- Python AMQP 0.9.1 client library
-=====================================================================
+A Python interface to libarchive. It uses the standard ctypes_ module to
+dynamically load and access the C library.
 
-|build-status| |coverage| |license| |wheel| |pyversion| |pyimp|
+.. _ctypes: https://docs.python.org/3/library/ctypes.html
 
-:Version: 5.3.1
-:Web: https://amqp.readthedocs.io/
-:Download: https://pypi.org/project/amqp/
-:Source: http://github.com/celery/py-amqp/
-:Keywords: amqp, rabbitmq
+Installation
+============
 
-About
+    pip install libarchive-c
+
+Compatibility
+=============
+
+python
+------
+
+python-libarchive-c is currently tested with python 3.8, 3.9, 3.10 and 3.11.
+
+If you find an incompatibility with older versions you can send us a small patch,
+but we won't accept big changes.
+
+libarchive
+----------
+
+python-libarchive-c may not work properly with obsolete versions of libarchive such as the ones included in MacOS. In that case you can install a recent version of libarchive (e.g. with ``brew install libarchive`` on MacOS) and use the ``LIBARCHIVE`` environment variable to point python-libarchive-c to it::
+
+    export LIBARCHIVE=/usr/local/Cellar/libarchive/3.3.3/lib/libarchive.13.dylib
+
+Usage
 =====
 
-This is a fork of amqplib_ which was originally written by Barry Pederson.
-It is maintained by the Celery_ project, and used by `kombu`_ as a pure python
-alternative when `librabbitmq`_ is not available.
+Import::
 
-This library should be API compatible with `librabbitmq`_.
+    import libarchive
 
-.. _amqplib: https://pypi.org/project/amqplib/
-.. _Celery: http://celeryproject.org/
-.. _kombu: https://kombu.readthedocs.io/
-.. _librabbitmq: https://pypi.org/project/librabbitmq/
+Extracting archives
+-------------------
 
-Differences from `amqplib`_
-===========================
+To extract an archive, use the ``extract_file`` function::
 
-- Supports draining events from multiple channels (``Connection.drain_events``)
-- Support for timeouts
-- Channels are restored after channel error, instead of having to close the
-  connection.
-- Support for heartbeats
+    os.chdir('/path/to/target/directory')
+    libarchive.extract_file('test.zip')
 
-    - ``Connection.heartbeat_tick(rate=2)`` must called at regular intervals
-      (half of the heartbeat value if rate is 2).
-    - Or some other scheme by using ``Connection.send_heartbeat``.
-- Supports RabbitMQ extensions:
-    - Consumer Cancel Notifications
-        - by default a cancel results in ``ChannelError`` being raised
-        - but not if a ``on_cancel`` callback is passed to ``basic_consume``.
-    - Publisher confirms
-        - ``Channel.confirm_select()`` enables publisher confirms.
-        - ``Channel.events['basic_ack'].append(my_callback)`` adds a callback
-          to be called when a message is confirmed. This callback is then
-          called with the signature ``(delivery_tag, multiple)``.
-    - Exchange-to-exchange bindings: ``exchange_bind`` / ``exchange_unbind``.
-        - ``Channel.confirm_select()`` enables publisher confirms.
-        - ``Channel.events['basic_ack'].append(my_callback)`` adds a callback
-          to be called when a message is confirmed. This callback is then
-          called with the signature ``(delivery_tag, multiple)``.
-    - Authentication Failure Notifications
-        Instead of just closing the connection abruptly on invalid
-        credentials, py-amqp will raise an ``AccessRefused`` error
-        when connected to rabbitmq-server 3.2.0 or greater.
-- Support for ``basic_return``
-- Uses AMQP 0-9-1 instead of 0-8.
-    - ``Channel.access_request`` and ``ticket`` arguments to methods
-      **removed**.
-    - Supports the ``arguments`` argument to ``basic_consume``.
-    - ``internal`` argument to ``exchange_declare`` removed.
-    - ``auto_delete`` argument to ``exchange_declare`` deprecated
-    - ``insist`` argument to ``Connection`` removed.
-    - ``Channel.alerts`` has been removed.
-    - Support for ``Channel.basic_recover_async``.
-    - ``Channel.basic_recover`` deprecated.
-- Exceptions renamed to have idiomatic names:
-    - ``AMQPException`` -> ``AMQPError``
-    - ``AMQPConnectionException`` -> ConnectionError``
-    - ``AMQPChannelException`` -> ChannelError``
-    - ``Connection.known_hosts`` removed.
-    - ``Connection`` no longer supports redirects.
-    - ``exchange`` argument to ``queue_bind`` can now be empty
-      to use the "default exchange".
-- Adds ``Connection.is_alive`` that tries to detect
-  whether the connection can still be used.
-- Adds ``Connection.connection_errors`` and ``.channel_errors``,
-  a list of recoverable errors.
-- Exposes the underlying socket as ``Connection.sock``.
-- Adds ``Channel.no_ack_consumers`` to keep track of consumer tags
-  that set the no_ack flag.
-- Slightly better at error recovery
+Alternatively, the ``extract_memory`` function can be used to extract from a buffer,
+and ``extract_fd`` from a file descriptor.
 
-Quick overview
-==============
+The ``extract_*`` functions all have an integer ``flags`` argument which is passed
+directly to the C function ``archive_write_disk_set_options()``. You can import
+the ``EXTRACT_*`` constants from the ``libarchive.extract`` module and see the
+official description of each flag in the ``archive_write_disk(3)`` man page.
 
-Simple producer publishing messages to ``test`` queue using default exchange:
+By default, when the ``flags`` argument is ``None``, the ``SECURE_NODOTDOT``,
+``SECURE_NOABSOLUTEPATHS`` and ``SECURE_SYMLINKS`` flags are passed to
+libarchive, unless the current directory is the root (``/``).
 
-.. code:: python
+Reading archives
+----------------
 
-    import amqp
+To read an archive, use the ``file_reader`` function::
 
-    with amqp.Connection('broker.example.com') as c:
-        ch = c.channel()
-        ch.basic_publish(amqp.Message('Hello World'), routing_key='test')
+    with libarchive.file_reader('test.7z') as archive:
+        for entry in archive:
+            for block in entry.get_blocks():
+                ...
 
-Producer publishing to ``test_exchange`` exchange with publisher confirms enabled and using virtual_host ``test_vhost``:
+Alternatively, the ``memory_reader`` function can be used to read from a buffer,
+``fd_reader`` from a file descriptor, ``stream_reader`` from a stream object
+(which must support the standard ``readinto`` method), and ``custom_reader``
+from anywhere using callbacks.
 
-.. code:: python
+To learn about the attributes of the ``entry`` object, see the ``libarchive/entry.py``
+source code or run ``help(libarchive.entry.ArchiveEntry)`` in a Python shell.
 
-    import amqp
+Displaying progress
+~~~~~~~~~~~~~~~~~~~
 
-    with amqp.Connection(
-        'broker.example.com', exchange='test_exchange',
-        confirm_publish=True, virtual_host='test_vhost'
-    ) as c:
-        ch = c.channel()
-        ch.basic_publish(amqp.Message('Hello World'), routing_key='test')
+If your program processes large archives, you can keep track of its progress
+with the ``bytes_read`` attribute. Here's an example of a progress bar using
+`tqdm <https://pypi.org/project/tqdm/>`_::
 
-Consumer with acknowledgments enabled:
+    with tqdm(total=os.stat(archive_path).st_size, unit='bytes') as pbar, \
+         libarchive.file_reader(archive_path) as archive:
+        for entry in archive:
+            ...
+            pbar.update(archive.bytes_read - pbar.n)
 
-.. code:: python
+Creating archives
+-----------------
 
-    import amqp
+To create an archive, use the ``file_writer`` function::
 
-    with amqp.Connection('broker.example.com') as c:
-        ch = c.channel()
-        def on_message(message):
-            print('Received message (delivery tag: {}): {}'.format(message.delivery_tag, message.body))
-            ch.basic_ack(message.delivery_tag)
-        ch.basic_consume(queue='test', callback=on_message)
-        while True:
-            c.drain_events()
+    from libarchive.entry import FileType
 
+    with libarchive.file_writer('test.tar.gz', 'ustar', 'gzip') as archive:
+        # Add the `libarchive/` directory and everything in it (recursively),
+        # then the `README.rst` file.
+        archive.add_files('libarchive/', 'README.rst')
+        # Add a regular file defined from scratch.
+        data = b'foobar'
+        archive.add_file_from_memory('../escape-test', len(data), data)
+        # Add a directory defined from scratch.
+        early_epoch = (42, 42)  # 1970-01-01 00:00:42.000000042
+        archive.add_file_from_memory(
+            'metadata-test', 0, b'',
+            filetype=FileType.DIRECTORY, permission=0o755, uid=4242, gid=4242,
+            atime=early_epoch, mtime=early_epoch, ctime=early_epoch, birthtime=early_epoch,
+        )
 
-Consumer with acknowledgments disabled:
+Alternatively, the ``memory_writer`` function can be used to write to a memory buffer,
+``fd_writer`` to a file descriptor, and ``custom_writer`` to a callback function.
 
-.. code:: python
+For each of those functions, the mandatory second argument is the archive format,
+and the optional third argument is the compression format (called “filter” in
+libarchive). The acceptable values are listed in ``libarchive.ffi.WRITE_FORMATS``
+and ``libarchive.ffi.WRITE_FILTERS``.
 
-    import amqp
+File metadata codecs
+--------------------
 
-    with amqp.Connection('broker.example.com') as c:
-        ch = c.channel()
-        def on_message(message):
-            print('Received message (delivery tag: {}): {}'.format(message.delivery_tag, message.body))
-        ch.basic_consume(queue='test', callback=on_message, no_ack=True)
-        while True:
-            c.drain_events()
+By default, UTF-8 is used to read and write file attributes from and to archives.
+A different codec can be specified through the ``header_codec`` arguments of the
+``*_reader`` and ``*_writer`` functions. Example::
 
-Speedups
-========
+    with libarchive.file_writer('test.tar', 'ustar', header_codec='cp037') as archive:
+        ...
+    with file_reader('test.tar', header_codec='cp037') as archive:
+        ...
 
-This library has **experimental** support of speedups. Speedups are implemented using Cython. To enable speedups, ``CELERY_ENABLE_SPEEDUPS`` environment variable must be set during building/installation.
-Currently speedups can be installed:
+In addition to file paths (``pathname`` and ``linkpath``), the specified codec is
+used to encode and decode user and group names (``uname`` and ``gname``).
 
-1. using source package (using ``--no-binary`` switch):
-
-.. code:: shell
-
-    CELERY_ENABLE_SPEEDUPS=true pip install --no-binary :all: amqp
-
-
-2. building directly source code:
-
-.. code:: shell
-
-    CELERY_ENABLE_SPEEDUPS=true python setup.py install
-
-Further
+License
 =======
 
-- Differences between AMQP 0.8 and 0.9.1
-
-    http://www.rabbitmq.com/amqp-0-8-to-0-9-1.html
-
-- AMQP 0.9.1 Quick Reference
-
-    http://www.rabbitmq.com/amqp-0-9-1-quickref.html
-
-- RabbitMQ Extensions
-
-    http://www.rabbitmq.com/extensions.html
-
-- For more information about AMQP, visit
-
-    http://www.amqp.org
-
-- For other Python client libraries see:
-
-    http://www.rabbitmq.com/devtools.html#python-dev
-
-.. |build-status| image:: https://github.com/celery/py-amqp/actions/workflows/ci.yaml/badge.svg
-    :alt: Build status
-    :target: https://github.com/celery/py-amqp/actions/workflows/ci.yaml
-
-.. |coverage| image:: https://codecov.io/github/celery/py-amqp/coverage.svg?branch=main
-    :target: https://codecov.io/github/celery/py-amqp?branch=main
-
-.. |license| image:: https://img.shields.io/pypi/l/amqp.svg
-    :alt: BSD License
-    :target: https://opensource.org/licenses/BSD-3-Clause
-
-.. |wheel| image:: https://img.shields.io/pypi/wheel/amqp.svg
-    :alt: Python AMQP can be installed via wheel
-    :target: https://pypi.org/project/amqp/
-
-.. |pyversion| image:: https://img.shields.io/pypi/pyversions/amqp.svg
-    :alt: Supported Python versions.
-    :target: https://pypi.org/project/amqp/
-
-.. |pyimp| image:: https://img.shields.io/pypi/implementation/amqp.svg
-    :alt: Support Python implementations.
-    :target: https://pypi.org/project/amqp/
-
-py-amqp as part of the Tidelift Subscription
-============================================
-
-The maintainers of py-amqp and thousands of other packages are working with Tidelift to deliver commercial support and maintenance for the open source dependencies you use to build your applications. Save time, reduce risk, and improve code health, while paying the maintainers of the exact dependencies you use. [Learn more.](https://tidelift.com/subscription/pkg/pypi-amqp?utm_source=pypi-amqp&utm_medium=referral&utm_campaign=readme&utm_term=repo)
-
+`CC0 Public Domain Dedication <http://creativecommons.org/publicdomain/zero/1.0/>`_
