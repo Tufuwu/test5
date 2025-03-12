@@ -1,6 +1,5 @@
-include README.md CONTRIBUTING.md NEWS ChangeLog COPYING *.py tox.ini
-recursive-include tests *.doctest *.dat *.py
-recursive-include docs *.rst *.py
-recursive-include online_check *
-recursive-include update README requirements.txt *.py
-recursive-include scripts *.py
+include Cargo.toml Cargo.lock
+recursive-include src *
+graft LICENSES
+global-exclude .git*
+global-exclude .git/**

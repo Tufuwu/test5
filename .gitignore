@@ -1,14 +1,24 @@
-# global
-*.pyc
-*.pyo
-*~
-__pycache__
+__pycache__/
+.venv/
+build/
+dist/
+*.eggs/
+*.egg-info/
+*-[0-9].*/
 
-# /
-/.coverage
-/.tox
-/build
-/coverage
-/dist
-/distribute-*.egg
-/python_stdnum.egg-info
+*.tar.gz
+*.pyc
+*.pyd
+*.whl
+
+*.~*
+~*
+Thumbs.db
+Desktop.ini
+.DS_Store
+*.bak
+*.tmp
+
+**/target
+**/*.rs.bk
+*.so

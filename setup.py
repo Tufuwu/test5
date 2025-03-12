@@ -1,88 +1,61 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
-# setup.py - python-stdnum installation script
-#
-# Copyright (C) 2010-2025 Arthur de Jong
-#
-# This library is free software; you can redistribute it and/or
-# modify it under the terms of the GNU Lesser General Public
-# License as published by the Free Software Foundation; either
-# version 2.1 of the License, or (at your option) any later version.
-#
-# This library is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# Lesser General Public License for more details.
-#
-# You should have received a copy of the GNU Lesser General Public
-# License along with this library; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-# 02110-1301 USA
-
-"""python-stdnum installation script."""
-
-import os
 import sys
+import os
 
 from setuptools import find_packages, setup
+from setuptools_rust import RustExtension
 
-import stdnum
+PACKAGE_NAME = "cryptg"
+PACKAGE_VERSION = "0.5.0.post0"
+ENVVAR_VERSION_SUFFIX = "PYPI_SETUP_VERSION_SUFFIX"
 
 
-# fix permissions for sdist
-if 'sdist' in sys.argv:
-    os.system('chmod -R a+rX .')
-    os.umask(int('022', 8))
+def main(args):
+    with open("README.rst", encoding='utf-8') as f:
+        long_description = f.read()
 
-base_dir = os.path.dirname(__file__)
+    url = "https://github.com/cher-nov/" + PACKAGE_NAME
 
-with open(os.path.join(base_dir, 'README.md'), 'rb') as fp:
-    long_description = fp.read().decode('utf-8')
+    setup(
+        name=PACKAGE_NAME,
+        version=PACKAGE_VERSION+os.environ.get(ENVVAR_VERSION_SUFFIX, ""),
+        description="Cryptographic utilities for Telegram.",
+        long_description=long_description,
+        long_description_content_type="text/x-rst",
 
-setup(
-    name='python-stdnum',
-    version=stdnum.__version__,
-    description='Python module to handle standardized numbers and codes',
-    long_description=long_description,
-    long_description_content_type='text/markdown',
-    author='Arthur de Jong',
-    author_email='arthur@arthurdejong.org',
-    url='https://arthurdejong.org/python-stdnum/',
-    project_urls={
-        'Documentation': 'https://arthurdejong.org/python-stdnum/doc/',
-        'GitHub': 'https://github.com/arthurdejong/python-stdnum/',
-    },
-    license='LGPL',
-    classifiers=[
-        'Development Status :: 5 - Production/Stable',
-        'Intended Audience :: Developers',
-        'Intended Audience :: Financial and Insurance Industry',
-        'Intended Audience :: Information Technology',
-        'Intended Audience :: Telecommunications Industry',
-        'License :: OSI Approved :: GNU Lesser General Public License v2 or later (LGPLv2+)',
-        'Operating System :: OS Independent',
-        'Programming Language :: Python',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
-        'Programming Language :: Python :: 3.8',
-        'Programming Language :: Python :: 3.9',
-        'Programming Language :: Python :: 3.10',
-        'Programming Language :: Python :: 3.11',
-        'Programming Language :: Python :: 3.12',
-        'Programming Language :: Python :: 3.13',
-        'Programming Language :: Python :: Implementation :: PyPy',
-        'Topic :: Office/Business :: Financial',
-        'Topic :: Software Development :: Libraries :: Python Modules',
-        'Topic :: Text Processing :: General',
-    ],
-    packages=find_packages(),
-    install_requires=[],
-    package_data={'': ['*.dat', '*.crt']},
-    extras_require={
-        # The SOAP feature is only required for a number of online tests
-        # of numbers such as the EU VAT VIES lookup, the Dominican Republic
-        # DGII services or the Turkish T.C. Kimlik validation.
-        'SOAP': ['zeep'],
-    },
-)
+        url=url,
+        download_url=url+"/releases",
+
+        author="Dmitry D. Chernov; Lonami E",
+        author_email="blackdoomer@yandex.ru",
+
+        license="CC0",
+
+        # https://pypi.python.org/pypi?:action=list_classifiers
+        classifiers=[
+            "Development Status :: 4 - Beta",
+
+            "Intended Audience :: Developers",
+            "Topic :: Security :: Cryptography",
+
+            "License :: CC0 1.0 Universal (CC0 1.0) Public Domain Dedication",
+
+            "Programming Language :: Python :: 3",
+            "Programming Language :: Python :: 3.7",
+            "Programming Language :: Python :: 3.8",
+            "Programming Language :: Python :: 3.9",
+            "Programming Language :: Python :: 3.10",
+            "Programming Language :: Python :: 3.11",
+        ],
+        keywords="telegram crypto cryptography mtproto aes",
+
+        packages=find_packages(),
+        python_requires=">=3.7",
+        rust_extensions=[RustExtension("cryptg.cryptg")],
+        zip_safe=False,
+    )
+
+
+if __name__ == '__main__':
+    main(sys.argv)
