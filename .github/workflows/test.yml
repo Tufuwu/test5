@@ -1,29 +1,66 @@
-name: test
-
-on: [push]
+name: CI
+on:
+  push:
+    branches: [master]
+  pull_request:
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  test:
+    name: Python ${{ matrix.python-version }} - ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
     strategy:
-      max-parallel: 4
       matrix:
+        os: ["ubuntu-latest", "macos-latest"]
         python-version: ["3.9", "3.10"]
-
+      fail-fast: false
     steps:
-      - uses: actions/checkout@v1
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v1
+      - uses: actions/checkout@v2
+      - name: Cache conda packages
+        uses: actions/cache@v4
+        env:
+          # Increase this value to reset cache if environment.yml has not changed
+          CACHE_NUMBER: 0
+        with:
+          path: ~/conda_pkgs_dir
+          key: Python${{ matrix.python-version }}-${{ matrix.os }}-${{ hashFiles('environment.yml') }}
+      - name: Set-up conda and install dependencies
+        uses: conda-incubator/setup-miniconda@v2
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install dependencies
+          auto-update-conda: true
+          environment-file: environment.yml
+          activate-environment: test_env
+          use-only-tar-bz2: true # IMPORTANT: This needs to be set for caching to work properly!
+      - name: Install futures
+        shell: bash -l {0}
+        run: conda install -c conda-forge futures
+        if: ${{ startsWith(matrix.python-version, 2) }}
+      - name: Build package
+        shell: bash -l {0}
         run: |
-          python -m pip install --upgrade pip
-          pip install -e .
-      - name: Test with pytest
+            python setup.py build_ext --inplace
+            python setup.py install
+      - name: Run tests
+        shell: bash -l {0}
         run: |
-          pip install pytest-cov msgpack-python python-coveralls pytest-pep8
-          pytest -W ignore::pytest.PytestDeprecationWarning --pep8 src/ahocorapy/ --cov src/ahocorapy/ --cov-report=xml tests/ahocorapy_test.py
-      - name: Upload coverage info to codecov
+            conda install -c conda-forge nose mock coverage coveralls
+            nosetests --with-coverage --with-doctest --doctest-options=+ELLIPSIS e3fp
+      - name: Upload to coveralls
+        shell: bash -l {0}
         run: |
-          curl -s https://codecov.io/bash | bash
+          coveralls
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COVERALLS_REPO_TOKEN: hTn1CWmaoGxWHc3Kpnv3f1ctfGLL2S01K
+          COVERALLS_FLAG_NAME: Python ${{ matrix.python-version }} - ${{ matrix.os }})
+          COVERALLS_PARALLEL: true
+  finish:
+    name: Coveralls Finished
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          $CONDA/bin/conda install -c conda-forge coveralls
+          $CONDA/bin/coveralls --finish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
