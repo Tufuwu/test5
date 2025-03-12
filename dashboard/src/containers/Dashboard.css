@@ -1,0 +1,29 @@
+.main{
+    margin: 24px;
+}
+.toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.toolbar .submit-button {
+    background: white !important;
+    border-color: white !important;
+}
+.map-card, .table-card{
+    height: calc(100vh - 140px);
+}
+.map-card {
+    width: 40%;
+    overflow: hidden;
+}
+.table-card {
+    width: 60%;
+    overflow: scroll;
+}
+h4 {
+    margin: 16px 0 !important;
+}
+.leaflet-container {
+    min-height: calc(80vh - 16px) !important;
+}
