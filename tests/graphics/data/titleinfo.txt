@@ -1,3 +1,0 @@
-VAR0_srtd.wgs.regions.bed.gz, *S. species*, ‘Variety 1’
-VAR1_srtd.wgs.regions.bed.gz, *S. species*, ‘Variety 2’
-VAR2_srtd.wgs.regions.bed.gz, *S. species*, ‘Variety 3’
