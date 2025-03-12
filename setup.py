@@ -1,59 +1,43 @@
-#! /usr/bin/env python
+"""Setup of georss_ingv_centro_nazionale_terremoti_client library."""
 
-import importlib
+from setuptools import find_packages, setup
 
-from setuptools import setup
+from georss_ingv_centro_nazionale_terremoti_client.__version__ import __version__
 
+NAME = "georss_ingv_centro_nazionale_terremoti_client"
+AUTHOR = "Malte Franken"
+AUTHOR_EMAIL = "coding@subspace.de"
+DESCRIPTION = "A GeoRSS client library for the INGV Centro Nazionale Terremoti (Earthquakes) feed."
+URL = (
+    "https://github.com/exxamalte/python-georss-ingv-centro-nazionale-terremoti-client"
+)
 
-def get_version():
-    ver_file = None
-    try:
-        vermod = importlib.import_module('cmakelint.__version__')
-        version = vermod.VERSION
-        return version
-    finally:
-        if ver_file is not None:
-            ver_file.close()
-
-
-def read_without_comments(filename):
-    """some pip versions bark on comments (e.g. on travis)"""
-    with open(filename) as f:
-        return [line for line in f.read().splitlines() if not len(line) == 0 and not line.startswith('#')]
+REQUIRES = [
+    "georss_client>=0.17",
+]
 
 
-test_required = read_without_comments('test-requirements')
+with open("README.md") as fh:
+    long_description = fh.read()
 
-setup(name='cmakelint',
-      version=get_version(),
-      packages=['cmakelint'],
-      entry_points={
-          'console_scripts': [
-              'cmakelint = cmakelint.main:main'
-          ]
-      },
-      install_requires=[],
-      setup_requires=[],
-      tests_require=test_required,
-      # extras_require allow pip install .[dev]
-      extras_require={
-          'test': test_required,
-          'dev': read_without_comments('dev-requirements') + test_required
-      },
-      author="Richard Quirk",
-      author_email="richard.quirk@gmail.com",
-      url="https://github.com/cmake-lint/cmake-lint",
-      download_url="https://github.com/cmake-lint/cmake-lint",
-      keywords=["cmake", "lint"],
-      classifiers=[
-        "Topic :: Software Development",
-        "Development Status :: 5 - Production/Stable",
-        "Environment :: Console",
-        "Programming Language :: Other",
-        "Programming Language :: Python",
-        "License :: OSI Approved :: Apache Software License"],
-      description="Static code checker for CMake files",
-      long_description=open('README.md').read(),
-      long_description_content_type="text/markdown",
-      license="Apache 2.0"
-      )
+setup(
+    name=NAME,
+    version=__version__,
+    author=AUTHOR,
+    author_email=AUTHOR_EMAIL,
+    description=DESCRIPTION,
+    license="Apache-2.0",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    url=URL,
+    packages=find_packages(exclude=("tests*",)),
+    classifiers=[
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+        "License :: OSI Approved :: Apache Software License",
+        "Operating System :: OS Independent",
+    ],
+    install_requires=REQUIRES,
+)
