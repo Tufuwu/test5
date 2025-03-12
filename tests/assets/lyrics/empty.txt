@@ -1,1 +1,0 @@
-Lyrics in a text file next to a track without metadata.
