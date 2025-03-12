@@ -1,2 +1,14 @@
 [run]
-relative_files = True
+branch = True
+concurrency =
+    gevent
+    multiprocessing
+
+[report]
+precision = 1
+include =
+    ./*
+omit =
+    lib/tarantool-python/*
+    lib/msgpack-python/*
+    test/*

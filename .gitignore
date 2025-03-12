@@ -1,28 +1,58 @@
-/.venv
-.DS_Store
-*.pyc
-/docs/build
-/docs/source/modules.rst
-docs/source/tenable*.rst
-/docs/_build
-.pytest_cache
-*.json
-*.log
+# General
+*~
+.*.sw[a-z]
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+.idea/
+
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
 .coverage
-/test_certs
-.python-version
-/build
-/tests/sc/cassettes/sc_login.yaml-backup
-/tests/sc/cassettes/sc_logout.yaml-backup
-/tests/sc/cassettes/scan_policy.yml-backup
-/test_*.py
-__pycache__
-/.secrets
-/*.nessus
-/pyTenable.egg-info
-Jenkinsfile
-/ex_*.py
-.idea
-/dist
-sync_job_example_run.py
-__MACOSX
+.coverage.*
+.cache
+.hypothesis/
+nosetests.xml
+coverage.xml
+*,cover
+
+# Translations
+*.mo
+*.pot
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/

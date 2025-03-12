@@ -1,4 +1,0 @@
-Errors
-======
-
-.. automodule:: tenable.errors

@@ -1,0 +1,3 @@
+coverage==5.*
+flake8==5.*
+hypothesis==4.*

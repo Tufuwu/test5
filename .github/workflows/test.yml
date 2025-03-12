@@ -1,29 +1,37 @@
-name: pyTenable Unit Tests
+name: test-run
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
-  unit_tests:
+  build:
+    if: ( github.event_name == 'push' ||
+        github.event.pull_request.head.repo.full_name != github.repository ) &&
+        ( github.repository == 'tarantool/test-run' )
+
     runs-on: ubuntu-latest
+
     strategy:
+      fail-fast: false
       matrix:
         python-version: ["3.9", "3.10"]
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r test-requirements.txt
-          pip install -r requirements.txt
-      #- name: Lint with flak8
-      #  run: |
-      #    flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-      #    flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-      - name: Test with pytest
-        run: |
-          pytest --vcr-record=none --cov-report term-missing --cov=tenable tests
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: display python version
+      run: python -c "import sys; print(sys.version)"
+    - name: setup dependencies
+      run: |
+       sudo apt update -y
+       sudo apt-get -y install lua5.1 luarocks
+       sudo luarocks install luacheck
+    - name: setup python dependencies
+      run: |
+       pip install -r requirements.txt
+       pip install -r requirements-test.txt
+    - name: run static analysis
+      run: |
+       make lint
