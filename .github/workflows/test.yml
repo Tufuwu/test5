@@ -1,23 +1,29 @@
----
-name: aactivator-ci
-on: push
+name: build
+
+on:
+  push:
+    branches:
+      - '*'
+  pull_request:
+    branches:
+      - master
+
 jobs:
-  tox:
+  build:
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: false
       matrix:
-        make_target:
-          - test
-          - itest_xenial
-          - itest_bionic
-          - itest_stretch
-          - itest_buster
+        python-version: ["3.9", "3.10"]
+
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-      - run: pip install tox
-      - run: sudo apt-get install -y --no-install-recommends zsh
-      - run: make ${{ matrix.make_target }}
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: pip install -r requirements-dev.txt
+    - name: Link with flake8
+      run: flake8 aioapns
+    - name: Run black
+      run: black --check .

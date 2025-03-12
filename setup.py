@@ -1,31 +1,34 @@
-from setuptools import setup
+#!/usr/bin/env python
 
-from aactivator import __version__
-
+from setuptools import find_packages, setup
 
 setup(
-    name='aactivator',
-    description=(
-        'Automatically activate Python virtualenvs (and other environments).'
-    ),
-    url='https://github.com/Yelp/aactivator',
-    version=__version__,
-    author='Yelp',
-    platforms='linux',
+    name="aioapns",
+    version="3.3.1",
+    description="An efficient APNs Client Library for Python/asyncio",
+    long_description=open("README.rst").read(),
+    platforms="all",
     classifiers=[
-        'License :: OSI Approved :: MIT License',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.7',
-        'Programming Language :: Python :: 3.8',
-        'Programming Language :: Python :: 3.9',
-        'Programming Language :: Python :: 3.10',
-        'Programming Language :: Python :: 3.11',
+        "License :: OSI Approved :: Apache Software License",
+        "Intended Audience :: Developers",
+        "Operating System :: MacOS :: MacOS X",
+        "Operating System :: POSIX",
+        "Programming Language :: Python :: 3 :: Only",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Development Status :: 5 - Production/Stable",
     ],
-    python_requires='>=3.7',
-    py_modules=['aactivator'],
-    entry_points={
-        'console_scripts': [
-            'aactivator = aactivator:main',
-        ],
-    },
+    license="Apache License, Version 2.0",
+    author="Alexander Tikhonov",
+    author_email="random.gauss@gmail.com",
+    url="https://github.com/Fatal1ty/aioapns",
+    packages=find_packages(exclude=("tests",)),
+    package_data={"aioapns": ["py.typed"]},
+    install_requires=[
+        "h2>=4.0.0",
+        "pyOpenSSL>=17.5.0",
+        "pyjwt>=2.0.0",
+    ],
 )
