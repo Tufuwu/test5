@@ -1,40 +1,51 @@
-name: CI
+name: PythonSymbols
 
-on: [push]
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  schedule:
+    - cron: "0 0 * * 0"
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
 
 jobs:
-  build_and_test_pinned:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-        python-version: ["3.9", "3.10"]  # 'pypy-3.6'
-        backend: [asyncio, curio, trio, uvloop]
+  build:
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Setup Python
+      - name: Checkout gh-pages branch.
+        uses: actions/checkout@v3
+        with:
+          ref: gh-pages
+          fetch-depth: 0 # Fetch all branches so we can merge.
+      - name: Merge any recent changes into the gh-pagest branch.
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git merge -X theirs origin/main
+      - name: Setup Python.
         uses: actions/setup-python@v3
         with:
-          python-version: ${{ matrix.python-version }}
-          cache: 'pip'
-          cache-dependency-path: 'requirements_test*.txt'
-      - run: pip install . -r requirements_test_py36.txt
-        if: ${{ contains(matrix.python-version, '3.6') }}
-      - run: pip install . -r requirements_test.txt
-        if: ${{ !contains(matrix.python-version, '3.6') }}
-      - run: PURERPC_BACKEND=${{ matrix.backend }} pytest
-
-  build_and_test_latest:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-        backend: [asyncio, curio, trio, uvloop]
-    steps:
-      - uses: actions/checkout@v3
-      - name: Setup Python
-        uses: actions/setup-python@v3
-        with:
-          python-version: '3.9'
-      - run: pip install .[test]
-      - run: PURERPC_BACKEND=${{ matrix.backend }} pytest
+          python-version: 3.x
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      - name: Update symbol server.
+        run: |
+          python pysymsrv.py
+      - name: Generate index.html.
+        run: |
+          python generateindex.py
+      - name: Deploy new symbols to GH Pages.
+        run: |
+          date > lastrun.txt
+          git add --all :/
+          git commit -m "Automatic update of gh-pages"
+          git push
