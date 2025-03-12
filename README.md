@@ -1,343 +1,78 @@
-## Introduction &middot; [![Build status](https://github.com/BenBrostoff/draftfast/actions/workflows/main.yml/badge.svg)](https://github.com/BenBrostoff/draftfast/actions/workflows/main.yml)  &middot; [![](https://draftfast.herokuapp.com/badge.svg)](https://draftfast.herokuapp.com/)
+# Library Updater
+![Kodi Version](https://img.shields.io/endpoint?url=https%3A%2F%2Fweberjr.com%2Fkodi-shield%2Fversion%2Frobweber%2Fxbmclibraryautoupdate%2Fmatrix%2Ftrue%2Ftrue) ![Total Downloads](https://img.shields.io/endpoint?url=https%3A%2F%2Fweberjr.com%2Fkodi-shield%2Fdownloads%2Fmatrix%2Fservice.libraryautoupdate%2F1.2.4) [![Build Status](https://img.shields.io/github/actions/workflow/status/robweber/xbmclibraryautoupdate/addon-checker.yml)](https://github.com/robweber/xbmclibraryautoupdate/actions/workflows/addon-checker.yml) [![License](https://img.shields.io/github/license/robweber/xbmclibraryautoupdate)](https://github.com/robweber/xbmclibraryautoupdate/blob/master/LICENSE.txt) [![PEP8](https://img.shields.io/badge/code%20style-pep8-orange.svg)](https://www.python.org/dev/peps/pep-0008/)
 
-![](marketing/MAIN_WORKFLOW.png)
-![](marketing/USE_CASES.png)
+The Library Updater will update your music and/or video libraries according to times specified by you. Please note that this is just a fancy timer that calls out to the normal Kodi Library Scanning functions. All of the processes associated with scanning are all handed off to Kodi.
 
-An incredibly powerful tool that automates and optimizes lineup building, allowing you to enter thousands of lineups in any DraftKings or FanDuel contest in the time it takes you to grab a coffee.
-
-## Installation
-
-Requires Python 3.12+.
-
-```bash
-pip install draftfast
-```
-
-## Usage
-
-Example usage ([you can experiment with these examples in repl.it](https://repl.it/@BenBrostoff/AllWarlikeDemoware)):
-
-```python
-from draftfast import rules
-from draftfast.optimize import run
-from draftfast.orm import Player
-from draftfast.csv_parse import salary_download
-
-# Create players for a classic DraftKings game
-player_pool = [
-    Player(name='A1', cost=5500, proj=55, pos='PG'),
-    Player(name='A2', cost=5500, proj=55, pos='PG'),
-    Player(name='A3', cost=5500, proj=55, pos='SG'),
-    Player(name='A4', cost=5500, proj=55, pos='SG'),
-    Player(name='A5', cost=5500, proj=55, pos='SF'),
-    Player(name='A6', cost=5500, proj=55, pos='SF'),
-    Player(name='A7', cost=5500, proj=55, pos='PF'),
-    Player(name='A8', cost=5500, proj=55, pos='PF'),
-    Player(name='A9', cost=5500, proj=55, pos='C'),
-    Player(name='A10', cost=5500, proj=55, pos='C'),
-]
-
-roster = run(
-    rule_set=rules.DK_NBA_RULE_SET,
-    player_pool=player_pool,
-    verbose=True,
-)
-
-# Or, alternatively, generate players from a CSV
-players = salary_download.generate_players_from_csvs(
-  salary_file_location='./salaries.csv',
-  game=rules.DRAFT_KINGS,
-)
-
-roster = run(
-  rule_set=rules.DK_NBA_RULE_SET,
-  player_pool=players,
-  verbose=True,
-)
-```
-
-You can see more examples in the [`examples` directory](https://github.com/BenBrostoff/draftfast/tree/master/examples).
-
-## Game Rules
-
-Optimizing for a particular game is as easy as setting the `RuleSet` (see the example above). Game rules in the library are in the table below:
-
-| League       | Site           | Reference  |
-| ------------- |:-------------:| :-----:|
-| NFL | DraftKings | `DK_NFL_RULE_SET` |
-| NFL | FanDuel | `FD_NFL_RULE_SET` |
-| NBA | DraftKings | `DK_NBA_RULE_SET` |
-| NBA | FanDuel | `FD_NBA_RULE_SET` |
-| MLB | DraftKings | `DK_MLB_RULE_SET` |
-| MLB | FanDuel | `FD_MLB_RULE_SET` |
-| WNBA | DraftKings | `DK_WNBA_RULE_SET` |
-| WNBA | FanDuel | `FD_WNBA_RULE_SET` |
-| PGA | FanDuel | `FD_PGA_RULE_SET` |
-| PGA | DraftKings | `DK_PGA_RULE_SET` |
-| PGA_CAPTAIN | DraftKings | `DK_PGA_CAPTAIN_RULE_SET` |
-| NASCAR | FanDuel | `FD_NASCAR_RULE_SET` |
-| NASCAR | DraftKings | `DK_NASCAR_RULE_SET` |
-| SOCCER | DraftKings | `DK_SOCCER_RULE_SET` |
-| EuroLeague | DraftKings | `DK_EURO_LEAGUE_RULE_SET` |
-| NHL | DraftKings | `DK_NHL_RULE_SET` |
-| NBA Pickem | DraftKings | `DK_NBA_PICKEM_RULE_SET` |
-| NFL Showdown | DraftKings | `DK_NFL_SHOWDOWN_RULE_SET` |
-| NBA Showdown | DraftKings | `DK_NBA_SHOWDOWN_RULE_SET` |
-| MLB Showdown | DraftKings | `DK_MLB_SHOWDOWN_RULE_SET` |
-| XFL | DraftKings | `DK_XFL_CLASSIC_RULE_SET` |
-| Tennis | DraftKings | `DK_TEN_CLASSIC_RULE_SET` |
-| CS:GO | DraftKings | `DK_CSGO_SHOWDOWN` |
-| F1 | DraftKings | `DK_F1_SHOWDOWN` |
-| NFL MVP | FanDuel | `FD_NFL_MVP_RULE_SET` |
-| MLB MVP | FanDuel | `FD_MLB_MVP_RULE_SET` |
-| NBA MVP | FanDuel | `FD_NBA_MVP_RULE_SET` |
-
-Note that you can also tune `draftfast` for any game of your choice even if it's not implemented in the library (PRs welcome!). Using the `RuleSet` class, you can generate your own game rules that specific number of players, salary, etc. Example:
-
-```python
-from draftfast import rules
-
-golf_rules = rules.RuleSet(
-    site=rules.DRAFT_KINGS,
-    league='PGA',
-    roster_size='6',
-    position_limits=[['G', 6, 6]],
-    salary_max=50_000,
-)
-```
+_Thanks to pkscuot for several small tweaks to this addon!_
 
 ## Settings
 
-Usage example:
+Be aware that settings are visible based on the [Kodi Settings Level](https://kodi.wiki/view/Settings) set. Levels higher than Standard (Advanced or Expert) are designated next to that setting.
 
-```python
-class Showdown(Roster):
-    POSITION_ORDER = {
-        'M': 0,
-        'F': 1,
-        'D': 2,
-        'GK': 3,
-    }
+### General Settings:
 
+* Startup Delay - if an update should run on startup (dependent on the time the last update has ran) this will delay it from running for a few minutes to allow other XBMC process to function.
+* Show Notifications - shows notifications when the updater will run again
+* Run During Playback - should the addon run a scheduled scan when you are playing media (yes/no)
+* Only run when idle - restricts the scanning process to when the screensaver is active
+* Check if sources exist before scan - checks if the sources are online before starting the scan process. For single source scans it will check only that source. ![Settings Level Advanced](https://img.shields.io/badge/-advanced-blue)
+* Disable Manual Run Prompt - disables the dialog box when selecting Manual Run and just goes right to the library update ![Settings Level Advanced](https://img.shields.io/badge/-advanced-blue)
 
-showdown_limits = [
-    ['M', 0, 6],
-    ['F', 0, 6],
-    ['D', 0, 6],
-    ['GK', 0, 6],
-]
+### Video Settings:
 
-soccer_rules = rules.RuleSet(
-    site=rules.DRAFT_KINGS,
-    league='SOCCER_SHOWDOWN',
-    roster_size=6,
-    position_limits=showdown_limits,
-    salary_max=50_000,
-    general_position_limits=[],
-)
-player_pool = salary_download.generate_players_from_csvs(
-    salary_file_location=salary_file,
-    game=rules.DRAFT_KINGS,
-)
-roster = run(
-    rule_set=soccer_rules,
-    player_pool=player_pool,
-    verbose=True,
-    roster_gen=Showdown,
-)
-```
+Enabling this will turn on scanning for the Video Library. This is the same as calling "Update Library" from within the Video menus of Kodi. There are a few options you can tweak regarding how often you want the scanner to run. Read the section on Timer Options for more information.
 
-`PlayerPoolSettings`
+__Custom Paths__ ![Settings Level Expert](https://img.shields.io/badge/-expert-blue)
 
-- `min_proj`
-- `max_proj`
-- `min_salary`
-- `max_salary`
-- `min_avg`
-- `max_avg`
+Custom paths are a special advanced feature for the Video library. It allows you to specify different schedules for individual paths in your library. This editor is limited to the Cron style syntax for scheduling. The path you select must already be in the video database and have content selected. The path must also match your source path exactly.
 
-`OptimizerSettings`
+### Music Settings
 
-- `stacks` - A list of `Stack` objects. Example:
+Enabled this will turn on scanning for the Music Library. This is the same as calling "Update Library" from within the Music menus of Kodi. The options here are identical to the Video Settings above. Read the section on Timer Options for more information.
 
-```python
-roster = run(
-    rule_set=rules.DK_NHL_RULE_SET,
-    player_pool=player_pool,
-    verbose=True,
-    optimizer_settings=OptimizerSettings(
-        stacks=[
-            Stack(team='PHI', count=3),
-            Stack(team='FLA', count=3),
-            Stack(team='NSH', count=2),
-        ]
-    ),
-)
-```
+### Timer Options:
 
-`Stack` can also be tuned to support different combinations of positions. For NFL,
-to only specify a QB-WRs based stack of five:
+For both Video and Music library scanning there are two types of timers to choose from.
 
-```python
-Stack(
-    team='NE',
-    count=5,
-    stack_lock_pos=['QB'],
-    stack_eligible_pos=['WR'],
-)
-```
+__Standard Timer__
 
-- `custom_rules` - Define rules that set if / then conditions for lineups.
+Specify an interval to run the library update process. It will be launched every X hours within the interval unless on of the conditions specified by you as been met (don't run during media playback, etc) in which case it will be run at the next earliest convenience.
 
+__Advanced Timer__ ![Settings Level Advanced](https://img.shields.io/badge/-advanced-blue)
 
-For example, if two WRs from the same team are in a naturally optimized lineup, then the QB must also be in the lineup. You can find some good examples of rules in `draftfast/test/test_custom_rules.py`.
-
-```python
-from draftfast.optimize import run
-from draftfast.settings import OptimizerSettings, CustomRule
-
-# If two WRs on one team, play the QB from same team
-settings = OptimizerSettings(
-    custom_rules=[
-        CustomRule(
-            group_a=lambda p: p.pos == 'WR' and p.team == 'Patriots',
-            group_b=lambda p: p.pos == 'QB' and p.team == 'Patriots',
-            comparison=lambda sum, a, b: sum(a) + 1 <= sum(b)
-        )
-    ]
-)
-roster = run(
-    rule_set=rules.DK_NFL_RULE_SET,
-    player_pool=nfl_pool,
-    verbose=True,
-    optimizer_settings=settings,
-)
-```
-
-Another common use case is given one player is in a lineup, always play another player:
-
-```python
-from draftfast.optimize import run
-from draftfast.settings import OptimizerSettings, CustomRule
-
-# If Player A, always play Player B and vice versa
-settings = OptimizerSettings(
-    custom_rules=[
-        CustomRule(
-            group_a=lambda p: p.name == 'Tom Brady',
-            group_b=lambda p: p.name == 'Rob Gronkowski',
-            comparison=lambda sum, a, b: sum(a) == sum(b)
-        )
-    ]
-)
-roster = run(
-    rule_set=rules.DK_NFL_RULE_SET,
-    player_pool=nfl_pool,
-    verbose=True,
-    optimizer_settings=settings,
-)
-```
-
-Custom rules also don't have to make a comparison between two groups. You can say "never play these two players in the same lineup" by using the `CustomRule#comparison` property.
-
-```python
-# Never play these two players together
-settings = OptimizerSettings(
-    custom_rules=[
-        CustomRule(
-            group_a=lambda p: p,
-            group_b=lambda p: p.name == 'Devon Booker' or p.name == 'Chris Paul',
-            comparison=lambda sum, a, b: sum(b) <= 1
-        )
-    ]
-)
-roster = run(
-    rule_set=rules.DK_NBA_RULE_SET,
-    player_pool=nba_pool,
-    verbose=True,
-    optimizer_settings=settings,
-)
-```
-
-Importantly, as of this writing, passing closures into `CustomRule`s does not work (ex. `lambda p: p.team == team`),
-so dynamically generating rules is not possible. PRs welcome for a fix here, I believe this is a limitation of `ortools`.
-
-`LineupConstraints`
-
-- `locked` - list of players to lock
-- `banned` - list of players to ban
-- `groups` - list of player groups constraints. See below
-
-```python
-roster = run(
-    rule_set=rules.DK_NFL_RULE_SET,
-    player_pool=player_pool,
-    verbose=True,
-    constraints=LineupConstraints(
-        locked=['Rob Gronkowski'],
-        banned=['Mark Ingram', 'Doug Martin'],
-        groups=[
-            [('Todd Gurley', 'Melvin Gordon', 'Christian McCaffrey'), (2, 3)],
-            [('Chris Carson', 'Mike Davis'), 1],
-        ]
-    )
-)
-```
-
-- `no_offense_against_defense` - Do not allow offensive players to be matched up against defensive players in the optimized lineup. Currently only implemented for soccer, NHL, and NFL -- PRs welcome!
-
-## CSV Upload
-
-```python
-from draftfast.csv_parse import uploaders
-
-uploader = uploaders.DraftKingsNBAUploader(
-    pid_file='./pid_file.csv',
-)
-uploader.write_rosters(rosters)
+Specify a cron expression to use as an interval for the update process. By default the expression will run at the top of every hour. More advanced expressions can be configured such as:
 
 ```
 
-## Support and Consulting
-
-DFS optimization is only one part of a sustainable strategy. Long-term DFS winners have the best:
-
-- Player projections
-- Bankroll management
-- Diversification in contests played
-- Diversification across lineups (see `draftfast.exposure`)
-- Research process
-- 1 hour before gametime lineup changes
-- ...and so much more
-
-DraftFast provides support and consulting services that can help with all of these. [Let's get in touch today](mailto:ben.brostoff@gmail.com).
-
-# Contributing
-
-Run tests or set of tests:
-
-```sh
-# All tests
-nose2
-
-# Single file
-nose2 draftfast.test.test_soccer
-
-# Single test
-nosetests draftfast.test.test_soccer.test_soccer_dk_no_opp_d
+    .--------------- minute (0 - 59)
+    |   .------------ hour (0 - 23)
+    |   |   .--------- day of month (1 - 31)
+    |   |   |   .------ month (1 - 12) or Jan, Feb ... Dec
+    |   |   |   |  .---- day of week (0 - 6) or Sun(0 or 7)
+    V   V   V   V  V
+    *   *   *   *  *
 ```
 
-Run linting
+Example:
+1. 0 */5 ** 1-5 - runs update every five hours Monday - Friday
+2. 0,15,30,45 0,15-18 * * * - runs update every quarter hour during midnight hour and 3pm-6pm
 
-```
-flake8 draftfast
-```
 
-# Credits
+Read up on cron (http://en.wikipedia.org/wiki/Cron) for more information on how to create these expressions
 
-Special thanks to [swanson](https://github.com/swanson/), who authored [this repo](https://github.com/swanson/degenerate), which was the inspiration for this one.
+### Cleaning the Library:
 
-Current project maintainers:
+Cleaning the Music/Video Libraries is not enabled by default. If you choose to do this you can select from a few options to try and reduce the likelyhood that a DB clean wile hose your database.
 
-- [BenBrostoff](https://github.com/BenBrostoff)
-- [sharkiteuthis](https://github.com/sharkiteuthis)
+* Library to Clean - You can clean your video library, music library, or both.
+* Prompt User Before Cleaning - you must confirm that you want to clean the library before it will happen. Really only useful for "After Update" as a condition. ![Settings Level Advanced](https://img.shields.io/badge/-advanced-blue)
+* Frequency - There are several frequency options.
+  * "After Update" will run a clean immediately following a scan on the selected library.
+  * The Day/Week/Month options will schedule a clean task to happen. Cleaning the Video Library is hardcoded for midnight and the music library at 2am. Weekly updates occur on Sunday and Monthly updates occur on the first of each month - these values are hardcoded.
+  * You can also choose to enter a custom cron timer for video and music library cleaning. These work the same as any of the other cron timers for the other schedules.
+
+## Contributing
+
+If you're having issues with this addon there are two main places to look. The first is the addon thread on [the Kodi Forums](https://forum.kodi.tv/showthread.php?tid=119520). This is where you can ask general questions regarding functionality. If you're having a legitimate issue, such as an error message, you can [create an Issue](https://github.com/robweber/xbmclibraryautoupdate/issues) for it in this repository.
+
+Pull Requests are welcome if you want to dig around in the code to fix issues or add functionality. Please submit them using [the usual workflow](https://guides.github.com/introduction/flow/index.html). Additionally you can help keep languages files up to date by visiting [the Weblate page](https://kodi.weblate.cloud/projects/kodi-add-ons-services/service-xbmclibraryautoupdate/) for this addon and updating untranslated strings. Changes to Weblate will automatically create PRs to this repository. This is a great way to contribute if you're not a coder!
