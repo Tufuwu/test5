@@ -1,19 +1,14 @@
-*.pyc
-test.py
-.pytest_cache
-*__pycache__
-.coverage
-*.ipynb
-.ipynb_checkpoints
-.tox
-*.egg-info
-tox.ini
-/.cache
-/.vscode
-.eggs
-*.code-workspace
+# general things to ignore
+build/
+dist/
+*.egg-info/
+*.egg
+*.py[cod]
+__pycache__/
+*.so
+*~
+venv/
 
-build
-dist
-
-venv
+# due to using nox and pytest
+.nox
+.cache

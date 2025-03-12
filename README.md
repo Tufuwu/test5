@@ -1,57 +1,39 @@
-[![Python 3.6](https://img.shields.io/badge/python-3.6-blue.svg)](https://www.python.org/downloads/release/python-360/)
+# A sample Python project
 
-# ladybug-pandas
+![Python Logo](https://www.python.org/static/community_logos/python-logo.png "Sample inline image")
 
-A ladybug extension powered by pandas
+A sample project that exists as an aid to the [Python Packaging User
+Guide][packaging guide]'s [Tutorial on Packaging and Distributing
+Projects][distribution tutorial].
 
-## Installation
-```console
-pip install ladybug-pandas
-```
+This project does not aim to cover best practices for Python project
+development as a whole. For example, it does not provide guidance or tool
+recommendations for version control, documentation, or testing.
 
-## QuickStart
-```python
-import ladybug_pandas as lbp
-from ladybug.epw import EPW
+[The source for this project is available here][src].
 
-epw_path = 'tests/assets/epw/tokyo.epw'
+The metadata for a Python project is defined in the `pyproject.toml` file,
+an example of which is included in this project. You should edit this file
+accordingly to adapt this sample project to your needs.
 
-epw = EPW(epw_path)
+----
 
-df = lbp.DataFrame.from_epw(epw)
+This is the README file for the project.
 
-df_ip = df.ladybug.to_ip()
+The file should use UTF-8 encoding and can be written using
+[reStructuredText][rst] or [markdown][md use] with the appropriate [key set][md
+use]. It will be used to generate the project webpage on PyPI and will be
+displayed as the project homepage on common code-hosting services, and should be
+written for that purpose.
 
-```
+Typical contents for this file would include an overview of the project, basic
+usage examples, etc. Generally, including the project changelog in here is not a
+good idea, although a simple “What's New” section for the most recent version
+may be appropriate.
 
-## [API Documentation](http://ladybug-tools.github.io/ladybug-pandas)
-
-You can also find some usage examples in the [examples](https://github.com/ladybug-tools/ladybug-pandas/blob/master/examples) folder of the code repository.
-
-
-## Local Development
-1. Clone this repo locally
-```console
-git clone git@github.com:ladybug-tools/ladybug-pandas
-
-# or
-
-git clone https://github.com/ladybug-tools/ladybug-pandas
-```
-2. Install dependencies:
-```console
-cd ladybug-pandas
-pip install -r dev-requirements.txt
-pip install -r requirements.txt
-```
-
-3. Run Tests:
-```console
-python -m pytest tests/
-```
-
-4. Generate Documentation:
-```console
-sphinx-apidoc -f -e -d 4 -o ./docs ./ladybug_pandas
-sphinx-build -b html ./docs ./docs/_build/docs
-```
+[packaging guide]: https://packaging.python.org
+[distribution tutorial]: https://packaging.python.org/tutorials/packaging-projects/
+[src]: https://github.com/pypa/sampleproject
+[rst]: http://docutils.sourceforge.net/rst.html
+[md]: https://tools.ietf.org/html/rfc7764#section-3.5 "CommonMark variant"
+[md use]: https://packaging.python.org/specifications/core-metadata/#description-content-type-optional
