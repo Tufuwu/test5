@@ -1,229 +1,183 @@
-# Beancount DKB Importer
+# Flask-FileAlchemy
 
-[![image](https://img.shields.io/pypi/v/beancount-dkb.svg)](https://pypi.python.org/pypi/beancount-dkb)
-[![image](https://img.shields.io/pypi/pyversions/beancount-dkb.svg)](https://pypi.python.org/pypi/beancount-dkb)
-[![Downloads](https://static.pepy.tech/badge/beancount-dkb)](https://pepy.tech/project/beancount-dkb)
-[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+![](https://github.com/siddhantgoel/flask-filealchemy/workflows/flask-filealchemy/badge.svg) ![](https://badge.fury.io/py/flask-filealchemy.svg)
 
-`beancount-dkb` provides importers for converting CSV exports of [DKB] (Deutsche
-Kreditbank) account summaries to the [Beancount] format.
+`Flask-FileAlchemy` is a [Flask] extension that lets you use Markdown or YAML
+formatted plain-text files as the main data store for your apps.
 
 ## Installation
 
-```sh
-$ pip install beancount-dkb
+```bash
+$ pip install flask-filealchemy
 ```
 
-In case you prefer installing from the Github repository, please note that `main` is the
-development branch so `stable` is what you should be installing from.
+## Background
 
-Note that v1.x will *only* work with Beancount 3.x, while v0.x will *only* work with
-Beancount 2.x, due to incompatibilities between Beancount 3.x and 2.x.
+The constraints on which data-store to use for applications that only have to
+run locally are quite relaxed as compared to the ones that have to serve
+production traffic. For such applications, it's normally OK to sacrifice on
+performance for ease of use.
+
+One very strong use case here is generating static sites. While you can use
+[Frozen-Flask] to "freeze" an entire Flask application to a set of HTML files,
+your application still needs to read data from somewhere. This means you'll need
+to set up a data store, which (locally) tends to be file based SQLite. While
+that does the job extremely well, this also means executing SQL statements to
+input data.
+
+Depending on how many data models you have and what types they contain, this can
+quickly get out of hand (imagine having to write an `INSERT` statement for a
+blog post).
+
+In addition, you can't version control your data. Well, technically you can, but
+the diffs won't make any sense to a human.
+
+Flask-FileAlchemy lets you use an alternative data store - plain text files.
+
+Plain text files have the advantage of being much easier to handle for a human.
+Plus, you can version control them so your application data and code are both
+checked in together and share history.
+
+Flask-FileAlchemy lets you enter your data in Markdown or YAML formatted plain
+text files and loads them according to the [SQLAlchemy] models you've defined
+using [Flask-SQLAlchemy] This data is then put into whatever data store you're
+using (in-memory SQLite works best) and is then ready for your app to query
+however it pleases.
+
+This lets you retain the comfort of dynamic sites without compromising on the
+simplicity of static sites.
 
 ## Usage
 
-If you're not familiar with how to import external data into Beancount, please read
-[this guide] first.
+### Define data models
 
-### Beancount 3.x
-
-Beancount 3.x has replaced the `config.py` file based workflow in favor of having a
-script based workflow, as per the [changes documented here]. As a result, the importer's
-initialization parameters have been shifted to `pyproject.toml`.
-
-Add the following to your `pyproject.toml` in your project root.
-
-```toml
-[tool.beancount-dkb.ec]
-iban = "DE99 9999 9999 9999 9999 99"
-account_name = "Assets:DKB:EC"
-currency = "EUR"
-
-[tool.beancount-dkb.credit]
-card_number = "9999 9999 9999 9999"
-account_name = "Assets:DKB:Credit"
-currency = "EUR"
-```
-
-Run `beancount-dkb-ec` or `beancount-dkb-credit` to call the importer. The `identify`
-and `extract` subcommands would identify the file and extract transactions for you.
-
-```sh
-$ beancount-dkb-ec extract transaction.csv >> you.beancount
-$ beancount-dkb-credit extract transaction.csv >> you.beancount
-```
-
-### Beancount 2.x
-
-Adjust your [config file] to include `ECImporter` and `CreditImporter`
-(depending on what account you're trying to import).
-
-Add the following to your `config.py`.
+Define your data models using the standard (Flask-)SQLAlchemy API. As an
+example, a `BlogPost` model can defined as follows.
 
 ```python
-from beancount_dkb import ECImporter, CreditImporter
+app = Flask(__name__)
 
-IBAN_NUMBER = 'DE99 9999 9999 9999 9999 99' # your real IBAN number
+# configure Flask-SQLAlchemy
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
 
-CARD_NUMBER = '9999 9999 9999 9999'         # your real Credit Card number
+db = SQLAlchemy()
 
-CONFIG = [
-    ECImporter(
-        IBAN_NUMBER,
-        'Assets:DKB:EC',
-        currency='EUR',
-    ),
+db.init_app(app)
 
-    CreditImporter(
-        CARD_NUMBER,
-        'Assets:DKB:Credit',
-        currency='EUR',
-    )
-]
+class BlogPost(db.Model):
+   __tablename__ = 'blog_posts'
+
+   slug = Column(String(255), primary_key=True)
+   title = Column(String(255), nullable=False)
+   content = Column(Text, nullable=False)
 ```
 
-Once this is in place, you should be able to run `bean-extract` on the command
-line to extract the transactions and pipe all of them into your Beancount file.
+### Add some data
 
-```sh
-$ bean-extract /path/to/config.py transaction.csv >> you.beancount
+Next, create a `data/` directory somewhere on your disk (to keep things simple,
+it's recommended to have this directory in the application root). For each model
+you've defined, create a directory under this `data/` directory with the same
+name as the `__tablename__` attribute.
+
+We currently support three different ways to define data.
+
+#### 1. Multiple YAML files
+
+The first way is to have multiple YAML files inside the `data/<__tablename__>/`
+directory, each file corresponding to one record.
+
+In case of the "blog" example, we can define a new `BlogPost` record by creating
+the file `data/blog_posts/first-post-ever.yml` with the following content.
+
+```yaml
+slug: first-post-ever
+title: First post ever!
+content: |
+  This blog post talks about how it's the first post ever!
 ```
 
-### Transaction Codes as Meta Tags
+Adding more such files in the same directory would result in more records.
 
-By default, the ECImporter prepends the transaction code ("Buchungstext") to the
-transaction description. To achieve shorter descriptions and use meta tags to query for
-certain transaction codes, the importer may be configured to store the transaction code
-in a user provided meta tag.
+#### 2. Single YAML file
 
-Add the `meta_code` parameter to the `ECImporter` initializer.
+For "smaller" models which don't have more than 2-3 fields, Flask-FileAlchemy
+supports reading from an `_all.yml` file. In such a case, instead of adding one
+file for every row, simply add all the rows in the `_all.yml` file inside the
+table directory.
 
-#### Beancount 3.x
+For the "blog" example, this would look like the following.
 
-```toml
-[tool.beancount-dkb.ec]
-iban = "DE99 9999 9999 9999 9999 99"
-account_name = "Assets:DKB:EC"
-meta_code = "code"
+```yaml
+- slug: first-post-ever
+  title: First post ever!
+  content: This blog post talks about how it's the first post ever!
+
+- slug: second-post-ever
+  title: second post ever!
+  content: This blog post talks about how it's the second post ever!
+ ```
+
+#### 3. Markdown/Frontmatter
+
+It's also possible to load data from Jekyll-style Markdown files containing
+Frontmatter metadata.
+
+In case of the blog example, it's possible to create a new `BlogPost` record by
+defining a `data/blog_posts/first-post-ever.md` file with the following
+content.
+
+```markdown
+---
+slug: first-post-ever
+title: First post ever!
+---
+
+This blog post talks about how it's the first post ever!
 ```
 
-#### Beancount 2.x
+Please note that when defining data using markdown, the name of the column
+associated with the main markdown body **needs** to be `content`.
+
+#### 4. Configure and load
+
+Finally, configure `Flask-FileAlchemy` with your setup and ask it to load all
+your data.
 
 ```python
-...
-CONFIG = [
-    ECImporter(
-        IBAN_NUMBER,
-        'Assets:DKB:EC',
-        currency='EUR',
-        meta_code='code',
-    ),
-...
+# configure Flask-FileAlchemy
+app.config['FILEALCHEMY_DATA_DIR'] = os.path.join(
+   os.path.dirname(os.path.realpath(__file__)), 'data'
+)
+app.config['FILEALCHEMY_MODELS'] = (BlogPost,)
 
+# load tables
+FileAlchemy(app, db).load_tables()
 ```
 
-This is how an example transaction looks without the option:
+`Flask-FileAlchemy` then reads your data from the given directory, and stores
+them in the data store of your choice that you configured `Flask-FileAlchemy`
+with (the preference being `sqlite:///:memory:`).
 
-```beancount
-2021-03-01 * "Kartenzahlung" "XY Supermarket"
-    Assets:DKB:EC                        -133.72 EUR
-```
-
-And this is the resulting transaction using `meta_code='code'`
-
-```beancount
-2021-03-01 * "XY Supermarket"
-    code: Kartenzahlung
-    Assets:DKB:EC                        -133.72 EUR
-```
-
-### Pattern-matching Transactions
-
-It's possible to give the importer classes hints if you'd like them to include a
-second posting based on specific characteristics of the original transaction.
-
-For instance, if the payee or the description in a transaction always matches a
-certain value, it's possible to tell the `ECImporter` or `CreditImporter` to
-automatically place a second posting in the returned lits of transactions.
-
-#### `ECImporter`
-
-`ECImporter` accepts `payee_patterns` and `description_patterns` arguments, which should
-be a list of `(pattern, account)` tuples.
-
-##### Beancount 3.x
-
-```toml
-[tool.beancount-dkb.ec]
-iban = "DE99 9999 9999 9999 9999 99"
-account_name = "Assets:DKB:EC"
-payee_patterns = [
-    ["REWE", "Expenses:Supermarket:REWE"],
-    ["NETFLIX", "Expenses:Online:Netflix"],
-]
-```
-
-##### Beancount 2.x
-
-```python
-CONFIG = [
-    ECImporter(
-        IBAN_NUMBER,
-        'Assets:DKB:EC',
-        currency='EUR',
-        payee_patterns=[
-            ('REWE', 'Expenses:Supermarket:REWE'),
-            ('NETFLIX', 'Expenses:Online:Netflix'),
-        ],
-    ),
-```
-
-#### `CreditImporter`
-
-`CreditImporter` accepts a `description_patterns` argument, which should be a list of
-`(pattern, account)` tuples.
-
-##### Beancount 3.x
-
-```toml
-[tool.beancount-dkb.credit]
-card_number = "9999 9999 9999 9999"
-account_name = "Assets:DKB:Credit"
-currency = "EUR"
-description_patterns=[
-    ['REWE', 'Expenses:Supermarket:REWE'],
-    ['NETFLIX', 'Expenses:Online:Netflix'],
-]
-```
-
-##### Beancount 2.x
-
-```python
-CONFIG = [
-    CreditImporter(
-        CARD_NUMBER,
-        'Assets:DKB:Credit',
-        currency='EUR',
-        description_patterns=[
-            ('REWE', 'Expenses:Supermarket:REWE'),
-            ('NETFLIX', 'Expenses:Online:Netflix'),
-        ],
-    )
-```
+Please note that it's not possible to write to this database using `db.session`.
+Well, technically it's allowed, but the changes your app makes will only be
+reflected in the in-memory data store but won't be persisted to disk.
 
 ## Contributing
 
 Contributions are most welcome!
 
-Please make sure you have Python 3.8+ and [Poetry] installed.
+Please make sure you have Python 3.9+ and [uv] installed.
 
-1. Clone the repository: `git clone https://github.com/siddhantgoel/beancount-dkb`
-2. Install the packages required for development: `poetry install`
-3. That's basically it. You should now be able to run the test suite: `poetry run task test`.
+1. Git clone the repository -
+   `git clone https://github.com/siddhantgoel/flask-filealchemy`.
 
-[Beancount]: http://furius.ca/beancount/
-[DKB]: https://www.dkb.de
-[Poetry]: https://python-poetry.org/
-[changes documented here]: https://docs.google.com/document/d/1O42HgYQBQEna6YpobTqszSgTGnbRX7RdjmzR2xumfjs/edit#heading=h.hjzt0c6v8pfs
-[config file]: https://beancount.github.io/docs/importing_external_data.html#configuration
-[this guide]: https://beancount.github.io/docs/importing_external_data.html
+2. Install the packages required for development - `uv sync`.
+
+3. That's basically it. You should now be able to run the test suite -
+   `uv run pytest`.
+
+[Flask-SQLAlchemy]: https://flask-sqlalchemy.palletsprojects.com/
+[Flask]: https://flask.palletsprojects.com/
+[Frozen-Flask]: https://pythonhosted.org/Frozen-Flask/
+[SQLAlchemy]: https://www.sqlalchemy.org/
+[uv]: https://docs.astral.sh/uv/

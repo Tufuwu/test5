@@ -1,9 +1,9 @@
-name: beancount-dkb
+name: flask-filealchemy
 
 on: [push, pull_request]
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -23,11 +23,7 @@ jobs:
         poetry install
     - name: Lint with flake8
       run: |
-        poetry run flake8 beancount_dkb/ tests/
-    - name: Lint with black
-      if: matrix.python-version != '3.5'
-      run: |
-        poetry run black --check beancount_dkb/ tests/
+        poetry run flake8
     - name: Test with py.test
       run: |
         poetry run py.test tests/
