@@ -1,38 +1,47 @@
 from setuptools import setup
 
-import pypandoc
+try:
+    import pypandoc
+    long_description = pypandoc.convert_file('README.md', 'rst')
+except (IOError, ImportError):
+    long_description = open('README.md').read()
 
 setup(
-    name='mysql_batch',
-    version='1.2.2',
-    description='Run large MySQL UPDATE and DELETE queries with small batches to prevent table/row-level locks',
-    long_description=pypandoc.convert_file('README.md', 'rst'),
+    name='pyvault',
+    version='2.4.5',
+    description='Python password manager',
+    long_description=long_description,
     author='Gabriel Bordeaux',
     author_email='pypi@gab.lc',
-    url='https://github.com/gabfl/mysql-batch',
+    url='https://github.com/gabfl/vault',
     license='MIT',
-    packages=['mysql_batch'],
-    package_dir={'mysql_batch': 'src'},
-    install_requires=[  # external dependencies
-        'pymysql==1.1.*'
-    ],
+    packages=['vault', 'vault.lib', 'vault.models',
+              'vault.modules', 'vault.views'],
+    package_dir={'vault': 'src'},
+    install_requires=[
+        'pycryptodome==3.20.0',
+        'pyperclip',
+        'tabulate',
+        'passwordgenerator',
+        'SQLAlchemy==1.4.41',
+        'sqlcipher3==0.5.3'
+    ],  # external dependencies
     entry_points={
         'console_scripts': [
-            'mysql_batch = mysql_batch.mysql_batch:main',
+            'vault = vault.vault:main',
         ],
     },
-    classifiers=[  # see https://pypi.python.org/pypi?%3Aaction=list_classifiers
-        'Topic :: Software Development',
-        'Topic :: Database',
-        'Topic :: Database :: Database Engines/Servers',
+    classifiers=[  # see https://pypi.org/pypi?%3Aaction=list_classifiers
+        'Topic :: Security',
+        'Topic :: Security :: Cryptography',
         'License :: OSI Approved :: MIT License',
         'Operating System :: MacOS',
         'Operating System :: POSIX :: Linux',
         'Natural Language :: English',
-        'Programming Language :: Python :: 2.7',
+        #  'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python',
-        #  'Development Status :: 4 - Beta',
-        'Development Status :: 5 - Production/Stable',
+        'Development Status :: 4 - Beta',
+        #  'Development Status :: 5 - Production/Stable',
     ],
 )

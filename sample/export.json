@@ -1,0 +1,42 @@
+[
+	{
+		"category": "Perso",
+		"name": "some item",
+		"url": "http://www.some-website.com",
+		"login": "gab@notarealemail.com",
+		"password": "password1",
+		"notes": "my notes\nmore notes"
+	},
+	{
+		"category": "Pro",
+		"name": "some other item",
+		"url": "http://www.some-website.com",
+		"login": "one@notarealemail.com",
+		"password": "password2",
+		"notes": "notes"
+	},
+	{
+		"category": "new category for import",
+		"name": "another kind of item",
+		"url": "http://www.some-website.com",
+		"login": "two@notarealemail.com",
+		"password": "password3 is very complicated!",
+		"notes": "sdasd"
+	},
+	{
+		"category": "Perso",
+		"name": "my stuff",
+		"url": "http://www.some-website.com",
+		"login": "three@notarealemail.com",
+		"password": "password4 is even more complicated!",
+		"notes": ""
+	},
+	{
+		"category": "",
+		"name": "multi line item",
+		"url": "http://www.some-website.com",
+		"login": "foor@notarealemail.com",
+		"password": "password5",
+		"notes": "multi\nline\nitem"
+	}
+]

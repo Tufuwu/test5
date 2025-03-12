@@ -1,144 +1,124 @@
-# mysql-batch
+# Vault
 
-[![Pypi](https://img.shields.io/pypi/v/mysql-batch.svg)](https://pypi.org/project/mysql-batch)
-[![Build Status](https://github.com/gabfl/mysql-batch/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/gabfl/mysql-batch/actions)
-[![codecov](https://codecov.io/gh/gabfl/mysql-batch/branch/main/graph/badge.svg)](https://codecov.io/gh/gabfl/mysql-batch)
-[![MIT licensed](https://img.shields.io/badge/license-MIT-green.svg)](https://raw.githubusercontent.com/gabfl/mysql-batch/main/LICENSE)
+[![Pypi](https://img.shields.io/pypi/v/pyvault.svg)](https://pypi.org/project/pyvault)
+[![Build Status](https://github.com/gabfl/vault/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/gabfl/vault/actions)
+[![codecov](https://codecov.io/gh/gabfl/vault/branch/main/graph/badge.svg)](https://codecov.io/gh/gabfl/vault)
+[![MIT licensed](https://img.shields.io/badge/license-MIT-green.svg)](https://raw.githubusercontent.com/gabfl/vault/main/LICENSE)
 
-Updating or deleting a large amount of rows in MySQL will create locks that will paralyze other queries running in parallel.
+Vault is a simple Python password manager. It allows you to securely save secrets with a simple CLI interface.
 
-This tool will run UPDATE and DELETE queries in small batches to prevent table-level and row-level locking (with InnoDB). If a large number of rows has to be updated or deleted, it is also possible to limit the number of rows selected at once.
+## Features
 
-## Installation
+ - Secrets are stored in an encrypted SQLite database with [SQLCipher](https://www.zetetic.net/sqlcipher/)
+ - Within the database, each password and notes are encrypted with a unique salt using AES-256 encryption with [pycryptodome](http://legrandin.github.io/pycryptodome/)
+ - Master key is hashed with a unique salt
+ - Possibility to create an unlimited number of vaults
+ - Clipboard cleared automatically
+ - Automatic vault locking after inactivity
+ - Password suggestions with [password-generator-py](https://github.com/gabfl/password-generator-py)
+ - Import / Export in Json
 
+## Basic usage
+
+![Demo](https://github.com/gabfl/vault/blob/main/img/demo.gif?raw=true)
+
+## Installation and setup
+
+Vault 2.x requires `sqlcipher` to be installed on your machine.
+
+### MacOS
+
+On MacOS, you can install `sqlcipher` with [brew](https://brew.sh/):
+```bash
+brew install sqlcipher
+
+# Install sqlcipher3
+SQLCIPHER_VERSION="0.5.3"
+pip3 install sqlcipher3==$SQLCIPHER_VERSION
+
+# If you are getting an error "Failed to build sqlcipher3", you would need to fix the build flags:
+SQLCIPHER_PATH="$(brew --cellar sqlcipher)/$(brew list --versions sqlcipher | tr ' ' '\n' | tail -1)"
+C_INCLUDE_PATH=$SQLCIPHER_PATH/include LIBRARY_PATH=$SQLCIPHER_PATH/lib pip3 install sqlcipher3==$SQLCIPHER_VERSION
 ```
-pip3 install mysql_batch
-```
 
-## UPDATE example
-
-You can run this example with the schema available in [sample_table/schema.sql](sample_table/schema.sql)
-
-The following example will be identical to the following update:
-
-```sql
-UPDATE batch_test SET date = NOW() WHERE number > 0.2 AND date is NULL;
-```
-
-This is the equivalent to process this update with batches of 20 rows:
+Then install the vault:
 
 ```bash
-mysql_batch --host localhost \
-            --user root \
-            --password secret_password \
-            --database "test" \
-            --table "batch_test" \
-            --write_batch_size 20 \
-            --where "number > 0.2 AND date IS NULL" \
-            --set "date = NOW()"
+pip3 install pyvault
+
+# Run setup
+vault
 ```
 
-Output sample:
+### Ubuntu / Debian
+
+On Ubuntu/Debian, you can install `sqlcipher` with apt:
+```bash
+sudo apt update
+sudo apt install -y gcc python3-dev libsqlcipher-dev xclip
+```
+
+Then install the vault:
 
 ```bash
-* Selecting data...
-   query: SELECT id as id FROM batch_test WHERE number > 0.2 AND date IS NULL AND id > 0 ORDER BY id LIMIT 1000
-* Preparing to modify 83 rows...
-* Updating 20 rows...
-   query: UPDATE batch_test SET date = NOW() WHERE id IN (1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 14, 15, 16, 17, 18, 19, 20, 21, 22)
-* Start updating? [Y/n]
-* Updating 20 rows...
-   query: UPDATE batch_test SET date = NOW() WHERE id IN (23, 25, 26, 28, 29, 30, 31, 33, 35, 36, 37, 38, 39, 40, 42, 43, 44, 45, 46, 47)
-* Updating 20 rows...
-   query: UPDATE batch_test SET date = NOW() WHERE id IN (48, 49, 50, 51, 52, 53, 54, 55, 56, 58, 59, 60, 61, 63, 64, 65, 68, 69, 70, 71)
-* Updating 20 rows...
-   query: UPDATE batch_test SET date = NOW() WHERE id IN (72, 74, 75, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 88, 89, 90, 91, 92, 94, 95)
-* Updating 3 rows...
-   query: UPDATE batch_test SET date = NOW() WHERE id IN (97, 98, 100)
-* Selecting data...
-   query: SELECT id as id FROM batch_test WHERE number > 0.2 AND date IS NULL AND id > 100 ORDER BY id LIMIT 1000
-* No more rows to modify!
-* Program exited
+pip3 install pyvault
+
+# Run setup
+vault
 ```
 
-## DELETE example
-
-The following example will be identical to the following delete:
-
-```sql
-DELETE FROM batch_test WHERE number > 0.2 AND date is NULL;
-```
-
-This is the equivalent to process this delete with batches of 20 rows:
+### Using Docker
 
 ```bash
-mysql_batch --host localhost \
-            --user root \
-            --password secret_password \
-            --database "test" \
-            --table "batch_test" \
-            --write_batch_size 20 \
-            --where "number > 0.2 AND date IS NULL" \
-            --action "delete"
+# Pull the image
+docker pull gabfl/vault
+
+# Create local directory
+mkdir ~/.vault
+
+# Launch image
+docker run -v ~/.vault:/root/.vault -ti gabfl/vault
 ```
 
-Output sample:
+### Cloning the project
 
 ```bash
-* Selecting data...
-   query: SELECT id as id FROM batch_test WHERE number > 0.2 AND date IS NULL AND id > 0 ORDER BY id LIMIT 1000
-* Preparing to modify 79 rows...
-* Deleting 20 rows...
-   query: DELETE FROM batch_test WHERE id IN (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 17, 19, 20, 21, 22, 23)
-* Start deleting? [Y/n]
-* Deleting 20 rows...
-   query: DELETE FROM batch_test WHERE id IN (24, 25, 26, 28, 34, 35, 36, 37, 38, 39, 40, 41, 44, 45, 47, 48, 50, 51, 52, 53)
-* Deleting 20 rows...
-   query: DELETE FROM batch_test WHERE id IN (54, 56, 57, 58, 60, 61, 62, 63, 64, 65, 66, 67, 68, 70, 71, 72, 73, 74, 75, 76)
-* Deleting 19 rows...
-   query: DELETE FROM batch_test WHERE id IN (77, 78, 79, 80, 82, 83, 86, 87, 88, 89, 90, 91, 93, 94, 95, 96, 98, 99, 100)
-* Selecting data...
-   query: SELECT id as id FROM batch_test WHERE number > 0.2 AND date IS NULL AND id > 100 ORDER BY id LIMIT 1000
-* No more rows to modify!
-* Program exited
+# Clone project
+git clone https://github.com/gabfl/vault && cd vault
+
+# Installation
+pip3 install .
+
+# Run setup
+vault
 ```
 
-## Usage
+## Advanced settings:
 
-```bash
-usage: mysql_batch [-h] [-H HOST] [-P PORT] -U USER [-p PASSWORD] -d DATABASE
-                   -t TABLE [-id PRIMARY_KEY] -w WHERE [-s SET]
-                   [-rbz READ_BATCH_SIZE] [-wbz WRITE_BATCH_SIZE] [-S SLEEP]
-                   [-a {update,delete}] [-n]
+```
+usage: vault [-h] [-t [CLIPBOARD_TTL]] [-p [HIDE_SECRET_TTL]]
+             [-a [AUTO_LOCK_TTL]] [-v VAULT_LOCATION] [-c CONFIG_LOCATION]
+             [-k] [-i IMPORT_ITEMS] [-x EXPORT] [-f [{json}]] [-e]
 
 optional arguments:
   -h, --help            show this help message and exit
-  -H HOST, --host HOST  MySQL server host
-  -P PORT, --port PORT  MySQL server port
-  -U USER, --user USER  MySQL user
-  -p PASSWORD, --password PASSWORD
-                        MySQL password
-  -d DATABASE, --database DATABASE
-                        MySQL database name
-  -t TABLE, --table TABLE
-                        MySQL table
-  -id PRIMARY_KEY, --primary_key PRIMARY_KEY
-                        Name of the primary key column
-  -w WHERE, --where WHERE
-                        Select WHERE clause
-  -s SET, --set SET     Update SET clause
-  -rbz READ_BATCH_SIZE, --read_batch_size READ_BATCH_SIZE
-                        Select batch size
-  -wbz WRITE_BATCH_SIZE, --write_batch_size WRITE_BATCH_SIZE
-                        Update/delete batch size
-  -S SLEEP, --sleep SLEEP
-                        Sleep after each batch
-  -a {update,delete}, --action {update,delete}
-                        Action ('update' or 'delete')
-  -n, --no_confirm      Don't ask for confirmation before to run the write
-                        queries
+  -t [CLIPBOARD_TTL], --clipboard_TTL [CLIPBOARD_TTL]
+                        Set clipboard TTL (in seconds, default: 15)
+  -p [HIDE_SECRET_TTL], --hide_secret_TTL [HIDE_SECRET_TTL]
+                        Set delay before hiding a printed password (in
+                        seconds, default: 15)
+  -a [AUTO_LOCK_TTL], --auto_lock_TTL [AUTO_LOCK_TTL]
+                        Set auto lock TTL (in seconds, default: 900)
+  -v VAULT_LOCATION, --vault_location VAULT_LOCATION
+                        Set vault path
+  -c CONFIG_LOCATION, --config_location CONFIG_LOCATION
+                        Set config path
+  -k, --change_key      Change master key
+  -i IMPORT_ITEMS, --import_items IMPORT_ITEMS
+                        File to import credentials from
+  -x EXPORT, --export EXPORT
+                        File to export credentials to
+  -f [{json}], --file_format [{json}]
+                        Import/export file format (default: 'json')
+  -e, --erase_vault     Erase the vault and config file
 ```
-
-## License
-
-This program is under MIT license ([view license](LICENSE)).

@@ -1,4 +1,4 @@
-from . import mysql_batch
+from . import vault
 
 if __name__ == '__main__':
-    mysql_batch.main()
+    vault.main()
