@@ -1,55 +1,38 @@
-name: Python CI
+# This workflow will install Python dependencies, run tests and lint with a single version of Python
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
 
-on: 
+name: CloudFormation Python Plugin CI
+
+on:
   push:
+    branches: [ master ]
   pull_request:
-  schedule:
-    - cron: '0 0 * * 0' # weekly
+    branches: [ master ]
 
 jobs:
   build:
+    env:
+      AWS_DEFAULT_REGION: us-east-1
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: false # Allow one of the matrix builds to fail without failing others
       matrix:
-        python-version: ["3.9", "3.10"]
-        
-    # The job
-    name: Python ${{ matrix.python-version }}
-    
-    # The steps in the job. Each step either RUNS code, or USES an action
+        python: ["3.9", "3.10"]
     steps:
-    
-      - name: Checkout
-        uses: actions/checkout@v2
-        
-      - name: Setup python
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python-version }}
-          architecture: x64
-          
-      - name: Run tests and linting
-        run: |
-          pip install pep8 flake8 black mypy pytest twine setuptools wheel --upgrade --quiet
-          flake8 --show-source --ignore=F811,W293,W391,W292,W291,E252,W503,E203 --max-line-length=120 --exclude='conf.py,__init__.py';
-          black . --check -l 120;
-          mypy efficient_apriori/*.py --ignore-missing-imports --show-error-context;
-          pip install -r requirements.txt
-          pip install -e .
-          pytest --doctest-modules -v efficient_apriori
-
-# ======================= BUILD WHEELS AND UPLOAD TO PYPI ==================================
-
-      - name: Build wheels ${{ matrix.python-version }} on ${{ matrix.os }}
-        run: |
-          python setup.py sdist bdist_wheel;
-
-      - name: Publish Python distribution to PyPI
-        if: github.ref == 'refs/heads/master'
-        uses: pypa/gh-action-pypi-publish@master
-        with:
-          skip_existing: true
-          user: __token__
-          password: ${{ secrets.pypi_password }}
-          
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python }}
+    - name: Install dependencies
+      run: |
+        pip install --upgrade mypy 'attrs==19.2.0' -r https://raw.githubusercontent.com/aws-cloudformation/aws-cloudformation-rpdk/master/requirements.txt
+    - name: Install both plugin and support lib
+      run: |
+        pip install . src/
+    - name: pre-commit checks
+      run: |
+        pre-commit run --all-files
+    - name: End to End Resource Packaging Test Python 3.6
+      run: ./e2e-test.sh python36
+    - name: End to End Resource Packaging Test Python 3.7
+      run: ./e2e-test.sh python37

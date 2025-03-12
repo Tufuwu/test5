@@ -1,85 +1,103 @@
-# Efficient-Apriori ![Build Status](https://github.com/tommyod/Efficient-Apriori/workflows/Python%20CI/badge.svg?branch=master) [![PyPI version](https://badge.fury.io/py/efficient-apriori.svg)](https://pypi.org/project/efficient-apriori/) [![Documentation Status](https://readthedocs.org/projects/efficient-apriori/badge/?version=latest)](https://efficient-apriori.readthedocs.io/en/latest/?badge=latest) [![Downloads](https://pepy.tech/badge/efficient-apriori)](https://pepy.tech/project/efficient-apriori) [![Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
+# AWS CloudFormation Resource Provider Python Plugin
 
-An efficient pure Python implementation of the Apriori algorithm.
+The CloudFormation CLI (cfn) allows you to author your own resource providers that can be used by CloudFormation.
 
-The apriori algorithm uncovers hidden structures in categorical data.
-The classical example is a database containing purchases from a supermarket.
-Every purchase has a number of items associated with it.
-We would like to uncover association rules such as `{bread, eggs} -> {bacon}` from the data.
-This is the goal of [association rule learning](https://en.wikipedia.org/wiki/Association_rule_learning), and the [Apriori algorithm](https://en.wikipedia.org/wiki/Apriori_algorithm) is arguably the most famous algorithm for this problem.
-This repository contains an efficient, well-tested implementation of the apriori algorithm as described in the [original paper](https://www.macs.hw.ac.uk/~dwcorne/Teaching/agrawal94fast.pdf) by Agrawal et al, published in 1994.
+This plugin library helps to provide Python runtime bindings for the execution of your providers by CloudFormation.
 
-**The code is stable and in widespread use.** It's cited in the book "*Mastering Machine Learning Algorithms*" by Bonaccorso.
+## AWS CloudFormation Resource Provider Python Plugin
 
-**The code is fast.** See timings in [this PR](https://github.com/tommyod/Efficient-Apriori/pull/40).
+The CloudFormation Resource Provider Development Kit (RPDK) allows you to author your own resource providers that can be used by CloudFormation.
 
+This plugin library helps to provide runtime bindings for the execution of your providers by CloudFormation.
 
-## Example
+[![Build Status](https://travis-ci.com/aws-cloudformation/cloudformation-cli-python-plugin.svg?branch=master)](https://travis-ci.com/aws-cloudformation/cloudformation-cli-python-plugin)
 
-Here's a minimal working example.
-Notice that in every transaction with `eggs` present, `bacon` is present too.
-Therefore, the rule `{eggs} -> {bacon}` is returned with 100 % confidence.
+## Community
 
-```python
-from efficient_apriori import apriori
-transactions = [('eggs', 'bacon', 'soup'),
-                ('eggs', 'bacon', 'apple'),
-                ('soup', 'bacon', 'banana')]
-itemsets, rules = apriori(transactions, min_support=0.5, min_confidence=1)
-print(rules)  # [{eggs} -> {bacon}, {soup} -> {bacon}]
-```
-If your data is in a pandas DataFrame, you must [convert it to a list of tuples](https://github.com/tommyod/Efficient-Apriori/issues/12).
-Do you have **missing values**, or does the algorithm **run for a long time**? See [this comment](https://github.com/tommyod/Efficient-Apriori/issues/30#issuecomment-626129085).
-**More examples are included below.**
+Join us on Discord! Connect & interact with CloudFormation developers &
+experts, find channels to discuss and get help for our CLIs, cfn-lint, CloudFormation registry, StackSets,
+Guard and more:
 
-## Installation
+[![Join our Discord](https://discordapp.com/api/guilds/981586120448020580/widget.png?style=banner3)](https://discord.gg/9zpd7TTRwq)
 
-The software is available through GitHub, and through [PyPI](https://pypi.org/project/efficient-apriori/).
-You may install the software using `pip`.
+Installation
+------------
 
 ```bash
-pip install efficient-apriori
+pip install cloudformation-cli-python-plugin
 ```
 
-## Contributing
+Howto
+-----
 
-You are very welcome to scrutinize the code and make pull requests if you have suggestions and improvements.
-Your submitted code must be PEP8 compliant, and all tests must pass.
-See list of contributors [here](https://github.com/tommyod/Efficient-Apriori/graphs/contributors).
-
-## More examples
-
-### Filtering and sorting association rules
-
-It's possible to filter and sort the returned list of association rules.
-
-```python
-from efficient_apriori import apriori
-transactions = [('eggs', 'bacon', 'soup'),
-                ('eggs', 'bacon', 'apple'),
-                ('soup', 'bacon', 'banana')]
-itemsets, rules = apriori(transactions, min_support=0.2, min_confidence=1)
-
-# Print out every rule with 2 items on the left hand side,
-# 1 item on the right hand side, sorted by lift
-rules_rhs = filter(lambda rule: len(rule.lhs) == 2 and len(rule.rhs) == 1, rules)
-for rule in sorted(rules_rhs, key=lambda rule: rule.lift):
-  print(rule)  # Prints the rule and its confidence, support, lift, ...
+```
+$ cfn init
+Initializing new project
+What's the name of your resource type?
+(Organization::Service::Resource)
+>> Foo::Bar::Baz
+Select a language for code generation:
+[1] java
+[2] csharp
+[3] python38
+[4] python39
+[5] python310
+[6] python311
+[7] python312
+(enter an integer):
+>> 4
+Use docker for platform-independent packaging (Y/n)?
+This is highly recommended unless you are experienced
+with cross-platform Python packaging.
+>> y
+Initialized a new project in <>
+$ cfn submit --dry-run
+$ cat <<EOT > test.json
+{
+  "credentials": {
+    "accessKeyId": "",
+    "secretAccessKey": "",
+    "sessionToken": ""
+  },
+  "action": "CREATE",
+  "request": {
+    "clientRequestToken": "ecba020e-b2e6-4742-a7d0-8a06ae7c4b2b",
+    "desiredResourceState": {
+      "Title": "This_Is_The_Title_For_My_Example",
+      "TestCode": "NOT_STARTED"
+    },
+    "previousResourceState": null,
+    "logicalResourceIdentifier": null
+  },
+  "callbackContext": null
+}
+EOT
+$ sam local invoke TestEntrypoint --event test.json
 ```
 
-### Transactions with IDs
+Development
+-----------
 
-If you need to know which transactions occurred in the frequent itemsets, set the `output_transaction_ids` parameter to `True`.
-This changes the output to contain `ItemsetCount` objects for each itemset.
-The objects have a `members` property containing is the set of ids of frequent transactions as well as a `count` property. 
-The ids are the enumeration of the transactions in the order they appear.    
+For changes to the plugin, a Python virtual environment is recommended. The development requirements can be sourced from the core repository:
 
-```python
-from efficient_apriori import apriori
-transactions = [('eggs', 'bacon', 'soup'),
-                ('eggs', 'bacon', 'apple'),
-                ('soup', 'bacon', 'banana')]
-itemsets, rules = apriori(transactions, output_transaction_ids=True)
-print(itemsets)
-# {1: {('bacon',): ItemsetCount(itemset_count=3, members={0, 1, 2}), ...
 ```
+python3 -m venv env
+source env/bin/activate
+pip install -e . -e src/ \
+  -r https://raw.githubusercontent.com/aws-cloudformation/aws-cloudformation-rpdk/master/requirements.txt
+pre-commit install
+```
+
+Linting and running unit tests is done via [pre-commit](https://pre-commit.com/), and so is performed automatically on commit. The continuous integration also runs these checks. Manual options are available so you don't have to commit):
+
+```
+# run all hooks on all files, mirrors what the CI runs
+pre-commit run --all-files
+# run unit tests only. can also be used for other hooks, e.g. black, flake8, pylint-local
+pre-commit run pytest-local
+```
+
+License
+-------
+
+This library is licensed under the Apache 2.0 License.

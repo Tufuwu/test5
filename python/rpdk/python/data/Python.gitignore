@@ -123,10 +123,7 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-.DS_Store
-.idea/
-.vscode/
-*.tar.gz
+# contains credentials
+sam-tests/
 
-# We want to allow the tests/lib folder
-!tests/lib
+rpdk.log*
