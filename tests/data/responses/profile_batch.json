@@ -1,0 +1,130 @@
+{
+  "profileUsers": [
+    {
+      "id": "2669321029139235",
+      "hostId": "2669321029139235",
+      "settings": [
+        {
+          "id": "GameDisplayName",
+          "value": "e"
+        },
+        {
+          "id": "AppDisplayName",
+          "value": "e"
+        },
+        {
+          "id": "AppDisplayPicRaw",
+          "value": "https://images-eds-ssl.xboxlive.com/image?url=z951ykn43p4FqWbbFvR2Ec.8vbDhj8G2Xe7JngaTToBrrCmIEEXHC9UNrdJ6P7KIl_5PaIHeJ592LG1L.uCOWneEDBhHctvuC06CzW38LKNYiVGTXqxcsQqYGIrr8hFz&format=png"
+        },
+        {
+          "id": "Gamerscore",
+          "value": "98096"
+        },
+        {
+          "id": "Gamertag",
+          "value": "e"
+        },
+        {
+          "id": "GameDisplayPicRaw",
+          "value": "https://images-eds-ssl.xboxlive.com/image?url=z951ykn43p4FqWbbFvR2Ec.8vbDhj8G2Xe7JngaTToBrrCmIEEXHC9UNrdJ6P7KIl_5PaIHeJ592LG1L.uCOWneEDBhHctvuC06CzW38LKNYiVGTXqxcsQqYGIrr8hFz&format=png"
+        },
+        {
+          "id": "AccountTier",
+          "value": "Gold"
+        },
+        {
+          "id": "TenureLevel",
+          "value": "18"
+        },
+        {
+          "id": "XboxOneRep",
+          "value": "Superstar"
+        },
+        {
+          "id": "PreferredColor",
+          "value": "http://dlassets.xboxlive.com/public/content/ppl/colors/00000.json"
+        },
+        {
+          "id": "Location",
+          "value": "about.me/thevowel"
+        },
+        {
+          "id": "Bio",
+          "value": "ex-Xbox"
+        },
+        {
+          "id": "Watermarks",
+          "value": "XboxOriginalTeam|XboxLiveLaunchTeam|LaunchTeam|NxeTeam|KinectTeam|XboxOneTeam|XboxNxoeTeam"
+        },
+        {
+          "id": "RealName",
+          "value": "Eric Neustadter"
+        }
+      ],
+      "isSponsoredUser": false
+    },
+    {
+      "id": "2584878536129841",
+      "hostId": "2584878536129841",
+      "settings": [
+        {
+          "id": "GameDisplayName",
+          "value": "Major Nelson"
+        },
+        {
+          "id": "AppDisplayName",
+          "value": "Major Nelson"
+        },
+        {
+          "id": "AppDisplayPicRaw",
+          "value": "http://images-eds.xboxlive.com/image?url=wHwbXKif8cus8csoZ03RW3apWESZjav65Yncai8aRmVbSlZ3zqRpg1sdxEje_JmFNr5FbAg8mGpxZhWm1_.xekXCR2mpX9Kn7L97rh6n6Q7a5biaccHqqjE6BUVbncx7MWYiyeBte1S..qNZ_KtfawrkVOpSEpTLiTjg5MD4fkk-&format=png"
+        },
+        {
+          "id": "Gamerscore",
+          "value": "123757"
+        },
+        {
+          "id": "Gamertag",
+          "value": "Major Nelson"
+        },
+        {
+          "id": "GameDisplayPicRaw",
+          "value": "http://images-eds.xboxlive.com/image?url=wHwbXKif8cus8csoZ03RW3apWESZjav65Yncai8aRmVbSlZ3zqRpg1sdxEje_JmFNr5FbAg8mGpxZhWm1_.xekXCR2mpX9Kn7L97rh6n6Q7a5biaccHqqjE6BUVbncx7MWYiyeBte1S..qNZ_KtfawrkVOpSEpTLiTjg5MD4fkk-&format=png"
+        },
+        {
+          "id": "AccountTier",
+          "value": "Gold"
+        },
+        {
+          "id": "TenureLevel",
+          "value": "16"
+        },
+        {
+          "id": "XboxOneRep",
+          "value": "Superstar"
+        },
+        {
+          "id": "PreferredColor",
+          "value": "https://dlassets-ssl.xboxlive.com/public/content/ppl/colors/00015.json"
+        },
+        {
+          "id": "Location",
+          "value": "In your Xbox"
+        },
+        {
+          "id": "Bio",
+          "value": "Yes I work for Xbox. Follow me here and on Twitter/Insta @Majornelson - Have fun and play fair!"
+        },
+        {
+          "id": "Watermarks",
+          "value": "LaunchTeam|NxeTeam|KinectTeam|XboxOneTeam|XboxNxoeTeam|XboxOneXTeam"
+        },
+        {
+          "id": "RealName",
+          "value": "Larry Hryb"
+        }
+      ],
+      "isSponsoredUser": false
+    }
+  ]
+}
