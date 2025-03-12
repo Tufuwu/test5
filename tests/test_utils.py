@@ -1,10 +1,20 @@
-# -*- coding: utf-8 -*-
-from __future__ import print_function, division, absolute_import, unicode_literals
-
-from apps.front.utils import timestamp_local_to_utc
+import lux
 
 
-def test_timestamp_local_to_utc():
-    # Assuming this timezone is Europe/Zurich.
-    # This can be parametrized if https://github.com/pelme/pytest_django/issues/93 is resolved.
-    assert timestamp_local_to_utc(1000000000) == 1000007200
+class TestDebugUtils:
+    def test_debug_info(self):
+
+        versions = lux.debug_info(return_string=True)
+
+        assert versions is not None
+
+        assert "python" in versions
+        assert "lux" in versions
+        assert "pandas" in versions
+        assert "luxwidget" in versions
+        assert "matplotlib" in versions
+        assert "altair" in versions
+
+
+if __name__ == "__main__":
+    TestDebugUtils().test_debug_info()

@@ -1,32 +1,37 @@
-name: CI
+# This workflow will install Python dependencies, run tests and lint with a single version of Python
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
 
-on: [push,pull_request]
+name: Python application
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
 
 jobs:
   build:
+
     runs-on: ubuntu-latest
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    strategy:
-      matrix:
-        python-version: ["3.9", "3.10"]
+
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
+    - name: Set up Python 3.7
       uses: actions/setup-python@v2
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: 3.9
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip coveralls
-        pip install -r requirements-tests.txt
-    - name: Prepare config
+        python -m pip install --upgrade pip
+        pip install jupyter-client==6.1.6
+        pip install wheel
+        pip install -r requirements.txt
+        pip install -r requirements-dev.txt
+    - name: Lint check with black
       run: |
-        cp config/settings.sample.ini config/settings.ini
-        sed -i 's/DEBUG\s*=\s*0/DEBUG = 1/' config/settings.ini
-    - name: Run unit tests
-      run: ./runtests.py
-    - name: Submit coverage
-      if: ${{ success() }}
+        black --target-version py37 --line-length 105 --check .
+    - name: Test with Pytest and Code Coverage Report
       run: |
-        coveralls --service=github
+        pytest --cov-report term --cov=lux tests/
+        bash <(curl -s https://codecov.io/bash)
