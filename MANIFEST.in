@@ -1,8 +1,15 @@
-include laia/VERSION
+graft src
+graft tests
+graft docs
 
-exclude .pre-commit-config.yaml
-exclude CONTRIBUTING.md
+include AUTHORS.rst
+include CONTRIBUTING.rst
+include CHANGELOG.rst
+include LICENSE.rst
+include README.rst
+include requirements.txt
+include tox.ini
+include pylintrc
+include tasks.py
 
-prune .github
-prune benchmarks
-prune tests
+global-exclude *.py[cod] __pycache__ *.so

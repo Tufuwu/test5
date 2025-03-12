@@ -1,63 +1,51 @@
-name: Laia CI
+name: Main
 
-on:
-  push:
-    branches: [master]
-  pull_request:
-  schedule:
-    # at 07:00 on Sunday
-    - cron: '0 7 * * sun'
+on: [push, pull_request]
 
 jobs:
-  pre-commit:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-      - name: Run pre-commit
-        run: |
-          pip install pre-commit
-          pre-commit run --all-files
-
-  pytest:
-    name: Python ${{ matrix.python-version }} - PyTorch ${{ matrix.torch-version }}
+  test:
+    name: Test
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: false
       matrix:
         python-version: ["3.9", "3.10"]
-        torch-version: [1.7.*, 1.6.*, 1.5.*, 1.4.*]
-        include:
-          # fix torchvision and nnutils versions for each torch version
-          - torch-version: 1.7.*
-            # TODO: update when released
-            nnutils-version: 1.6.*
-            torchvision-version: 0.8.*
-          - torch-version: 1.6.*
-            nnutils-version: 1.6.*
-            torchvision-version: 0.7.*
-          - torch-version: 1.5.*
-            nnutils-version: 1.5.*
-            torchvision-version: 0.6.*
-          - torch-version: 1.4.*
-            nnutils-version: 1.4.*
-            torchvision-version: 0.5.*
-        exclude:
-          # TODO: NumPy does not support 3.9 yet
-          - python-version: 3.9
+
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Configure requirements
-      run: |
-        sed -i s/^torch$/torch==${{ matrix.torch-version }}/ requirements.txt
-        sed -i s/^torchvision$/torchvision==${{ matrix.torchvision-version }}/ requirements.txt
-        sed -i s/^nnutils-pytorch$/nnutils-pytorch==${{ matrix.nnutils-version }}/ requirements.txt
-    - name: Install requirements
-      run: pip install -e .[test]
-    - name: Run pytest
-      run: pytest --cov=laia tests
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install tox-gh-actions coveralls
+
+      - name: Run tests
+        run: |
+          tox
+
+      - name: Send coverage report
+        run: |
+          coveralls
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COVERALLS_FLAG_NAME: ${{ matrix.python-version }}
+          COVERALLS_PARALLEL: true
+
+  coveralls:
+    name: Finish Coveralls
+    needs: test
+    runs-on: ubuntu-latest
+    container: python:3-slim
+
+    steps:
+      - name: Finished
+        run: |
+          pip install --upgrade coveralls
+          coveralls --finish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
