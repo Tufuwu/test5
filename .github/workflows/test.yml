@@ -1,71 +1,31 @@
-name: Rqalpha test
-on: [push, pull_request]
-
+name: build
+on:
+  push:
+    branches: 
+      - master
+  pull_request:
+    branches:
+      - master
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         python-version: ["3.9", "3.10"]
     steps:
-    # Checks out a copy of your repository on the ubuntu-latest machine
-    - uses: actions/checkout@v2
-    - name: Set up Python
-      uses: actions/setup-python@v1
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
-      run: |
-        # Install TA-Lib
-          wget http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz
-          tar -xzvf ta-lib-0.4.0-src.tar.gz
-          cd ta-lib
-          ./configure --prefix=/usr
-          make
-          sudo make install
-          cd ..
-        # Install Test Deps
-          pip install -U pip
-          pip install "numpy>=1.15.4"
-          pip install TA-Lib
-          pip install coveralls
-          pip install -U setuptools
-          pip install ipython==5.3.0
-          pip install --prefer-binary .
-    - name: run test
-      run:  |
-          rqalpha download-bundle
-          coverage run --source=rqalpha test.py
-          ls -al $HOME/.rqalpha/
-          ls -al $HOME/.rqalpha/bundle/
-    - name: Upload coverage data to coveralls.io
-      # https://coveralls-python.readthedocs.io/en/latest/usage/configuration.html#configuration
-      # need COVERALLS_REPO_TOKEN
-      env:
-        COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
-        COVERALLS_FLAG_NAME: ${{ matrix.python-version }}
-        COVERALLS_PARALLEL: true
-      run: |
-        coveralls
-    - name: Cache bundle
-      # cache will change when runner.os or requirements.txt changed
-      uses: actions/cache@v4
-      with:
-        path: |
-          $HOME/.cache/pip
-          $HOME/.rqalpha/bundle
-        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-
-  coveralls:
-    name: Indicate completion to coveralls.io
-    # need secrets.GITHUB_TOKEN
-    needs: test
-    runs-on: ubuntu-latest
-    container: python:3-slim
-    steps:
-    - name: Finished
-      run: |
-        pip3 install --upgrade coveralls
-        coveralls --finish
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install flake8 pytest .
+      - name: Lint with flake8
+        run: |
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+      - name: Test with pytest
+        run: |
+          pytest
