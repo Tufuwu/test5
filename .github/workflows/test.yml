@@ -1,18 +1,22 @@
-on: [push]
-name: tests
+# https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+name: ci
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
 jobs:
-  tests:
+  ci:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout
-        uses: actions/checkout@v2
-        with:
-          submodules: "recursive"
-      - name: pip
-        run: |
-          pip install codecov
-          pip install coverage
-      - name: test
-        run: |
-          coverage run jsn.py -i example.jsn -o test.json -I import_dir
-          codecov
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@4
+      with:
+        python-version: 3.x
+    - run: pip install --upgrade pip
+    - run: pip install pytest ruff .
+    - run: ruff --format=github --ignore=E501 --target-version=py37 .
+    - run: pytest
+   
