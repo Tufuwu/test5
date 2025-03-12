@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{settings.PRERENDER_TITLE}}</title>
+    <meta name="description" content="{{settings.PRERENDER_DESCRIPTION}}">
+    <meta property="og:description" content="{{settings.PRERENDER_DESCRIPTION}}" />
+
+    <meta property="og:title" content="{{settings.PRERENDER_TITLE}}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="{{settings.BASE_URL}}" />
+    <meta property="og:image" content="{{settings.LOGO_URL}}" />
+    <meta property="og:site_name" content="{{settings.PRERENDER_TITLE}}">
+
+    <style>
+        img.head { width:350px; max-width: 100%; }
+    </style>
+</head>
+
+<body>
+
+{%include "links.html" %}
+
+<h2>Events</h2>
+<ul>
+{% for event in events  %}
+    <li itemscope itemtype="http://schema.org/Event">
+        <a itemprop="url" href="{{settings.BASE_URL}}/event/{{event.str_id}}">
+            <span itemprop="name">{{event.name}}</span>
+        </a>
+        {%include "event_date_venue.html" with event=event settings=settings %}
+        <meta itemprop="description" content="{{event.description}}">
+
+        <br>
+
+        {% for body in event.bodies.all  %}
+            <div itemprop="organizer" itemscope itemtype="http://schema.org/Organization">
+                <a itemprop="url" href="{{settings.BASE_URL}}/org/{{body.str_id}}">
+                    <span itemprop="name">{{body.name}}</span>
+                </a>
+                {% if body.website_url  %}
+                - <a itemprop="sameAs" href="{{body.website_url}}">{{body.name}} Website</a>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <div>
+            <a href="{{settings.BASE_URL}}/event/{{event.str_id}}">
+                <img itemprop="image" class="head" src="{{event.image_url | default_if_none:event.bodies.first.image_url }}">
+            </a>
+        </div>
+    </li>
+{% endfor %}
+</ul>
+
+</body>
+</html>
