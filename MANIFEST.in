@@ -1,6 +1,0 @@
-include README.rst
-include LICENSE
-include AUTHORS
-recursive-include docs *
-recursive-include tests *
-recursive-exclude */__pycache__ *
