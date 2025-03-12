@@ -1,0 +1,21 @@
+# Copyright Contributors to the Pyro project.
+#
+# SPDX-License-Identifier: Apache-2.0
+
+[report]
+omit =
+    pyro/docutil.py
+    pyro/logger.py
+exclude_lines =
+    pragma: no cover
+    def backward
+    raise AssertionError
+    raise NotImplementedError
+    raise ValueError
+    except NotImplementedError
+    except ImportError
+    except KeyError
+    except TypeError
+    warnings\.warn.*
+    warn_if.*
+    if __name__ == .__main__.:
