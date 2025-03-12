@@ -1,78 +1,94 @@
-#/usr/bin/env python
+#!/usr/bin/python3
 
+# -------------------------------------------------------------------------------
+# This file is part of Phobos, a Blender Add-On to edit robot models.
+# Copyright (C) 2020 University of Bremen & DFKI GmbH Robotics Innovation Center
+#
+# You should have received a copy of the 3-Clause BSD License in the LICENSE file.
+# If not, see <https://opensource.org/licenses/BSD-3-Clause>.
+# -------------------------------------------------------------------------------
+import json
 import os
-import sys
-from setuptools import setup, find_packages
-
-# if you are not using vagrant, just delete os.link directly,
-# The hard link only saves a little disk space, so you should not care
-if os.environ.get('USER', '') == 'vagrant':
-    del os.link
+import setuptools
+import subprocess
+from pathlib import Path
 
 
-ROOT_DIR = os.path.dirname(__file__)
-SOURCE_DIR = os.path.join(ROOT_DIR)
+# utilities
+def get_git_revision_hash():
+    return subprocess.check_output(['git', 'rev-parse', 'HEAD']).strip().decode("utf-8")
 
-if sys.version_info < (3, 8):
-    raise RuntimeError(
-        "opencage requires Python 3.8 or newer"
-        "Use older opencage 1.x for Python 2.7 or 3.7"
+
+def get_git_revision_short_hash():
+    return subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD']).strip().decode("utf-8")
+
+
+def get_git_branch():
+    return subprocess.check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD']).strip().decode("utf-8")
+
+
+def main(args):
+    # data
+    with open("README.md", "r") as fh:
+        long_description = fh.read()
+    codemeta = json.load(open("codemeta.json", "r"))
+    requirements = {
+        "yaml": "pyyaml",
+        "networkx": "networkx",  # optional for blender
+        "numpy": "numpy",
+        "scipy": "scipy",
+        "trimesh": "trimesh",  # optional for blender
+        "pkg_resources": "setuptools",
+        "collada": "pycollada",
+        "pydot": "pydot"
+    }
+    optional_requirements = {
+        "yaml": "pyyaml",
+        "pybullet": "pybullet",  # optional for blender
+        "open3d": "open3d",  # optional for blender
+        "python-fcl": "python-fcl",  # optional for blender
+    }
+    this_dir = Path(__file__).parent
+
+    ##################
+    # python package #
+    ##################
+    kwargs = {
+        "name": codemeta["title"].lower(),  # Replace with your own username
+        "version": codemeta["version"],
+        "author": ",  ".join(codemeta["author"]),
+        "author_email": codemeta["maintainer"],
+        "description": codemeta["description"] + " Revision:" + get_git_branch() + "-" + get_git_revision_short_hash(),
+        "long_description": long_description,
+        "long_description_content_type":" text/markdown",
+        "url": codemeta["codeRepository"],
+        "packages": setuptools.find_packages(),
+        "include_package_data": True,
+        "package_data":{'':  [os.path.join("data", x) for x in os.listdir(this_dir/"phobos"/"data")],},
+        "classifiers": [
+            "Programming Language :: Python :: 3",
+            "Programming Language :: Python :: 3.6",
+            "Programming Language :: Python :: 3.8",
+            "Programming Language :: Python :: 3.10",
+            "Operating System :: OS Independent",
+        ],
+        "python_requires": '>= 3.6',
+        "entry_points": {
+            'console_scripts': [
+                'phobos=phobos.scripts.phobos:main',
+            ]
+        }
+    }
+    # autoproj handling
+    if not "AUTOPROJ_CURRENT_ROOT" in os.environ:
+        kwargs["install_requires"] = list(requirements.values())
+        kwargs["extras_require"] = {'console_scripts': list(optional_requirements.keys())}
+
+    setuptools.setup(
+        **kwargs
     )
 
-# try for testing
-try:
-    with open(os.path.join(SOURCE_DIR, 'README.md'), encoding="utf-8") as f:
-        LONG_DESCRIPTION = f.read()
-except FileNotFoundError:
-    LONG_DESCRIPTION = ""
 
-setup(
-    name="opencage",
-    version="3.0.4",
-    description="Wrapper module for the OpenCage Geocoder API",
-    long_description=LONG_DESCRIPTION,
-    long_description_content_type='text/markdown',
-    author="OpenCage GmbH",
-    author_email="info@opencagedata.com",
-    url="https://github.com/OpenCageData/python-opencage-geocoder/",
-    download_url="https://github.com/OpenCageData/python-opencage-geocoder/tarball/3.0.4",
-    license="BSD",
-    entry_points={
-        'console_scripts': [
-            'opencage=opencage.command_line:main'
-        ]
-    },
-    packages=find_packages(),
-    include_package_data=True,
-    zip_safe=False,
-    keywords=['geocoding', 'geocoder'],
-    classifiers=[
-        'Environment :: Web Environment',
-        "Development Status :: 5 - Production/Stable",
-        'Intended Audience :: Developers',
-        'License :: OSI Approved :: BSD License',
-        'Operating System :: OS Independent',
-        "Programming Language :: Python :: 3 :: Only",
-        'Programming Language :: Python :: 3.8',
-        'Programming Language :: Python :: 3.9',
-        'Programming Language :: Python :: 3.10',
-        'Programming Language :: Python :: 3.11',
-        'Programming Language :: Python :: 3.12',
-        'Programming Language :: Python :: 3.13',
-        'Topic :: Scientific/Engineering :: GIS',
-        'Topic :: Utilities'
-    ],
-    install_requires=[
-        'Requests>=2.31.0',
-        'backoff>=2.2.1',
-        'tqdm>=4.66.4',
-        'certifi>=2024.07.04',
-        'aiohttp>=3.10.5'
-    ],
-    test_suite='pytest',
-    tests_require=[
-        'httpretty>=1.1.4',
-        'pylint==2.17.4',
-        'pytest>=7.4.0'
-    ],
-)
+if __name__ == "__main__":
+    import sys
+    main(sys.argv)
