@@ -1,37 +1,185 @@
-==================================================
-Enhydris - Web-based hydro/meteorological database
-==================================================
+Django-WeasyPrint
+=================
 
-.. image:: https://github.com/openmeteo/enhydris/actions/workflows/run-tests.yml/badge.svg
-    :alt: Build button
-    :target: https://github.com/openmeteo/enhydris/actions/workflows/run-tests.yml
+|Build| |Coverage| |PyPI Download| |PyPI Python Versions| |PyPI License|
 
-.. image:: https://codecov.io/github/openmeteo/enhydris/coverage.svg?branch=master
-    :alt: Coverage
-    :target: https://codecov.io/gh/openmeteo/enhydris
+.. |Build| image:: https://github.com/fdemmer/django-weasyprint/workflows/CI/badge.svg?branch=main
+    :target: https://github.com/fdemmer/django-weasyprint/actions?workflow=CI
 
-Enhydris is a system for the storage and management of hydrological
-and meteorological time series. You can see it in action at
-http://openmeteo.org/.
+.. |Coverage| image:: https://codecov.io/github/fdemmer/django-weasyprint/branch/main/graph/badge.svg?token=aF7vd6Cx2P
+    :target: https://codecov.io/github/fdemmer/django-weasyprint
 
-The database is accessible through a web interface, which includes
-several data representation features such as tables, graphs and
-mapping capabilities. Data access is configurable to allow or to
-restrict user groups and/or privileged users to contribute or to
-download data. With these capabilities, Enhydris can be used either as
-a public repository of free data or as a private
-system for data storage. Time series can be downloaded in plain text
-format that can be directly loaded to Hydrognomon_, a free
-tool for analysis and processing of meteorological time series.
+.. |PyPI Download| image:: https://img.shields.io/pypi/v/django-weasyprint.svg
+   :target: https://pypi.python.org/pypi/django-weasyprint/
 
-.. _hydrognomon: http://hydrognomon.org/
+.. |PyPI Python Versions| image:: https://img.shields.io/pypi/pyversions/django-weasyprint.svg
+   :target: https://pypi.python.org/pypi/django-weasyprint/
 
-Enhydris is written in Python/Django, and can be installed on every
-operating system on which Python runs, including GNU/Linux and Windows.
-It is free software, available under the GNU General Public License
-version 3 or any later version.
+.. |PyPI License| image:: https://img.shields.io/pypi/l/django-weasyprint.svg
+   :target: https://pypi.python.org/pypi/django-weasyprint/
 
-For more information about Enhydris, read its documentation in the
-``doc`` directory or `live at readthedocs`_.
 
-.. _live at readthedocs: http://enhydris.readthedocs.io/
+A `Django`_ class-based view generating PDF responses using `WeasyPrint`_.
+
+
+Installation
+------------
+
+Install and update using `pip`_:
+
+.. code-block:: text
+
+    pip install -U django-weasyprint
+
+`WeasyPrint`_ is automatically installed as a dependency of this package.
+If you run into any problems be sure to check their `install instructions
+<https://doc.courtbouillon.org/weasyprint/stable/first_steps.html#installation>`_ for help!
+
+.. tip::
+
+   In version 53 WeasyPrint switched to `pydyf`_ as PDF generator instead of Cairo.
+   With that change PNG output was dropped and you might encounter other
+   changes in the generated PDF.
+
+   You can continue using WeasyPrint/Cairo by installing django-weasyprint 1.x!
+
+
+Usage
+-----
+
+Use ``WeasyTemplateView`` as class based view base class or the
+mixin ``WeasyTemplateResponseMixin`` on a ``TemplateView`` (or subclass
+thereof).
+
+
+Example
+-------
+
+.. code:: python
+
+    # views.py
+    import functools
+
+    from django.conf import settings
+    from django.views.generic import DetailView
+
+    from django_weasyprint import WeasyTemplateResponseMixin
+    from django_weasyprint.views import WeasyTemplateResponse
+    from django_weasyprint.utils import django_url_fetcher
+
+
+    class MyDetailView(DetailView):
+        # vanilla Django DetailView
+        template_name = 'mymodel.html'
+
+    def custom_url_fetcher(url, *args, **kwargs):
+        # rewrite requests for CDN URLs to file path in STATIC_ROOT to use local file
+        cloud_storage_url = 'https://s3.amazonaws.com/django-weasyprint/static/'
+        if url.startswith(cloud_storage_url):
+            url = 'file://' + url.replace(cloud_storage_url, settings.STATIC_URL)
+        return django_url_fetcher(url, *args, **kwargs)
+
+    class CustomWeasyTemplateResponse(WeasyTemplateResponse):
+        # customized response class to pass a kwarg to URL fetcher
+        def get_url_fetcher(self):
+            # disable host and certificate check
+            context = ssl.create_default_context()
+            context.check_hostname = False
+            context.verify_mode = ssl.CERT_NONE
+            return functools.partial(custom_url_fetcher, ssl_context=context)
+
+    class PrintView(WeasyTemplateResponseMixin, MyDetailView):
+        # output of MyDetailView rendered as PDF with hardcoded CSS
+        pdf_stylesheets = [
+            settings.STATIC_ROOT + 'css/app.css',
+        ]
+        # show pdf in-line (default: True, show download dialog)
+        pdf_attachment = False
+        # custom response class to configure url-fetcher
+        response_class = CustomWeasyTemplateResponse
+
+    class DownloadView(WeasyTemplateResponseMixin, MyDetailView):
+        # suggested filename (is required for attachment/download!)
+        pdf_filename = 'foo.pdf'
+        # set PDF variant to 'pdf/ua-1' (see weasyprint.DEFAULT_OPTIONS)
+        pdf_options = {'pdf_variant': 'pdf/ua-1'}
+
+    class DynamicNameView(WeasyTemplateResponseMixin, MyDetailView):
+        # dynamically generate filename
+        def get_pdf_filename(self):
+            return 'foo-{at}.pdf'.format(
+                at=timezone.now().strftime('%Y%m%d-%H%M'),
+            )
+
+.. code:: python
+
+    # tasks.py
+    from celery import shared_task
+    from django.template.loader import render_to_string
+
+    from django_weasyprint.utils import django_url_fetcher
+
+    @shared_task
+    def generate_pdf(filename='mymodel.pdf'):
+        weasy_html = weasyprint.HTML(
+            string=render_to_string('mymodel.html'),
+            url_fetcher=django_url_fetcher,
+            base_url='file://',
+        )
+        weasy_html.write_pdf(filename)
+
+
+.. code:: html
+
+    <!-- mymodel.html -->
+    <!doctype html>
+    <html>
+        <head>
+            <!-- Use "static" template tag and configure STATIC_URL as usual. -->
+            <link rel="stylesheet" href="{% static 'css/app.css' %}" />
+        </head>
+        <body>
+            Hello PDF-world!
+        </body>
+    </html>
+
+
+Settings
+--------
+
+By default ``WeasyTemplateResponse`` determines the ``base_url`` for
+`weasyprint.HTML`_ and `weasyprint.CSS`_ automatically using Django's
+``request.build_absolute_uri()``.
+
+To disable that set ``WEASYPRINT_BASEURL`` to a fixed value, e.g.:
+
+.. code:: python
+
+    # Disable prefixing relative URLs with request.build_absolute_uri().
+    # Instead, handle them as absolute file paths.
+    WEASYPRINT_BASEURL = '/'
+
+
+Changelog
+---------
+
+See `CHANGELOG.md`_
+
+
+Links
+-----
+
+* Releases: https://pypi.python.org/pypi/django-weasyprint
+* Issue tracker: https://github.com/fdemmer/django-weasyprint/issues
+* Code: https://github.com/fdemmer/django-weasyprint
+
+
+.. _pip: https://pip.pypa.io/en/stable/quickstart
+.. _Django: https://www.djangoproject.com
+.. _WeasyPrint: http://weasyprint.org
+.. _pydyf: https://doc.courtbouillon.org/pydyf/stable/
+
+.. _weasyprint.HTML: https://doc.courtbouillon.org/weasyprint/stable/api_reference.html?highlight=base_url#weasyprint.HTML
+.. _weasyprint.CSS: https://doc.courtbouillon.org/weasyprint/stable/api_reference.html?#weasyprint.CSS
+
+.. _CHANGELOG.md: https://github.com/fdemmer/django-weasyprint/blob/main/CHANGELOG.md
