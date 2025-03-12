@@ -1,84 +1,97 @@
-#!/usr/bin/env python3
+"""Library and CLI tools for interacting with RFlink 433MHz transceiver."""
 
 import sys
-import re
+from codecs import open
+from os import path
+from subprocess import check_output
 
-from distutils.core import setup
-from setuptools import (
-    setup as install,
-    find_packages,
-    Extension
-)
+from setuptools import find_packages, setup
 
-# Parses version number: https://stackoverflow.com/a/7071358
-VERSIONFILE = 'learn2learn/_version.py'
-verstrline = open(VERSIONFILE, "rt").read()
-VSRE = r"^__version__ = ['\"]([^'\"]*)['\"]"
-mo = re.search(VSRE, verstrline, re.M)
-if mo:
-    VERSION = mo.group(1)
-else:
-    raise RuntimeError('Unable to find version string in %s.' % (VERSIONFILE,))
+here = path.abspath(path.dirname(__file__))
 
-# Compile with Cython
-# https://cython.readthedocs.io/en/latest/src/userguide/source_files_and_compilation.html
-# https://github.com/FedericoStra/cython-package-example/blob/master/setup.py
-extension_type = '.c'
-cmd_class = {}
-use_cython = 'develop' in sys.argv or 'build_ext' in sys.argv
-if use_cython:
-    from Cython.Build import cythonize
-    from Cython.Distutils import build_ext
-    extension_type = '.pyx'
-    cmd_class = {'build_ext': build_ext}
+if sys.version_info < (3, 4):
+    raise RuntimeError("This package requires at least Python 3.4")
 
-extensions = [
-    Extension(name='learn2learn.data.meta_dataset',
-              sources=['learn2learn/data/meta_dataset' + extension_type]), 
-    Extension(name='learn2learn.data.task_dataset',
-              sources=['learn2learn/data/task_dataset' + extension_type]), 
-    Extension(name='learn2learn.data.transforms',
-              sources=['learn2learn/data/transforms' + extension_type]), 
-]
+# Get the long description from the README file
+with open(path.join(here, "README.rst"), encoding="utf-8") as f:
+    long_description = f.read()
 
-if use_cython:
-    compiler_directives = {
-        'language_level': 3,
-        'embedsignature': True,
-        #  'profile': True,
-        #  'binding': True,
-    }
-    extensions = cythonize(extensions, compiler_directives=compiler_directives)
 
-# Installs the package
-install(
-    name='learn2learn',
-    packages=find_packages(),
-    ext_modules=extensions,
-    cmdclass=cmd_class,
-    zip_safe=False,  # as per Cython docs
-    version=VERSION,
-    description='PyTorch Library for Meta-Learning Research',
-    long_description=open('README.md', encoding='utf8').read(),
-    long_description_content_type='text/markdown',
-    author='Debajyoti Datta, Ian bunner, Seb Arnold, Praateek Mahajan',
-    author_email='smr.arnold@gmail.com',
-    url='https://github.com/learnables/learn2learn',
-    download_url='https://github.com/learnables/learn2learn/archive/' + str(VERSION) + '.zip',
-    license='MIT',
-    classifiers=[],
-    scripts=[],
-    setup_requires=['cython>=0.28.5', ],
-    install_requires=[
-        'numpy>=1.15.4',
-        'gym>=0.14.0',
-        'torch>=1.1.0',
-        'torchvision>=0.3.0',
-        'scipy',
-        'requests',
-        'gsutil',
-        'tqdm',
-        # 'qpth>=0.0.15',
-        #  'pytorch_lightning>=1.0.2',
+def version_from_git():
+    """Acquire package version form current git tag."""
+    return check_output(
+        ["git", "describe", "--tags", "--abbrev=0"], universal_newlines=True
+    ).strip()
+
+
+setup(
+    name="rflink",
+    version=version_from_git(),
+    description=__doc__,
+    long_description=long_description,
+    # The project's main homepage.
+    url="https://github.com/aequitas/python-rflink",
+    # Author details
+    author="Johan Bloemberg",
+    author_email="github@ijohan.nl",
+    # Choose your license
+    license="MIT",
+    # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
+    classifiers=[
+        # How mature is this project? Common values are
+        #   3 - Alpha
+        #   4 - Beta
+        #   5 - Production/Stable
+        "Development Status :: 3 - Alpha",
+        # Indicate who your project is intended for
+        "Intended Audience :: Developers",
+        # Pick your license as you wish (should match "license" above)
+        "License :: OSI Approved :: MIT License",
+        "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
     ],
+    keywords="rflink 433mhz domotica",
+    packages=find_packages(exclude=["contrib", "docs", "tests"]),
+    package_data={"rflink": ["py.typed"]},
+    install_requires=[
+        "async_timeout",
+        "docopt",
+        "pyserial",
+        "pyserial-asyncio",
+        'typing;python_version<"3.5"',
+    ],
+    # # List additional groups of dependencies here (e.g. development
+    # # dependencies). You can install these using the following syntax,
+    # # for example:
+    # # $ pip install -e .[dev,test]
+    # extras_require={
+    #     'dev': ['check-manifest'],
+    #     'test': ['coverage'],
+    # },
+    # # If there are data files included in your packages that need to be
+    # # installed, specify them here.  If using Python 2.6 or less, then these
+    # # have to be included in MANIFEST.in as well.
+    # package_data={
+    #     'sample': ['package_data.dat'],
+    # },
+    # # Although 'package_data' is the preferred approach, in some case you may
+    # # need to place data files outside of your packages. See:
+    # # http://docs.python.org/3.4/distutils/setupscript.html#installing-additional-files # noqa
+    # # In this case, 'data_file' will be installed into '<sys.prefix>/my_data'
+    # data_files=[('my_data', ['data/data_file'])],
+    # To provide executable scripts, use entry points in preference to the
+    # "scripts" keyword. Entry points provide cross-platform support and allow
+    # pip to create the appropriate form of executable for the target platform.
+    entry_points={
+        "console_scripts": [
+            "rflink=rflink.__main__:main",
+            "rflinkproxy=rflinkproxy.__main__:main",
+        ],
+    },
+    project_urls={
+        "Release notes": "https://github.com/aequitas/python-rflink/releases",
+    },
 )
