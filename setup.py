@@ -1,29 +1,28 @@
-from setuptools import setup, find_packages
+#!/usr/bin/env python
 
-with open('README.md') as f:
-    readme = f.read()
+# SPDX-License-Identifier: Apache-2.0
+#
+# http://nexb.com and https://github.com/aboutcode-org/scancode.io
+# The ScanCode.io software is licensed under the Apache License version 2.0.
+# Data generated with ScanCode.io is provided as-is without warranties.
+# ScanCode is a trademark of nexB Inc.
+#
+# You may not use this software except in compliance with the License.
+# You may obtain a copy of the License at: http://apache.org/licenses/LICENSE-2.0
+# Unless required by applicable law or agreed to in writing, software distributed
+# under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+# CONDITIONS OF ANY KIND, either express or implied. See the License for the
+# specific language governing permissions and limitations under the License.
+#
+# Data Generated with ScanCode.io is provided on an "AS IS" BASIS, WITHOUT WARRANTIES
+# OR CONDITIONS OF ANY KIND, either express or implied. No content created from
+# ScanCode.io should be considered or used as legal advice. Consult an Attorney
+# for any legal advice.
+#
+# ScanCode.io is a free software code scanning tool from nexB Inc. and others.
+# Visit https://github.com/aboutcode-org/scancode.io for support and download.
 
-setup(
-    name='seatsio',
-    version='v81.1.0',
-    description='The official Seats.io Python client library',
-    author='The seats.io dev team',
-    author_email='hello@seats.io',
-    url='https://github.com/seatsio/seatsio-python',
-    license="MIT",
-    long_description=open('README.md').read(),
-    long_description_content_type="text/markdown",
+import setuptools
 
-    packages=find_packages(),
-    install_requires=[
-        "requests>=2.0, <3.0",
-        "munch==4.0",
-        "jsonpickle>=3.0, <4.0",
-        "future==1.0.0"
-    ],
-    tests_require=[
-        "parameterized==0.9.0"
-    ],
-
-    test_suite='tests'
-)
+if __name__ == "__main__":
+    setuptools.setup()
