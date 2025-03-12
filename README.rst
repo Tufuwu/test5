@@ -1,315 +1,326 @@
-pygame.org website |coverage-status|
-====================================
-
-Pieces of the pygame website (https://www.pygame.org/) will be open sourced here.
-
-Strategy is to bring in code one piece at a time, and clean it up as I go.
-
-
-It's a community website where people can post projects, comment on them,
-but also write things in there themselves on wiki pages.
-
-
-Quick-Start
-===========
-
-Set up the required packages::
-
-    python3.6 -m venv anenv
-    . ./anenv/bin/activate
-    pip install --upgrade pip
-    pip install -r requirements.dev.txt
-    pip install -e .
-
-For now yuicompressor is needed for css compression, and
-imagamagick and optipng are needed for creating and optimizing image thumbnails,
-additionally postgresql is the database of choice::
-    brew install yuicompressor node optipng imagemagick postgresql
-    sudo apt-get install yui-compressor nodejs optipng imagemagick postgresql postgresql-client libpq-dev
-
-
-Environment setup
-=================
-
-Define a **.env** file based on the **example.env** file.
-
-::
-
-    cp example.env .env
-
-Define the **APP_SECRET_KEY** variable in the **.env** file or the tests won't work. 
-You can define any value, like **"a"** or **"s3cret-stuff-blah"**.
-
-Tool setup
-==========
-
-See setup.cfg for all tool config (pytest, coverage, etc).
-
-
-
-Db setup instructions
-=====================
-
-postgresql 9.6
-
-One database for testing, and another one for running the app.
-
-We use alembic for db migrations. http://alembic.readthedocs.org/en/latest/
-
-
-Set up the `postgresql` database::
-
-    sudo -u postgres createdb pygame
-    sudo -u postgres psql pygame -c "CREATE USER pygame WITH PASSWORD 'password';"
-    sudo -u postgres psql pygame -c "GRANT ALL PRIVILEGES ON DATABASE pygame to pygame;"
-
-We also create a database for running tests::
-
-    sudo -u postgres createdb pygame_test
-    sudo -u postgres psql pygame -c "CREATE USER pygame_test WITH PASSWORD 'password';"
-    sudo -u postgres psql pygame_test -c "GRANT ALL PRIVILEGES ON DATABASE pygame_test to pygame_test;"
-
-
-To upgrade to latest model changes do::
-
-    alembic upgrade head
-
-
-When you change a model make an alembic revision::
-
-    alembic revision --autogenerate -m "Added a field for these reasons."
-
-Then you will need to apply the change to your db (and commit the version file)::
-
-    alembic upgrade head
-
-
-Testing with pytest
-===================
-
-http://docs.pytest.org/en/latest/
-
-To run all unit tests and functional tests use::
-
-    pytest
-
-To watch for changes and rerun tests::
-
-    ptw
-
-Maybe you just want to test the wiki parts::
-
-    pytest -k wiki
-
-
-tests/unit/ are for unit tests.
-tests/functional/ are for tests which would use flask and db.
-tests/conftest.py is for test configuration.
-tests/sqlpytestflask.py are some fixtures for db testing.
-
-Unit tests and functional tests are kept separate, because functional tests can take a while longer to run.
-
-We use various fixtures to make writing the tests easier and faster.
-
-
-Running the webserver locally
-=============================
-
-Use an environment variable to configure the database connection (see the
-database setup steps above)::
-
-    export APP_DATABASE_URL="postgresql://pygame:password@localhost/pygame"
-
-Configure a directory containing static files::
-
-    export APP_WWW="static/"
-
-The application may need a secure key, but for debugging it's not important
-that it's properly random::
-
-    export APP_SECRET_KEY="s3cret-stuff-blah"
-
-Finally, you can enable some Flask debugging machinery (which should be off for
-the site in production)::
-
-    export APP_DEBUG=1
-
-Now add the database fixtures to populate it with sample users. After that, you should be able to
-login as admin with email ``admin@example.com`` and  password ``password``::
-    
-    pygameweb_fixtures
-    
-Then run::
-
-    pygameweb_front
-
-
-Templates with jinja2 and bootstrap
-===================================
-
-pygameweb/templates/
-
-We use::
-
-    * `Jinja2 <http://jinja.pocoo.org/>`_
-    * `Flask-Bootstrap <https://pythonhosted.org/Flask-Bootstrap/basic-usage.html>`_
-    * `Bootstrap <http://getbootstrap.com/>`_
-
-
-Command line tools with click
-=============================
-
-We use click and setuptools entry points (in setup.py) for command line tools::
-
-    * `click <http://click.pocoo.org/5/>`_
-    * `entry points <https://packaging.python.org/distributing/#entry-points>`_
-
-Note, when you add or change a command line tool, you need to `pip install -e .` again.
-
-If you can, try not to use command line options at all. Have one command do one thing,
-and make the defaults good, or use the pygameweb.config.
-
-
-User login with Flask-security-fork
-===================================
-
-pygameweb.user
-pygameweb/templates/security
-
-Using::
-
-    * `flask-security-fork <https://flask-security-fork.readthedocs.io/en/latest/quickstart.html>`_
-
-
-Navigation with flask-nav
-=========================
-
-pygameweb.nav
-pygameweb.page.models
-
-Using::
-
-    * `flask-nav <http://pythonhosted.org/flask-nav/>`_
-    * `flask-bootstrap <https://pythonhosted.org/Flask-Bootstrap/nav.html>`_
-
-
-
-Dashboard is an overview
-========================
-
-of all sorts of things happening in the pygame worlds around the interwebs.
-
-https://pygame.org/dashboard
-
-It's a 7000px wide webpage offering a summary of what's happening.
-
-Projects people are working on,
-videos folks are making,
-tweets twits are... tweeting,
-questions asked and answered.
-
-
-
-To caching things we
+====================
+sphinxcontrib-apidoc
 ====================
 
-use `Flask-Caching <http://pythonhosted.org/Flask-Caching/>`_
+.. image:: https://github.com/sphinx-contrib/apidoc/actions/workflows/ci.yaml/badge.svg
+    :target: https://github.com/sphinx-contrib/apidoc/actions/workflows/ci.yaml
+    :alt: Build Status
 
-pygameweb.cache
-pygameweb.news.views
+A Sphinx extension for running `sphinx-apidoc`_ on each build.
 
+Overview
+--------
 
-With with a @cache decorator, and/or markup in a template.
+*sphinx-apidoc* is a tool for automatic generation of Sphinx sources that,
+using the `autodoc <sphinx_autodoc>`_ extension, documents a whole package in
+the style of other automatic API documentation tools. *sphinx-apidoc* does not
+actually build documentation - rather it simply generates it. As a result, it
+must be run before *sphinx-build*. This generally results in ``tox.ini`` files
+like the following:
 
+.. code-block:: ini
 
-.. |coverage-status| image:: https://coveralls.io/repos/github/pygame/pygameweb/badge.svg?branch=main
-   :target: https://coveralls.io/github/pygame/pygameweb?branch=main
-   :alt: Test coverage percentage
+    [testenv:docs]
+    commands =
+      sphinx-apidoc -o doc/api my_code my_code/tests
+      sphinx-build -W -b html doc doc/_build/html
 
+This extension eliminates the need to keep that configuration outside Sphinx.
+Instead, this functionality can be enabled and configured from your
+documentation's ``conf.py`` file, like so:
 
+.. code-block:: python
 
-Releases
-========
+    extensions = [
+        'sphinxcontrib.apidoc',
+        # ...
+    ]
+    apidoc_module_dir = '../my_code'
+    apidoc_output_dir = 'reference'
+    apidoc_excluded_paths = ['tests']
+    apidoc_separate_modules = True
 
-Step by step release instructions below.
+Configuration
+-------------
 
-- Commits to `main` branch do a dev deploy to pypi.
-- Commits to `maintest` branch do a dev deploy to pypi.
-- Commits to a tag do a real deploy to pypi.
+The *apidoc* extension uses the following configuration values:
 
+``apidoc_module_dir``
+   The path to the module to document. This must be a path to a Python package.
+   This path can be a path relative to the documentation source directory or an
+   absolute path.
 
-Prereleases
------------
+   **Required**
 
-https://packaging.python.org/tutorials/distributing-packages/#pre-release-versioning
+``apidoc_output_dir``
+   The output directory. If it does not exist, it is created. This path is
+   relative to the documentation source directory.
 
-Pre releases should be named like this:
-```
-# pygameweb/__init__.py
-__version__ = '0.0.2'
-```
-Which is one version ahead of of the last tagged release.
+   **Optional**, defaults to ``api``.
 
-Release tags should be like '0.0.2', and match the `pygameweb/__init__.py __version__`.
+``apidoc_template_dir``
+   A directory containing user-defined templates. Template files in this
+   directory that match the default apidoc templates (``module.rst_t``,
+   ``package.rst_t``, ``toc.rst_t``) will overwrite them. The default templates
+   can be found in ``site-packages/sphinx/templates/apidoc/``. This path is
+   relative to the documentation source directory.
 
+   **Optional**, defaults to ``'templates'``.
 
-Preparing a release in a branch.
---------------------------------
+``apidoc_excluded_paths``
+   An optional list of modules to exclude. These should be paths relative to
+   ``apidoc_module_dir``. fnmatch-style wildcarding is supported.
 
-It's a good idea to start a branch first, and make any necessary changes
-for the release.
+   **Optional**, defaults to ``[]``.
 
-```
-git checkout -b v0.0.2
-vi pygameweb/__init__.py __version__ = '0.0.2'
-git commit -m "Version 0.0.2"
-```
+``apidoc_separate_modules``
+   Put documentation for each module on its own page. Otherwise there will be
+   one page per (sub)package.
 
-Change log, drafting a release.
--------------------------------
+   **Optional**, defaults to ``False``.
 
-Github 'releases' are done as well.
-You can start drafting the release notes in there before the tag.
-https://help.github.com/articles/creating-releases/
+``apidoc_toc_file``
+   Filename for a table of contents file. Defaults to ``modules``. If set to
+   ``False``, *apidoc* will not create a table of contents file.
 
-You can make the release notes with the help of the changes since last release.
-https://github.com/pygame/pygameweb/compare/0.0.1...main
+   **Optional**, defaults to ``None``.
 
-git log 0.0.1...main
+``apidoc_module_first``
+   When set to ``True``, put module documentation before submodule
+   documentation.
 
-Tagging a release
------------------
+   **Optional**, defaults to ``False``.
 
-When the release is tagged, pushing it starts the deploy to pypi off.
-```
-git tag -a 0.0.2
-git push origin 0.0.2
-```
-Note: do not tag pre releases
-(these are made on commits to `main`/`maintest`).
+``apidoc_extra_args``
+   Extra arguments which will be passed to ``sphinx-apidoc``. These are placed
+   after flags and before the module name.
 
-After the tag is pushed, then you can do the release
-in github from your draft release.
+   **Optional**, defaults to ``[]``.
 
+Migration from pbr
+------------------
 
-Back to dev version.
---------------------
+`pbr`_ has historically included a custom variant of the `build_sphinx`_
+distutils command. This provides, among other things, the ability to generate
+API documentation as part of build process. Clearly this is not necessary with
+this extension.
 
-If we were at 0.0.2 before, now we want to be at 0.0.3.dev
-```
-vi pygameweb/__init__.py __version__ = '0.0.3.dev'
-```
+There are two implementations of the API documentation feature in *pbr*:
+*autodoc_tree* and *autodoc*. To describe the difference, let's explore how one
+would migrate real-world projects using both features. Your project might use
+one or both: *autodoc_tree* is enabled using the ``autodoc_tree_index_modules``
+setting while *autodoc* is enabled using the ``autodoc_index_modules``
+setting, both found in the ``[pbr]`` section of ``setup.cfg``.
 
-Merge the release branch into main, and push that up.
+autodoc_tree
+~~~~~~~~~~~~
 
+As *autodoc_tree* is based on *sphinx-apidoc*, migration is easy. Lets take
+`python-openstackclient`_ as an example, looking at minimal versions of
+``setup.cfg`` and ``doc/source/conf.py``:
 
-Contributing
-============
+.. code-block:: ini
 
-Please discuss contributions first to avoid disappointment and rework.
+   [build_sphinx]
+   all_files = 1
+   build-dir = doc/build
+   source-dir = doc/source
 
-Please see `contribution-guide.org <http://www.contribution-guide.org/>`_ and
-`Python Code of Conduct <https://www.python.org/psf/codeofconduct/>`_ for
-details on what we expect from contributors. Thanks!
+   [pbr]
+   autodoc_tree_index_modules = True
+   autodoc_tree_excludes =
+     setup.py
+     openstackclient/volume/v3
+     openstackclient/tests/
+     openstackclient/tests/*
+   api_doc_dir = contributor/api
 
-The stack? python 3.6, postgresql 9.6, Flask, py.test, sqlalchemy, alembic, gulp, ansible, node.
+.. code-block:: python
+
+   extensions = ['']
+
+Once migrated, this would look like so:
+
+.. code-block:: ini
+
+   [build_sphinx]
+   all_files = 1
+   build-dir = doc/build
+   source-dir = doc/source
+
+.. code-block:: python
+
+   extensions = ['sphinxcontrib.apidoc']
+
+   apidoc_module_dir = '../../openstack'
+   apidoc_excluded_paths = [
+     'volume',
+     'tests'
+   ]
+   apidoc_output_dir = 'contributor/api'
+
+There are a couple of changes here:
+
+#. Configure ``apidoc_module_dir`` in ``conf.py``
+
+   With the *autodoc_tree* feature, API documentation is always generated for
+   the directory in which ``setup.cfg`` exists, which is typically the
+   top-level directory. With this extension, you must explicitly state which
+   directory you wish to build documentation for using the
+   ``apidoc_module_dir`` setting. You should configure this to point to your
+   actual package rather than the top level directory as this means you don't
+   need to worry about skipping unrelated files like ``setup.py``.
+
+#. Configure ``apidoc_excluded_paths`` in ``conf.py``
+
+   The ``apidoc_excluded_paths`` setting in ``conf.py`` works exactly like the
+   ``[pbr] autodoc_tree_excludes`` setting in ``setup.cfg``; namely, it's a
+   list of fnmatch-style paths describing files and directories to exclude
+   relative to the source directory. This means you can use the values from the
+   ``[pbr] autodoc_tree_excludes`` setting, though you may need to update
+   these if you configured ``apidoc_module_dir`` to point to something other
+   than the top-level directory.
+
+#. Configure ``apidoc_output_dir`` in ``conf.py``
+
+   The ``apidoc_output_dir`` setting in ``conf.py`` works exactly like the
+   ``[pbr] api_doc_dir`` setting in ``setup.cfg``; namely, it's a path relative
+   to the documentation source directory to which all API documentation should
+   be written. You can just copy the value from the ``[pbr] api_doc_dir``
+   setting.
+
+#. Remove settings from ``setup.cfg``
+
+   Remove the following settings from the ``[pbr]`` section of the
+   ``setup.cfg`` file:
+
+   - ``autodoc_tree_index_modules``
+   - ``autodoc_tree_excludes``
+   - ``api_doc_dir``
+
+   You may also wish to remove the entirety of the ``[build_sphinx]`` section,
+   should you wish to build docs using ``sphinx-build`` instead.
+
+Once done, your output should work exactly as before.
+
+autodoc
+~~~~~~~
+
+*autodoc* is not based on *sphinx-apidoc*. Fortunately it is possible to
+generate something very similar (although not identical!). Let's take
+`oslo.privsep`_ as an example, once again looking at minimal versions of
+``setup.cfg`` and ``doc/source/conf.py``:
+
+.. code-block:: ini
+
+   [build_sphinx]
+   all_files = 1
+   build-dir = doc/build
+   source-dir = doc/source
+
+   [pbr]
+   autodoc_index_modules = True
+   api_doc_dir = reference/api
+   autodoc_exclude_modules =
+     oslo_privsep.tests.*
+     oslo_privsep._*
+
+.. code-block:: python
+
+   extensions = ['']
+
+Once migrated, this would look like so:
+
+.. code-block:: ini
+
+   [build_sphinx]
+   all_files = 1
+   build-dir = doc/build
+   source-dir = doc/source
+
+.. code-block:: python
+
+   extensions = ['sphinxcontrib.apidoc']
+
+   apidoc_module_dir = '../../oslo_privsep'
+   apidoc_excluded_paths = ['tests', '_*']
+   apidoc_output_dir = 'reference/api'
+   apidoc_separate_modules = True
+
+Most of the changes necessary are the same as `autodoc_tree`_, with some
+exceptions.
+
+#. Configure ``apidoc_module_dir`` in ``conf.py``
+
+   With the *autodoc* feature, API documentation is always generated for
+   the directory in which ``setup.cfg`` exists, which is typically the
+   top-level directory. With this extension, you must explicitly state which
+   directory you wish to build documentation for using the
+   ``apidoc_module_dir`` setting. You should configure this to point to your
+   actual package rather than the top level directory as this means you don't
+   need to worry about skipping unrelated files like ``setup.py``.
+
+#. Configure ``apidoc_excluded_paths`` in ``conf.py``
+
+   The  ``apidoc_excluded_paths`` setting in ``conf.py`` differs from the
+   ``[pbr] autodoc_exclude_modules`` setting in ``setup.cfg`` in that the
+   former is a list of fnmatch-style **file paths**, while the latter is a list
+   of fnmatch-style **module paths**. As a result, you can reuse most of the
+   values from the ``[pbr] autodoc_exclude_modules`` setting but you must
+   switch from ``x.y`` format to ``x/y``. You may also need to update these
+   paths if you configured ``apidoc_module_dir`` to point to something other
+   than the top-level directory.
+
+#. Configure ``apidoc_output_dir`` in ``conf.py``
+
+   The ``apidoc_output_dir`` setting in ``conf.py`` works exactly like the
+   ``[pbr] api_doc_dir`` setting in ``setup.cfg``; namely, it's a path relative
+   to the documentation source directory to which all API documentation should
+   be written. You can just copy the value from the ``[pbr] api_doc_dir``
+   setting.
+
+#. Configure ``apidoc_separate_modules=True`` in ``conf.py``
+
+   By default, *sphinx-apidoc* generates a document per package while *autodoc*
+   generates a document per (sub)module. By setting this attribute to ``True``,
+   we ensure the latter behavior is used.
+
+#. Replace references to ``autoindex.rst`` with ``modules.rst``
+
+   The *autodoc* feature generates a list of modules in a file called
+   ``autoindex.rst`` located in the output directory. By comparison,
+   *sphinx-apidoc* and this extension call this file ``modules.rst``. You must
+   update all references to ``autoindex.rst`` with ``modules.rst`` instead. You
+   may also wish to configure the ``depth`` option of any ``toctree``\s that
+   include this document as ``modules.rst`` is nested.
+
+#. Remove settings from ``setup.cfg``
+
+   Remove the following settings from the ``[pbr]`` section of the
+   ``setup.cfg`` file:
+
+   - ``autodoc_index_modules``
+   - ``autodoc_exclude_modules``
+   - ``api_doc_dir``
+
+   You may also wish to remove the entirety of the ``[build_sphinx]`` section,
+   should you wish to build docs using ``sphinx-build`` instead.
+
+Once done, your output should look similar to previously. The main change will
+be in the aforementioned ``modules.rst``, which uses a nested layout compared
+to the flat layout of the ``autoindex.rst`` file.
+
+Links
+-----
+
+- Source: https://github.com/sphinx-contrib/apidoc
+- Bugs: https://github.com/sphinx-contrib/apidoc/issues
+
+.. Links
+
+.. _sphinx-apidoc: http://www.sphinx-doc.org/en/stable/man/sphinx-apidoc.html
+.. _sphinx_autodoc: http://www.sphinx-doc.org/en/stable/ext/autodoc.html
+.. _pbr: https://docs.openstack.org/pbr/
+.. _build_sphinx: https://docs.openstack.org/pbr/latest/user/using.html#build-sphinx
+.. _python-openstackclient: https://github.com/openstack/python-openstackclient/tree/3.15.0
+.. _oslo.privsep: https://github.com/openstack/oslo.privsep/tree/1.28.0
