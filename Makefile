@@ -1,39 +1,75 @@
-.PHONY: test docs
+PYTHON_VERSION=$(shell python3 -c "import platform; print('.'.join(platform.python_version_tuple()[:-1]))")
+VENV_DIR=.venv_$(PYTHON_VERSION)
 
-ENABLE_BRANCH_COVERAGE ?= 0
-AUTO_FIX_IMPORTS ?= 0
-
-ifneq ($(AUTO_FIX_IMPORTS), 1)
-  autofix = --check-only
+ifeq ($(PYTHON_VERSION),)
+	$(error No Python 3 interpreter found!)
 endif
 
-static: imports flake8 pylint
-test: static test_lib test_examples
+ifeq ($(OS),Windows_NT)
+	VENV_BIN_DIR=scripts
+else
+	VENV_BIN_DIR=bin
+endif
 
-flake8:
-	flake8 nameko test
+# Generate virtualenv
+$(VENV_DIR)/install.indicator: pyproject.toml requirements/development.txt
+	$(VENV_DIR)/$(VENV_BIN_DIR)/python3 -m piptools sync requirements/development.txt
+	$(VENV_DIR)/$(VENV_BIN_DIR)/python3 -m pip install -r requirements/development.txt
+	$(VENV_DIR)/$(VENV_BIN_DIR)/python3 -m pip install -e .
+	touch $@
 
-pylint:
-	pylint --rcfile=pylintrc nameko -E
+$(VENV_DIR):
+	python3 -m venv $@
+	$(VENV_DIR)/$(VENV_BIN_DIR)/python3 -m pip install -r requirements/development.txt
+	ln -sf $(VENV_DIR) .venv
 
-imports:
-	isort $(autofix) nameko test
+.PHONY: venv
+venv: $(VENV_DIR) $(VENV_DIR)/install.indicator
 
-test_lib:
-	BRANCH=$(ENABLE_BRANCH_COVERAGE) coverage run -m nameko test test -v --strict-markers --timeout 30
-	BRANCH=$(ENABLE_BRANCH_COVERAGE) coverage report
+pyproject.toml: $(VENV_DIR)
 
-test_examples:
-	BRANCH=$(ENABLE_BRANCH_COVERAGE) nameko test docs/examples/test --strict-markers --timeout 30 --cov=docs/examples --cov-config=$(CURDIR)/.coveragerc
-	nameko test docs/examples/testing
+# Generate requirements
+requirements/%.txt: pyproject.toml
+	mkdir requirements; touch $@
+	$(VENV_DIR)/$(VENV_BIN_DIR)/python3 -m piptools compile --extra $(basename $(notdir $@)) --output-file $@ $<
 
-test_docs: docs spelling #linkcheck
+.PHONY: requirements
+requirements: $(VENV_DIR) requirements/development.txt
 
-docs:
-	sphinx-build -n -b html -d docs/build/doctrees docs docs/build/html
+.coverage: venv
+	$(VENV_DIR)/$(VENV_BIN_DIR)/py.test --cov=pyfatfs tests
 
-spelling:
-	sphinx-build -b spelling -d docs/build/doctrees docs docs/build/spelling
+.PHONY: tests
+tests: venv .coverage
 
-linkcheck:
-	sphinx-build -W -b linkcheck -d docs/build/doctrees docs docs/build/linkcheck
+.PHONY: flake8
+flake8: venv
+	$(VENV_DIR)/$(VENV_BIN_DIR)/flake8 pyfatfs tests --count --show-source --statistics
+
+.PHONY: docs
+docs: venv
+	. $(VENV_DIR)/$(VENV_BIN_DIR)/activate; $(MAKE) -C docs html
+	xdg-open docs/_build/html/index.html
+
+.PHONY: build
+build: venv
+	$(VENV_DIR)/$(VENV_BIN_DIR)/python3 -m build .
+
+.PHONY: twine_upload
+twine_upload: clean build
+	python3 -m venv $(VENV_DIR)/twine_venv
+	$(VENV_DIR)/twine_venv/$(VENV_BIN_DIR)/python3 -m pip install twine==5.0.0
+	$(VENV_DIR)/twine_venv/$(VENV_BIN_DIR)/twine upload dist/*
+
+.PHONY: coveralls_parallel
+coveralls_parallel: venv
+	$(VENV_DIR)/$(VENV_BIN_DIR)/coveralls --service=github
+
+.PHONY: coveralls_finish
+coveralls_finish: venv
+	$(VENV_DIR)/$(VENV_BIN_DIR)/coveralls --service=github --finish
+
+.PHONY: clean
+.NOTPARALLEL: clean
+clean:
+	rm -rf $(VENV_DIR) docs/_build/ build/ dist/ pyfatfs.egg-info/
