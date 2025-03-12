@@ -1,2 +1,0 @@
-class UnityDocumentError(Exception):
-    pass

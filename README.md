@@ -1,104 +1,67 @@
-# Unity YAML Parser #
+     ____          _           _                 _
+    |  _ \   __ _ | |_   __ _ | |      __ _   __| |
+    | | | | / _` || __| / _` || |     / _` | / _` |
+    | |_| || (_| || |_ | (_| || |___ | (_| || (_| |
+    |____/  \__,_| \__| \__,_||_____| \__,_| \__,_|
+                                       Neuroimaging
 
-This project aims to provide a python3 API to load and dump [Unity YAML 
-files](https://docs.unity3d.com/Manual/TextSceneFormat.html) (configurations, prefabs, scenes, serialized data, etc) in the exact same 
-format the internal Unity YAML serializer does.
+[![Travis tests status](https://ci.appveyor.com/api/projects/status/github/datalad/datalad-neuroimaging?branch=master&svg=true)](https://ci.appveyor.com/project/mih/datalad-neuroimaging/branch/master) [![codecov.io](https://codecov.io/github/datalad/datalad-neuroimaging/coverage.svg?branch=master)](https://codecov.io/github/datalad/datalad-neuroimaging?branch=master) [![Documentation](https://readthedocs.org/projects/datalad-neuroimaging/badge/?version=latest)](http://datalad-neuroimaging.rtfd.org) [![https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg](https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg)](https://singularity-hub.org/collections/841) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![GitHub release](https://img.shields.io/github/release/datalad/datalad-neuroimaging.svg)](https://GitHub.com/datalad/datalad-neuroimaging/releases/) [![PyPI version fury.io](https://badge.fury.io/py/datalad-neuroimaging.svg)](https://pypi.python.org/pypi/datalad-neuroimaging/) [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/datalad/datalad-neuroimaging.svg)](http://isitmaintained.com/project/datalad/datalad-neuroimaging "Average time to resolve an issue") [![Percentage of issues still open](http://isitmaintained.com/badge/open/datalad/datalad-neuroimaging.svg)](http://isitmaintained.com/project/datalad/datalad-neuroimaging "Percentage of issues still open")
 
-Using this API you will be able to easily manipulate(as python objects) 
-Unity YAML files and save them just the same, keeping the YAML structure
-exactly as Unity does. This has the advantages of, first not having to
-configure PyYAML beforehand to deal with Unity YAMLs, and second as the
-modified file keeps the same structure and formatting that Unity does, 
-when the YAML file is loaded by Unity it won't make formatting changes 
-to it that will make any VCS report unexpected file changes.
+This extension enhances DataLad (http://datalad.org) for working with
+neuroimaging data and workflows. Please see the [extension
+documentation](http://datalad-neuroimaging.rtfd.org)
+for a description on additional commands and functionality.
 
-## Installing ##
+For general information on how to use or contribute to DataLad (and this
+extension), please see the [DataLad website](http://datalad.org) or the
+[main GitHub project page](http://datalad.org).
 
-Install and update using [pip](https://pip.pypa.io/en/stable/quickstart/):
-````
-pip install -U unityparser
-````
-## A Simple Example ##
-````python
-from unityparser import UnityDocument
 
-# Loading and modifying a config file with a single YAML document
-project_settings_file = 'UnityProject/ProjectSettings/ProjectSettings.asset'
-doc = UnityDocument.load_yaml(project_settings_file)
-ProjectSettings = doc.entry
-ProjectSettings.scriptingDefineSymbols[1] += ';CUSTOM_DEFINE'
-ProjectSettings.scriptingDefineSymbols[7] = ProjectSettings.scriptingDefineSymbols[1]
-doc.dump_yaml()
+## Installation
 
-# You can also load YAML files with multiple documents and filter for a single or multiple entries
-hero_prefab_file = 'UnityProject/Assets/Prefabs/Hero.prefab'
-doc = UnityDocument.load_yaml(hero_prefab_file)
-# accessing all entries
-doc.entries
-# [<UnityClass>, <UnityClass>, ...]
-# accessing first entry
-doc.entry
-# <UnityClass>
-# get single entry uniquely defined by filters
-entry = doc.get(class_name='MonoBehaviour', attributes=('m_MaxHealth',))
-entry.m_MaxHealth += 10
-# get multiple entries matching a filter
-entries = doc.filter(class_names=('MonoBehaviour',), attributes=('m_Enabled',))
-for entry in entries:
-    entry.m_Enabled = 1
-doc.dump_yaml()
-# calling entry method for a doc with multiple document will return the first one
-print(doc.entry.__class__.__name__)
-# 'Prefab'
+Before you install this package, please make sure that you [install a recent
+version of git-annex](https://git-annex.branchable.com/install).  Afterwards,
+install the latest version of `datalad-neuroimaging` from
+[PyPi](https://pypi.org/project/datalad-neuroimaging). It is recommended to use
+a dedicated [virtualenv](https://virtualenv.pypa.io):
 
-# get the object ID number
-# e.g., the first line of an object == '--- !u!1 &42362281700597288'
-print(doc.entry.anchor)  
-# '42362281700597288' 
-````
+    # create and enter a new virtual environment (optional)
+    virtualenv --system-site-packages --python=python3 ~/env/dataladni
+    . ~/env/dataladni/bin/activate
 
-## Classes ##
+    # install from PyPi
+    pip install datalad_neuroimaging
 
-### unityparser.UnityDocument ###
+There is also a [Singularity container](http://singularity.lbl.gov) available.
+The latest release version can be obtained by running:
 
-Main class to load and dump files.
+    singularity pull shub://datalad/datalad-neuroimaging
 
-#### unityparser.UnityDocument.load_yaml(file_path) ####
+## Support
 
-_**Classmethod**_: Load the given YAML file_path and return a UnityDocument file
+The documentation of this project is found here:
+http://docs.datalad.org/projects/neuroimaging
 
-#### unityparser.UnityDocument.dump_yaml(file_path=None) ####
+All bugs, concerns and enhancement requests for this software can be submitted here:
+https://github.com/datalad/datalad-neuroimaging/issues
 
-Dump the UnityDocument to the previously loaded file location(overwrite). 
-If *file_path* argument is provided, dump the document to the specified location instead.
+If you have a problem or would like to ask a question about how to use DataLad,
+please [submit a question to
+NeuroStars.org](https://neurostars.org/tags/datalad) with a ``datalad`` tag.
+NeuroStars.org is a platform similar to StackOverflow but dedicated to
+neuroinformatics.
 
-This method **keeps line endings** of the original file when it dumps.
+All previous DataLad questions are available here:
+http://neurostars.org/tags/datalad/
 
-#### unityparser.UnityDocument.entries ####
+## Acknowledgements
 
-_**Property**_: Return the _list_ of documents found in the YAML. The objects in the _list_ are of _types_ Class named after the serialized Unity class(ie. MonoBehaviour, GameObject, Prefab, CustomName, etc).
-
-#### unityparser.UnityDocument.entry ####
-
-_**Property**_: Return the first document in the YAML, useful if there is only one. Equivalent of doing `UnityDocument.entries[0]`.
-
-#### unityparser.UnityDocument.get(class_name=None, attributes=None) ####
-
-_**Method**_: Return a single entry uniquely matching the given filters. Must exist exactly one.
-
-#### unityparser.UnityDocument.filter(class_names=None, attributes=None) ####
-
-_**Method**_: Return a list of entries matching the given filters. Many or none can be matched.
-
-### unityparser.loader.UnityLoader ###
-
-PyYAML's Loader class, can be used directly with PyYAML to customise loading. 
-
-### unityparser.dumper.UnityDumper ###
-
-PyYAML's Dumper class, can be used directly with PyYAML to customise dumping. 
-
-## Considerations ##
-
-Text scalars which are single or double quoted that span multiple lines are not being dumped exactly as Unity does. There's a difference in the maximum length allowed per line and the logic to wrap them.
-
+DataLad development is supported by a US-German collaboration in computational
+neuroscience (CRCNS) project "DataGit: converging catalogues, warehouses, and
+deployment logistics into a federated 'data distribution'" (Halchenko/Hanke),
+co-funded by the US National Science Foundation (NSF 1429999) and the German
+Federal Ministry of Education and Research (BMBF 01GQ1411). Additional support
+is provided by the German federal state of Saxony-Anhalt and the European
+Regional Development Fund (ERDF), Project: Center for Behavioral Brain
+Sciences, Imaging Platform.  This work is further facilitated by the ReproNim
+project (NIH 1P41EB019936-01A1).

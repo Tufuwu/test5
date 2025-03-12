@@ -1,156 +1,125 @@
-# Changelog
 
-<!--next-version-placeholder-->
+<a id='changelog-0.3.6'></a>
+# 0.3.6 (2024-12-09)
 
-## v4.0.0 (2024-04-12)
-### Feature
-* **data:** Parse to string by default ([`4a9fd95`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/4a9fd951191a21209333f18d070648f262e0c65c))
+## 🐛 Bug Fixes
 
-### Fix
-* **UnityDocument:** Preserve version and tags ([`59647f7`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/59647f7ce2424ed5437422845b0843643fa99cb8))
+- BF: Explicitly cast to simple float from numpy.float32 which is now returned by smth (nibabel?).  [PR #134](https://github.com/datalad/datalad-neuroimaging/pull/134) (by [@yarikoptic](https://github.com/yarikoptic))
 
-### Breaking
-* All data is now deserialized to Python str ([`4a9fd95`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/4a9fd951191a21209333f18d070648f262e0c65c))
+<a id='changelog-0.3.5'></a>
+# 0.3.5 (2024-03-19)
 
-**[See all commits in this version](https://github.com/socialpoint-labs/unity-yaml-parser/compare/v3.0.1...v4.0.0)**
+## 🐛 Bug Fixes
 
-## v3.0.1 (2023-07-26)
-### Fix
-* **dependencies:** Upgrade PyYaml version ([`8e7f163`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/8e7f16386b85f6d843742650ae08c6c6e7085c3f))
+- Add codespell config and workflow, and use it to typos found throughout the codebase.  [PR #131](https://github.com/datalad/datalad-neuroimaging/pull/131) (by [@yarikoptic](https://github.com/yarikoptic))
 
-**[See all commits in this version](https://github.com/socialpoint-labs/unity-yaml-parser/compare/v3.0.0...v3.0.1)**
+## 📝 Documentation
 
-## v3.0.0 (2023-07-21)
-### Feature
-* **deps:** Update pyyaml to 6.0 ([`e989e15`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/e989e15ebe4fd3f6df64a5df7d8b2d6dcb92a94c))
+- Fixup intersphinx_mapping for python.  [PR #132](https://github.com/datalad/datalad-neuroimaging/pull/132) (by [@yarikoptic](https://github.com/yarikoptic))
 
-### Breaking
-* Support for Python 3.6 dropped  ([`e989e15`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/e989e15ebe4fd3f6df64a5df7d8b2d6dcb92a94c))
+## 🏠 Internal
 
-**[See all commits in this version](https://github.com/socialpoint-labs/unity-yaml-parser/compare/v2.2.2...v3.0.0)**
+- Set up releasing workflows.  Fixes [#127](https://github.com/datalad/datalad-neuroimaging/issues/127) via [PR #130](https://github.com/datalad/datalad-neuroimaging/pull/130) (by [@jwodder](https://github.com/jwodder))
+## 0.3.4 (Oct 24, 2023) -- Make BIDS great again
 
-## v2.2.2 (2023-03-21)
-### Fix
-* **setup:** Add requirements folder to sdist ([`85df55c`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/85df55c91c031bc9544da772ff25431dfa819a9d))
+- BIDS metadata extractor(s): do not require `participants.tsv` file to be present
+  (it is RECOMMENDED not REQUIRED in BIDS)
+- `cfg_bids` procedure: do not annex any `README*`, `LICENSE`, or
+  `.bids-validator-config.json` files
+- documentation: fix builds on RTD
 
-### Documentation
-* **CONTRIBUTING:** Update ([`dec5035`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/dec5035098775daee26bf07ec3df3b3b58449030))
+## 0.3.3 (Oct 28, 2022) -- Oktoberfest
 
-**[See all commits in this version](https://github.com/socialpoint-labs/unity-yaml-parser/compare/v2.2.1...v2.2.2)**
+- raise dependency on datalad-deprecated which was prematurely released
 
-## v2.2.1 (2022-11-24)
-### Fix
-* **ci:** Disable firstParent ([`a2ae5bf`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/a2ae5bf148a0a10b82ca9740bdbf7f3a792a75e0))
+## 0.3.2 (Oct 25, 2022) -- ... but grandparents always are
 
-**[See all commits in this version](https://github.com/socialpoint-labs/unity-yaml-parser/compare/v2.2.0...v2.2.1)**
+- increase dependency on datalad to 0.16.7
+- depend on datalad-metalad and datalad-deprecated for both styles of metadata
+  extractors
+- update the metadata extractors to work with current numpy versions
+- BIDS extractor compatible with pybids>=0.15.1 and BIDS v1.6.0
+- fix nifti1 metadata extractor not dealing properly with byte strings
+- various internal changes and fixes around testing and CI setup
 
-## v2.2.0 (2022-05-28)
-### Feature
-* **command:** Allow testing arbitraty files ([`085eb2f`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/085eb2f920bf82fb02d895d8de322e557174361a))
-* **parser:** Fix #32 ([`e300ccf`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/e300ccf3a65c72e07f2e969943368a23bc467293))
+## 0.3.1 (Jun 3, 2020) -- Uncles aren't always nice either
 
-**[See all commits in this version](https://github.com/socialpoint-labs/unity-yaml-parser/compare/v2.1.5...v2.2.0)**
+- be compatible with pydicom 2.0.0
 
-## v2.1.5 (2022-02-22)
-### Fix
-* **ci:** Now correctly using deploy key ([`7b74008`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/7b740084d9575a25f166f5f7c0b15cbd58e5be91))
-* **ci:** Check PR deploy ([`aef6b09`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/aef6b0995b70096ff537d4b2f93144eb9f4813c3))
-* **ci:** Another attempt ([`27a48f9`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/27a48f9458980365216180dd68b163524ffa1488))
-* **ci:** Another attempt ([`2051639`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/2051639763037677d0bf1b379fb18e1fec1dc4df))
-* **ci:** Another attempt ([`977dd5c`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/977dd5c5a855c726f0390f95807d7028edb8b51f))
+## 0.3.0 (Feb 26, 2020) -- ... and parents become grumpier
 
-**[See all commits in this version](https://github.com/socialpoint-labs/unity-yaml-parser/compare/v2.1.4...v2.1.5)**
+- DataLad 0.12 series is now minimal supported
 
-## v2.1.4 (2022-02-18)
-### Fix
-* **ci:** Debug stuff ([`6250afb`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/6250afb3e7f1ee37b836220d4b710340a226bb7f))
+## 0.2.4 (Feb 05, 2020) -- Kids are growing
 
-**[See all commits in this version](https://github.com/socialpoint-labs/unity-yaml-parser/compare/v2.1.3...v2.1.4)**
+Minor bugfix release to account for changes in pybids and datalad
 
-## v2.1.3 (2022-02-18)
-### Fix
-* **ci:** Debug stuff ([`d7ae09c`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/d7ae09cc776da46d5a166a859713b6fec028572f))
-* **ci:** Debug stuff ([`1433308`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/14333080931773a689e0b0e3ce28492fae806c1b))
-* **ci:** Hopefully ran publish step #4 ([`b7a733e`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/b7a733e14efd1a23f22c4d228acb0968e63eaf37))
+- pybids:
+  - demand pybids >=0.9.2
+  - account for new field  "extension" provided by BIDS now
+  - use get_dataset_description if available
+- pandas:
+  - use .iloc instead of deprecated .ix
+- datalad
+  - use -d^ instead of deprecated (in 0.12) -S in an example script
 
-**[See all commits in this version](https://github.com/socialpoint-labs/unity-yaml-parser/compare/v2.1.2...v2.1.3)**
+## 0.2.3 (May 24, 2019) -- Old is not bad
 
-## v2.1.2 (2022-02-18)
-### Fix
-* **ci:** Hopefully ran publish step #4 ([`3f4977b`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/3f4977bc82efc7619d37a94563c8c321e2328e80))
-* **ci:** Hopefully ran publish step #3 ([`619c1b2`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/619c1b2ecbd83ed4ce7c35fd814e2b798fe6718d))
-* **ci:** Hopefully ran publish step #2 ([`6c3f77d`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/6c3f77dfdf0ef5a475ed171f280b6862b2ef66ab))
-* **ci:** Hopefully ran publish step ([`d62cf73`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/d62cf7301d447aa58f9a05d62eb98e04a7c8bca2))
-* **Makefile:** Continue on dist prune error ([`0f9172e`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/0f9172ea8ce00e0a36060ced7a3e94782dde213d))
-* **ci:** Correct release condittional ([`43179a0`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/43179a05e19d779b8998a0be48183623bbc6450f))
+Minor quick bugfix release to demand pybids < 0.9 since we are not yet fully
+ready for its full glory
 
-### Documentation
-* **CHANGELOG:** Fix missing commits ([`dfcdb40`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/dfcdb400b81b8c5ee7db6e0339ac8845d35e9185))
+## 0.2.2 (May 20, 2019) -- It was like that way before!
 
-**[See all commits in this version](https://github.com/socialpoint-labs/unity-yaml-parser/compare/v2.1.1...v2.1.2)**
+Minor bugfix release
+- revert back to old ways of installing package data so test data and procedures
+  get properly installed
 
-## v2.1.1 (2022-02-16)
-### Feature
-* **Makefile:** Add lint and release steps ([`33a84ee`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/33a84eee00469a68495b67c4d41b9cab4cb9849d))
-* **deploy:** Add publishing requirements ([`017a8da`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/017a8dae201876c30b1ac9bc48ea9797dcbdc636))
-* **ci:** Enable pypi publishing ([`5564eb8`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/5564eb8e53922e21a17952076dfe7a79997e21ba))
-* **ci:** Archive logs on failure ([`35a1170`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/35a11709a62293ee1149094cb62e10b15353c126))
-* **ci:** Add GH Actions CI ([`79f9869`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/79f98697b5d23119b7ef50724a586597ceb50931))
+## 0.2.1 (May 17, 2019) -- Why wasn't it that way before?
 
-### Fix
-* **version:** Manually bump version ([`f6db941`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/f6db94179a5eaa74b21c95d4a24182429c3754f1))
-* **deploy:** Use correct release branch ([`2fd9225`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/2fd9225fef398128a529d931a1cab147dd004508))
-* **ci:** Taget correct branch on release ([`d7505c1`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/d7505c16e895905014aecdf3c45c2eecb09206ca))
-* **requirements:** Flexible requirement files ([`4bd47d5`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/4bd47d53ef1be9b19d1f89258e9a6d6f957a3c71))
-* **ci:** Uses actions ([`3a0341e`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/3a0341e9fefc6c9cd641ea72549d1f019f90d82d))
+- include a procedure 'cfg_bids' to configure BIDS datasets
+- fix several issues with troublesome dependency declarations
 
-### Documentation
-* **CONTRIBUTING:** Updated rules ([`41ecab0`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/41ecab067d54742a94d9f8069894cc93aba29351))
+## 0.2.0 (Feb 09, 2019) -- Am I compatible with you honey?
 
-**[See all commits in this version](https://github.com/socialpoint-labs/unity-yaml-parser/compare/v2.0.0...v2.1.1)**
+- Make compatible with (and demand) pybids 0.7.{0,1}.  0.7.0 introduced
+  change of terms: modality -> suffix, and type -> datatype, which would now
+  require to either reaggregate all previous metadata or somehow fixup
+  in-place existing metadata files. And for 0.7.1 workaround was added to
+  not return `suffix` at least when participants.tsv was queried.
+- Make compatible with pydicom 1.0 in treatment of MultiValue
+- Refactorings:
+  - tests: 
+    - use `export_archive` instead of plain `tarfile.open`
+    - make compatible with recent (0.11.x) DataLad which now extract annex
+      keys etc
 
-## v2.0.0 (2021-05-03)
-### Feature
-* **representer:** Save string representation ([`6b2bb15`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/6b2bb150557fb7a13faba5bd7699722239762fa6))
+## 0.1.5 (Sep 28, 2018) -- BIDS robustness
 
-### Fix
-* **command:** Convert Path to str ([`157db9e`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/157db9eff900e604beb1408a48f4a6a648028aca))
+- Assorted improvements of the BIDS metadata extractor performance on datasets
+  in the wild.
 
-### Breaking
-* A security update of PyYAML to 5.4 forces to drop support to Python 3.5  ([`beaf2f6`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/beaf2f6ddbcd99ef05a95d8f613886d2687d194a))
+## 0.1.4 (Aug 02, 2018) -- PyBIDS
 
-**[See all commits in this version](https://github.com/socialpoint-labs/unity-yaml-parser/compare/v1.0.0...v2.0.0)**
+- Fixed compatibility with pybids 0.6.4 and now demand it as the minimal
+  PyBIDS version
 
-## v1.0.0 (2019-12-06)
-### Feature
-* **resolver:** Add safe value types int and float ([`3bd6918`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/3bd6918cf20ba31c32b7fd567f2fc680c17f895f))
-* **unitydocument:** Add get and filter methods to UnityDocument ([`36a4b91`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/36a4b9150c4b9cd81ccb0829ee07ec67c62c02fc))
-* **Makefile:** Add update-changelog make command ([`eb3cbd5`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/eb3cbd55fb85202abb0e53540904a6874971ef2e))
-* **travis:** Add commitlint check step to Travis CI ([`050f4d5`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/050f4d5f1aa245eee17555f1ea9a86a70286a7d2))
-* **commitlint:** Add commitlint configuration ([`73d0d81`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/73d0d8112d7e62ef1db3f01b8f69f3803d037ccb))
+## 0.1 (Apr 28, 2018) -- The Release
 
-### Breaking
-* loaded UnityClass entries attributes may now be int or float too, not only strings. ([`3bd6918`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/3bd6918cf20ba31c32b7fd567f2fc680c17f895f))
+### Major refactoring and deprecations
 
-### Documentation
-* **readme:** Update examples and remove solved considerations ([`0f200a8`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/0f200a897d9c3818b4a9fb1597fd5ad448dd4843))
-* **contributing:** Update contributing ([`c577705`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/c577705d024a9b2c5d8635ee89e73c4ab5cf2244))
-* **readme:** Updated examples ([`0e02334`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/0e023349fef59d4210e6a43ce6ce01dd10d8849f))
+- This is the first separate release of DataLad's neuroimaging functionality as an
+  extension module.
+- Metadata
+  - BIDS metadata now uniformly refers to subjects and participants using the
+    metadata key 'subject' 
 
-**[See all commits in this version](https://github.com/socialpoint-labs/unity-yaml-parser/compare/v0.1.0...v1.0.0)**
+### Enhancements and new features
 
-## v0.1.0 (2019-10-18)
-### Feature
-* **prefab:** Add scene and prefab support ([`dec5a27`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/dec5a27f1b4137cb496cafc788ed71da3d40d09f))
+- Extractors now report progress (with DataLad 0.10+)
+- BIDS participant metadata is now read via pybids
 
-### Fix
-* **UnitClassIdMap:** Allow identifying Unity classes by it's 'id-name' ([`18e55a4`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/18e55a49196f466f124be7485a86a60018beb5e9))
-* **UnityClassIdMap:** Make UnityClassIdMap reset method inter-process safe ([`7175e3e`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/7175e3e57b438867f3bc46000f2542a66cebdfdc))
-* **tests:** Add autouse fixture to ensure every test runs with a clear ([`bc1db54`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/bc1db54fff5068182f8d0261af73a69ac09a006e))
-* **travis:** Fix windows miniconda not finding libraries ([`6738224`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/6738224e96eff26a31b126d67358b05b93616a94))
+### Fixes
 
-**[See all commits in this version](https://github.com/socialpoint-labs/unity-yaml-parser/compare/v0.0.1...v0.1.0)**
-
-## v0.0.1 (2019-06-11)
-### Feature
-* **scope:** Initial commit ([`dd4c87f`](https://github.com/socialpoint-labs/unity-yaml-parser/commit/dd4c87ff3f320ba1f55d057e5946a9897c45cb1c))
+- Fix issue with unicode characters in BIDS metadata
+- DICOM metadata now also contains the 'PatientName' field that was previously
+  excluded due to a too restrictive data type filter

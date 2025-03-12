@@ -1,1 +1,6 @@
-graft requirements
+include CONTRIBUTORS LICENSE versioneer.py
+include datalad_neuroimaging/_version.py
+graft _datalad_buildsupport
+graft docs
+prune docs/build
+global-exclude *.py[cod]

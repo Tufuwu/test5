@@ -1,51 +1,42 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
-import io
-import os
-import re
 
 from setuptools import setup
+from setuptools import findall
 
-with open(os.path.join(os.path.dirname(__file__), 'README.md')) as f:
-    readme = f.read()
+from os.path import join as opj
+from os.path import sep as pathsep
+from os.path import splitext
 
-with io.open('unityparser/__init__.py', 'rt', encoding='utf8') as f:
-    version = re.search(
-        r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]',
-        f.read(),
-        re.MULTILINE
-    ).group(1)
+from _datalad_buildsupport.setup import (
+    BuildManPage,
+    BuildRSTExamplesFromScripts,
+)
 
-requirements = {'base': None, 'development': None}
-for k in requirements:
-    with open("requirements/{}.in".format(k)) as f:
-        requirements[k] = list(filter(lambda x: bool(x.strip()) and not x.strip().startswith('-r '), f.read().splitlines()))
+import versioneer
 
-# allow setup.py to be run from any path
-os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
+
+def findsome(subdir, extensions):
+    """Find files under subdir having specified extensions
+
+    Leading directory (datalad) gets stripped
+    """
+    return [
+        f.split(pathsep, 1)[1] for f in findall(opj('datalad_neuroimaging', subdir))
+        if splitext(f)[-1].lstrip('.') in extensions
+    ]
+
+
+cmdclass = {
+    'build_manpage': BuildManPage,
+    'build_examples': BuildRSTExamplesFromScripts,
+}
+
 
 setup(
-    name='unityparser',
-    version=version,
-    description='A python library to parse and dump Unity YAML files',
-    long_description=readme,
-    long_description_content_type='text/markdown',
-    author='Ricard Valverde',
-    author_email='ricard.valverde@socialpoint.es',
-    url='https://github.com/socialpoint-labs/unity-yaml-parser',
-    license='MIT License',
-    python_requires='>=3.7.0',
-    packages=['unityparser'],
-    keywords=['unity', 'yaml', 'parser', 'serializer'],
-    install_requires=requirements.pop('base'),
-    extras_require=requirements,
-    classifiers=[
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3 :: Only',
-        'License :: OSI Approved :: MIT License',
-        'Operating System :: OS Independent',
-        'Development Status :: 3 - Alpha',
-        'Intended Audience :: Developers',
-        'Topic :: Software Development :: Libraries :: Python Modules'
-    ]
+    version=versioneer.get_version(),
+    cmdclass=versioneer.get_cmdclass(cmdclass),
+    package_data={
+        'datalad_neuroimaging':
+            findsome(opj('tests', 'data', 'files'), {'dcm', 'gz'}) +
+            findsome('resources', {'py', 'txt'})},
 )

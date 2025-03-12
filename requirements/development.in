@@ -1,7 +1,0 @@
--r base.in
-
-pip-compile-multi
-pytest
-pytest-cov
-tox
-tox-conda
