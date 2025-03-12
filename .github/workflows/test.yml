@@ -1,36 +1,61 @@
-name: Tests
+name: Build Status
+
+
 
 on:
+
   push:
+
     branches: [ master ]
+
   pull_request:
+
     branches: [ master ]
+
+
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.9", "3.10"]
-    steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-    - run: pip install -r requirements.txt coveralls
-    - run: docker-compose up -d
-    - run: pytest
-    - run: coveralls --service=github
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        COVERALLS_FLAG_NAME: ${{ matrix.python-version }}
-        COVERALLS_PARALLEL: true
 
-  finalize:
-    needs: test
+  build:
+
+
+
     runs-on: ubuntu-latest
+
+    strategy:
+
+      matrix:
+
+        python-version: ["3.9", "3.10"]
+
+
+
     steps:
-    - uses: coverallsapp/github-action@master
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        parallel-finished: true
+
+      - uses: actions/checkout@v2
+
+      - name: Set up Python ${{ matrix.python-version }}
+
+        uses: actions/setup-python@v2
+
+        with:
+
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+
+        run: |
+
+          python -m pip install --upgrade pip
+
+          pip install poetry
+
+          poetry install
+
+      - name: Run tests
+
+        run: |
+
+          poetry run coverage run --source=niaaml -m unittest discover -b
+
+          poetry run coveralls
