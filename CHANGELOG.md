@@ -1,52 +1,141 @@
-# Change Log
-All notable changes to this project will be documented in this file.
-This project adheres to [Semantic Versioning](http://semver.org/).
+## 0.5.3
 
-## [Unreleased]
+Migrate package meta data to pyproject.toml
 
-*Nothing here yet*
+## 0.5.2
 
-## [v0.4.0]
-- Discover command if not in entry_points
+Add/fix more type hints.
 
-## [v0.3.0]
-- Make compatible with click >= 7.0
+## 0.5.1
 
-## [v0.2.2]
-- Release
+Fix type hints
 
-## [v0.2.1]
-### Added
-- Add information to man page for commands. Refs #3
+## 0.5.0
 
-### Fixed
-- Use hyphens to split words in a command. Refs #2
+Switched the minio-py client library version from `<7` to `>=7`.
 
-## [v0.2.0]
-### Added
-- Allow to specify version via command line
-- Proof-of-concept for debian packaging
+Minimum Django version is now 3.2
 
-## [v0.1.1]
-### Fixed
+Minimum Python version is now 3.8
 
-- Several small bugs
-- Improved README
+## 0.3.9
 
-## [v0.1.0]
-### Added
-- Initial release
+The minio client is now deconstructable by Django, fixes migrations.
+
+## 0.3.8
+
+Improved presigned urls with non standard base urls
+
+## 0.3.7
+
+Removed accidentally left over debug print from previous release
+
+## 0.3.6
+
+### support adding default meta data
+
+Also new settings: MINIO_STORAGE_MEDIA_OBJECT_METADATA and
+MINIO_STORAGE_STATIC_OBJECT_METADATA
+
+example:
+
+```py
+MINIO_STORAGE_MEDIA_OBJECT_METADATA  = {"Cache-Control": "max-age=1000"}
+```
+
+### fix issue with directory listing names
+
+Minio has changed in the last months to be more picky about path names so we
+now enure that we don't create path prefixes with a // suffix.
 
 
-## Info
+## 0.3.5
 
-Please also see `git log`
+#### Add support for skipping bucket existst/policy check on start up
+https://github.com/py-pa/django-minio-storage/commit/7086f125ed74b157240bae10c589ce785ca93bbf
 
-[Unreleased]: https://github.com/click-contrib/click-man/compare/v0.4.0...HEAD
-[v0.4.0]: https://github.com/click-contrib/click-man/compare/v0.3.0...v0.4.0
-[v0.3.0]: https://github.com/click-contrib/click-man/compare/v0.2.2...v0.3.0
-[v0.2.2]: https://github.com/click-contrib/click-man/compare/v0.2.1...v0.2.2
-[v0.2.1]: https://github.com/click-contrib/click-man/compare/v0.2.0...v0.2.1
-[v0.2.0]: https://github.com/click-contrib/click-man/compare/v0.1.1...v0.2.0
-[v0.1.1]: https://github.com/click-contrib/click-man/compare/v0.1.0...v0.1.1
-[v0.1.0]: https://github.com/click-contrib/click-man/compare/30626839cc048856f799eb0bcd9e731fff4221dc...v0.1.0
+Added settings MINIO_STORAGE_ASSUME_MEDIA_BUCKET_EXISTS and
+MINIO_STORAGE_ASSUME_STATIC_BUCKET_EXISTS
+
+## 0.3.4
+
+#### • fixed resource leak where one extra file was opened per file and never closed
+https://github.com/py-pa/django-minio-storage/commit/1532e34c7dcecbc2cf3ca0805d6fbf42b57c25ba
+  
+There leaked file descriptors were only freed by the gargabe collector before
+this fix so if you have farily tight loop that does something to a lot of files
+while not generating a lot of garbage to trigger the gc.
+
+
+## 0.3.3
+
+#### • reworked management commands and added tests.
+
+```
+$ python manage.py minio
+usage: minio  [-h] [--class CLASS] [--bucket BUCKET] [--version]
+              [-v {0,1,2,3}] [--settings SETTINGS] [--pythonpath PYTHONPATH]
+              [--traceback] [--no-color] [--force-color]
+              {check,create,delete,ls,policy} ...
+   ...
+minio:
+  --class CLASS         Storage class to modify (media/static are short names
+                        for default classes)
+  --bucket BUCKET       bucket name (default: storage defined bucket if not
+                        set)
+
+subcommands:
+  valid subcommands
+
+  {check,create,delete,ls,policy}
+    check               check bucket
+    create              make bucket
+    delete              remove an empty bucket
+    ls                  list bucket objects or buckets
+    policy              get or set bucket policy
+```
+
+
+## 0.3.2
+
+#### • GET_ONLY is now the default bucket policy
+
+
+## 0.3.1
+
+### Changes
+
+#### • dropped python 2 support, 3.6+ is now required
+
+#### • dropped support for django earlier than 1.11
+
+#### • policy settings default values changed
+
+- MINIO_STORAGE_AUTO_CREATE_..._POLICY now has more options (see Policy enum)
+- MINIO_STORAGE_AUTO_CREATE_..._POLICY now defaults to GET_ONLY
+
+### New feautures
+
+#### • new django management commands
+
+- minio_bucket
+- minio_bucket_policy
+#### • implement Storage.listdir(): 
+
+https://github.com/py-pa/django-minio-storage/commit/9300d3d0b819672dbae788155258ff499788691c
+
+#### • add max_age to Storage.url()
+
+https://github.com/py-pa/django-minio-storage/commit/5084b954ad0ba0afad340a8d1010ccd2e491a30c
+
+### Fixes
+
+#### • urlquote object name when using BASE_URL setting
+
+https://github.com/py-pa/django-minio-storage/commit/960961932bcef8c17fbb774f0ef5fa3022af15a2
+
+
+## 0.2.2 
+
+
+

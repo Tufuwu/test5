@@ -1,51 +1,83 @@
-[build-system]
-requires = ["setuptools"]
-build-backend = "setuptools.build_meta"
-
 [project]
-name = "click-man"
+name = "django-minio-storage"
+description = "Django file storage using the minio python client"
+license = {file = "LICENSE"}
+requires-python = ">=3.8"
+dependencies = [
+  "django>=3.2",
+  "minio>=7.1.16",
+]
+classifiers=[
+  "Development Status :: 4 - Beta",
+  "Environment :: Web Environment",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: BSD License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Framework :: Django",
+]
 authors = [
-    {name = "Timo Furrer", email = "tuxtimo@gmail.com"},
+  {name = "Thomas Frössman", email = "thomasf@jossystem.se"},
+  {name = "Tom Houlé", email = "tom@kafunsho.be"},
 ]
 maintainers = [
-    {name = "Timo Furrer", email = "tuxtimo@gmail.com"},
-    {name = "Stephen Finucane", email = "stephen@that.guru"},
+  {name = "Thomas Frössman", email = "thomasf@jossystem.se"},
 ]
-description = "Generate man pages for click based CLI applications"
-readme = {file = "README.md", content-type="text/markdown"}
-requires-python = ">=3.9"
-license = {text = "MIT"}
-classifiers = [
-    "Development Status :: 5 - Production/Stable",
-    "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3 :: Only",
-    "Topic :: Documentation",
-]
-dependencies = [
-    "click",
-]
-version = "0.5.0"
+readme = "README.md"
+dynamic = ["version"]
 
-[project.scripts]
-click-man = "click_man.__main__:cli"
+[build-system]
+requires = ["setuptools>=62", "setuptools_scm[toml]>=6.2"]
 
 [project.urls]
-Source = "https://github.com/click-contrib/click-man"
+Homepage = "https://github.com/py-pa/django-minio-storage"
+Repository = "https://github.com/py-pa/django-minio-storage"
+Documentation = "https://django-minio-storage.readthedocs.io/"
 
-# [tool.setuptools]
-# include-package-data = false
+[tool.black]
+target_version = ['py38']
 
-[tool.setuptools.packages.find]
-include = ["click_man*"]
-exclude = ["tests*"]
-namespaces = false
+[tool.setuptools_scm]
+write_to =  "minio_storage/version.py"
+write_to_template = '__version__ = "{version}"'
+tag_regex =  "^v(?P<prefix>v)?(?P<version>[^\\+]+)(?P<suffix>.*)?$"
+
+[tool.isort]
+profile = "black"
+skip = [".tox", "migrations", "node_modules", ".git", ".eggs"]
 
 [tool.ruff]
-line-length = 79
-
-[tool.ruff.format]
-quote-style = "single"
-docstring-code-format = true
+target-version = 'py38'
+line-length = 88
+select = [
+    "B",
+    "C4",
+    "C9",
+    "DJ",
+    "E",
+    "F",
+    "I",
+    "ISC",
+    "NPY",
+    "PLC",
+    "PLE",
+    "PLW",
+    "RUF010",
+    "RUF013",
+    "S5",
+    "S6",
+    "UP",
+    "W",
+]
+ignore = ["E203"]
+exclude = [
+    "docs",
+    "migrations",
+    ".git",
+    ".ropeproject",
+    ".cache",
+    ".tox",
+    ".eggs",
+    "minio_storage/version.py",
+]
