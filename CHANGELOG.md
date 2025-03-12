@@ -1,66 +1,50 @@
-# Changelog
-
-All notable changes to this project will be documented in this file.
-
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+# QmeQ Changelog
 
 ## [Unreleased]
 
-- N/A
-
-## [1.3.0] - 2024-07-06
+## [1.1] - 2021-06-04
 
 ### Added
 
-- Python 3.10 through 3.12 support
+- First-order approaches to describe electron-phonon coupling inside a quantum dot
+  * Pauli (classical)
+  * Lindblad
+  * Redfield
+  * First order von Neumann (1vN)
 
-### Removed
+- Approaches to describe tunneling from metallic leads
+  * Second order Real Time Diagramatic (RTD) approach
 
-- Dropped Python 3.6 and 3.7 support due to EOL
-- Dropped Python 3.8 support for latest Sphinx compatibility
+- Added BuilderManyBody class for dealing with many-body state input
+- Support for Fock state removal when calculating quantum dot eigenstates
 
 ### Changed
 
-- No longer depending on jQuery for delayed loading of embed.js ([#33](https://github.com/Robpol86/sphinx-disqus/pull/33))
-- Now supporting Sphinx themes that don't use jQuery
+- Refactored Approach classes:
+  * Introduced separate Cython class
+  * Introduced KernelHandler class for more convenient dealing with master equation matrix elements
 
-## [1.2.0] - 2021-06-10
+### Fixed
 
-### Added
-
-- Support for `file://` ([#15](https://github.com/Robpol86/sphinx-disqus/pull/15))
+- Add to a coulomb matrix element correctly when before it was not defined/used
 
 ### Removed
 
-- Dropped Python 2.7 and <3.6 support
+- Python 2.7 support
 
-### Fixed
-
-- Support for Sphinx 1.6+ ([#7](https://github.com/Robpol86/sphinx-disqus/pull/7))
-- Fixed new html_static_path append and timing ([#15](https://github.com/Robpol86/sphinx-disqus/pull/15))
-
-### Changed
-
-- Re-licensed from MIT to BSD 2-Clause
-- Renamed project from `sphinxcontrib-disqus` to `sphinx-disqus`
-- Updated disqus.js with their latest universal code
-
-## [1.1.0] - 2016-08-04
+## [1.0] - 2017-07-13
 
 ### Added
 
-- Python 3.5 support (Linux/OS X and Windows).
+- Quantum dot eigenstate calculations
 
-### Fixed
+- Approaches to describe tunneling from metallic leads
+  * Pauli (classical)
+  * Lindblad
+  * Redfield
+  * First order von Neumann (1vN)
+  * Second order von Neumann (2vN)
 
-- easy_install: https://bitbucket.org/birkenfeld/sphinx-contrib/issues/155/
-- https://github.com/Robpol86/sphinxcontrib-disqus/issues/2
-- https://github.com/Robpol86/sphinxcontrib-disqus/issues/1
-- https://github.com/Robpol86/sphinxcontrib-disqus/issues/3
-
-## [1.0.0] - 2015-07-31
-
-### Added
-
-- Initial release.
+[unreleased]: https://github.com/gedaskir/qmeq/compare/1.1...HEAD
+[1.1]: https://github.com/gedaskir/qmeq/releases/tag/1.1
+[1.0]: https://github.com/gedaskir/qmeq/releases/tag/1.0

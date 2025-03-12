@@ -1,48 +1,73 @@
-# sphinx-disqus
+QmeQ: Quantum master equation for Quantum dot transport calculations
+====================================================================
 
-Embed [Disqus](https://disqus.com) comments in Sphinx documents/pages.
+QmeQ is an open-source Python package for calculations of transport through
+quantum  dot devices. The so-called Anderson-type models are used to describe
+the quantum dot device, where quantum dots are coupled to the leads by
+tunneling. QmeQ can calculate the stationary state **particle** and
+**energy currents** using various approximate density matrix approaches. As for
+now we have implemented the following first-order methods
 
-* Python 3.9 through 3.12 supported on Linux, macOS, and Windows.
+* Pauli (classical) master equation
+* Lindblad approach
+* Redfield approach
+* First order von Neumann (1vN) approach
 
-📖 Full documentation: https://sphinx-disqus.readthedocs.io
+which can describe the effect of Coulomb blockade. Additionally, there is a
+possibility to model electron-phonon interaction inside a quantum dot using
+the first-order approaches. QmeQ also has two second-order methods
 
-[![Github-CI][github-ci]][github-link]
-[![Coverage Status][codecov-badge]][codecov-link]
-[![Documentation Status][rtd-badge]][rtd-link]
-[![Code style: black][black-badge]][black-link]
-[![PyPI][pypi-badge]][pypi-link]
-[![PyPI Downloads][pypi-dl-badge]][pypi-dl-link]
+* Second order von Neumann (2vN) approach
+* Real Time Diagrammatic (RTD) approach
 
-[github-ci]: https://github.com/Robpol86/sphinx-disqus/actions/workflows/ci.yml/badge.svg?branch=main
-[github-link]: https://github.com/Robpol86/sphinx-disqus/actions/workflows/ci.yml
-[codecov-badge]: https://codecov.io/gh/Robpol86/sphinx-disqus/branch/main/graph/badge.svg
-[codecov-link]: https://codecov.io/gh/Robpol86/sphinx-disqus
-[rtd-badge]: https://readthedocs.org/projects/sphinx-disqus/badge/?version=latest
-[rtd-link]: https://sphinx-disqus.readthedocs.io/en/latest/?badge=latest
-[black-badge]: https://img.shields.io/badge/code%20style-black-000000.svg
-[black-link]: https://github.com/ambv/black
-[pypi-badge]: https://img.shields.io/pypi/v/sphinx-disqus.svg
-[pypi-link]: https://pypi.org/project/sphinx-disqus
-[pypi-dl-badge]: https://img.shields.io/pypi/dw/sphinx-disqus?label=pypi%20downloads
-[pypi-dl-link]: https://pypistats.org/packages/sphinx-disqus
+2vN and RTD approaches can address the effects of cotunneling and pair tunneling.
+Additionally, the 2vN approach can describe broadening of quantum dot states.
+The advantage of RTD approach is that it requires a lot less memory and
+computation time resources.
 
-## Quickstart
+Physics disclaimer
+------------------
 
-To install run the following:
+All the methods in QmeQ are approximate so depending on parameter regime they
+**can fail**, and a good knowledge of the method is required whether to trust
+the result or not. For example, Redfield, 1vN, and 2vN approaches can **violate
+positivity** of the reduced density matrix and lead to **currents flowing against
+the bias**. We still think it is important to have a package where a user can
+duplicate existing calculations, check applicability of different methods, or
+simply discover new kind of physics using different approximate master equations.
 
-```bash
-pip install sphinx-disqus
-```
+Installation
+------------
 
-To use in Sphinx simply add to your `conf.py`:
+For installation instructions see [INSTALL.md](INSTALL.md).
 
-```python
-extensions = ["sphinx_disqus.disqus"]
-disqus_shortname = "my-cool-project"
-```
+Tutorial & Examples
+-------------------
 
-Also add this to any document you wish to have comments:
+For an introduction to QmeQ see this [tutorial][tutorial]
+and various [examples][examples].
 
-```rst
-.. disqus::
-```
+License
+-------
+
+QmeQ has [The BSD 2-Clause License][license] and it can be found
+in [LICENSE.md](LICENSE.md).
+
+Citing QmeQ
+-----------
+
+Please consider citing QmeQ if the use of this project gives results which lead
+to scientific publication:
+
+G. Kiršanskas, J. N. Pedersen, O. Karlström, M. Leijnse, and A. Wacker,
+*QmeQ 1.0: An open-source Python package for calculations of transport through
+quantum dot devices*, [Comput. Phys. Commun. 221, 317 (2017)][qmeqdoi].
+
+The preprint version of the paper can be found on the
+[arXiv.org][qmeqarxiv] server.
+
+[tutorial]: https://github.com/gedaskir/qmeq-examples/tree/master/tutorial/tutorial.ipynb
+[examples]: https://github.com/gedaskir/qmeq-examples
+[license]: https://opensource.org/licenses/BSD-2-Clause
+[qmeqdoi]: https://dx.doi.org/10.1016/j.cpc.2017.07.024
+[qmeqarxiv]: https://arxiv.org/abs/1706.10104
