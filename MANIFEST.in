@@ -1,5 +1,21 @@
-include CHANGELOG.txt
-include LICENSE.txt
-include README.md
-include setup.py
-recursive-include grow *.py
+recursive-include testinfra *.py
+recursive-include test *.py ssh_key
+recursive-include images Dockerfile
+recursive-include doc *.py *.rst *.svg
+include doc/source/_templates/piwik.html
+include doc/Makefile
+include tox.ini
+include .flake8
+include mypy.ini
+include Makefile
+include *.yaml
+include README.rst CONTRIBUTING.rst CHANGELOG.rst
+include MANIFEST.in
+include ansible.cfg
+include dev-requirements.txt
+include test-requirements.txt
+include LICENSE
+exclude .editorconfig
+exclude .gitignore
+prune doc/build
+prune .github
