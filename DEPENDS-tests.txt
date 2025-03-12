@@ -1,0 +1,8 @@
+####################################################################
+# Additional dependencies necessary to run package tests           #
+####################################################################
+-r DEPENDS.txt
+coveralls
+packaging
+pytest
+ruff
