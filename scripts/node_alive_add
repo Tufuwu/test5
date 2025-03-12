@@ -1,0 +1,25 @@
+#!/usr/bin/env python
+
+from optparse import OptionParser
+import rospy
+
+from std_msgs.msg import String
+
+from node_alive.util import get_node_names
+
+
+if __name__ == '__main__':
+    rospy.init_node('node_alive_add')
+
+    parser = OptionParser(usage="usage: \t node_alive_add [roslaunch_file]")
+
+    options, args = parser.parse_args()
+    if not args:
+        parser.error('please specify a roslaunch_file')
+
+    pub = rospy.Publisher('check_alive_nodes', String)
+
+    for node in get_node_names([args[0]]):
+        if node[-4:] != "_tmp":
+            pub.publish(node)
+            rospy.loginfo("Adding '%s' to node_alive_server" % node)

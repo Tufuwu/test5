@@ -1,27 +1,5 @@
-# Drift Scan Telescope Analysis
+# node_alive
 
-This is a Python project for simulating and analysing the transit radio
-telescopes, with a particular focus on 21cm Cosmology.
+[![CI](https://github.com/tue-robotics/node_alive/actions/workflows/main.yml/badge.svg)](https://github.com/tue-robotics/node_alive/actions/workflows/main.yml)
 
-## Installation
-
-The primary dependency of this project is the `cora` package. This can be
-fetched from `here <http://github.com/radiocosmology/cora>`_. In addition to its
-dependencies we also require an installation of `h5py
-<http://h5py.alfven.org/>`_ for storing results in `hdf5` files.
-
-This package is installable by the usual methods, either the standard ::
-
-    $ python setup.py install [--user]
-
-or to develop the package ::
-
-    $ python setup.py develop [--user]
-
-It should also be installable directly with `pip` using the command::
-
-	$ pip install [-e] git+ssh://git@github.com/radiocosmology/driftscan
-
-
-## Documentation
- The full documentation of `driftscan` is at https://radiocosmology.github.io/driftscan/.
+`node_alive_server` checks if all nodes in the `node_list` are still alive. Nodes can be added to the node_list with use of `node_alive_add [launch_file]`. `node_alive_add` scans recursively through all nodes that are being launched with use of the specified launch file and adds these to the node_list.

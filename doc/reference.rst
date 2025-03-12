@@ -1,4 +1,0 @@
-Programming References
-----------------------
-
-.. automodule:: drift

@@ -1,37 +1,13 @@
-"""Build cython extensions.
+#!/usr/bin/env python
 
-The full project config can be found in `pyproject.toml`. `setup.py` is still
-required to build cython extensions.
-"""
-
-import os
-import re
-import sysconfig
-
-import numpy
-from Cython.Build import cythonize
 from setuptools import setup
-from setuptools.extension import Extension
+from catkin_pkg.python_setup import generate_distutils_setup
 
-# Enable OpenMP support if available
-if re.search("gcc", sysconfig.get_config_var("CC")) is None:
-    print("Not using OpenMP")
-    omp_args = []
-else:
-    omp_args = ["-fopenmp"]
-
-# Cython module for fast operations
-extensions = [
-    Extension(
-        "drift.util._fast_tools",
-        ["drift/util/_fast_tools.pyx"],
-        include_dirs=[numpy.get_include()],
-        extra_compile_args=omp_args,
-        extra_link_args=omp_args,
-    ),
-]
-
-setup(
-    name="driftscan",
-    ext_modules=cythonize(extensions),
+d = generate_distutils_setup(
+    #  don't do this unless you want a globally visible script
+    scripts=['scripts/node_alive_add', 'scripts/node_alive_server'],
+    packages=['node_alive'],
+    package_dir={'': 'src'}
 )
+
+setup(**d)
