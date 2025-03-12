@@ -1,0 +1,37 @@
+{% block title %}
+CERN Library Catalogue: cannot delete users, action needed!
+{% endblock %}
+
+{% block body_plain %}
+Dear librarians,
+
+the following users do not have anymore a CERN account. The system could not anonymize data and delete such users because active loans or purchase orders have been found.
+
+Please, take the action to cancel the loans/orders of these users so that data can be successfully anonymized at the next run (every day).
+
+Patrons details in the backoffice area:
+{%- for patron in patrons %}
+  *  {{ patron.name }} <{{ patron.email }}> (id {{ patron.pid }}): <{{ spa_routes.HOST }}{{ spa_routes.PATHS['patron'] }}/{{ patron.pid }}>
+{% endfor %}
+
+Thank you!
+{% endblock %}
+
+{% block body_html %}
+Dear librarians,<br/><br/>
+
+the following users do not have anymore a CERN account. The system could not anonymize data and delete such users because active loans or purchase orders have been found.<br/><br/>
+
+Please, take the action to cancel the loans/orders of these users so that data can be successfully anonymized at the next run (every day).<br/><br/>
+
+Patrons details in the backoffice area:<br/>
+<ul>
+{%- for patron in patrons %}
+ <li>
+   <a href="{{ spa_routes.HOST }}{{ spa_routes.PATHS['patron'] }}/{{ patron.pid }}">{{ patron.name }} <{{ patron.email }}> (id {{ patron.pid }} )</a>
+ </li>
+{% endfor %}
+</ul>
+<br/><br/>
+Thank you!<br/>
+{% endblock %}

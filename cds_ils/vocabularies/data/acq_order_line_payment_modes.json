@@ -1,0 +1,17 @@
+[
+  {
+    "type": "acq_order_line_payment_mode",
+    "key": "CASH_CARD",
+    "text": "Cash or card"
+  },
+  {
+    "type": "acq_order_line_payment_mode",
+    "key": "BUDGET_CODE",
+    "text": "Budget Code"
+  },
+  {
+     "type": "acq_order_line_payment_mode",
+     "key": "INTERNAL_BUDGET",
+     "text": "Internal Budget"
+  }
+]

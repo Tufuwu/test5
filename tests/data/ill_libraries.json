@@ -1,0 +1,8 @@
+[
+  {
+    "name": "Library 1",
+    "pid": "ill-provid-1",
+    "type": "LIBRARY",
+    "legacy_ids": ["1"]
+  }
+]

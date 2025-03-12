@@ -1,0 +1,27 @@
+{% block footer_plain %}
+Check your library loans and requests in your profile page <{{ spa_routes.HOST }}{{ spa_routes.PATHS["profile"] }}>.
+
+Kind regards,
+
+CERN Library
+
+Location: building 52/1-052 on the Meyrin campus
+Opening hours (https://catalogue.library.cern/opening-hours)
+Email: library.desk@cern.ch
+Tel +412276 72444
+Subscribe to our newsletter: http://cern.ch/n-wnd
+{% endblock %}
+
+{% block footer_html %}
+<br/><br/>
+Check your library loans and requests in your <a href="{{ spa_routes.HOST }}{{ spa_routes.PATHS['profile'] }}">profile page</a>.
+<br/><br/>
+Kind regards, <br/><br/>
+
+CERN Library <br/>
+Location: building 52/1-052 on the Meyrin campus <br/>
+<a href="https://catalogue.library.cern/opening-hours"> Opening hours</a> <br/>
+Email: library.desk@cern.ch <br/>
+Tel +412276 72444<br/>
+Subscribe to our <a href="http://cern.ch/n-wnd"> newsletter</a><br/>
+{% endblock %}

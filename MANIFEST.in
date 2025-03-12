@@ -1,0 +1,47 @@
+# -*- coding: utf-8 -*-
+#
+# Copyright (C) 2020 CERN.
+#
+# CDS-ILS is free software; you can redistribute it and/or modify it under
+# the terms of the MIT License; see LICENSE file for more details.
+
+# To update your MANIFEST.in, use the following commands:
+#
+#  git init  # if not already done
+#  git add -A
+#  check-manifest -u  # to install run "pipenv install --dev"
+#  # please sort the lines in this file after running the commands
+
+# Check manifest will not automatically add these two files:
+
+include .dockerignore
+include .editorconfig
+include .git-blame-ignore-revs
+include *.rst
+include *.sh
+include *.txt
+include *.yml
+include babel.ini
+include LICENSE
+include scripts/bootstrap
+include scripts/celery
+include scripts/console
+include scripts/celery
+include scripts/server
+include scripts/setup
+include scripts/update
+include scripts/ldap_sync
+include tests
+recursive-include .github/workflows *.yml
+recursive-include cds_ils *.gitkeep
+recursive-include cds_ils *.po *.pot *.mo
+recursive-include cds_ils *.json *.html *.js *.scss
+recursive-include cds_ils *.png *.jpg *.svg
+recursive-include cds_ils *.py
+recursive-include tests *.json
+recursive-include tests *.py
+recursive-include tests *.html
+recursive-include tests *.xml
+prune scripts/certs
+prune ui
+

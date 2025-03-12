@@ -1,0 +1,3 @@
+extends:
+  - '@inveniosoftware/invenio'
+  - '@inveniosoftware/invenio/prettier'

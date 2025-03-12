@@ -1,0 +1,97 @@
+[
+  {
+    "key": "AMS",
+    "text": "American Mathematical Society",
+    "type": "eitem_sources"
+  },
+  {
+    "key": "CBO",
+    "text": "Cambridge University Press",
+    "type": "eitem_sources"
+  },
+  {
+    "key": "EBL",
+    "text": "E-Book Central",
+    "type": "eitem_sources"
+  },
+  {
+    "key": "EBSCO",
+    "text": "Ebsco",
+    "type": "eitem_sources"
+  },
+  {
+    "key": "ELS",
+    "text": "Elsevier",
+    "type": "eitem_sources"
+  },
+  {
+    "key": "GRU",
+    "text": "De Gruyter",
+    "type": "eitem_sources"
+  },
+  {
+    "key": "IEEE",
+    "text": "IEEE",
+    "type": "eitem_sources"
+  },
+  {
+    "key": "IGI",
+    "text": "IGI Global",
+    "type": "eitem_sources"
+  },
+  {
+    "key": "IOS",
+    "text": "IOS Press",
+    "type": "eitem_sources"
+  },
+  {
+    "key": "IOP",
+    "text": "Institute of Physics",
+    "type": "eitem_sources"
+  },
+  {
+    "key": "MIT",
+    "text": "MIT Press",
+    "type": "eitem_sources"
+  },
+  {
+    "key": "OSO",
+    "text": "Oxford University Press",
+    "type": "eitem_sources"
+  },
+  {
+    "key": "SAFARI",
+    "text": "O'Reilly",
+    "type": "eitem_sources"
+  },
+  {
+    "key": "SPRINGER",
+    "text": "Springer",
+    "type": "eitem_sources"
+  },
+  {
+    "key": "TAF",
+    "text": "Taylor and Francis",
+    "type": "eitem_sources"
+  },
+  {
+    "key": "WIL",
+    "text": "Wiley",
+    "type": "eitem_sources"
+  },
+  {
+    "key": "WOO",
+    "text": "Woodhead Publishing",
+    "type": "eitem_sources"
+  },
+  {
+    "key": "WSC",
+    "text": "World Scientific",
+    "type": "eitem_sources"
+  },
+  {
+    "key": "CDS",
+    "text": "CDS",
+    "type": "eitem_sources"
+  }
+]

@@ -1,0 +1,47 @@
+[
+  {
+    "type": "tag",
+    "key": "BOOKSHOP",
+    "text": "Bookshop"
+  },
+  {
+    "type": "tag",
+    "key": "BOOK_SUGGESTION",
+    "text": "Book suggestion"
+  },
+  {
+    "type": "tag",
+    "key": "DIDACTIC_LIBRARY",
+    "text": "Didactic Library"
+  },
+  {
+    "type": "tag",
+    "key": "LEGAL_SERVICE_LIBRARY",
+    "text": "Legal service Library"
+  },
+  {
+    "type": "tag",
+    "key": "OMBUD_LIBRARY",
+    "text": "Ombud's Library"
+  },
+  {
+    "type": "tag",
+    "key": "THESIS",
+    "text": "Thesis"
+  },
+  {
+    "type": "tag",
+    "key": "YELLOW_REPORT",
+    "text": "Yellow Report"
+  },
+  {
+    "type": "tag",
+    "key": "WOMEN_IN_TECHNOLOGY",
+    "text": "Women in Technology"
+  },
+  {
+    "type": "tag",
+    "key": "DIVERSITY_AND_INCLUSION",
+    "text": "Diversity and Inclusion"
+  }
+]

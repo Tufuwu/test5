@@ -1,0 +1,24 @@
+[
+  {
+    "$schema": "https://127.0.0.1:5000/schemas/items/item-v1.0.0.json",
+    "pid": "itemid-1",
+    "created_by": {"type": "script", "value":  "test"},
+    "barcode": "123456789-1",
+    "document_pid": "docid-1",
+    "internal_location_pid": "ilocid-1",
+    "circulation_restriction": "NO_RESTRICTION",
+    "medium": "NOT_SPECIFIED",
+    "status": "MISSING"
+  },
+  {
+    "$schema": "https://127.0.0.1:5000/schemas/items/item-v1.0.0.json",
+    "created_by": {"type": "script", "value":  "test"},
+    "pid": "itemid-2",
+    "barcode": "123456789-3",
+    "document_pid": "docid-2",
+    "internal_location_pid": "ilocid-1",
+    "circulation_restriction": "NO_RESTRICTION",
+    "medium": "NOT_SPECIFIED",
+    "status": "CAN_CIRCULATE"
+  }
+]
