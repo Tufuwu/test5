@@ -1,17 +1,16 @@
-init:
-	pip install -r requirements.txt
-	pip install -r test_requirements.txt
-
+docs:
+	cd docs
+	make html
+isort:
+	isort atomdb
+	isort tests
+typecheck:
+	mypy atomdb --ignore-missing-imports
+lintcheck:
+	flake8 --ignore=E501,W503  atomdb tests
+reformat:
+	black atomdb tests
 test:
-	pytest --spec -s tests/
+	pytest -v tests --cov atomdb --cov-report xml --asyncio-mode auto
 
-test-coverage:
-	pytest --spec -s tests/ --cov=./greenswitch --cov-report term-missing
-
-build:
-	python setup.py sdist bdist_wheel
-
-upload:
-	python -m twine upload dist/*
-
-release: build upload
+precommit: isort reformat typecheck lintcheck

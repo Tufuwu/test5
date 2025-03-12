@@ -1,5 +1,0 @@
-pytest
-pytest-profiling
-pytest-spec
-pytest-cov
-mock
