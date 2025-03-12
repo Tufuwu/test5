@@ -1,0 +1,15 @@
+include LICENSE.rst
+include README.rst
+include CHANGES.rst
+
+include pyproject.toml
+include setup.cfg
+
+recursive-include docs *
+recursive-include licenses *
+
+prune build
+prune docs/_build
+prune docs/api
+
+global-exclude *.pyc *.o
