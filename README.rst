@@ -1,175 +1,134 @@
-.. image:: https://img.shields.io/pypi/v/jsonpickle.svg
-   :target: `PyPI link`_
+.. image:: https://raw.githubusercontent.com/igordejanovic/parglare/master/docs/images/parglare-logo.png
 
-.. image:: https://img.shields.io/pypi/pyversions/jsonpickle.svg
-   :target: `PyPI link`_
-
-.. _PyPI link: https://pypi.org/project/jsonpickle
-
-.. image:: https://readthedocs.org/projects/jsonpickle/badge/?version=latest
-   :target: https://jsonpickle.readthedocs.io/en/latest/?badge=latest
-
-.. image:: https://github.com/jsonpickle/jsonpickle/actions/workflows/test.yml/badge.svg
-   :target: https://github.com/jsonpickle/jsonpickle/actions
-   :alt: Github Actions
-
-.. image:: https://img.shields.io/badge/License-BSD%203--Clause-blue.svg
-   :target: https://github.com/jsonpickle/jsonpickle/blob/main/COPYING
-   :alt: BSD
+|build-status| |coverage| |docs| |status| |license| |python-versions|
 
 
-jsonpickle
-==========
-
-jsonpickle is a library for the two-way conversion of complex Python objects
-and `JSON <http://json.org/>`_.  jsonpickle builds upon existing JSON
-encoders, such as simplejson, json, and ujson.
-
-.. warning::
-
-   jsonpickle can execute arbitrary Python code.
-
-   Please see the Security section for more details.
+A pure Python scannerless LR/GLR parser.
 
 
-For complete documentation, please visit the
-`jsonpickle documentation <http://jsonpickle.readthedocs.io/>`_.
-
-Bug reports and merge requests are encouraged at the
-`jsonpickle repository on github <https://github.com/jsonpickle/jsonpickle>`_.
-
-Usage
-=====
-The following is a very simple example of how one can use jsonpickle in their scripts/projects. Note the usage of jsonpickle.encode and decode, and how the data is written/encoded to a file and then read/decoded from the file.
-
-.. code-block:: python
-
-    import jsonpickle
-    from dataclasses import dataclass
-   
-    @dataclass
-    class Example:
-        data: str
-   
-   
-    ex = Example("value1")
-    encoded_instance = jsonpickle.encode(ex)
-    assert encoded_instance == '{"py/object": "__main__.Example", "data": "value1"}'
-   
-    with open("example.json", "w+") as f:
-        f.write(encoded_instance)
-   
-    with open("example.json", "r+") as f:
-        written_instance = f.read()
-        decoded_instance = jsonpickle.decode(written_instance)
-    assert decoded_instance == ex
-
-For more examples, see the `examples directory on GitHub <https://github.com/jsonpickle/jsonpickle/tree/main/examples>`_ for example scripts. These can be run on your local machine to see how jsonpickle works and behaves, and how to use it. Contributions from users regarding how they use jsonpickle are welcome!
+For more information see `the docs <http://www.igordejanovic.net/parglare/>`_.
 
 
-Why jsonpickle?
-===============
+Quick intro
+-----------
 
-Data serialized with python's pickle (or cPickle or dill) is not easily readable outside of python. Using the json format, jsonpickle allows simple data types to be stored in a human-readable format, and more complex data types such as numpy arrays and pandas dataframes, to be machine-readable on any platform that supports json. E.g., unlike pickled data, jsonpickled data stored in an Amazon S3 bucket is indexible by Amazon's Athena.
+This is just a small example to get the general idea. This example shows how to
+parse and evaluate expressions with 5 operations with different priority and
+associativity. Evaluation is done using semantic/reduction actions.
 
-Security
-========
+The whole expression evaluator is done in under 30 lines of code!
 
-jsonpickle should be treated the same as the
-`Python stdlib pickle module <https://docs.python.org/3/library/pickle.html>`_
-from a security perspective.
+.. code:: python
 
-.. warning::
+    from parglare import Parser, Grammar
 
-   The jsonpickle module **is not secure**.  Only unpickle data you trust.
+    grammar = r"""
+    E: E '+' E  {left, 1}
+     | E '-' E  {left, 1}
+     | E '*' E  {left, 2}
+     | E '/' E  {left, 2}
+     | E '^' E  {right, 3}
+     | '(' E ')'
+     | number;
 
-   It is possible to construct malicious pickle data which will **execute
-   arbitrary code during unpickling**.  Never unpickle data that could have come
-   from an untrusted source, or that could have been tampered with.
+    terminals
+    number: /\d+(\.\d+)?/;
+    """
 
-   Consider signing data with an HMAC if you need to ensure that it has not
-   been tampered with.
+    actions = {
+        "E": [lambda _, n: n[0] + n[2],
+              lambda _, n: n[0] - n[2],
+              lambda _, n: n[0] * n[2],
+              lambda _, n: n[0] / n[2],
+              lambda _, n: n[0] ** n[2],
+              lambda _, n: n[1],
+              lambda _, n: n[0]],
+        "number": lambda _, value: float(value),
+    }
 
-   Safer deserialization approaches, such as reading JSON directly,
-   may be more appropriate if you are processing untrusted data.
+    g = Grammar.from_string(grammar)
+    parser = Parser(g, debug=True, actions=actions)
 
+    result = parser.parse("34 + 4.6 / 2 * 4^2^2 + 78")
 
-Install
-=======
+    print("Result = ", result)
 
-Install from pip for the latest stable release:
-
-::
-
-    pip install jsonpickle
-
-Install from github for the latest changes:
-
-::
-
-    pip install git+https://github.com/jsonpickle/jsonpickle.git
-
-
-Numpy/Pandas Support
-====================
-
-jsonpickle includes built-in numpy and pandas extensions.  If you would
-like to encode sklearn models, numpy arrays, pandas DataFrames, and other
-numpy/pandas-based data, then you must enable the numpy and/or pandas
-extensions by registering their handlers::
-
-    >>> import jsonpickle.ext.numpy as jsonpickle_numpy
-    >>> import jsonpickle.ext.pandas as jsonpickle_pandas
-    >>> jsonpickle_numpy.register_handlers()
-    >>> jsonpickle_pandas.register_handlers()
+    # Output
+    # -- Debugging/tracing output with detailed info about grammar, productions,
+    # -- terminals and nonterminals, DFA states, parsing progress,
+    # -- and at the end of the output:
+    # Result = 700.8
 
 
-Development
-===========
+Installation
+------------
 
-Use `make` to run the unit tests::
+- Stable version:
 
-        make test
+.. code:: shell
 
-`pytest` is used to run unit tests internally.
+    $ pip install parglare
 
-A `tox` target is provided to run tests using all installed and supported Python versions::
+- Development version:
 
-        make tox
+.. code:: shell
 
-`jsonpickle` itself has no dependencies beyond the Python stdlib.
-`tox` is required for testing when using the `tox` test runner only.
+    $ git clone git@github.com:igordejanovic/parglare.git
+    $ pip install -e parglare
 
-The testing requirements are specified in `setup.cfg`.
-It is recommended to create a virtualenv and run tests from within the
-virtualenv.::
+Citing parglare
+---------------
 
-        python3 -mvenv env3
-        source env3/bin/activate
-        pip install --editable '.[dev]'
-        make test
+If you use parglare in your research please cite this paper:
 
-You can also use a tool such as `vx <https://github.com/davvid/vx/>`_
-to activate the virtualenv without polluting your shell environment::
+.. code:: text
 
-        python3 -mvenv env3
-        vx env3 pip install --editable '.[dev]'
-        vx env3 make test
+    Igor Dejanović, Parglare: A LR/GLR parser for Python,
+    Science of Computer Programming, issn:0167-6423, p.102734,
+    DOI:10.1016/j.scico.2021.102734, 2021.
 
-If you can't use a venv, you can install the testing packages as follows::
-
-        pip install .[testing]
-
-`jsonpickle` supports multiple Python versions, so using a combination of
-multiple virtualenvs and `tox` is useful in order to catch compatibility
-issues when developing.
-
-GPG Signing
-===========
-
-Unfortunately, while versions of jsonpickle before 3.0.1 should still be signed, GPG signing support was removed from PyPi (https://blog.pypi.org/posts/2023-05-23-removing-pgp/) back in May 2023.
+    @article{dejanovic2021b,
+        author = {Igor Dejanović},
+        title = {Parglare: A LR/GLR parser for Python},
+        doi = {10.1016/j.scico.2021.102734},
+        issn = {0167-6423},
+        journal = {Science of Computer Programming},
+        keywords = {parsing, LR, GLR, Python, visualization},
+        pages = {102734},
+        url = {https://www.sciencedirect.com/science/article/pii/S0167642321001271},
+        year = {2021}
+    }
 
 License
-=======
+-------
 
-Licensed under the BSD License. See COPYING for details.
+MIT
+
+Python versions
+---------------
+
+Tested with 3.6-3.11
+
+Credits
+-------
+
+Initial layout/content of this package was created with `Cookiecutter
+<https://github.com/audreyr/cookiecutter>`_ and the
+`audreyr/cookiecutter-pypackage <https://github.com/audreyr/cookiecutter-pypackage>`_ project template.
+
+
+.. |build-status| image:: https://github.com/igordejanovic/parglare/actions/workflows/ci-linux-ubuntu.yml/badge.svg
+   :target: https://github.com/igordejanovic/parglare/actions
+
+.. |coverage| image:: https://coveralls.io/repos/github/igordejanovic/parglare/badge.svg?branch=master
+   :target: https://coveralls.io/github/igordejanovic/parglare?branch=master
+
+.. |docs| image:: https://img.shields.io/badge/docs-latest-green.svg
+   :target: http://www.igordejanovic.net/parglare/latest/
+
+.. |status| image:: https://img.shields.io/pypi/status/parglare.svg
+
+.. |license| image:: https://img.shields.io/badge/License-MIT-blue.svg
+   :target: https://opensource.org/licenses/MIT
+
+.. |python-versions| image:: https://img.shields.io/pypi/pyversions/parglare.svg

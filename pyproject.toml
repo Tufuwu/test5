@@ -1,97 +1,90 @@
-[build-system]
-requires = ["setuptools>=61.2", "setuptools_scm[toml]>=6.0"]
-build-backend = "setuptools.build_meta"
-
 [project]
-name = "jsonpickle"
+name = "parglare"
+version = "0.18.0"
+description = "A pure Python LR/GLR parser"
 authors = [
-    { name = "Theelx" },
-    { name = "David Aguilar", email = "davvid+jsonpickle@gmail.com" },
+    {name = "Igor R. Dejanović", email = "igor.dejanovic@gmail.com"},
 ]
-description = "jsonpickle encodes/decodes any Python object to/from JSON"
+maintainers = [
+    {name = "Igor R. Dejanović", email = "igor.dejanovic@gmail.com"},
+]
+readme = "README.rst"
+license = {text = "MIT"}
+keywords = ["parser", "lr", "glr"]
 classifiers = [
-    "Development Status :: 5 - Production/Stable",
+    "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: BSD License",
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: Science/Research",
+    "Topic :: Software Development :: Interpreters",
+    "Topic :: Software Development :: Compilers",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: OS Independent",
 ]
-requires-python = ">=3.8"
-dependencies = [
-]
-dynamic = ["version"]
 
-[project.readme]
-file = "README.rst"
-content-type = "text/x-rst"
+requires-python = ">=3.8, <3.13"
+dependencies = [
+    "click >=7.0, <9.0"
+]
 
 [project.urls]
-Documentation = "https://jsonpickle.readthedocs.io/"
-Homepage = "https://jsonpickle.readthedocs.io/"
-Source = "https://github.com/jsonpickle/jsonpickle"
+Homepage = "https://github.com/igordejanovic/parglare"
+Repository = "https://github.com/igordejanovic/parglare"
+Changelog = "https://github.com/igordejanovic/parglare/blob/master/CHANGELOG.md"
+
+[build-system]
+build-backend = "flit_core.buildapi"
+requires = ["flit_core >=3.8.0,<4"]
+
+[tool.flit.module]
+name = "parglare"
+
+[tool.flit.sdist]
+exclude = ["**/.*"]
 
 [project.optional-dependencies]
-cov = [
-    "pytest-cov",
-]
 dev = [
-    "black",
-    "pyupgrade",
-]
-testing = [
-    # core
-    "pytest >= 6.0, != 8.1.*",
-    "pytest-benchmark",
-    "pytest-benchmark[histogram]",
-    "pytest-checkdocs >= 1.2.3",
-    "pytest-enabler >= 1.0.1",
-    "pytest-ruff >= 0.2.1",
-    # local
-    "bson",
-    "ecdsa",
-    "feedparser",
-    "gmpy2",
-    "numpy",
-    "pandas",
-    "pymongo",
-    "PyYAML",
-    "scikit-learn",
-    "scipy>=1.9.3; python_version > '3.10'",
-    "scipy; python_version <= '3.10'",
-    "simplejson",
-    "sqlalchemy",
-    "ujson",
-    # fuzzing
-    "atheris ~= 2.3.0; python_version < '3.12'",
-]
-docs = [
-    "furo",
-    "rst.linker >= 1.9",
-    "sphinx >= 3.5",
-]
-packaging = [
-    "build",
-    "setuptools>=61.2",
-    "setuptools_scm[toml]>=6.0",
-    "twine",
+    "ruff",
+    "flit",
+    "mkdocs",
+    "mike",
 ]
 
-[tool.setuptools]
-packages = [
-    "jsonpickle",
-    "jsonpickle.ext",
+test = [
+    "ruff",
+    "coverage",
+    "coveralls",
+    "pytest",
 ]
-include-package-data = true
-license-files = ["LICENSE"]
 
-[tool.black]
-skip-string-normalization = true
+[project.scripts]
+pglr = "parglare.cli:pglr"
 
-[tool.setuptools_scm]
-
-[tool.pytest-enabler.ruff]
-addopts = "--ruff"
+[tool.ruff]
+line-length = 90
+indent-width = 4
 
 [tool.ruff.lint]
-# E721 Do not compare types -> jsonpickle compares types using "is" for performance.
-ignore = ["E721"]
+# https://docs.astral.sh/ruff/linter/#rule-selection
+select = [
+    # pycodestyle
+    "E",
+    # Pyflakes
+    "F",
+    # pyupgrade
+    "UP",
+    # flake8-bugbear
+    "B",
+    # flake8-simplify
+    "SIM",
+    # isort
+    "I",
+]
