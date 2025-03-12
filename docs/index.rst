@@ -1,22 +1,25 @@
-.. gsheets documentation master file
-
-.. include:: ../README.rst
-
-
-API Reference
-=============
-
-.. toctree::
-    :maxdepth: 2
-
-    api
+.. include:: ../README
+   :end-before: API
 
 
-Project Info
-============
+Contents
+--------
 
 .. toctree::
-    :maxdepth: 2
+   :maxdepth: 1
 
-    changelog
-    license
+   usage
+   encryption
+   mac
+   signatures
+   policy
+   exceptions
+   scripts
+   changes
+
+
+Security considerations
+-----------------------
+
+.. include:: ../README
+   :start-after: -----------------------

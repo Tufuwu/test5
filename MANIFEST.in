@@ -1,7 +1,3 @@
-include README.rst LICENSE.txt CHANGES.rst
-include requirements.txt
-include run-tests.py try-example.py try-api-limits.py
-include tox.ini
-recursive-include tests *.py
-recursive-include docs *.rst *.txt *.py *.png
-prune docs/_build
+include README NEWS ChangeLog COPYING tox.ini *.py
+recursive-include tests *.doctest *.py *.pskcxml *.xml *.pem *.txt *.pskc README
+recursive-include docs *.rst *.py

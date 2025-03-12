@@ -1,22 +1,14 @@
-*.py[co]
-__pycache__/
+# global
+*.pyc
+*.pyo
+__pycache__
 
-/MANIFEST
-/build/
-/dist/
-/docs/_build/
-/*.egg-info/
+# /
 /*.egg
-/.eggs/
-
-/.venv/
-/.pytest_cache/
-/.tox/
-/htmlcov/
+/*.egg-info
 /.coverage
-/test-log.txt
-
-Thumbs.db
-
-/storage.json
-/*.csv
+/.tox
+/build
+/coverage
+/dist
+/output.pskcxml

@@ -1,0 +1,298 @@
+test_misc.doctest - miscellaneous tests
+
+Copyright (C) 2014-2024 Arthur de Jong
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+02110-1301 USA
+
+
+>>> import warnings
+>>> from binascii import a2b_hex, b2a_hex
+>>> def tostr(x):
+...     return str(x.decode())
+>>> def decode(f):
+...     return lambda x: tostr(f(x))
+>>> b2a_hex = decode(b2a_hex)
+>>> import datetime
+>>> now = datetime.datetime(2016, 3, 23, 0, 0, 0)
+>>> import dateutil.tz
+
+>>> from pskc import PSKC
+
+
+This tests the most minimal valid PSKC file with one empty key.
+
+>>> try:
+...     from StringIO import StringIO
+... except ImportError:
+...     from io import StringIO
+>>> minimal_pskc = StringIO('''
+... <?xml version="1.0"?>
+... <KeyContainer xmlns="urn:ietf:params:xml:ns:keyprov:pskc" Version="1.0">
+...   <KeyPackage/>
+... </KeyContainer>
+... '''.strip())
+>>> pskc = PSKC(minimal_pskc)
+>>> len(pskc.keys)
+0
+>>> len(pskc.devices)
+1
+
+
+Check creation of empty PSKC structure and adding an empty key to the list.
+
+>>> pskc = PSKC()
+>>> key = pskc.add_key(id='123')
+>>> key.id
+'123'
+>>> key.secret is None
+True
+
+
+We can also put device-specific properties in a device:
+
+>>> pskc = PSKC()
+>>> device = pskc.add_device(manufacturer='Tokens INC.')
+>>> len(pskc.keys)
+0
+>>> key = device.add_key(id='123', serial='456')
+>>> len(pskc.keys)
+1
+>>> key.id
+'123'
+>>> key.manufacturer
+'Tokens INC.'
+>>> device.serial
+'456'
+
+
+Adding a key or device with unknown attributes raises an error.
+
+>>> key = pskc.add_key(foo='bar')  # doctest: +IGNORE_EXCEPTION_DETAIL
+Traceback (most recent call last):
+    ...
+AttributeError
+>>> device.add_key(foo='bar')  # doctest: +IGNORE_EXCEPTION_DETAIL
+Traceback (most recent call last):
+    ...
+AttributeError
+>>> device = pskc.add_device(foo='bar')  # doctest: +IGNORE_EXCEPTION_DETAIL
+Traceback (most recent call last):
+    ...
+AttributeError
+
+
+Setting secret, counter, etc. also works
+
+>>> key = pskc.add_key(secret='VERYSECRET')
+>>> key.counter = 10
+>>> key.secret
+'VERYSECRET'
+>>> key.counter
+10
+
+
+We can set policy properties in two ways: policy.property or
+policy__property:
+
+>>> data = {
+...     'policy__start_date': datetime.datetime(2018, 3, 2, 10, 12, 16),
+...     'policy.expiry_date': datetime.datetime(2018, 3, 3, 16, 37, 21),
+... }
+>>> key = pskc.add_key(**data)
+>>> key.policy.start_date
+datetime.datetime(2018, 3, 2, 10, 12, 16)
+>>> key.policy.expiry_date
+datetime.datetime(2018, 3, 3, 16, 37, 21)
+
+
+Setting encryption key name and algorithm also works.
+
+>>> pskc.encryption.key_name = 'Test encryption key'
+>>> pskc.encryption.key_names
+['Test encryption key']
+>>> pskc.encryption.algorithm is None
+True
+>>> pskc.encryption.algorithm = 'aes128-cbc'
+>>> pskc.encryption.algorithm
+'http://www.w3.org/2001/04/xmlenc#aes128-cbc'
+>>> pskc.encryption.algorithm_key_lengths
+[16]
+>>> pskc.encryption.algorithm = '3des-cbc'
+>>> pskc.encryption.algorithm
+'http://www.w3.org/2001/04/xmlenc#tripledes-cbc'
+>>> pskc.encryption.algorithm_key_lengths
+[16, 24]
+>>> pskc.encryption.algorithm = 'none'
+>>> pskc.encryption.algorithm is None
+True
+>>> pskc.encryption.algorithm_key_lengths  # doctest: +IGNORE_EXCEPTION_DETAIL
+Traceback (most recent call last):
+    ...
+DecryptionError: No algorithm specified
+
+
+Load an PSKC file with an odd namespace.
+
+>>> pskc = PSKC('tests/misc/odd-namespace.pskcxml')
+>>> pskc.version
+'1.0'
+>>> pskc.id
+'exampleID1'
+>>> key = pskc.keys[0]
+>>> key.id
+'12345678'
+>>> key.issuer
+'Issuer-A'
+>>> tostr(key.secret)
+'1234'
+
+
+Load a PSKC file that uses the xenc11 namespace for the PBKDF2 parameters.
+
+>>> pskc = PSKC('tests/misc/SampleFullyQualifiedNS.xml')
+>>> pskc.encryption.key_name
+'PassPhrase'
+>>> pskc.encryption.derive_key('3FCA3158035072D6')
+>>> key = pskc.keys[0]
+>>> b2a_hex(key.secret)
+'09fbecfd0bf47910839e2eb05ffa10b95cd0390950ce32ab790583ed134171e0'
+>>> key.check()
+True
+
+
+Empty PSKC files should raise a useful exception when trying to derive an
+encryption key from a password.
+
+>>> pskc = PSKC()
+>>> pskc.encryption.derive_key('123456')  # doctest: +IGNORE_EXCEPTION_DETAIL
+Traceback (most recent call last):
+    ...
+KeyDerivationError: No algorithm specified
+
+
+Integers can be represented in different ways in PSKC files.
+
+>>> pskc = PSKC('tests/misc/integers.pskcxml')
+>>> pskc.encryption.key = a2b_hex('12345678901234567890123456789012')
+>>> [key.counter for key in pskc.keys]
+[831791, 709791, 405834, 298507, 961392]
+
+
+This tests key policy and unknown policy elements. The first key should have
+all known policy elements set while other keys should have extra unknown
+information added which should result in rejected usage.
+
+>>> pskc = PSKC('tests/misc/policy.pskcxml')
+>>> key = pskc.keys[0]
+>>> key.policy.start_date
+datetime.datetime(2006, 5, 1, 0, 0, tzinfo=tzutc())
+>>> key.policy.expiry_date
+datetime.datetime(2026, 5, 31, 0, 0, tzinfo=tzutc())
+>>> key.policy.number_of_transactions
+4321
+>>> key.policy.key_usage
+['OTP']
+>>> key.policy.unknown_policy_elements
+False
+>>> key.policy.may_use('OTP', datetime.datetime(2005, 4, 3, 0, 0, 0))
+False
+>>> key.policy.may_use('OTP', now)
+True
+>>> key.policy.may_use('OTP', datetime.datetime(2028, 12, 31, 0, 0, 0))
+False
+>>> key.policy.start_date = datetime.datetime.now() + datetime.timedelta(seconds=10)
+>>> key.policy.expiry_date = datetime.datetime.now() + datetime.timedelta(days=1)
+>>> key.policy.may_use()
+False
+>>> key.policy.start_date = datetime.datetime.now() - datetime.timedelta(seconds=10)
+>>> key.policy.may_use()
+True
+>>> key = pskc.keys[1]
+>>> key.policy.key_usage
+['OTP']
+>>> key.policy.unknown_policy_elements
+True
+>>> key.policy.may_use('OTP', now)
+False
+>>> key.policy.pin
+'1234'
+>>> key = pskc.keys[2]
+>>> key.policy.key_usage
+['OTP']
+>>> key.policy.unknown_policy_elements
+True
+>>> key.policy.may_use('OTP', now)
+False
+>>> key.policy.pin is None
+True
+>>> key = pskc.keys[3]
+>>> key.policy.key_usage
+['OTP']
+>>> key.policy.unknown_policy_elements
+True
+>>> key.policy.may_use('OTP', now)
+False
+>>> key.policy.pin is None
+True
+
+
+This checks the ChallengeFormat and ResponseFormat handling of keys and
+specifically the attribute indicating presence of check digits.
+
+>>> pskc = PSKC('tests/misc/checkdigits.pskcxml')
+>>> for key in pskc.keys:
+...     print('challenge %r %r %r %r' % (
+...         key.challenge_encoding, key.challenge_min_length,
+...         key.challenge_max_length, key.challenge_check))
+...     print('response  %r %r %r' % (
+...         key.response_encoding, key.response_length,
+...         key.response_check))  #doctest: +REPORT_UDIFF
+challenge 'DECIMAL' 12 34 True
+response  'DECIMAL' 8 False
+challenge 'DECIMAL' 56 78 False
+response  'DECIMAL' 9 True
+challenge 'DECIMAL' 16 87 False
+response  'DECIMAL' 3 True
+challenge 'HEXADECIMAL' 4 6 None
+response  'ALPHANUMERIC' 6 None
+
+
+This checks an PSKC file with a number of different empty sections that
+normally contain data.
+
+>>> pskc = PSKC('tests/misc/partialxml.pskcxml')
+>>> all(key.counter is None for key in pskc.keys)
+True
+
+
+A typo was fixed and the old name was provided via a deprecation wrapper
+property.
+
+>>> pskc = PSKC()
+>>> key = pskc.add_key()
+>>> with warnings.catch_warnings(record=True) as w:
+...     warnings.simplefilter('always')
+...     key.policy.pin_max_failed_attemtps = 10
+...     assert len(w) == 1
+...     assert issubclass(w[0].category, DeprecationWarning)
+>>> key.policy.pin_max_failed_attempts
+10
+>>> with warnings.catch_warnings(record=True) as w:
+...     warnings.simplefilter('always')
+...     key.policy.pin_max_failed_attemtps
+...     assert len(w) == 1
+...     assert issubclass(w[0].category, DeprecationWarning)
+10

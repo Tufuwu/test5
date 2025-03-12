@@ -1,49 +1,88 @@
-import pathlib
-from setuptools import setup, find_packages
+#!/usr/bin/env python
+
+# setup.py - python-pskc installation script
+#
+# Copyright (C) 2014-2024 Arthur de Jong
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+# 02110-1301 USA
+
+"""python-pskc installation script."""
+
+import os
+import sys
+
+import pskc
+
+from setuptools import find_packages, setup
+
+
+# fix permissions for sdist
+if 'sdist' in sys.argv:
+    os.system('chmod -R a+rX .')
+    os.umask(int('022', 8))
+
+base_dir = os.path.dirname(__file__)
+
+with open(os.path.join(base_dir, 'README'), 'r') as fp:
+    long_description = fp.read()
 
 setup(
-    name='gsheets',
-    version='0.6.2.dev0',
-    author='Sebastian Bank',
-    author_email='sebastian.bank@uni-leipzig.de',
-    description='Pythonic wrapper for the Google Sheets API',
-    keywords='spreadhseets google api v4 wrapper csv pandas',
-    license='MIT',
-    url='https://github.com/xflr6/gsheets',
-    project_urls={
-        'Documentation': 'https://gsheets.readthedocs.io',
-        'Changelog': 'https://gsheets.readthedocs.io/en/latest/changelog.html',
-        'Issue Tracker': 'https://github.com/xflr6/gsheets/issues',
-        'CI': 'https://github.com/xflr6/gsheets/actions',
-        'Coverage': 'https://codecov.io/gh/xflr6/gsheets',
-    },
-    packages=find_packages(),
-    platforms='any',
-    python_requires='>=3.9',
-    install_requires=[
-        'google-api-python-client',
-        'oauth2client>=1.5.0',
-    ],
-    extras_require={
-        'dev': ['tox>=3', 'flake8', 'pep8-naming', 'wheel', 'twine'],
-        'test': ['mock>=4', 'pytest>=7', 'pytest-mock>=3', 'pytest-cov'],
-        'docs': ['sphinx>=5', 'sphinx-rtd-theme'],
-    },
-    long_description=pathlib.Path('README.rst').read_text(encoding='utf-8'),
-    long_description_content_type='text/x-rst',
+    name='python-pskc',
+    version=pskc.__version__,
+    description='Python module for handling PSKC files',
+    long_description=long_description,
+    author='Arthur de Jong',
+    author_email='arthur@arthurdejong.org',
+    keywords=['PSKC', 'RFC 6030', 'key container'],
+    url='https://arthurdejong.org/python-pskc/',
+    license='LGPL',
     classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
-        'Intended Audience :: Science/Research',
-        'License :: OSI Approved :: MIT License',
+        'Intended Audience :: Information Technology',
+        'Intended Audience :: System Administrators',
+        'License :: OSI Approved :: GNU Lesser General Public License v2 or later (LGPLv2+)',
         'Operating System :: OS Independent',
+        'Programming Language :: Python',
         'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
         'Programming Language :: Python :: 3.11',
         'Programming Language :: Python :: 3.12',
-        'Programming Language :: Python :: 3.13',
-        'Topic :: Internet :: WWW/HTTP',
-        'Topic :: Office/Business :: Financial :: Spreadsheet',
+        'Programming Language :: Python :: Implementation :: PyPy',
+        'Topic :: Security :: Cryptography',
+        'Topic :: Software Development :: Libraries :: Python Modules',
+        'Topic :: System :: Systems Administration :: Authentication/Directory',
+        'Topic :: Text Processing :: Markup :: XML',
     ],
+    packages=find_packages(),
+    install_requires=['cryptography', 'python-dateutil'],
+    extras_require={
+        'lxml': ['lxml'],
+        'defuse': ['defusedxml'],
+        'signature': ['signxml'],
+    },
+    entry_points={
+        'console_scripts': [
+            'csv2pskc = pskc.scripts.csv2pskc:main',
+            'pskc2csv = pskc.scripts.pskc2csv:main',
+            'pskc2pskc = pskc.scripts.pskc2pskc:main',
+        ],
+    },
 )
