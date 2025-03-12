@@ -1,52 +1,45 @@
-# Copyright 2016-2018 Dirk Thomas
-# Licensed under the Apache License, Version 2.0
-
 import os
-
 from setuptools import setup
 
-cmdclass = {}
-try:
-    from stdeb.command.sdist_dsc import sdist_dsc
-except ImportError:
-    pass
-else:
-    class CustomSdistDebCommand(sdist_dsc):
-        """Weird approach to apply the Debian patches during packaging."""
+with open(os.path.join(os.path.dirname(__file__), 'README.rst')) as readme:
+    README = readme.read()
 
-        def run(self):  # noqa: D102
-            from stdeb.command import sdist_dsc
-            build_dsc = sdist_dsc.build_dsc
+# allow setup.py to be run from any path
+os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
-            def custom_build_dsc(*args, **kwargs):
-                nonlocal build_dsc
-                debinfo = self.get_debinfo()
-                repackaged_dirname = \
-                    debinfo.source + '-' + debinfo.upstream_version
-                dst_directory = os.path.join(
-                    self.dist_dir, repackaged_dirname, 'debian', 'patches')
-                os.makedirs(dst_directory, exist_ok=True)
-                # read patch
-                with open('debian/patches/setup.cfg.patch', 'r') as h:
-                    lines = h.read().splitlines()
-                print(
-                    "writing customized patch '%s'" %
-                    os.path.join(dst_directory, 'setup.cfg.patch'))
-                # write patch with modified path
-                with open(
-                    os.path.join(dst_directory, 'setup.cfg.patch'), 'w'
-                ) as h:
-                    for line in lines:
-                        if line.startswith('--- ') or line.startswith('+++ '):
-                            line = \
-                                line[0:4] + repackaged_dirname + '/' + line[4:]
-                        h.write(line + '\n')
-                with open(os.path.join(dst_directory, 'series'), 'w') as h:
-                    h.write('setup.cfg.patch\n')
-                return build_dsc(*args, **kwargs)
 
-            sdist_dsc.build_dsc = custom_build_dsc
-            super().run()
-    cmdclass['sdist_dsc'] = CustomSdistDebCommand
+def local_scheme(version):
+    return ""
 
-setup(cmdclass=cmdclass)
+
+setup(
+    name='django-db-logger',
+    version='0.1.13',
+    # use_scm_version={"local_scheme": local_scheme} if os.getenv('TestPypi') == 'yes' else False,  # using `setuptools_scm` when publish to test.pypi
+    setup_requires=['setuptools_scm'],
+    packages=['django_db_logger', 'django_db_logger.migrations'],
+    include_package_data=True,
+    license='MIT License',
+    description='Django logging in database',
+    long_description=README,
+    url='https://github.com/CiCiUi/django-db-logger',
+    author='zhangshine',
+    author_email='zhangshine0125@gmail.com',
+    install_requires=['django>=3.2', 'six'],
+    classifiers=[
+        'Environment :: Web Environment',
+        'Framework :: Django',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: MIT License',
+        'Operating System :: OS Independent',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
+        'Topic :: Internet :: WWW/HTTP',
+        'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
+    ],
+)

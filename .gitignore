@@ -1,0 +1,11 @@
+*.pyc
+.DS_Store
+.idea
+Fancy
+db.sqlite*
+dist
+*.egg-info
+.coding-ide
+dev.db
+build
+.eggs
