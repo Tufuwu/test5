@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -----------------------------------------------------------------------------
 # Copyright (c) 2013-2021, NeXpy Development Team.
 #
@@ -7,6 +6,4 @@
 # The full license is in the file COPYING, distributed with this software.
 # -----------------------------------------------------------------------------
 
-from setuptools import setup
-
-setup()
+from ._version import version as __version__
