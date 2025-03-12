@@ -1,29 +1,37 @@
-# Shuffled: Random iterators for large integer ranges
+django-enforce-host
+===================
 
-Shuffled is a library for iterating randomly and without repetition over integer ranges.
-It doesn't store all the integers in memory so that you can work with ranges of up to
-2<sup>128</sup> elements, even with your standard RAM available.
+[![pypi release](https://img.shields.io/pypi/v/django-enforce-host.svg)](https://pypi.python.org/pypi/django-enforce-host)
 
-```python
->>> shuffled_range = Shuffled(10)
->>> list(shuffled_range)
-[4, 1, 2, 9, 8, 5, 3, 0, 6, 7]
->>> same_shuffled_range = Shuffled(10, seed=shuffled_range.seed)
->>> list(same_shuffled_range)
-[4, 1, 2, 9, 8, 5, 3, 0, 6, 7]
-```
+Sometimes, it's unavoidable that multiple URLs point at the same app - for example, on Heroku, all apps get a `.herokuapp.com` address, as well as any custom domains that are pointed at them.
 
-```python
->>> network = ipaddress.IPv4Network('10.0.0.0/8')
->>> shuffled_range = Shuffled(network.num_addresses)
->>> for index in shuffled_range:
-...     print(network[index])
-...
-10.24.41.126
-10.67.199.15
-10.240.82.199
-10.79.219.74
-10.166.105.25
-10.19.5.91
-[...]
-```
+This is a simple Django middleware that redirects all traffic from hosts other than the one(s) you specify to your canonical URL.
+
+Tested against Django 3.2 and 4.0, 4.1 and 4.2 on Python 3.8, 3.9, 3.10 and 3.11.
+
+### Installation
+
+Install from PyPI
+
+    pip install django-enforce-host
+
+In your `MIDDLEWARE` setting, add the middleware just after the `SecurityMiddleware`:
+
+    MIDDLEWARE = [
+        # Django's SecurityMiddleware will handle HTTP -> HTTPS redirects
+        # before the EnforceHostMiddleware redirects to the canonical domain
+        'django.middleware.security.SecurityMiddleware',
+        'enforce_host.EnforceHostMiddleware',
+        ... other middleware
+    ]
+
+Set the following setting to be either a single allowed host, or a list of allowed hosts:
+
+    ENFORCE_HOST = 'yourapp.com'
+
+That's it!
+
+## Code of conduct
+
+For guidelines regarding the code of conduct when contributing to this repository please review [https://www.dabapps.com/open-source/code-of-conduct/](https://www.dabapps.com/open-source/code-of-conduct/)
+

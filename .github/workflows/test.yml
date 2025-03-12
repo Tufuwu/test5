@@ -1,29 +1,24 @@
-name: main
-on:
-  - push
+name: CI
+
+on: [pull_request]
+
 jobs:
-  check-tests:
+  build:
+
     runs-on: ubuntu-latest
+
     strategy:
       matrix:
-        python-version: ["3.9", "3.10"]
+        python: ["3.9", "3.10"]
+        django: [2.2]
+
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python-version }}
-      - run: pip install --editable '.[tests]'
-      - run: make check-tests
-  check-dev:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.9", "3.10"]
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python-version }}
-      - run: pip install --editable '.[dev]'
-      - run: make check-lint
-      - run: make check-format
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python }}
+    - name: Install dependencies
+      run: pip install -U django==${{ matrix.django }}
+    - name: Run tests
+      run: python manage.py test

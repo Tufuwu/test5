@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+set -e
+
+black enforce_host
+isort enforce_host
