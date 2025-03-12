@@ -1,63 +1,60 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
+name: Test & Checks
 
-name: Upload Python Package
-
-on:
-  push:
-    tags:
-      - '\d+\.\d+\.[0-9a-z]+'
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
-permissions:
-  contents: read
+on: [push, pull_request]
 
 jobs:
-  release-build:
+  tests:
+    name: Tests & Checks
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.9", "3.10"]
 
     steps:
-      - uses: actions/checkout@v4
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{matrix.python}}
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install tox pbr
+        pip install -r doc/requirements.txt .[test]
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Check doc
+      run: tox -e docs
+    - name: Check with linters
+      run: tox -e pep8
+    - name: Check covering
+      run: tox -e cover
+    - name: Test with tox
+      run: tox
 
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.x"
-
-      - name: Build release distributions
-        run: |
-          # NOTE: put your own distribution build steps here.
-          python -m pip install build
-          python -m build
-
-      - name: Upload distributions
-        uses: actions/upload-artifact@v4
-        with:
-          name: release-dists
-          path: dist/
-
-  pypi-publish:
-    name: upload release to PyPI
+  build-and-publish:
+    name: Build a new package and publish it to pypi if necessary
     runs-on: ubuntu-latest
-    environment: release
-
-    needs:
-      - release-build
-
+    needs: tests
     permissions:
-      # IMPORTANT: this permission is mandatory for trusted publishing
       id-token: write
-      contents: write
 
     steps:
-      - name: Retrieve release distributions
-        uses: actions/download-artifact@v4
-        with:
-          name: release-dists
-          path: dist/
-
-      - name: Publish package distributions to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v4
+      with:
+        python-version: "3.x"
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install build
+    - name: Build package
+      run: python -m build
+    - name: upload windows dists
+      uses: actions/upload-artifact@v4
+      with:
+        name: release-dists
+        path: dist/
+    - name: Publish release distributions to PyPI
+      # deploy only when a new tag is pushed to github
+      if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+      uses: pypa/gh-action-pypi-publish@release/v1
