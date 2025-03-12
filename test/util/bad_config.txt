@@ -1,2 +1,0 @@
-#This config is not in JSON or YAML format.
-]csv_config_key, csv_config_value
