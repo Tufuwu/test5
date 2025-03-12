@@ -1,29 +1,47 @@
-name: CI
+name: CI Build
 
 on:
   push:
+    branches: [ master ]
   pull_request:
-  schedule:
-    - cron: '0 0 * * 2'
+    branches: [ master ]
 
 jobs:
-  industrial_ci:
+  build:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
     strategy:
       matrix:
-        env:
-          - {ROS_DISTRO: melodic, ROS_REPO: main}
-    env:
-      ADDITIONAL_DEBS: "python-pip"
-      BEFORE_INSTALL_TARGET_DEPENDENCIES: "pip install --upgrade pip && hash -r pip && pip install --upgrade --progress-bar=off enum34 pyasn1-modules 'tensorflow>=2.1' 'keras<2.4'"
-      CCACHE_DIR: /github/home/.ccache # Directory for ccache (and how we enable ccache in industrial_ci)
-    runs-on: ubuntu-latest
+        python-version: ["3.9", "3.10"]
+
+    name: Build with Python ${{ matrix.python-version }}
     steps:
-      - uses: actions/checkout@v2
-      # This step will fetch/store the directory used by ccache before/after the ci run
-      - uses: actions/cache@v4
+      - name: Checkout code
+        uses: actions/checkout@v2
+        # Fetch all tags and branches because tests rely on it
         with:
-          path: ${{ env.CCACHE_DIR }}
-          key: ccache-${{ matrix.env.ROS_DISTRO }}-${{ matrix.env.ROS_REPO }}
-      # Run industrial_ci
-      - uses: 'ros-industrial/industrial_ci@master'
-        env: ${{ matrix.env }}
+          fetch-depth: 0
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: python -m pip install tox tox-gh-actions
+      - name: Test with tox ${{ matrix.python-version }}
+        run: tox

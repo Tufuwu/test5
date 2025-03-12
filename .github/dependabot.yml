@@ -1,11 +1,14 @@
 version: 2
 updates:
-  - package-ecosystem: "github-actions"
+  - package-ecosystem: github-actions
     directory: "/"
     schedule:
-      interval: "daily"
-  - package-ecosystem: "gitsubmodule"
+      interval: weekly
+    assignees:
+      - "David-Wobrock"
+  - package-ecosystem: pip
     directory: "/"
     schedule:
-      interval: "weekly"
-      day: "tuesday"
+      interval: weekly
+    assignees:
+      - "David-Wobrock"

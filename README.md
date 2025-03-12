@@ -1,60 +1,115 @@
-# TU/e Robotics image_recognition
+# Django migration linter
 
-[![CI](https://github.com/tue-robotics/image_recognition/actions/workflows/main.yml/badge.svg)](https://github.com/tue-robotics/image_recognition/actions/workflows/main.yml)
-[![Industrial CI](https://github.com/tue-robotics/image_recognition/actions/workflows/industrial_ci.yml/badge.svg)](https://github.com/tue-robotics/image_recognition/actions/workflows/industrial_ci.yml)
+Detect backward incompatible migrations for your Django project.
+It will save you time by making sure migrations will not break with a older codebase.
 
-Packages for image recognition - Robocup TU/e Robotics
+[![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2F3YOURMIND%2Fdjango-migration-linter%2Fbadge%3Fref%3Dmain&style=flat)](https://actions-badge.atrox.dev/3YOURMIND/django-migration-linter/goto?ref=main)
+[![PyPI](https://img.shields.io/pypi/v/django-migration-linter.svg)](https://pypi.python.org/pypi/django-migration-linter/)
+[![PR_Welcome](https://img.shields.io/badge/PR-welcome-green.svg)](https://github.com/3YOURMIND/django-migration-linter/pulls)
+[![3YD_Hiring](https://img.shields.io/badge/3YOURMIND-Hiring-brightgreen.svg)](https://www.3yourmind.com/career)
+[![GitHub_Stars](https://img.shields.io/github/stars/3YOURMIND/django-migration-linter.svg?style=social&label=Stars)](https://github.com/3YOURMIND/django-migration-linter/stargazers)
 
-## Package status & Description
+## Quick installation
 
-Package | Build status Xenial Kinetic x64 | Description
-------- | ------------------------------- | -----------
-[image_recognition](https://github.com/tue-robotics/image_recognition/tree/master/image_recognition) | [![Build Status](http://build.ros.org/job/Ksrc_uX__image_recognition__ubuntu_xenial__source/1//badge/icon)](http://build.ros.org/job/Ksrc_uX__image_recognition__ubuntu_xenial__source/1/) | Meta package for all image_recognition packages.
-[image_recognition_analysis](https://github.com/tue-robotics/image_recognition/tree/master/image_recognition_analysis) | [![Build Status](http://build.ros.org/job/Ksrc_uX__image_recognition_analysis__ubuntu_xenial__source/1//badge/icon)](http://build.ros.org/job/Ksrc_uX__image_recognition_analysis__ubuntu_xenial__source/1/) | analysis for image recognition
-[image_recognition_color_extractor](https://github.com/tue-robotics/image_recognition/tree/master/image_recognition_color_extractor) | [![Build Status](http://build.ros.org/job/Ksrc_uX__image_recognition_color_extractor__ubuntu_xenial__source/1//badge/icon)](http://build.ros.org/job/Ksrc_uX__image_recognition_color_extractor__ubuntu_xenial__source/1/) | Extract dominant colors from images
-[image_recognition_jetson](https://github.com/tue-robotics/image_recognition/tree/master/image_recognition_jetson) | [![Build Status](http://build.ros.org/job/Ksrc_uX__image_recognition_jetson__ubuntu_xenial__source/1//badge/icon)](http://build.ros.org/job/Ksrc_uX__image_recognition_jetson_ubuntu_xenial__source/1/) | ROS wrapper for Jetson Inference (https://github.com/dusty-nv/jetson-inference) for running inference using TensorRT.
-[image_recognition_keras](https://github.com/tue-robotics/image_recognition/tree/master/image_recognition_keras) | [![Build Status](http://build.ros.org/job/Ksrc_uX__image_recognition_keras__ubuntu_xenial__source/1//badge/icon)](http://build.ros.org/job/Ksrc_uX__image_recognition_keras_ubuntu_xenial__source/1/) | ROS wrappers for Keras neural nets.
-[image_recognition_msgs](https://github.com/tue-robotics/image_recognition/tree/master/image_recognition_msgs) | [![Build Status](http://build.ros.org/job/Ksrc_uX__image_recognition_msgs__ubuntu_xenial__source/1//badge/icon)](http://build.ros.org/job/Ksrc_uX__image_recognition_msgs__ubuntu_xenial__source/1/) | Interface definition for image recognition
-[image_recognition_openface](https://github.com/tue-robotics/image_recognition/tree/master/image_recognition_openface) | [![Build Status](http://build.ros.org/job/Ksrc_uX__image_recognition_openface__ubuntu_xenial__source/1//badge/icon)](http://build.ros.org/job/Ksrc_uX__image_recognition_openface__ubuntu_xenial__source/1/) | ROS wrapper for Openface (https://github.com/cmusatyalab/openface) to detect and recognize faces in images.
-[image_recognition_openpose](https://github.com/tue-robotics/image_recognition/tree/master/image_recognition_openpose) | [![Build Status](http://build.ros.org/job/Ksrc_uX__image_recognition_openpose__ubuntu_xenial__source/1//badge/icon)](http://build.ros.org/job/Ksrc_uX__image_recognition_openpose_ubuntu_xenial__source/1/) | ROS wrapper for Openpose (https://github.com/CMU-Perceptual-Computing-Lab/) for getting poses of 2D images.
-[image_recognition_pytorch](https://github.com/tue-robotics/image_recognition/tree/master/image_recognition_pytorch) | [![Build Status](http://build.ros.org/job/Ksrc_uX__image_recognition_pytorch__ubuntu_xenial__source/1//badge/icon)](http://build.ros.org/job/Ksrc_uX__image_recognition_pytorch_ubuntu_xenial__source/1/) | ROS wrapper around a PyTorch model for (https://github.com/Nebula4869/PyTorch-gender-age-estimation) for getting age & gender estimations on faces
-[image_recognition_rqt](https://github.com/tue-robotics/image_recognition/tree/master/image_recognition_rqt) | [![Build Status](http://build.ros.org/job/Ksrc_uX__image_recognition_rqt__ubuntu_xenial__source/1//badge/icon)](http://build.ros.org/job/Ksrc_uX__image_recognition_rqt__ubuntu_xenial__source/1/) | RQT tools with helpers testing this interface and training/labeling data.
-[image_recognition_skybiometry](https://github.com/tue-robotics/image_recognition/tree/master/image_recognition_skybiometry) | [![Build Status](http://build.ros.org/job/Ksrc_uX__image_recognition_skybiometry__ubuntu_xenial__source/1//badge/icon)](http://build.ros.org/job/Ksrc_uX__image_recognition_skybiometry_ubuntu_xenial__source/1/) | ROS wrapper for Skybiometry (https://skybiometry.com/) for getting face properties of a detected face, e.g. age estimation, gender estimation etc.
-[image_recognition_tensorflow](https://github.com/tue-robotics/image_recognition/tree/master/image_recognition_tensorflow) | [![Build Status](http://build.ros.org/job/Ksrc_uX__image_recognition_tensorflow__ubuntu_xenial__source/1//badge/icon)](http://build.ros.org/job/Ksrc_uX__image_recognition_tensorflow__ubuntu_xenial__source/1/) | Object recognition with use of Tensorflow. The user can retrain the top layers of a neural network to perform classification with its own dataset as described in [this tutorial](https://www.tensorflow.org/versions/r0.11/how_tos/image_retraining/index.html).
-[image_recognition_tensorflow_rqt](https://github.com/tue-robotics/image_recognition/tree/master/image_recognition_tensorflow_rqt) | [![Build Status](http://build.ros.org/job/Ksrc_uX__image_recognition_tensorflow_rqt__ubuntu_xenial__source/1//badge/icon)](http://build.ros.org/job/Ksrc_uX__image_recognition_tensorflow_rqt__ubuntu_xenial__source/1/) | RQT tools for retraining a Tensorflow neural network.
-[image_recognition_util](https://github.com/tue-robotics/image_recognition/tree/master/image_recognition_util) | [![Build Status](http://build.ros.org/job/Ksrc_uX__image_recognition_util__ubuntu_xenial__source/1//badge/icon)](http://build.ros.org/job/Ksrc_uX__image_recognition_util__ubuntu_xenial__source/1/) | Utils shared among image recognition packages
+```
+pip install django-migration-linter
+```
 
-# How to
+And add the migration linter to your ``INSTALLED_APPS``:
+```
+INSTALLED_APPS = [
+    ...,
+    "django_migration_linter",
+    ...,
+]
+```
 
-## Object recognition
-Step 1: label images with the [image_recognition_rqt#annotation-plugin](https://github.com/tue-robotics/image_recognition/tree/master/image_recognition_rqt#annotation-plugin)
+Optionally, add a configuration:
+```
+MIGRATION_LINTER_OPTIONS = {
+    ...
+}
+```
 
-[![Annotate](http://img.youtube.com/vi/uAQvn7SInlg/0.jpg)](http://www.youtube.com/watch?v=uAQvn7SInlg)
-<-- Youtube video
+For details about configuration options, checkout [Usage](docs/usage.md).
 
-Step 2: train a neural network with the [image_recognition_tensorflow_rqt](https://github.com/tue-robotics/image_recognition/tree/master/image_recognition_tensorflow_rqt)
+## Usage example
 
-[![Train](http://img.youtube.com/vi/6JdtWa8FD04/0.jpg)](http://www.youtube.com/watch?v=6JdtWa8FD04)
-<-- Youtube video
+```
+$ python manage.py lintmigrations
 
-Step 3: predict labels for new data with the [image_recognition_rqt#test-plugin](https://github.com/tue-robotics/image_recognition/tree/master/image_recognition_rqt#test-plugin)
+(app_add_not_null_column, 0001_create_table)... OK
+(app_add_not_null_column, 0002_add_new_not_null_field)... ERR
+        NOT NULL constraint on columns
+(app_drop_table, 0001_initial)... OK
+(app_drop_table, 0002_delete_a)... ERR
+        DROPPING table
+(app_ignore_migration, 0001_initial)... OK
+(app_ignore_migration, 0002_ignore_migration)... IGNORE
+(app_rename_table, 0001_initial)... OK
+(app_rename_table, 0002_auto_20190414_1500)... ERR
+        RENAMING tables
 
-[![Recognize](http://img.youtube.com/vi/OJKYLB3myWw/0.jpg)](http://www.youtube.com/watch?v=OJKYLB3myWw)
-<-- Youtube video
+*** Summary ***
+Valid migrations: 4/8
+Erroneous migrations: 3/8
+Migrations with warnings: 0/8
+Ignored migrations: 1/8
+```
 
-## Face recognition
-See the tutorial at [image_recognition_openface](https://github.com/tue-robotics/image_recognition/tree/master/image_recognition_openface)
+The linter analysed all migrations from the Django project.
+It found 3 migrations that are doing backward incompatible operations and 1 that is explicitly ignored.
+The list of incompatibilities that the linter analyses [can be found at docs/incompatibilities.md](./docs/incompatibilities.md).
 
-[![Face recognition](http://img.youtube.com/vi/yGqDdfYxHZw/0.jpg)](http://www.youtube.com/watch?v=yGqDdfYxHZw)
-<-- Youtube video
+More advanced usages of the linter and options [can be found at docs/usage.md](./docs/usage.md).
 
-# Installation
+## Integration
 
-Clone the repo in your catkin_ws:
+One can either integrate the linter in the CI using its `lintmigrations` command, or detect incompatibilities during generation of migrations with
+```
+$ python manage.py makemigrations --lint
 
-        cd ~/catkin_ws/src
-        git clone https://github.com/tue-robotics/image_recognition.git
+Migrations for 'app_correct':
+  tests/test_project/app_correct/migrations/0003_a_column.py
+    - Add field column to a
+Linting for 'app_correct':
+(app_correct, 0003_a_column)... ERR
+        NOT NULL constraint on columns
 
-Build your catkin workspace
-        cd ~/catkin_ws
-        catkin_make
+The migration linter detected that this migration is not backward compatible.
+- If you keep the migration, you will want to fix the issue or ignore the migration.
+- By default, the newly created migration file will be deleted.
+Do you want to keep the migration? [y/N] n
+Deleted tests/test_project/app_correct/migrations/0003_a_column.py
+```
+
+The linter found that the newly created migration is not backward compatible and deleted the file after confirmation.
+This behaviour can be the default of the `makemigrations` command through the `MIGRATION_LINTER_OVERRIDE_MAKEMIGRATIONS` Django setting.
+Find out more about the [makemigrations command at docs/makemigrations.md](./docs/makemigrations.md).
+
+### More information
+
+Please find more documentation [in the docs/ folder](./docs/).
+
+Some implementation details [can be found in the ./docs/internals/ folder](./docs/internals/).
+
+### Blog post
+
+* [Keeping Django database migrations backward compatible](https://medium.com/3yourmind/keeping-django-database-migrations-backward-compatible-727820260dbb)
+* [Django and its default values](https://medium.com/botify-labs/django-and-its-default-values-c21a13cff9f)
+
+### They talk about the linter
+
+* [Django News](https://django-news.com/issues/6?m=web#uMmosw7)
+* [wemake-django-template](https://wemake-django-template.readthedocs.io/en/latest/pages/template/linters.html#django-migration-linter)
+* [Testing Django migrations on sobolevn's blog](https://sobolevn.me/2019/10/testing-django-migrations#existing-setup)
+
+### Related
+
+* [django-test-migrations](https://github.com/wemake-services/django-test-migrations) - Test django schema and data migrations, including migrations' order and best practices.
+
+### License
+
+*django-migration-linter* is released under the [Apache 2.0 License](./LICENSE).
+
+##### Maintained by [David Wobrock](https://github.com/David-Wobrock)
