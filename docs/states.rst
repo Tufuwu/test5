@@ -1,5 +1,0 @@
-======
-States
-======
-
-.. automodule :: quantumflow.states

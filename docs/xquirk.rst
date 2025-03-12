@@ -1,6 +1,0 @@
-========
-Quirk
-========
-
-.. automodule :: quantumflow.xquirk
-

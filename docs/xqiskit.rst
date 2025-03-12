@@ -1,5 +1,0 @@
-========
-QisKit
-========
-
-.. automodule :: quantumflow.xqiskit

@@ -1,5 +1,0 @@
-========
-Channels
-========
-
-.. automodule :: quantumflow.channels

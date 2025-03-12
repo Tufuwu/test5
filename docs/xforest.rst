@@ -1,5 +1,0 @@
-========
-Forest
-========
-
-.. automodule :: quantumflow.xforest

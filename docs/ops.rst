@@ -1,5 +1,0 @@
-==========
-Operations
-==========
-
-.. automodule :: quantumflow.ops
