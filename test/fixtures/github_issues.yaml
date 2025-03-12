@@ -1,0 +1,83 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - Basic 0xdeadbeef
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.31.0
+    method: GET
+    uri: https://api.github.com/repos/llimllib/limbo/issues/5
+  response:
+    body:
+      string: '{"url":"https://api.github.com/repos/llimllib/limbo/issues/5","repository_url":"https://api.github.com/repos/llimllib/limbo","labels_url":"https://api.github.com/repos/llimllib/limbo/issues/5/labels{/name}","comments_url":"https://api.github.com/repos/llimllib/limbo/issues/5/comments","events_url":"https://api.github.com/repos/llimllib/limbo/issues/5/events","html_url":"https://github.com/llimllib/limbo/issues/5","id":45395034,"node_id":"MDU6SXNzdWU0NTM5NTAzNA==","number":5,"title":"Create
+        an emoji translator","user":{"login":"llimllib","id":7150,"node_id":"MDQ6VXNlcjcxNTA=","avatar_url":"https://avatars.githubusercontent.com/u/7150?v=4","gravatar_id":"","url":"https://api.github.com/users/llimllib","html_url":"https://github.com/llimllib","followers_url":"https://api.github.com/users/llimllib/followers","following_url":"https://api.github.com/users/llimllib/following{/other_user}","gists_url":"https://api.github.com/users/llimllib/gists{/gist_id}","starred_url":"https://api.github.com/users/llimllib/starred{/owner}{/repo}","subscriptions_url":"https://api.github.com/users/llimllib/subscriptions","organizations_url":"https://api.github.com/users/llimllib/orgs","repos_url":"https://api.github.com/users/llimllib/repos","events_url":"https://api.github.com/users/llimllib/events{/privacy}","received_events_url":"https://api.github.com/users/llimllib/received_events","type":"User","site_admin":false},"labels":[{"id":88493851,"node_id":"MDU6TGFiZWw4ODQ5Mzg1MQ==","url":"https://api.github.com/repos/llimllib/limbo/labels/enhancement","name":"enhancement","color":"84b6eb","default":true,"description":null}],"state":"open","locked":false,"assignee":null,"assignees":[],"milestone":null,"comments":0,"created_at":"2014-10-09T17:38:51Z","updated_at":"2014-10-09T17:38:54Z","closed_at":null,"author_association":"OWNER","active_lock_reason":null,"body":"i.e.
+        if you type \"I love to eat bananas\", the plugin does _something_ to try
+        and convert that into a string of emoji. It probably involves a list of synonyms?
+        Maybe even a word model? Or it does something really simple? I don''t know,
+        but it would be an awesome feature.\n","closed_by":null,"reactions":{"url":"https://api.github.com/repos/llimllib/limbo/issues/5/reactions","total_count":0,"+1":0,"-1":0,"laugh":0,"hooray":0,"confused":0,"heart":0,"rocket":0,"eyes":0},"timeline_url":"https://api.github.com/repos/llimllib/limbo/issues/5/timeline","performed_via_github_app":null,"state_reason":null}'
+    headers:
+      Access-Control-Allow-Origin:
+      - '*'
+      Access-Control-Expose-Headers:
+      - ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining,
+        X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes,
+        X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO,
+        X-GitHub-Request-Id, Deprecation, Sunset
+      Cache-Control:
+      - public, max-age=60, s-maxage=60
+      Content-Encoding:
+      - gzip
+      Content-Security-Policy:
+      - default-src 'none'
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Sat, 09 Mar 2024 15:46:16 GMT
+      ETag:
+      - W/"55285a7d98036988ae3297a5fad3f5d2c1a375229d7311ac135dc4fe862a2982"
+      Last-Modified:
+      - Tue, 20 Feb 2024 19:08:26 GMT
+      Referrer-Policy:
+      - origin-when-cross-origin, strict-origin-when-cross-origin
+      Server:
+      - GitHub.com
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubdomains; preload
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept
+      - Accept-Encoding, Accept, X-Requested-With
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-GitHub-Media-Type:
+      - github.v3; format=json
+      X-GitHub-Request-Id:
+      - DF12:14962F:4C94CAF:8F7B397:65EC8448
+      X-RateLimit-Limit:
+      - '60'
+      X-RateLimit-Remaining:
+      - '58'
+      X-RateLimit-Reset:
+      - '1710001567'
+      X-RateLimit-Resource:
+      - core
+      X-RateLimit-Used:
+      - '2'
+      X-XSS-Protection:
+      - '0'
+      x-github-api-version-selected:
+      - '2022-11-28'
+    status:
+      code: 200
+      message: OK
+version: 1

@@ -1,36 +1,47 @@
-.PHONY: docs
+# to run a single file, with debugger support:
+# pytest -s test/test_plugins/test_image.py
+.PHONY: test
+test: install
+	LANG=en_US.UTF-8 pytest --cov=limbo --cov-report term-missing test
 
-define PRINT_HELP_PYSCRIPT
-import re, sys
+.PHONY: clean
+clean:
+	rm -rf build dist limbo.egg-info
 
-for line in sys.stdin:
-	match = re.match(r'^([a-zA-Z_-]+):.*?## (.*)$$', line)
-	if match:
-		target, help = match.groups()
-		print("%-20s %s" % (target, help))
-endef
-export PRINT_HELP_PYSCRIPT
+.PHONY: run
+run: install
+	bin/limbo
 
-help: ## display this message
-	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
+.PHONY: repl
+repl: install
+	bin/limbo -t
 
-generate: ## generate environment for tests
-	cd pyroma/testdata/complete
-	python setup.py sdist --formats=bztar,gztar,tar,zip
-	cp pyroma/testdata/complete/dist/complete-1.0.dev1.* pyroma/testdata/distributions/
+.PHONY: requirements
+requirements:
+	pip install -r requirements.txt
 
-tests: generate ## run tests
-	python -m unittest pyroma.tests
+.PHONY: install
+install: requirements
+	python setup.py install
+	make clean
 
-clean: clean-pyc ## remove all
+.PHONY: publish
+publish:
+	pandoc -s -w rst README.md -o README.rst
+	pip install wheel twine
+	python setup.py sdist bdist_wheel
+	twine upload dist/*
+	rm README.rst
+	rm -rf dist
 
-clean-pyc: ## remove Python file artifacts
-	find . -name '*.pyc' -exec rm -f {} +
-	find . -name '*.pyo' -exec rm -f {} +
-	find . -name '*~' -exec rm -f {} +
-	find . -name '__pycache__' -exec rm -fr {} +
-	find . -name 'pip-selfcheck.json' -exec rm -fr {} +
-	find . -name 'pyvenv.cfg' -exec rm -fr {} +
+.PHONY: flake8
+flake8:
+	flake8 limbo test
 
-prepare-release:
-	python fetch_classifiers.py
+.PHONY: update-requirements
+update-requirements:
+	rm -rf update-requirements || true
+	python -mvenv update-requirements
+	update-requirements/bin/pip install -r requirements-to-freeze.txt --upgrade
+	update-requirements/bin/pip freeze > requirements.txt
+	rm -rf update-requirements

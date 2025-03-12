@@ -1,0 +1,153 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-agent:
+      - Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_0 like Mac OS X; en-us) AppleWebKit/532.9
+        (KHTML, like Gecko) Version/4.0.5 Mobile/8A293 Safari/6531.22.7
+    method: GET
+    uri: https://www.google.com/search?tbm=isch&q=bananas&safe=active
+  response:
+    body:
+      string: '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//WAPFORUM//DTD
+        XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd"><html
+        xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta content="application/xhtml+xml;
+        charset=UTF-8" http-equiv="Content-Type"/><meta content="no-cache" name="Cache-Control"/><title>bananas
+        - Google Search</title><style>a{text-decoration:none;color:inherit}a img{border:0}body{font-family:Roboto,Helvetica,Arial,sans-serif;padding:8px;margin:0
+        auto;max-width:700px;min-width:240px;}.FbhRzb{border-left:thin solid #dadce0;border-right:thin
+        solid #dadce0;border-top:thin solid #dadce0;height:24px;overflow:hidden}.n692Zd{margin-bottom:10px}.cvifge{height:24px;border-spacing:0}.QvGUP{height:24px;padding:0
+        8px 0 8px;vertical-align:top}.O4cRJf{height:24px;width:100%;padding:0;}.O1ePr{height:24px;padding:0;vertical-align:top}.kgJEQe{height:16px;width:16px;vertical-align:top;margin-top:4px}.lXLRf{vertical-align:top}.MhzMZd{border:0;vertical-align:middle;font-size:12px;height:24px;padding:0;width:100%;}.xB0fq{height:24px;border:none;font-size:12px;background-color:#1a73e8;color:#fff;padding:0
+        8px;margin:0;vertical-align:top;}.xB0fq:focus{border:1px solid #1a73e8}.M7pB2{border:thin
+        solid #dadce0;margin:0 0 3px 0;font-size:10px;font-weight:500;height:28px}.euZec{width:100%;height:28px;text-align:center;border-spacing:0}table.euZec
+        td{padding:0;width:25%}.QIqI7{display:inline-block;padding-top:4px;font-weight:bold;color:#4285f4}.EY24We{border-bottom:2px
+        solid #4285f4}.CsQyDc{display:inline-block;color:#70757a}.TuS8Ad{font-size:12px}.HddGcc{padding:8px;color:#70757a}.dzp8ae{font-weight:bold;color:#3c4043}.rEM8G{color:#70757a}.bookcf{table-layout:fixed;width:100%;border-spacing:0}.InWNIe{text-align:center}.uZgmoc{border:thin
+        solid #dadce0;color:#70757a;font-size:12px;text-align:center;table-layout:fixed;width:100%}.frGj1b{display:block;padding:8px
+        0 8px 0;width:100%}.nQvrDb{text-align:center}</style></head><body><style>.X6ZCif{color:#202124;font-size:10px;line-height:16px;display:inline-block;padding-top:2px;overflow:hidden;padding-bottom:4px;width:100%}.TwVfHd{border-radius:16px;border:thin
+        solid #dadce0;display:inline-block;padding:8px 8px;margin-right:8px;margin-bottom:4px}.yekiAe{background-color:#dadce0}.jjVJ4e{display:inline-block;margin:5px
+        3px}.ezO2md{border:thin solid #dadce0;padding:8px 8px 8px 8px;margin-bottom:10px;font-family:Roboto,Helvetica,Arial,sans-serif}.lIMUZd{font-family:Roboto,Helvetica,Arial,sans-serif}.SpelHe{position:relative}.kCmkOe{position:relative}.AlD19d{padding-top:2px;padding-bottom:8px;}</style><div
+        class="n692Zd"><div class="FbhRzb"><form action="/search"><input name="safe"
+        value="active" type="hidden"/><input name="sca_esv" value="59c13155e087bde1"
+        type="hidden"/><input name="tbm" value="isch" type="hidden"/><input name="oq"
+        type="hidden"/><input name="aqs" type="hidden"/><table class="cvifge"><tr><td
+        class="QvGUP"><a class="lXLRf" href="/?safe=active&amp;sca_esv=59c13155e087bde1&amp;output=images&amp;tbm=isch&amp;sa=X&amp;ved=0ahUKEwjWlYntvueEAxVqmokEHRp1DY4QPAgC"><img
+        class="kgJEQe" src="//www.gstatic.com/m/images/icons/googleg.gif" alt="Google"/></a></td><td
+        class="O4cRJf"><input class="MhzMZd" value="bananas" name="q" type="text"/></td><td
+        class="O1ePr"><input class="xB0fq" value="Search" type="submit"/></td></tr></table></form></div><div
+        class="M7pB2"><table class="euZec"><tbody><tr><td><a class="CsQyDc" href="/search?q=bananas&amp;safe=active&amp;sca_esv=59c13155e087bde1&amp;source=lnms&amp;sa=X&amp;ved=0ahUKEwjWlYntvueEAxVqmokEHRp1DY4Q_AUIBCgA">ALL</a></td><td
+        class="EY24We"><span class="QIqI7">IMAGES</span></td><td><a class="CsQyDc"
+        href="/search?q=bananas&amp;safe=active&amp;sca_esv=59c13155e087bde1&amp;tbm=vid&amp;source=lnms&amp;sa=X&amp;ved=0ahUKEwjWlYntvueEAxVqmokEHRp1DY4Q_AUIBigC">VIDEOS</a></td><td><a
+        class="CsQyDc" href="/search?q=bananas&amp;safe=active&amp;sca_esv=59c13155e087bde1&amp;tbm=nws&amp;source=lnms&amp;sa=X&amp;ved=0ahUKEwjWlYntvueEAxVqmokEHRp1DY4Q_AUIBygD">NEWS</a></td></tr></tbody></table></div></div><div><div
+        class="nQvrDb"><span><div class="jjVJ4e"> <div> <div class="lIMUZd"><div><a
+        href="/imgres?imgurl=https://images.immediate.co.uk/production/volatile/sites/30/2017/01/Bunch-of-bananas-67e91d5.jpg?quality%3D90%26resize%3D440,400&amp;imgrefurl=https://www.bbcgoodfood.com/howto/guide/health-benefits-bananas&amp;h=400&amp;w=440&amp;tbnid=BkLFzaVC2XC-vM&amp;q=bananas&amp;tbnh=214&amp;tbnw=235&amp;iact=rc&amp;usg=AI4_-kSgIiQXK5LxRUd3oCSRRN0LzdsTjw&amp;vet=1&amp;docid=61wM01jihoQ46M&amp;itg=1&amp;tbm=isch&amp;sa=X&amp;ved=2ahUKEwjWlYntvueEAxVqmokEHRp1DY4QrQN6BAgHEAE"><div
+        class="SpelHe"><img class="lgD2Tc" alt="" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgEUVmy0bPiAFgEMea5TPxEZ7csWhjT-qES4L821MrmU-FslVErZfpTMiu&amp;s"
+        style="max-width:130px;max-height:70px"/></div></a></div></div> </div> </div><div
+        class="jjVJ4e"> <div> <div class="lIMUZd"><div><a href="/imgres?imgurl=https://images.everydayhealth.com/images/diet-nutrition/all-about-bananas-nutrition-facts-health-benefits-recipes-and-more-rm-722x406.jpg&amp;imgrefurl=https://www.everydayhealth.com/diet-nutrition/diet/bananas-nutrition-facts-health-benefits-recipes-risks/&amp;h=406&amp;w=722&amp;tbnid=fV7cO8Pu5HaH_M&amp;q=bananas&amp;tbnh=168&amp;tbnw=300&amp;iact=rc&amp;usg=AI4_-kTlJZ5u4fFiQCBw7Gqx3HI4nw2qYQ&amp;vet=1&amp;docid=yJaHhdO_FriLFM&amp;itg=1&amp;tbm=isch&amp;sa=X&amp;ved=2ahUKEwjWlYntvueEAxVqmokEHRp1DY4QrQN6BAgTEAE"><div
+        class="SpelHe"><img class="lgD2Tc" alt="" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMRXV-wvEnbG4DOiNcbZYX5BbToWi7pi1F9-9Yq_EA3zRxhQA7jOF9_UYJIA&amp;s"
+        style="max-width:130px;max-height:70px"/></div></a></div></div> </div> </div><div
+        class="jjVJ4e"> <div> <div class="lIMUZd"><div><a href="/imgres?imgurl=https://media.cnn.com/api/v1/images/stellar/prod/120604032828-fresh-ripe-bananas.jpg?q%3Dw_3590,h_2774,x_0,y_0,c_fill&amp;imgrefurl=https://www.cnn.com/2014/01/15/health/bananas-nutritional-benefits/index.html&amp;h=2774&amp;w=3590&amp;tbnid=suVHAxZ3BDHmoM&amp;q=bananas&amp;tbnh=197&amp;tbnw=255&amp;iact=rc&amp;usg=AI4_-kQezODsdTG4arhuI2zHNVOUD6Ho0A&amp;vet=1&amp;docid=d7Al2YJ04a0wsM&amp;itg=1&amp;tbm=isch&amp;sa=X&amp;ved=2ahUKEwjWlYntvueEAxVqmokEHRp1DY4QrQN6BAgSEAE"><div
+        class="SpelHe"><img class="lgD2Tc" alt="" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhULr0TIylABT1t5TFYJ4m8O2DruylB2bVCha-MoOYAtjCUjdmJ9j9BmLT&amp;s"
+        style="max-width:130px;max-height:70px"/></div></a></div></div> </div> </div><div
+        class="jjVJ4e"> <div> <div class="lIMUZd"><div><a href="/imgres?imgurl=https://hips.hearstapps.com/hmg-prod/images/bananas-royalty-free-image-1702061943.jpg&amp;imgrefurl=https://www.delish.com/food-news/a46076181/eat-banana-every-day-healthy/&amp;h=1414&amp;w=2121&amp;tbnid=AD9rYoOHbbuEYM&amp;q=bananas&amp;tbnh=183&amp;tbnw=275&amp;iact=rc&amp;usg=AI4_-kSIxbpVh8AzI6xgM4CX2pWfJ9p6vA&amp;vet=1&amp;docid=Zt_VRybZNOGgoM&amp;itg=1&amp;tbm=isch&amp;sa=X&amp;ved=2ahUKEwjWlYntvueEAxVqmokEHRp1DY4QrQN6BAgQEAE"><div
+        class="SpelHe"><img class="lgD2Tc" alt="" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTmOtyvEEGHIQ0DEnr73CvRb8ELEpuwk8A7ejpFG0v09X5PrRprmeRNmUn7gA&amp;s"
+        style="max-width:130px;max-height:70px"/></div></a></div></div> </div> </div><div
+        class="jjVJ4e"> <div> <div class="lIMUZd"><div><a href="/imgres?imgurl=https://cdn-prod.medicalnewstoday.com/content/images/articles/271/271157/bananas-chopped-up-in-a-bowl.jpg&amp;imgrefurl=https://www.medicalnewstoday.com/articles/271157&amp;h=728&amp;w=1100&amp;tbnid=3PusOSuxSOMSkM&amp;q=bananas&amp;tbnh=183&amp;tbnw=276&amp;iact=rc&amp;usg=AI4_-kTh6xqsyrqvIB3GdDkCsZngnyt7oQ&amp;vet=1&amp;docid=tnGIrvooBePAFM&amp;tbm=isch&amp;sa=X&amp;ved=2ahUKEwjWlYntvueEAxVqmokEHRp1DY4QrQN6BAgREAE"><div
+        class="SpelHe"><img class="lgD2Tc" alt="" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTkIucQCgjbB8j4esuPaI31tBo_yj9PaibTq2E3k7X_Ardc2RGlp_fdAza&amp;s"
+        style="max-width:130px;max-height:70px"/></div></a></div></div> </div> </div><div
+        class="jjVJ4e"> <div> <div class="lIMUZd"><div><a href="/imgres?imgurl=https://domf5oio6qrcr.cloudfront.net/medialibrary/6372/202ebeef-6657-44ec-8fff-28352e1f5999.jpg&amp;imgrefurl=https://www.health.harvard.edu/heart-health/fruit-of-the-month-bananas&amp;h=1146&amp;w=1500&amp;tbnid=4gV1TjWbLhmNyM&amp;q=bananas&amp;tbnh=196&amp;tbnw=257&amp;iact=rc&amp;usg=AI4_-kRhJzGEKIuwzSK1fN4lZYE6V1jUbA&amp;vet=1&amp;docid=4I9eLV0jPmPc4M&amp;itg=1&amp;tbm=isch&amp;sa=X&amp;ved=2ahUKEwjWlYntvueEAxVqmokEHRp1DY4QrQN6BAgPEAE"><div
+        class="SpelHe"><img class="lgD2Tc" alt="" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOyx50muVMaj8IKGJeh6o10MO0Cw6alAU60U3GFKLI2vQGVjnWw1_rUUi1vg&amp;s"
+        style="max-width:130px;max-height:70px"/></div></a></div></div> </div> </div><div
+        class="jjVJ4e"> <div> <div class="lIMUZd"><div><a href="/imgres?imgurl=https://draxe.com/wp-content/uploads/2015/01/BananaNutritionThumbnail.jpg&amp;imgrefurl=https://draxe.com/nutrition/banana-nutrition/&amp;h=800&amp;w=800&amp;tbnid=JL7Yr6YAuYbilM&amp;q=bananas&amp;tbnh=225&amp;tbnw=225&amp;iact=rc&amp;usg=AI4_-kRKhCrgzsy2PkPnDMa_OlGIYHQ7CQ&amp;vet=1&amp;docid=1EgCmvl732bxzM&amp;itg=1&amp;tbm=isch&amp;sa=X&amp;ved=2ahUKEwjWlYntvueEAxVqmokEHRp1DY4QrQN6BAgNEAE"><div
+        class="SpelHe"><img class="lgD2Tc" alt="" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQggGmCDQRnMp30VVr1AJ10Wu90Cm1zgoGAui6APVMJoFaLEcd3gup-ymgn7g&amp;s"
+        style="max-width:130px;max-height:70px"/></div></a></div></div> </div> </div><div
+        class="jjVJ4e"> <div> <div class="lIMUZd"><div><a href="/imgres?imgurl=https://media.post.rvohealth.io/wp-content/uploads/2020/09/bananas-732x549-thumbnail.jpg&amp;imgrefurl=https://www.healthline.com/nutrition/foods/bananas&amp;h=549&amp;w=732&amp;tbnid=G9Z5ChZHxTqwoM&amp;q=bananas&amp;tbnh=194&amp;tbnw=259&amp;iact=rc&amp;usg=AI4_-kRGQLTylBMwc8GmsDAAei_NYDNTfw&amp;vet=1&amp;docid=eI4W9j64V_IGMM&amp;tbm=isch&amp;sa=X&amp;ved=2ahUKEwjWlYntvueEAxVqmokEHRp1DY4QrQN6BAgKEAE"><div
+        class="SpelHe"><img class="lgD2Tc" alt="" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEqMqa8MBVw1o0Kvj6LlIZDrbD2i8HKdPVX1rvjln5TbknlcyHmMluT5pHVQ&amp;s"
+        style="max-width:130px;max-height:70px"/></div></a></div></div> </div> </div><div
+        class="jjVJ4e"> <div> <div class="lIMUZd"><div><a href="/imgres?imgurl=https://www.health.com/thmb/zvIgtdQscZdYENlsSg1a0LmveJs%3D/2121x0/filters:no_upscale():max_bytes(150000):strip_icc()/Bananas-02809456216b4984b8771f12be063cdf.jpg&amp;imgrefurl=https://www.health.com/bananas-8413931&amp;h=1414&amp;w=2121&amp;tbnid=4_p-lDu-ijkt6M&amp;q=bananas&amp;tbnh=183&amp;tbnw=275&amp;iact=rc&amp;usg=AI4_-kSgaA2pWdBFwjzzoTrOnKfL0wyYlQ&amp;vet=1&amp;docid=o1N3zL91GYlzYM&amp;tbm=isch&amp;sa=X&amp;ved=2ahUKEwjWlYntvueEAxVqmokEHRp1DY4QrQN6BAgJEAE"><div
+        class="SpelHe"><img class="lgD2Tc" alt="" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxbBruoyYvbe2sGnX-w1_Q7npYMoHIBfKLsCFavE_Q9U2jHmD9XijnYNnY1g&amp;s"
+        style="max-width:130px;max-height:70px"/></div></a></div></div> </div> </div><div
+        class="jjVJ4e"> <div> <div class="lIMUZd"><div><a href="/imgres?imgurl=https://ip.prod.freshop.retail.ncrcloud.com/resize?url%3Dhttps://images.freshop.ncrcloud.com/produce_bananas/d6b28f69c0414ca28c61935a591654d4_large.png%26width%3D512%26type%3Dwebp%26quality%3D90&amp;imgrefurl=https://www.marketbasketpa.com/shop/produce/fresh_fruit/bananas_and_plantains/yellow_bananas/p/12413&amp;h=512&amp;w=512&amp;tbnid=4o_43eCbEyno4M&amp;q=bananas&amp;tbnh=225&amp;tbnw=225&amp;iact=rc&amp;usg=AI4_-kS8Nah25X-7TQ8lGULB3S0AiZ66jA&amp;vet=1&amp;docid=vFQzLhT_fK7mKM&amp;itg=1&amp;tbm=isch&amp;sa=X&amp;ved=2ahUKEwjWlYntvueEAxVqmokEHRp1DY4QrQN6BAgOEAE"><div
+        class="SpelHe"><img class="lgD2Tc" alt="" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT-iar6kst7TKwJMuSS7sLk9cvmV7F_IK18rlKDqPfB1EtFpI-qKDuGQhDV&amp;s"
+        style="max-width:130px;max-height:70px"/></div></a></div></div> </div> </div><div
+        class="jjVJ4e"> <div> <div class="lIMUZd"><div><a href="/imgres?imgurl=https://cdn.mos.cms.futurecdn.net/YDFk8cgmSKu8VYFVedUQ8j.jpg&amp;imgrefurl=https://www.livescience.com/45005-banana-nutrition-facts.html&amp;h=1191&amp;w=2118&amp;tbnid=q-YYCDZ52tteTM&amp;q=bananas&amp;tbnh=168&amp;tbnw=300&amp;iact=rc&amp;usg=AI4_-kQAEfCCc_x6NBognXfCsNN46qU5Lg&amp;vet=1&amp;docid=aCmLYEGvNNOXNM&amp;itg=1&amp;tbm=isch&amp;sa=X&amp;ved=2ahUKEwjWlYntvueEAxVqmokEHRp1DY4QrQN6BAgMEAE"><div
+        class="SpelHe"><img class="lgD2Tc" alt="" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHwm__DZhtRWGYYoc72CU9_kfqszHuXbBmG_5j82jQ1n1PL3zwB9UEXZcT&amp;s"
+        style="max-width:130px;max-height:70px"/></div></a></div></div> </div> </div><div
+        class="jjVJ4e"> <div> <div class="lIMUZd"><div><a href="/imgres?imgurl=https://i5.walmartimages.com/asr/3bbb1151-d69a-43fb-b132-47e0bc066307.1f28c1acf3df725a6a39ba4c8738e025.jpeg?odnHeight%3D768%26odnWidth%3D768%26odnBg%3DFFFFFF&amp;imgrefurl=https://www.walmart.com/ip/Bananas-each/44390948?athbdg%3DL1200&amp;h=768&amp;w=768&amp;tbnid=TFbXO4VD-xvkNM&amp;q=bananas&amp;tbnh=225&amp;tbnw=225&amp;iact=rc&amp;usg=AI4_-kS2kIt_eaDwioHaJrZ8KCfCznxSJA&amp;vet=1&amp;docid=NtIms7tuc0DZTM&amp;itg=1&amp;tbm=isch&amp;sa=X&amp;ved=2ahUKEwjWlYntvueEAxVqmokEHRp1DY4QrQN6BAgLEAE"><div
+        class="SpelHe"><img class="lgD2Tc" alt="" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKsrvEe2kJkzadzYmbE7YcpWkWtI-l1THVFoyHK8ZhnodxtkJv6VjhWKN4&amp;s"
+        style="max-width:130px;max-height:70px"/></div></a></div></div> </div> </div><div
+        class="jjVJ4e"> <div> <div class="lIMUZd"><div><a href="/imgres?imgurl=https://th-thumbnailer.cdn-si-edu.com/xK6NAJHiv_51fzn5sDiQt0eD5Is%3D/fit-in/1600x0/https://tf-cmsv2-smithsonianmag-media.s3.amazonaws.com/filer/d5/24/d5243019-e0fc-4b3c-8cdb-48e22f38bff2/istock-183380744.jpg&amp;imgrefurl=https://www.smithsonianmag.com/science-nature/building-a-better-banana-70543194/&amp;h=1067&amp;w=1600&amp;tbnid=VJZV8N0aXGKBHM&amp;q=bananas&amp;tbnh=183&amp;tbnw=275&amp;iact=rc&amp;usg=AI4_-kTaZmN5DcWO11WWGRvNVjGiR1rIKw&amp;vet=1&amp;docid=iBhRaL7m-KGeNM&amp;itg=1&amp;tbm=isch&amp;sa=X&amp;ved=2ahUKEwjWlYntvueEAxVqmokEHRp1DY4QrQN6BAgBEAE"><div
+        class="SpelHe"><img class="lgD2Tc" alt="" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQAwo-EVtGJhplN22b28s4E8VTTciIgyqk6oLNVnrWuGMRQw35oEHOvJC2PPw&amp;s"
+        style="max-width:130px;max-height:70px"/></div></a></div></div> </div> </div><div
+        class="jjVJ4e"> <div> <div class="lIMUZd"><div><a href="/imgres?imgurl=https://www.usatoday.com/gcdn/-mm-/ac688eec997d2fce10372bf71657297ff863814d/c%3D171-0-1195-768/local/-/media/2022/01/25/USATODAY/usatsports/gettyimages-174959827.jpg&amp;imgrefurl=https://www.usatoday.com/story/life/health-wellness/2024/03/06/how-many-calories-carbs-in-bananas/72523181007/&amp;h=768&amp;w=1024&amp;tbnid=B0rC39VFlC-F_M&amp;q=bananas&amp;tbnh=194&amp;tbnw=259&amp;iact=rc&amp;usg=AI4_-kTZXDWhU2fvLyem1A86Xf9JMYWKZA&amp;vet=1&amp;docid=d2cpzVX1_ob02M&amp;tbm=isch&amp;sa=X&amp;ved=2ahUKEwjWlYntvueEAxVqmokEHRp1DY4QrQN6BAgIEAE"><div
+        class="SpelHe"><img class="lgD2Tc" alt="" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZ25UA--VG5dQkDhfs6hxdqglyhq4JNKZpsX-2-8tCUqQyV9RKLvvLfaZX&amp;s"
+        style="max-width:130px;max-height:70px"/></div></a></div></div> </div> </div><div
+        class="jjVJ4e"> <div> <div class="lIMUZd"><div><a href="/imgres?imgurl=https://parade.com/.image/ar_4:3%252Cc_fill%252Ccs_srgb%252Cfl_progressive%252Cq_auto:good%252Cw_1200/MTk3MDYyOTU3MDI3MzA0NzY3/are-bananas-good-for-you.jpg&amp;imgrefurl=https://parade.com/food/how-to-ripen-bananas&amp;h=900&amp;w=1200&amp;tbnid=giECPTus9hxMrM&amp;q=bananas&amp;tbnh=194&amp;tbnw=259&amp;iact=rc&amp;usg=AI4_-kTIixy6NP2hIJSWx6cI6uKk2bteXw&amp;vet=1&amp;docid=iwWUKjRzcsxYkM&amp;itg=1&amp;tbm=isch&amp;sa=X&amp;ved=2ahUKEwjWlYntvueEAxVqmokEHRp1DY4QrQN6BAgCEAE"><div
+        class="SpelHe"><img class="lgD2Tc" alt="" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXS-H5zUA8R3qUENy0NpQGVar1jzk35ENu0MfJU2DlewPDV5hY_N3WRloxkA&amp;s"
+        style="max-width:130px;max-height:70px"/></div></a></div></div> </div> </div><div
+        class="jjVJ4e"> <div> <div class="lIMUZd"><div><a href="/imgres?imgurl=https://www.theglobeandmail.com/resizer/v2/UY7R46JKR5HHTDH34DXVXI6KZI?auth%3D9a3f2d7281510d7e0f8989bdc3ed02943111bc60c2e009c7e4b9e548d0474c18%26width%3D1500%26height%3D1000%26quality%3D80&amp;imgrefurl=https://www.theglobeandmail.com/life/article-are-bananas-healthy-calories-potassium/&amp;h=1000&amp;w=1500&amp;tbnid=I6dTG79-m35VvM&amp;q=bananas&amp;tbnh=183&amp;tbnw=275&amp;iact=rc&amp;usg=AI4_-kSGjVuzAAj0EEeE3UgYYKgHhIucYw&amp;vet=1&amp;docid=Ol-Q3TyYh3sQYM&amp;itg=1&amp;tbm=isch&amp;sa=X&amp;ved=2ahUKEwjWlYntvueEAxVqmokEHRp1DY4QrQN6BAgDEAE"><div
+        class="SpelHe"><img class="lgD2Tc" alt="" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6ZDSMOAzERj6E6nuoPGVNn9TIhS9BlbLsPkfHjvlshCfcmqP9h_VNhfjf&amp;s"
+        style="max-width:130px;max-height:70px"/></div></a></div></div> </div> </div><div
+        class="jjVJ4e"> <div> <div class="lIMUZd"><div><a href="/imgres?imgurl=https://m.media-amazon.com/images/I/61fZ%2BYAYGaL._AC_UF1000,1000_QL80_.jpg&amp;imgrefurl=https://www.amazon.com/Fresh-Organic-Bananas-Bundle-lbs/dp/B075QN7361&amp;h=906&amp;w=1000&amp;tbnid=un0_KbDkf0dL9M&amp;q=bananas&amp;tbnh=214&amp;tbnw=236&amp;iact=rc&amp;usg=AI4_-kQUeOAEpMaE-w7qiBiqDq5aXBQoSQ&amp;vet=1&amp;docid=Zjkd_NnfcTLSKM&amp;itg=1&amp;tbm=isch&amp;sa=X&amp;ved=2ahUKEwjWlYntvueEAxVqmokEHRp1DY4QrQN6BAgEEAE"><div
+        class="SpelHe"><img class="lgD2Tc" alt="" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSptOnVu1UOYJuu3QYb2YY6saaVyd4zMknyE5oY9xKG204KeQQYamZsACVPcw&amp;s"
+        style="max-width:130px;max-height:70px"/></div></a></div></div> </div> </div><div
+        class="jjVJ4e"> <div> <div class="lIMUZd"><div><a href="/imgres?imgurl=https://media.tegna-media.com/assets/VERIFY/images/b24f0d90-0844-43d8-97f5-9fc0653c0f65/b24f0d90-0844-43d8-97f5-9fc0653c0f65_750x422.jpg&amp;imgrefurl=https://www.verifythis.com/article/news/verify/food-verify/bananas-natural-radiation-radioactivity-potassium-fact-check/536-69d40988-fb91-4706-b92b-37a343714c69&amp;h=422&amp;w=750&amp;tbnid=VmX__XLUukVgCM&amp;q=bananas&amp;tbnh=168&amp;tbnw=299&amp;iact=rc&amp;usg=AI4_-kRLDOZjZNsPeCvpM1dGCQd1yOjxAw&amp;vet=1&amp;docid=l0qku9-kp99KiM&amp;itg=1&amp;tbm=isch&amp;sa=X&amp;ved=2ahUKEwjWlYntvueEAxVqmokEHRp1DY4QrQN6BAgAEAE"><div
+        class="SpelHe"><img class="lgD2Tc" alt="" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCZpyp1BP1L_8Bci8kFmy7aZtzgjhkshsnDBidVAkkeiL1OnHJgdEV2mEy&amp;s"
+        style="max-width:130px;max-height:70px"/></div></a></div></div> </div> </div><div
+        class="jjVJ4e"> <div> <div class="lIMUZd"><div><a href="/imgres?imgurl=https://www.forbesindia.com/media/images/2022/Sep/img_193775_bananas.jpg&amp;imgrefurl=https://www.forbesindia.com/article/lifes/how-bananas-are-in-danger-from-their-own-pandemic/79687/1&amp;h=600&amp;w=800&amp;tbnid=a8NTuwaMF0AotM&amp;q=bananas&amp;tbnh=194&amp;tbnw=259&amp;iact=rc&amp;usg=AI4_-kRnH-MXXKzRuMJKRnZxgZP4bAyeDw&amp;vet=1&amp;docid=YdXeIxtNtRoQoM&amp;itg=1&amp;tbm=isch&amp;sa=X&amp;ved=2ahUKEwjWlYntvueEAxVqmokEHRp1DY4QrQN6BAgFEAE"><div
+        class="SpelHe"><img class="lgD2Tc" alt="" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRF-jkM6SItccyhAs6rCZT36G27UHqrw1geWXnyfY8kQpGBtzCRL1zzxv19&amp;s"
+        style="max-width:130px;max-height:70px"/></div></a></div></div> </div> </div><div
+        class="jjVJ4e"> <div> <div class="lIMUZd"><div><a href="/imgres?imgurl=https://media.npr.org/assets/img/2011/08/19/istock_000017061174small-6ca3bb7c8b6c768b92153932e822623a95065935.jpg&amp;imgrefurl=https://www.npr.org/2011/08/30/139787380/bananas-the-uncertain-future-of-a-favorite-fruit&amp;h=563&amp;w=751&amp;tbnid=0EsG_hpNGOLVGM&amp;q=bananas&amp;tbnh=194&amp;tbnw=259&amp;iact=rc&amp;usg=AI4_-kRVhfw8C080wGF3HIm5Y7RFPEXc_g&amp;vet=1&amp;docid=tLVwUzjzmeZk8M&amp;itg=1&amp;tbm=isch&amp;sa=X&amp;ved=2ahUKEwjWlYntvueEAxVqmokEHRp1DY4QrQN6BAgGEAE"><div
+        class="SpelHe"><img class="lgD2Tc" alt="" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkwia7uSrbJKvUlw1fst6I5IPUg4UflnMVGVVSO4IP_3P8IRGt0Xm2olRHnw&amp;s"
+        style="max-width:130px;max-height:70px"/></div></a></div></div> </div> </div></span></div></div><table
+        class="uZgmoc"><tbody><td><a class="frGj1b" href="/search?q=bananas&amp;safe=active&amp;sca_esv=59c13155e087bde1&amp;tbm=isch&amp;ei=k3_sZZaABuq0ptQPmuq18Ag&amp;start=20&amp;sa=N">Next&nbsp;&gt;</a></td></tbody></table><br/><div
+        class="TuS8Ad" data-ved="0ahUKEwjWlYntvueEAxVqmokEHRp1DY4QpyoIMQ"><style>.VYM29{font-weight:bold}</style><div
+        class="HddGcc" align="center"><span class="VYM29">04101, Portland, ME</span><span>&nbsp;-&nbsp;</span><span>From
+        your IP address</span><span>&nbsp;-&nbsp;</span><a href="/url?q=https://support.google.com/websearch%3Fp%3Dws_m_learnmore_location%26hl%3Den&amp;opi=89978449&amp;sa=U&amp;ved=0ahUKEwjWlYntvueEAxVqmokEHRp1DY4Qty4IMg&amp;usg=AOvVaw3s1EDBLV1jTZvdYH6OOFeQ">Learn
+        more</a></div><div align="center"><a class="rEM8G" href="/url?q=https://accounts.google.com/ServiceLogin%3Fcontinue%3Dhttps://www.google.com/search%253Ftbm%253Disch%2526q%253Dbananas%2526safe%253Dactive%26hl%3Den&amp;opi=89978449&amp;sa=U&amp;ved=0ahUKEwjWlYntvueEAxVqmokEHRp1DY4Qxs8CCDM&amp;usg=AOvVaw0I3txhgEPhWBJ52rQUoiAT">Sign
+        in</a></div><div><table class="bookcf"><tbody class="InWNIe"><tr><td><a class="rEM8G"
+        href="https://www.google.com/preferences?hl=en&amp;sa=X&amp;ved=0ahUKEwjWlYntvueEAxVqmokEHRp1DY4Qv5YECDQ">Settings</a></td><td><a
+        class="rEM8G" href="https://www.google.com/intl/en_us/policies/privacy/">Privacy</a></td><td><a
+        class="rEM8G" href="https://www.google.com/intl/en_us/policies/terms/">Terms</a></td></tr></tbody></table></div></div><div>  </div></body></html>'
+    headers:
+      Alt-Svc:
+      - h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+      Cache-Control:
+      - private, max-age=0
+      Content-Encoding:
+      - gzip
+      Content-Security-Policy:
+      - 'object-src ''none'';base-uri ''self'';script-src ''nonce-S0ZGw2ZxAJ45trcVM-J_Eg''
+        ''strict-dynamic'' ''report-sample'' ''unsafe-eval'' ''unsafe-inline'' https:
+        http:;report-uri https://csp.withgoogle.com/csp/gws/other'
+      Content-Type:
+      - application/xhtml+xml; charset=UTF-8
+      Date:
+      - Sat, 09 Mar 2024 15:26:11 GMT
+      Expires:
+      - '-1'
+      P3P:
+      - CP="This is not a P3P policy! See g.co/p3phelp for more info."
+      Server:
+      - gws
+      Set-Cookie:
+      - 1P_JAR=2024-03-09-15; expires=Mon, 08-Apr-2024 15:26:11 GMT; path=/; domain=.google.com;
+        Secure
+      - AEC=Ae3NU9OorqnASPRGVlmPZ1cLnYk3pRqa7ts0nqDPJRgRPn-SwuSC9ZYGFQ; expires=Thu,
+        05-Sep-2024 15:26:11 GMT; path=/; domain=.google.com; Secure; HttpOnly; SameSite=lax
+      - NID=512=bVf75tDbdQLQWhll2Zhro2Zwu73MZ3MQJF6jQBzld23E9kz2CX254VaqsjQfm__v1qPADa8pzIHnD0cBPuQ0ArrR-czg-gdBHWipR8I7yr4jTmgNLaFA5FWoy5d7YdH4cCcEqhCAXjjFzPIFDjicN23HD4KHhODWviA3NGxdJ9k;
+        expires=Sun, 08-Sep-2024 15:26:11 GMT; path=/; domain=.google.com; HttpOnly
+      Transfer-Encoding:
+      - chunked
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-XSS-Protection:
+      - '0'
+    status:
+      code: 200
+      message: OK
+version: 1
