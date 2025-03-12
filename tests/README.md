@@ -1,1 +1,0 @@
-To run the test suite, run `python -m unittest discover` from the root directory.

@@ -1,16 +1,16 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
 *.py[cod]
-
-# Distribution / packaging
-build/
-dist/
-
-# Lint tools
-.mypy_cache
-
-# Envs
-.venv
-
-# Editors
-.idea
+.idea/
+env/
+node_modules/
+.coverage
+.coverage.*
+coverage.xml
+/build/
+harrier.egg-info
+/dist/
+/htmlcov/
+/.pytest_cache/
+/example/
+/example2/
+/sandbox/
+/docs/dist/
