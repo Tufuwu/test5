@@ -1,0 +1,80 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="utf-8">
+<style type="text/css" media="screen">@import "../../css/common.css";
+@import "../../css/validator.css";
+@import "../../css/documentation.css";
+@import "../../css/validator/base.css";
+</style>
+    <title>wfw:commentRSS should be wfw:commentRss</title>
+  </head>
+
+  <body>
+    <div id="banner">
+      <h1 id="title">
+              <a href="http://www.w3.org/"><img alt="W3C" width="110" height="61" id="logo" src="/images/w3c.png"></a>
+<a href="./"><span>Feed Validation Service</span></a>
+</h1>
+			  <p id="tagline">Check the syntax of Atom or RSS feeds</p>
+    </div>
+    <div id="main" class="doc">
+<h2>Message</h2>
+<div class="docbody">
+<p><code>wfw:commentRSS</code> should be <code>wfw:commentRss</code></p>
+</div>
+<h2>Explanation</h2>
+
+<div class="docbody">
+<p>Due to a clerical error, the element Chris Sells originally spec'ed as
+<code>wfw:commentRss</code> appeared as <code>wfw:commentR<b>SS</b></code>
+(note the difference in case) on Joe Gregorio's site.  At least one product
+(WordPress) has implemented and deployed feeds using the spelling originally
+present on Joe's site.</p>
+<p>Since that time, Joe has corrected his error.  Accordingly:</p>
+<ul>
+<li>All consumers are encouraged to accept both spellings.</li>
+<li>All producers are encouraged to adopt the original spelling</li>
+</ul>
+<p>Here are a few links to prior discussions on the topic:</p>
+<ul>
+<li><a href="http://www.sellsbrothers.com/spout/default.aspx?content=archive.htm#exposingRssComments">Chris Sells</a></li>
+<li>Joe Gregorio:
+<ul>
+<li><a href="http://web.archive.org/web/20050305162845/http://wellformedweb.org/news/wfw_namespace_elements/">Wayback</a></li>
+<li><a href="http://wellformedweb.org/news/wfw_namespace_elements/">Current</a></li>
+</ul>
+</li>
+<li><a href="http://www.25hoursaday.com/weblog/CommentView.aspx?guid=d1dc22b1-7d83-422c-adb6-758aee8d5fa6">Dare Obasanjo</a></li>
+<li><a href="http://www.blojsom.com/blog/nerdery/2006/01/31/wfw-commentRSS-right.html">David Czarnecki</a></li>
+<li><a href="http://groups.yahoo.com/group/rss-public/message/593">Greg Smith</a></li>
+<li><a href="http://photomatt.net/2006/04/15/feed-validator/">Matthew Mullenweg</a></li>
+<li><a href="http://groups.yahoo.com/group/rss-public/message/613">James Holderness</a></li>
+</ul>
+</div>
+<h2>Solution</h2>
+<div class="docbody">
+<p>Change <code>wfw:commentRSS</code> to <code>wfw:commentR<b>ss</b></code></p>
+<p>Wordpress users can find this in the <code>wp-rss2.php</code> file.</p>
+</div>
+<h2>Not clear?  Disagree?</h2>
+<div class="docbody">
+<p>You might be able to find help in one of <a href="../howto/resources.html">these fine resources</a>.</p>
+</div>
+
+</div><!-- main -->
+<ul class="navbar" id="menu">
+    <li>
+    <a href="../../" accesskey="1" title="Go to the Home Page for The W3C Feed Validation Service">Home</a></li>
+    <li><a href="../../about.html" title="Information About this Service">About...</a></li>
+    <li><a href="../../whatsnew.html" title="The changes made to this service recently">News</a></li>
+    <li><a href="../" accesskey="3" title="Documentation for this Service">Docs</a></li>
+</ul>
+<div id="footer">
+<address>
+Maintained by the <a href="http://www.w3.org/QA/Tools/qa-dev">W3C qa-dev group</a><br>
+This service uses the <a href="https://github.com/w3c/feedvalidator">Feed validator software</a>.
+</address>
+</div>
+
+
+
+</body></html>

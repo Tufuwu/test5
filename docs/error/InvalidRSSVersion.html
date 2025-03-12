@@ -1,0 +1,70 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="utf-8">
+<style type="text/css" media="screen">@import "../../css/common.css";
+@import "../../css/validator.css";
+@import "../../css/documentation.css";
+@import "../../css/validator/base.css";
+</style>
+    <title>Invalid RSS Version: x.y</title>
+  </head>
+
+  <body>
+    <div id="banner">
+      <h1 id="title">
+              <a href="http://www.w3.org/"><img alt="W3C" width="110" height="61" id="logo" src="/images/w3c.png"></a>
+<a href="./"><span>Feed Validation Service</span></a>
+</h1>
+			  <p id="tagline">Check the syntax of Atom or RSS feeds</p>
+    </div>
+    <div id="main" class="doc">
+<h2>Message</h2>
+<div class="docbody">
+<p>Invalid RSS Version: <code>x.y</code></p>
+</div>
+<h2>Explanation</h2>
+
+<div class="docbody">
+<p>Released versions of RSS include:</p>
+<ul>
+<!-- <li><a href="http://www.purplepages.ie/RSS/netscape/rss0.91.html">Netscape 0.91</a></li> -->
+<li><a href="http://www.rssboard.org/rss-0-9-1-netscape">Netscape 0.91</a></li>
+<li><a href="http://backend.userland.com/rss091">Userland 0.91</a></li>
+<li><a href="http://backend.userland.com/rss092">Userland 0.92</a></li>
+<li><a href="http://cyber.law.harvard.edu/rss/rss.html">Harvard 2.0</a></li>
+<li><a href="http://www.rssboard.org/rss-specification">RSS Advisory Board 2.0</a></li>
+</ul>
+<p><a href="http://backend.userland.com/rss093">RSS 0.93</a> and
+<a href="http://backend.userland.com/rss093">RSS 0.94</a> were never finalized.</p>
+<p><!--
+<a href="http://www.purplepages.ie/RSS/netscape/rss0.90.html">RSS 0.90</a>
+--><a href="http://www.rssboard.org/rss-0-9-0">RSS 0.90</a>
+and <a href="http://web.resource.org/rss/1.0/">RSS 1.0</a> have a completely different XML structure, and in particular, no <code>version</code> attribute.</p>
+</div>
+<h2>Solution</h2>
+<div class="docbody">
+<p>In most cases, simply changing the version attribute to <code>2.0</code> is the simplest fix.</p>
+<p>If, however, you actually are intending to produce a valid RSS 1.0 feed, consult the specification linked above for guidance.</p>
+</div>
+<h2>Not clear?  Disagree?</h2>
+<div class="docbody">
+<p>You might be able to find help in one of <a href="../howto/resources.html">these fine resources</a>.</p>
+</div>
+
+</div><!-- main -->
+<ul class="navbar" id="menu">
+    <li>
+    <a href="../../" accesskey="1" title="Go to the Home Page for The W3C Feed Validation Service">Home</a></li>
+    <li><a href="../../about.html" title="Information About this Service">About...</a></li>
+    <li><a href="../../whatsnew.html" title="The changes made to this service recently">News</a></li>
+    <li><a href="../" accesskey="3" title="Documentation for this Service">Docs</a></li>
+</ul>
+<div id="footer">
+<address>
+Maintained by the <a href="http://www.w3.org/QA/Tools/qa-dev">W3C qa-dev group</a><br>
+This service uses the <a href="https://github.com/w3c/feedvalidator">Feed validator software</a>.
+</address>
+</div>
+
+
+
+</body></html>

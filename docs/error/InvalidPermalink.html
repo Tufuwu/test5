@@ -1,0 +1,73 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="utf-8">
+<style type="text/css" media="screen">@import "../../css/common.css";
+@import "../../css/validator.css";
+@import "../../css/documentation.css";
+@import "../../css/validator/base.css";
+</style>
+    <title>guid must be a full URL, unless isPermaLink attribute is false</title>
+  </head>
+
+  <body>
+    <div id="banner">
+      <h1 id="title">
+              <a href="http://www.w3.org/"><img alt="W3C" width="110" height="61" id="logo" src="/images/w3c.png"></a>
+<a href="./"><span>Feed Validation Service</span></a>
+</h1>
+			  <p id="tagline">Check the syntax of Atom or RSS feeds</p>
+    </div>
+    <div id="main" class="doc">
+<h2>Message</h2>
+<div class="docbody">
+<p><code>guid</code> must be a full URL, unless isPermaLink attribute is false</p>
+</div>
+<h2>Explanation</h2>
+
+<div class="docbody">
+<p>By default, the <code>guid</code> element specifies a permanent link for an
+item, the value must be a full URL (for example, starting with
+"<code>http://</code>").</p>
+<p>URIs (such as <code>tag:</code> URIs), as opposed to URLs, only identify,
+not locate, items, and are not suitable for permalinks.</p>
+</div>
+<h2>Solution</h2>
+<div class="docbody">
+<p>If you are using the <code>guid</code> element as a permanent link, make sure
+the value is a full URL, that could be followed directly in a browser.</p>
+
+<p>If you are using the <code>guid</code> element simply as a unique identifier
+(and not a link to the item), then the value can be whatever you want, but you
+must include the attribute <code>isPermaLink="false"</code> in the
+<code>guid</code> tag.</p>
+
+<p>These are valid <code>guid</code>s:</p>
+
+<ul>
+<li><samp>&lt;guid&gt;http://www.example.com/archives/000054.html&lt;/guid&gt;</samp></li>
+<li><samp>&lt;guid isPermaLink="false"&gt;article 54 at example.com&lt;/guid&gt;</samp></li>
+<li><samp>&lt;guid isPermaLink="false"&gt;tag:blogger.com,1999:blog-555&lt;/guid&gt;</samp></li>
+</ul>
+</div>
+<h2>Not clear?  Disagree?</h2>
+<div class="docbody">
+<p>You might be able to find help in one of <a href="../howto/resources.html">these fine resources</a>.</p>
+</div>
+
+</div><!-- main -->
+<ul class="navbar" id="menu">
+    <li>
+    <a href="../../" accesskey="1" title="Go to the Home Page for The W3C Feed Validation Service">Home</a></li>
+    <li><a href="../../about.html" title="Information About this Service">About...</a></li>
+    <li><a href="../../whatsnew.html" title="The changes made to this service recently">News</a></li>
+    <li><a href="../" accesskey="3" title="Documentation for this Service">Docs</a></li>
+</ul>
+<div id="footer">
+<address>
+Maintained by the <a href="http://www.w3.org/QA/Tools/qa-dev">W3C qa-dev group</a><br>
+This service uses the <a href="https://github.com/w3c/feedvalidator">Feed validator software</a>.
+</address>
+</div>
+
+
+
+</body></html>

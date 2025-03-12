@@ -1,20 +1,14 @@
-# win32-setctime
+![Build Status](https://github.com/w3c/feedvalidator/actions/workflows/test.yml/badge.svg)
 
-[![Pypi version](https://img.shields.io/pypi/v/win32-setctime.svg)](https://pypi.python.org/pypi/win32-setctime) [![Python version](https://img.shields.io/badge/python-3.5%2B-blue.svg)](https://pypi.python.org/pypi/win32-setctime) [![Build status](https://img.shields.io/github/actions/workflow/status/Delgan/win32-setctime/tests.yml?branch=master)](https://github.com/Delgan/win32-setctime/actions/workflows/tests.yml?query=branch:master) [![License](https://img.shields.io/github/license/delgan/win32-setctime.svg)](https://github.com/Delgan/win32-setctime/blob/master/LICENSE)
+Some tests, and some functionality, will not be enabled unless a full set
+of 32-bit character encodings are available through Python.
 
-A small Python utility to set file creation time on Windows.
+The feedvalidator relies on html5lib for parsing HTML and rdflib for parsing RDF.
 
+Python 3 is required.
 
-## Installation
-
-```shell
-pip install win32-setctime
-```
-
-## Usage
-
-```python
-from win32_setctime import setctime
-
-setctime("my_file.txt", 1561675987.509, follow_symlinks=True)
+To run with Docker:
+```bash
+docker build -t feedvalidator .
+docker run -p 8080:80 feedvalidator
 ```

@@ -1,0 +1,70 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="utf-8">
+<style type="text/css" media="screen">@import "../../css/common.css";
+@import "../../css/validator.css";
+@import "../../css/documentation.css";
+@import "../../css/validator/base.css";
+</style>
+    <title>Blank line before XML declaration (WordPress)</title>
+  </head>
+
+  <body>
+    <div id="banner">
+      <h1 id="title">
+              <a href="http://www.w3.org/"><img alt="W3C" width="110" height="61" id="logo" src="/images/w3c.png"></a>
+<a href="./"><span>Feed Validation Service</span></a>
+</h1>
+			  <p id="tagline">Check the syntax of Atom or RSS feeds</p>
+    </div>
+    <div id="main" class="doc">
+<h2>Message</h2>
+<div class="docbody">
+<p>Blank line before XML declaration (WordPress)</p>
+</div>
+<h2>Explanation</h2>
+
+<div class="docbody">
+<p>If an XML declaration (<code>&lt;?xml ... ?&gt;</code>) appears in your feed,
+it must be the first thing in the feed, before any whitespace.</p>
+<p>Unfortunately, with WordPress it seems all too easy for a plugin, a
+theme, or for your configuration file to contain a blank line.
+Further compounding this problem, some — but not all — feed
+readers compensate for this common error, allowing the error to go undetected
+for quite a while.</p>
+</div>
+<h2>Solution</h2>
+<div class="docbody">
+<ul>
+<li>PHP also uses a similar notation: <code>&lt;?php ... ?&gt;</code>.  Note that the final <em>php</em> <code>?&gt;</code> should be omitted from all PHP code files—modules, includes, etc.  The closing delimiter is optional in PHP (but not in XML), and removing it helps prevent unwanted white space at the end of files which can cause problems with your feeds.</li>
+<li>Check your <code>wp-rss2.php</code> and <code>wp-atom.php</code> files for
+blank lines outside of <code>&lt;?</code> and <code>?&gt;</code> bracketed sections.</li>
+<li>Check your <code>wp-config.php</code> file for
+blank lines outside of <code>&lt;?</code> and <code>?&gt;</code> bracketed sections.</li>
+<li>Check your theme's <code>functions.php</code> file for
+blank lines outside of <code>&lt;?</code> and <code>?&gt;</code> bracketed sections.</li>
+<li>One by one, disable plugins and revalidate until you isolate the one causing the problem.</li>
+</ul>
+</div>
+<h2>Not clear?  Disagree?</h2>
+<div class="docbody">
+<p>You might be able to find help in one of <a href="../howto/resources.html">these fine resources</a>.</p>
+</div>
+
+</div><!-- main -->
+<ul class="navbar" id="menu">
+    <li>
+    <a href="../../" accesskey="1" title="Go to the Home Page for The W3C Feed Validation Service">Home</a></li>
+    <li><a href="../../about.html" title="Information About this Service">About...</a></li>
+    <li><a href="../../whatsnew.html" title="The changes made to this service recently">News</a></li>
+    <li><a href="../" accesskey="3" title="Documentation for this Service">Docs</a></li>
+</ul>
+<div id="footer">
+<address>
+Maintained by the <a href="http://www.w3.org/QA/Tools/qa-dev">W3C qa-dev group</a><br>
+This service uses the <a href="https://github.com/w3c/feedvalidator">Feed validator software</a>.
+</address>
+</div>
+
+
+
+</body></html>

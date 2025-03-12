@@ -1,0 +1,79 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="utf-8">
+<style type="text/css" media="screen">@import "../../css/common.css";
+@import "../../css/validator.css";
+@import "../../css/documentation.css";
+@import "../../css/validator/base.css";
+</style>
+    <title>Avoid foo:bar</title>
+  </head>
+
+  <body>
+    <div id="banner">
+      <h1 id="title">
+              <a href="http://www.w3.org/"><img alt="W3C" width="110" height="61" id="logo" src="/images/w3c.png"></a>
+<a href="./"><span>Feed Validation Service</span></a>
+</h1>
+			  <p id="tagline">Check the syntax of Atom or RSS feeds</p>
+    </div>
+    <div id="main" class="doc">
+<h2>Message</h2>
+<div class="docbody">
+<p>Avoid <code>foo:bar</code></p>
+</div>
+<h2>Explanation</h2>
+
+<div class="docbody">
+<p>Avoid using elements in namespaces when there are already core elements
+that do the same thing.</p>
+<p>The item contains an element that duplicates the semantics of the
+description element.  Be advised that clients will behave unpredictably in the
+presence of such an element: some will prefer it over the description element,
+others will ignore it, and the behavior may depend on the order in which such
+elements appear in the item.</p>
+<p>Here are a few links to prior discussions on the topic:</p>
+<ul>
+<li>Dave Winer
+<ul>
+<li><a href="http://backend.userland.com/davesRss2PoliticalFaq#questionWhatDoesFunkyMeanInTheContextOfRss20">RSS 2.0 Political FAQ</a></li>
+<li><a href="http://scripting.wordpress.com/2006/03/08/a-busy-developers-guide-to-rss-20/">A Busy Developer’s Guide to RSS 2.0</a></li>
+</ul>
+</li>
+<li><a href="http://www.cadenhead.org/workbench/news/1598/improving-movable-types-rss-20-feed">Rogers Cadenhead</a></li>
+<li><a href="http://groups.yahoo.com/group/rss-public/message/310">James Holderness</a></li>
+<li><a href="http://www.2020hindsight.org/2006/03/09/learning-feeds/">Susan A. Kitchens</a></li>
+<li><a href="http://blogs.opml.org/amyloo/2006/04/15#justRealizedSomethingAboutMyVerticalTopicFeedCouldUseSomeHelp">Amy Bellinger</a></li>
+</ul>
+</div>
+<h2>Solution</h2>
+<div class="docbody">
+<ul>
+<li>Select whether you want your feed to contains summaries (sometimes called excerpts) or full content (a.k.a. body).</li>
+<li>Encode your selection as HTML.</li>
+<li>Place the result in the item <code>description</code> element.</li>
+<li>Remove other elements that provide the same function.</li>
+</ul>
+</div>
+<h2>Not clear?  Disagree?</h2>
+<div class="docbody">
+<p>You might be able to find help in one of <a href="../howto/resources.html">these fine resources</a>.</p>
+</div>
+
+</div><!-- main -->
+<ul class="navbar" id="menu">
+    <li>
+    <a href="../../" accesskey="1" title="Go to the Home Page for The W3C Feed Validation Service">Home</a></li>
+    <li><a href="../../about.html" title="Information About this Service">About...</a></li>
+    <li><a href="../../whatsnew.html" title="The changes made to this service recently">News</a></li>
+    <li><a href="../" accesskey="3" title="Documentation for this Service">Docs</a></li>
+</ul>
+<div id="footer">
+<address>
+Maintained by the <a href="http://www.w3.org/QA/Tools/qa-dev">W3C qa-dev group</a><br>
+This service uses the <a href="https://github.com/w3c/feedvalidator">Feed validator software</a>.
+</address>
+</div>
+
+
+
+</body></html>

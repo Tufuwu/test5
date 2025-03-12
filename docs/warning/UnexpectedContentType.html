@@ -1,0 +1,74 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="utf-8">
+<style type="text/css" media="screen">@import "../../css/common.css";
+@import "../../css/validator.css";
+@import "../../css/documentation.css";
+@import "../../css/validator/base.css";
+</style>
+    <title>Feeds should not be served with the 'type/subtype' media type</title>
+  </head>
+
+  <body>
+    <div id="banner">
+      <h1 id="title">
+              <a href="http://www.w3.org/"><img alt="W3C" width="110" height="61" id="logo" src="/images/w3c.png"></a>
+<a href="./"><span>Feed Validation Service</span></a>
+</h1>
+			  <p id="tagline">Check the syntax of Atom or RSS feeds</p>
+    </div>
+    <div id="main" class="doc">
+<h2>Message</h2>
+<div class="docbody">
+<p>Feeds should not be served with the '<code>type/subtype</code>' media type</p>
+</div>
+<h2>Explanation</h2>
+
+<div class="docbody">
+<p>The web server is reporting an unexpected MIME type for a feed.
+Although we tried to parse it as a feed, aggregators may well report this
+as an error and act as if the user had pointed them at something other than
+a feed.</p>
+<p>RSS feeds should be served as <code>application/rss+xml</code>
+(RSS 1.0 is an RDF format, so it may be served as
+<code>application/rdf+xml</code> instead).
+Atom feeds should use <code>application/atom+xml</code>.
+Alternatively, for compatibility with widely-deployed web browsers, any of
+these feeds can use one of the more
+general XML types -  preferably <code>application/xml</code>.</p>
+</div>
+<h2>Solution</h2>
+<div class="docbody">
+<p>Use the appropriate MIME type for your feed.</p>
+<ul>
+<li>For static content served with Apache, use the
+<a href="http://httpd.apache.org/docs/mod/mod_mime.html#addtype">AddType</a>
+directive.</li>
+<li>For static content served with Microsoft IIS,
+<a href="http://www.microsoft.com/resources/documentation/WindowsServ/2003/all/deployguide/en-us/Default.asp?url=/resources/documentation/WindowsServ/2003/all/deployguide/en-us/iisdg_dep_wzvf.asp">add a MIME type</a>.</li>
+<li>Other information can be found
+<a href="http://www.w3.org/International/O-HTTP-charset">here</a> or in the documentation provided by your server.</li>
+</ul>
+</div>
+<h2>Not clear?  Disagree?</h2>
+<div class="docbody">
+<p>You might be able to find help in one of <a href="../howto/resources.html">these fine resources</a>.</p>
+</div>
+
+</div><!-- main -->
+<ul class="navbar" id="menu">
+    <li>
+    <a href="../../" accesskey="1" title="Go to the Home Page for The W3C Feed Validation Service">Home</a></li>
+    <li><a href="../../about.html" title="Information About this Service">About...</a></li>
+    <li><a href="../../whatsnew.html" title="The changes made to this service recently">News</a></li>
+    <li><a href="../" accesskey="3" title="Documentation for this Service">Docs</a></li>
+</ul>
+<div id="footer">
+<address>
+Maintained by the <a href="http://www.w3.org/QA/Tools/qa-dev">W3C qa-dev group</a><br>
+This service uses the <a href="https://github.com/w3c/feedvalidator">Feed validator software</a>.
+</address>
+</div>
+
+
+
+</body></html>

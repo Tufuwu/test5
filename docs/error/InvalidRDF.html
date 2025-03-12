@@ -1,0 +1,66 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="utf-8">
+<style type="text/css" media="screen">@import "../../css/common.css";
+@import "../../css/validator.css";
+@import "../../css/documentation.css";
+@import "../../css/validator/base.css";
+</style>
+    <title>RDF Parsing Error</title>
+  </head>
+
+  <body>
+    <div id="banner">
+      <h1 id="title">
+              <a href="http://www.w3.org/"><img alt="W3C" width="110" height="61" id="logo" src="/images/w3c.png"></a>
+<a href="./"><span>Feed Validation Service</span></a>
+</h1>
+			  <p id="tagline">Check the syntax of Atom or RSS feeds</p>
+    </div>
+    <div id="main" class="doc">
+<h2>Message</h2>
+<div class="docbody">
+<p>RDF Parsing Error</p>
+</div>
+<h2>Explanation</h2>
+
+<div class="docbody">
+<p>The feed uses an RDF format (RSS
+<a href="http://www.purplepages.ie/RSS/netscape/rss0.90.html" title="My Netscape Network - RSS 0.90 Specification">0.90</a>,
+<a href="http://web.resource.org/rss/1.0/" title="RDF Site Summary (RSS) 1.0">1.0</a>
+or
+<a href="http://inamidst.com/rss1.1/" title="RSS 1.1: RDF Site Summary (DRAFT)">1.1</a>),
+but is not valid RDF/XML
+(<a href="http://www.w3.org/TR/rdf-syntax-grammar/" title="RDF/XML Syntax Specification (Revised)">specification</a>).</p>
+</div>
+<h2>Solution</h2>
+<div class="docbody">
+<p>Make sure your feed matches the structure given in the feed specification,
+including all <code>rdf:</code> attributes and elements. Check your feed
+against the RDF/XML spec, and make sure that it is valid
+RDF as well as well-formed XML. An RDF implementation with a tool such as
+<a href="http://librdf.org/raptor/rapper.html" title="Raptor RDF Parser Toolkit - Raptor RDF parser utility">rapper</a>
+can help to check for RDF validity.</p>
+</div>
+<h2>Not clear?  Disagree?</h2>
+<div class="docbody">
+<p>You might be able to find help in one of <a href="../howto/resources.html">these fine resources</a>.</p>
+</div>
+
+</div><!-- main -->
+<ul class="navbar" id="menu">
+    <li>
+    <a href="../../" accesskey="1" title="Go to the Home Page for The W3C Feed Validation Service">Home</a></li>
+    <li><a href="../../about.html" title="Information About this Service">About...</a></li>
+    <li><a href="../../whatsnew.html" title="The changes made to this service recently">News</a></li>
+    <li><a href="../" accesskey="3" title="Documentation for this Service">Docs</a></li>
+</ul>
+<div id="footer">
+<address>
+Maintained by the <a href="http://www.w3.org/QA/Tools/qa-dev">W3C qa-dev group</a><br>
+This service uses the <a href="https://github.com/w3c/feedvalidator">Feed validator software</a>.
+</address>
+</div>
+
+
+
+</body></html>

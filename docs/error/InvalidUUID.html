@@ -1,0 +1,65 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="utf-8">
+<style type="text/css" media="screen">@import "../../css/common.css";
+@import "../../css/validator.css";
+@import "../../css/documentation.css";
+@import "../../css/validator/base.css";
+</style>
+    <title>foo is not a valid UUID</title>
+  </head>
+
+  <body>
+    <div id="banner">
+      <h1 id="title">
+              <a href="http://www.w3.org/"><img alt="W3C" width="110" height="61" id="logo" src="/images/w3c.png"></a>
+<a href="./"><span>Feed Validation Service</span></a>
+</h1>
+			  <p id="tagline">Check the syntax of Atom or RSS feeds</p>
+    </div>
+    <div id="main" class="doc">
+<h2>Message</h2>
+<div class="docbody">
+<p><code>foo</code> is not a valid UUID</p>
+</div>
+<h2>Explanation</h2>
+
+<div class="docbody">
+<p>Value is not a valid UUID, as defined by <a href="http://www.ietf.org/rfc/rfc4122.txt">RFC 4122</a>.</p>
+</div>
+<h2>Solution</h2>
+<div class="docbody">
+<p>Ensure that the UUID id is permanent, universally unique and
+consists of 8 hex digits followed by a
+dash followed by 4 hex digits followed by a dash followed by 4 hex digits
+followed by a dash followed by 12 hex digits.</p>
+<p>Other alternatives:</p>
+<ul>
+<li><p>If your <code>alternate</code> link is a a <a href="http://en.wikipedia.org/wiki/Permalink">permalink</a>, simply use the
+same value as the <code>id</code> for the entry.</p></li>
+<li><p>Use a <a href="http://www.rfc-editor.org/rfc/rfc4151.txt">'tag' URI</a> instead, as <a href="https://web.archive.org/web/20110926231958/http://diveintomark.org/archives/2004/05/28/howto-atom-id">described
+here</a>.</p></li>
+</ul>
+</div>
+<h2>Not clear?  Disagree?</h2>
+<div class="docbody">
+<p>You might be able to find help in one of <a href="../howto/resources.html">these fine resources</a>.</p>
+</div>
+
+</div><!-- main -->
+<ul class="navbar" id="menu">
+    <li>
+    <a href="../../" accesskey="1" title="Go to the Home Page for The W3C Feed Validation Service">Home</a></li>
+    <li><a href="../../about.html" title="Information About this Service">About...</a></li>
+    <li><a href="../../whatsnew.html" title="The changes made to this service recently">News</a></li>
+    <li><a href="../" accesskey="3" title="Documentation for this Service">Docs</a></li>
+</ul>
+<div id="footer">
+<address>
+Maintained by the <a href="http://www.w3.org/QA/Tools/qa-dev">W3C qa-dev group</a><br>
+This service uses the <a href="https://github.com/w3c/feedvalidator">Feed validator software</a>.
+</address>
+</div>
+
+
+
+</body></html>

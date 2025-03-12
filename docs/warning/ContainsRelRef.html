@@ -1,0 +1,79 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="utf-8">
+<style type="text/css" media="screen">@import "../../css/common.css";
+@import "../../css/validator.css";
+@import "../../css/documentation.css";
+@import "../../css/validator/base.css";
+</style>
+    <title>element should not contain relative URL references</title>
+  </head>
+
+  <body>
+    <div id="banner">
+      <h1 id="title">
+              <a href="http://www.w3.org/"><img alt="W3C" width="110" height="61" id="logo" src="/images/w3c.png"></a>
+<a href="./"><span>Feed Validation Service</span></a>
+</h1>
+			  <p id="tagline">Check the syntax of Atom or RSS feeds</p>
+    </div>
+    <div id="main" class="doc">
+<h2>Message</h2>
+<div class="docbody">
+<p><code>element</code> should not contain relative URL references</p>
+</div>
+<h2>Explanation</h2>
+
+<div class="docbody">
+<p>Some RSS elements are allowed to contain HTML, including links and images.  However, if these links use relative URLs to point to resources, users of some news aggregators will not be able to click on them.  And your images use the relative URLs, the images may not appear (since the news aggregator will be looking for the images locally on the user's hard drive, rather than on your web site).</p>
+</div>
+<h2>Solution</h2>
+<div class="docbody">
+<p>Make sure all URLs are absolute, that is, that they include your server name and a full path.</p>
+
+<p>This is an example of a relative URL in a link (bad):</p>
+
+<blockquote>
+<p><code>&lt;a href="../../archives/001087.html"&gt;as I discussed yesterday&lt;/a&gt;</code></p>
+</blockquote>
+
+<p>This is the same example, using an absolute URL (good):</p>
+
+<blockquote>
+<p><code>&lt;a href="http://www.example.com/archives/001087.html"&gt;as I discussed yesterday&lt;/a&gt;</code></p>
+</blockquote>
+
+<p>The same thing applies to the <code>src</code> attribute of images.  This is an example of an image that uses a relative URL (bad):</p>
+
+<blockquote>
+<p><code>&lt;img src="../../images/catpictures/73.jpg"&gt;</code></p>
+</blockquote>
+
+<p>This is the same image, using an absolute URL (good):</p>
+
+<blockquote>
+<p><code>&lt;img src="http://www.example.com/images/catpictures/73.jpg"&gt;</code></p>
+</blockquote>
+</div>
+<h2>Not clear?  Disagree?</h2>
+<div class="docbody">
+<p>You might be able to find help in one of <a href="../howto/resources.html">these fine resources</a>.</p>
+</div>
+
+</div><!-- main -->
+<ul class="navbar" id="menu">
+    <li>
+    <a href="../../" accesskey="1" title="Go to the Home Page for The W3C Feed Validation Service">Home</a></li>
+    <li><a href="../../about.html" title="Information About this Service">About...</a></li>
+    <li><a href="../../whatsnew.html" title="The changes made to this service recently">News</a></li>
+    <li><a href="../" accesskey="3" title="Documentation for this Service">Docs</a></li>
+</ul>
+<div id="footer">
+<address>
+Maintained by the <a href="http://www.w3.org/QA/Tools/qa-dev">W3C qa-dev group</a><br>
+This service uses the <a href="https://github.com/w3c/feedvalidator">Feed validator software</a>.
+</address>
+</div>
+
+
+
+</body></html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="utf-8">
+<style type="text/css" media="screen">@import "../../css/common.css";
+@import "../../css/validator.css";
+@import "../../css/documentation.css";
+@import "../../css/validator/base.css";
+</style>
+    <title>Identifier “foo” is not in canonical form (the canonical form would be “bar”)</title>
+  </head>
+
+  <body>
+    <div id="banner">
+      <h1 id="title">
+              <a href="http://www.w3.org/"><img alt="W3C" width="110" height="61" id="logo" src="/images/w3c.png"></a>
+<a href="./"><span>Feed Validation Service</span></a>
+</h1>
+			  <p id="tagline">Check the syntax of Atom or RSS feeds</p>
+    </div>
+    <div id="main" class="doc">
+<h2>Message</h2>
+<div class="docbody">
+<p>Identifier “foo” is not in canonical form (the canonical form would be “bar”)</p>
+</div>
+<h2>Explanation</h2>
+
+<div class="docbody">
+<p>URIs used as identifiers should be in canonical form, as described
+by section 6 of
+<a href="http://www.ietf.org/rfc/rfc3986.txt">RFC 3986</a>.
+This means that insignificant differences
+(e.g., case of hostname) are removed, so URIs can be compared
+character-by-character to determine equivalence. This is particularly
+important when content is syndicated, and the same entry may appear
+in multiple feeds.</p>
+<p>Also avoid leading and trailing whitespace as clients
+vary in their interpretation of such characters.</p>
+</div>
+<h2>Solution</h2>
+<div class="docbody">
+<p>All newly issued ids should be in canonical form.
+Use the canonical form given in the warning message for guidance.</p>
+<p><b>Notes</b>:</p>
+<ul>
+<li>Do <b>not</b> update previously issued ids, unless they were issued
+in error.</li>
+<li>Do <b>not</b> canonicalize ids that you are resyndicating from
+other sources.  Those <b>must</b> be character by character identical
+to the original.  Instead, consider contacting the original source and
+see if this can be corrected for any new ids they may issue.</li>
+</ul>
+</div>
+<h2>Not clear?  Disagree?</h2>
+<div class="docbody">
+<p>You might be able to find help in one of <a href="../howto/resources.html">these fine resources</a>.</p>
+</div>
+
+</div><!-- main -->
+<ul class="navbar" id="menu">
+    <li>
+    <a href="../../" accesskey="1" title="Go to the Home Page for The W3C Feed Validation Service">Home</a></li>
+    <li><a href="../../about.html" title="Information About this Service">About...</a></li>
+    <li><a href="../../whatsnew.html" title="The changes made to this service recently">News</a></li>
+    <li><a href="../" accesskey="3" title="Documentation for this Service">Docs</a></li>
+</ul>
+<div id="footer">
+<address>
+Maintained by the <a href="http://www.w3.org/QA/Tools/qa-dev">W3C qa-dev group</a><br>
+This service uses the <a href="https://github.com/w3c/feedvalidator">Feed validator software</a>.
+</address>
+</div>
+
+
+
+</body></html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="utf-8">
+<style type="text/css" media="screen">@import "../../css/common.css";
+@import "../../css/validator.css";
+@import "../../css/documentation.css";
+@import "../../css/validator/base.css";
+</style>
+    <title>item should contain a guid element</title>
+  </head>
+
+  <body>
+    <div id="banner">
+      <h1 id="title">
+              <a href="http://www.w3.org/"><img alt="W3C" width="110" height="61" id="logo" src="/images/w3c.png"></a>
+<a href="./"><span>Feed Validation Service</span></a>
+</h1>
+			  <p id="tagline">Check the syntax of Atom or RSS feeds</p>
+    </div>
+    <div id="main" class="doc">
+<h2>Message</h2>
+<div class="docbody">
+<p><code>item</code> should contain a <code>guid</code> element</p>
+</div>
+<h2>Explanation</h2>
+
+<div class="docbody">
+<p>From the <a href="http://cyber.law.harvard.edu/rss/rss.html#comments">RSS 2.0 Specification</a>:</p>
+<blockquote>
+<p>It's recommended that you provide the guid, and if possible make
+it a permalink. This enables aggregators to not repeat items, even if there
+have been editing changes.</p>
+<p>A frequently asked question about &lt;guid&gt;s is how do they
+compare to &lt;link&gt;s. Aren't they the same thing? Yes, in some
+content systems, and no in others. In some systems, &lt;link&gt; is a
+permalink to a weblog item. However, in other systems, each
+&lt;item&gt; is a synopsis of a longer article, &lt;link&gt; points to
+the article, and &lt;guid&gt; is the permalink to the weblog entry.</p>
+</blockquote>
+<p>Additional useful information can be found here:</p>
+<ul>
+<li><a href="http://www.xn--8ws00zhy3a.com/blog/2006/08/rss-dup-detection">RSS Duplicate Detection</a></li>
+</ul>
+</div>
+<h2>Solution</h2>
+<div class="docbody">
+<p>Add a different, unique, and unchanging
+<a href="https://www.rssboard.org/rss-specification#ltguidgtSubelementOfLtitemgt">guid</a> to each item.  See <a href="http://scripting.com/rss.xml">scripting.com</a> for an example.</p>
+</div>
+<h2>Not clear?  Disagree?</h2>
+<div class="docbody">
+<p>You might be able to find help in one of <a href="../howto/resources.html">these fine resources</a>.</p>
+</div>
+
+</div><!-- main -->
+<ul class="navbar" id="menu">
+    <li>
+    <a href="../../" accesskey="1" title="Go to the Home Page for The W3C Feed Validation Service">Home</a></li>
+    <li><a href="../../about.html" title="Information About this Service">About...</a></li>
+    <li><a href="../../whatsnew.html" title="The changes made to this service recently">News</a></li>
+    <li><a href="../" accesskey="3" title="Documentation for this Service">Docs</a></li>
+</ul>
+<div id="footer">
+<address>
+Maintained by the <a href="http://www.w3.org/QA/Tools/qa-dev">W3C qa-dev group</a><br>
+This service uses the <a href="https://github.com/w3c/feedvalidator">Feed validator software</a>.
+</address>
+</div>
+
+
+
+</body></html>
