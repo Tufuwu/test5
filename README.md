@@ -1,145 +1,158 @@
-olefile
-=======
+# Jaro Winkler Distance
 
-[![Test](https://github.com/decalage2/olefile/actions/workflows/test.yml/badge.svg)](https://github.com/decalage2/olefile/actions)
-[![Build Status AppVeyor](https://ci.appveyor.com/api/projects/status/github/decalage2/olefile?svg=true)](https://ci.appveyor.com/project/decalage2/olefile)
-[![codecov](https://codecov.io/gh/decalage2/olefile/branch/main/graph/badge.svg)](https://codecov.io/gh/decalage2/olefile)
-[![Documentation Status](http://readthedocs.org/projects/olefile/badge/?version=latest)](http://olefile.readthedocs.io/en/latest/?badge=latest)
-[![PyPI](https://img.shields.io/pypi/v/olefile.svg)](https://pypi.org/project/olefile/)
-[![Say Thanks!](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/decalage2)
+<div align="center">
 
-[olefile](https://www.decalage.info/olefile) is a Python package to parse, read and write
-[Microsoft OLE2 files](http://en.wikipedia.org/wiki/Compound_File_Binary_Format)
-(also called Structured Storage, Compound File Binary Format or Compound Document File Format),
-such as Microsoft Office 97-2003 documents, vbaProject.bin in MS Office 2007+ files, Image Composer
-and FlashPix files, Outlook messages, StickyNotes, several Microscopy file formats, McAfee antivirus quarantine files,
-etc.
+![PyPI - Version](https://img.shields.io/pypi/v/pyjarowinkler?style=flat-square)
+![License](https://img.shields.io/github/license/nap/jaro-winkler-distance?style=flat-square)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pyjarowinkler?style=flat-square)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/nap/jaro-winkler-distance/push.yml?branch=main&style=flat-square)
 
+</div>
 
-**Quick links:** [Home page](https://www.decalage.info/olefile) -
-[Download/Install](http://olefile.readthedocs.io/en/latest/Install.html) -
-[Documentation](http://olefile.readthedocs.io/en/latest) -
-[Report Issues/Suggestions/Questions](https://github.com/decalage2/olefile/issues) -
-[Contact the author](https://www.decalage.info/contact) -
-[Repository](https://github.com/decalage2/olefile) -
-[Updates on Twitter](https://twitter.com/decalage2)
+This module finds a non-euclidean distance or similarity between two strings.
 
+Jaro and [Jaro-Winkler](https://www.census.gov/content/dam/Census/library/working-papers/1991/adrm/rr91-9.pdf) equations provides a score between two short strings where errors are more prone at the end of the string. Jaro's equation measure is the weighted sum of the percentage of matching and transposed characters from each string. Winkler's factor adds weight in Jaro's formula to increase the calculated measure when there is a sequence of characters (a prefix) in both strings.
 
-News
-----
+This version is based on the [original C implementation of strcmp95](https://web.archive.org/web/20100227020019/http://www.census.gov/geo/msb/stand/strcmp.c) implementation but does not attempt to normalize characters that are similar to the eyes (e.g.: `O` vs `0`).
 
-Follow all updates and news on Twitter: <https://twitter.com/decalage2>
+ * Impact of the prefix is limited to 4 characters, as originally defined by Winkler.
+ * Input strings are not modified beyond whitespace trimming.
+ * In-word whitespace and characters case will **optionally** impact score.
+ * Returns a floating point number rounded to the desired decimals (defaults to `2`) using Python's [`round`](https://docs.python.org/3/library/functions.html#round).
+ * Consider usual [floating point arithmetic](https://docs.python.org/3/tutorial/floatingpoint.html#tut-fp-issues) characteristics when working with this module.
 
-- **2023-12-01 v0.47**: now distributed as wheel package, added VT_VECTOR support for properties,
-  added get_userdefined_properties, fixed bugs in isOleFile and write_sect, improved file closure
-- 2018-09-09 v0.46: OleFileIO can now be used as a context manager
-(with...as), to close the file automatically
-(see [doc](https://olefile.readthedocs.io/en/latest/Howto.html#open-an-ole-file-from-disk)).
-Improved handling of malformed files, fixed several bugs.
-- 2018-01-24 v0.45: olefile can now overwrite streams of any size, improved handling of malformed files,
-fixed several [bugs](https://github.com/decalage2/olefile/milestone/4?closed=1), end of support for Python 2.6 and 3.3.
-- 2017-01-06 v0.44: several bugfixes, removed support for Python 2.5 (olefile2),
-added support for incomplete streams and incorrect directory entries (to read malformed documents),
-added getclsid, improved [documentation](http://olefile.readthedocs.io/en/latest) with API reference.
-- 2017-01-04: moved the documentation to [ReadTheDocs](http://olefile.readthedocs.io/en/latest)
-- 2016-05-20: moved olefile repository to [GitHub](https://github.com/decalage2/olefile)
-- 2016-02-02 v0.43: fixed issues [#26](https://github.com/decalage2/olefile/issues/26)
-    and [#27](https://github.com/decalage2/olefile/issues/27),
-    better handling of malformed files, use python logging.
-- see [changelog](https://github.com/decalage2/olefile/blob/master/CHANGELOG.md) for more detailed information and
-the latest changes.
+## Implementation
 
-Download/Install
-----------------
+The complexity of this algoritme resides in finding the `matching` and `transposed` characters. That is because of the interpretation of what are the `matching` conditions and the definition of `transposed`. Definitions of those two will make the score vary between implementations of this algorithme.
 
-If you have pip or setuptools installed (pip is included in Python 2.7.9+), you may simply run **pip install olefile**
-or **easy_install olefile** for the first installation.
+Here is how `matching` and `transposed` are defined in this module:
 
-To update olefile, run **pip install -U olefile**.
+* A character of the first string at position `N` is `matching` if found at position `N` or within `distance` on either side in the second string.
+* The `distance` is calculated using the rounded down length of the longest string divided by two minus one.
+* Characters in the first string are matched only once against characters of the second string.
+* Two characters are `transposed` if they previously matched and aren't at the same position in the matching character subset.
+* Decimals are rounded according to the scientific method.
 
-Otherwise, see http://olefile.readthedocs.io/en/latest/Install.html
+**TODO**: Implementation should be refactored to use Python's [Decimal](https://docs.python.org/3.13/library/decimal.html) module from the standard library. This module was introduced in Python 3.9.
 
-Features
---------
+### Example
 
-- Parse, read and write any OLE file such as Microsoft Office 97-2003 legacy document formats (Word .doc, Excel .xls,
-    PowerPoint .ppt, Visio .vsd, Project .mpp), MSI files, Image Composer and FlashPix files, Outlook messages, StickyNotes,
-    Zeiss AxioVision ZVI files, Olympus FluoView OIB files, etc
-- List all the streams and storages contained in an OLE file
-- Open streams as files
-- Parse and read property streams, containing metadata of the file
-- Portable, pure Python module, no dependency
+Calculate the Jaro Winkler similarity ($sim_{w}$) between `PENNSYLVANIA` and `PENNCISYLVNIA`:
 
-olefile can be used as an independent package or with PIL/Pillow.
+$$
+s_{1}=\text{PENNSYLVANIA} \qquad\text{and}\qquad s_{2}=\text{PENNCISYLVNIA}
+$$
 
-olefile is mostly meant for developers. If you are looking for tools to analyze OLE files or to extract data (especially
-for security purposes such as malware analysis and forensics), then please also check my
-[python-oletools](https://www.decalage.info/python/oletools), which are built upon olefile and provide a higher-level interface.
+```
+    P E N N C I S Y L V N I A
+  ┌-─────────────────────────
+P │ 1          ╎
+E │   1          ╎
+N │     1          ╎
+N │       1          ╎           Symbols '╎' represent the sliding windows
+S │             1      ╎        boundary in the second string where we look
+Y │ ╎             1      ╎           for the first string's character.
+L │   ╎             1      ╎
+V │     ╎             1                   d = 5 in this example.
+A │       ╎                 1
+N │         ╎           1
+I │           ╎           1
+A │             ╎
+```
 
+$$
+\begin{split}
+   d &= \left\lfloor {\max(12, 13) \over 2} \right\rfloor - 1 \newline
+     &= 5 \newline
+\end{split}
+\qquad
+   \text{ and }
+\qquad
+\begin{split}
+   |s_{1}| &= 12 \newline
+   |s_{2}| &= 13 \newline
+\end{split}
+\qquad
+   \text{ and }
+\qquad
+\begin{split}
+   \ell &= 4 \newline
+      m &= 11 \newline
+      t &= 3 \newline
+      p &= 0.1 \newline
+\end{split}
+$$
 
-Documentation
--------------
+Considering the input parameters calculated above:
 
-Please see the [online documentation](http://olefile.readthedocs.io/en/latest) for more information.
+$$
+\begin{split}
+   sim_{j} &=\begin{cases}
+               0 & \text{if } m = 0 \newline
+               {1 \over 3} \times \left({m \over |s_{1}|} + {m \over |s_{2}|} + {{m - t} \over m} \right) & \text{otherwise}
+             \end{cases} \newline
+           &={1 \over 3} \times \left({11 \over 12} + {11 \over 13} + {{11 - 3} \over 11}\right) \newline
+           &= 0.83003108003 \newline
+\end{split}
+\qquad
+   \text{then}
+\qquad
+\begin{split}
+   sim_{w} &= sim_{j} + \ell \times p \times (1 - sim_{j}) \newline
+           &= 0.83003108003 + 4 \times 0.1 \times (1 - 0.83003108003) \newline
+           &= 0.89801864801 \newline
+\end{split}
+$$
 
+We found that the $\lceil sim_{w} \rceil$ is $0.9$.
 
-## Real-life examples ##
+## Usage
 
-A real-life example: [using OleFileIO_PL for malware analysis and forensics](http://blog.gregback.net/2011/03/using-remnux-for-forensic-puzzle-6/).
+```python
+from pyjarowinkler import distance
 
-See also [this paper](https://computer-forensics.sans.org/community/papers/gcfa/grow-forensic-tools-taxonomy-python-libraries-helpful-forensic-analysis_6879) about python tools for forensics, which features olefile.
+distance.get_jaro_similarity("PENNSYLVANIA", "PENNCISYLVNIA", decimals=12)
+# 0.830031080031
+distance.get_jaro_winkler_similarity("PENNSYLVANIA", "PENNCISYLVNIA", decimals=12)
+# 0.898018648019
+distance.get_jaro_distance("hello", "haloa", decimals=4)
+# 0.2667
+distance.get_jaro_similarity("hello", "haloa", decimals=2)
+# 0.73
+distance.get_jaro_winkler_distance("hello", "Haloa", scaling=0.1, ignore_case=False)
+# 0.4
+distance.get_jaro_winkler_distance("hello", "HaLoA", scaling=0.1, ignore_case=True)
+# 0.24
+distance.get_jaro_winkler_similarity("hello", "haloa", decimals=2)
+# 0.76
+```
 
+## Contribute
 
-License
--------
+You need to have installed [`asdf`](https://asdf-vm.com/) on your system. Then, running the commands below will setup your environment with the project's optional (dev) requirements and create the python virtual environment necessary to run test, lint, and build steps.
 
-olefile (formerly OleFileIO_PL) is copyright (c) 2005-2023 Philippe Lagadec
-([https://www.decalage.info](https://www.decalage.info))
+Typical order of execution is as follow:
 
-All rights reserved.
+```shell
+$ cd ./jaro-winkler-distance
+$ asdf install
+$ pip install '.[dev]'
+$ hatch python install 3.13 3.12 3.11 3.10 3.9
+$ hatch env create
+```
 
-Redistribution and use in source and binary forms, with or without modification,
-are permitted provided that the following conditions are met:
+Other helpful commands:
 
- * Redistributions of source code must retain the above copyright notice, this
-   list of conditions and the following disclaimer.
- * Redistributions in binary form must reproduce the above copyright notice,
-   this list of conditions and the following disclaimer in the documentation
-   and/or other materials provided with the distribution.
+* `hatch test`
+* `hatch fmt`
+* `hatch env show`
+* `hatch run test:unit`
+* `hatch run test:all`
+* `hatch run lint:all`
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+## Release
 
-
-----------
-
-olefile is based on source code from the OleFileIO module of the Python Imaging Library (PIL) published by Fredrik
-Lundh under the following license:
-
-The Python Imaging Library (PIL) is
-
-- Copyright (c) 1997-2009 by Secret Labs AB
-- Copyright (c) 1995-2009 by Fredrik Lundh
-
-By obtaining, using, and/or copying this software and/or its associated documentation, you agree that you have read,
-understood, and will comply with the following terms and conditions:
-
-Permission to use, copy, modify, and distribute this software and its associated documentation for any purpose and
-without fee is hereby granted, provided that the above copyright notice appears in all copies, and that both that
-copyright notice and this permission notice appear in supporting documentation, and that the name of Secret Labs AB or
-the author not be used in advertising or publicity pertaining to distribution of the software without specific, written
-prior permission.
-
-SECRET LABS AB AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES
-OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL SECRET LABS AB OR THE AUTHOR BE LIABLE FOR ANY SPECIAL, INDIRECT OR
-CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF
-CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
-SOFTWARE.
+```shell
+$ ./release.sh help
+Usage: release.sh [help|major|minor|patch]
+```
