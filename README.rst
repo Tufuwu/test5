@@ -1,196 +1,345 @@
-sqlservice
-**********
+cacheout
+********
 
 |version| |build| |coveralls| |license|
 
 
-The missing SQLAlchemy ORM interface.
+A caching library for Python.
 
 
 Links
 =====
 
-- Project: https://github.com/dgilland/sqlservice
-- Documentation: http://sqlservice.readthedocs.io
-- PyPI: https://pypi.python.org/pypi/sqlservice/
-- Github Actions: https://github.com/dgilland/sqlservice/actions
+- Project: https://github.com/dgilland/cacheout
+- Documentation: https://cacheout.readthedocs.io
+- PyPI: https://pypi.python.org/pypi/cacheout/
+- Github Actions: https://github.com/dgilland/cacheout/actions
 
-
-Introduction
-============
-
-So what exactly is ``sqlservice`` and what does "the missing SQLAlchemy ORM interface" even mean? SQLAlchemy is a fantastic library and features a superb ORM layer. However, one thing SQLAlchemy lacks is a unified interface for easily interacting with your database through your ORM models. This is where ``sqlservice`` comes in. It's interface layer on top of SQLAlchemy's session manager and ORM layer that provides a single point to manage your database connection/session, create/reflect/drop your database objects, and easily persist/destroy model objects.
 
 Features
---------
+========
 
-This library is meant to enhance your usage of SQLAlchemy. SQLAlchemy is great and this library tries to build upon that by providing useful abstractions on top of it.
+- In-memory caching using dictionary backend
+- Cache manager for easily accessing multiple cache objects
+- Reconfigurable cache settings for runtime setup when using module-level cache objects
+- Maximum cache size enforcement
+- Default cache TTL (time-to-live) as well as custom TTLs per cache entry
+- Bulk set, get, and delete operations
+- Bulk get and delete operations filtered by string, regex, or function
+- Memoization decorators
+- Thread safe
+- Multiple cache implementations:
 
-- Sync and asyncio database clients to manage ORM sessions with enhanced session classes.
-- Base class for a declarative ORM Model that makes updating model columns and relationships easier and converting to a dictionary a breeze.
-- Decorator-based event register for SQLAlchemy ORM events that can be used at the model class level. No need to register the event handler outside of the class definition.
-- And more!
+  - FIFO (First In, First Out)
+  - LIFO (Last In, First Out)
+  - LRU (Least Recently Used)
+  - MRU (Most Recently Used)
+  - LFU (Least Frequently Used)
+  - RR (Random Replacement)
+
+
+Roadmap
+=======
+
+- Layered caching (multi-level caching)
 
 
 Requirements
-------------
+============
 
 - Python >= 3.7
-- `SQLAlchemy <http://www.sqlalchemy.org/>`_ >= 2.0
 
 
 Quickstart
 ==========
 
-First, install using pip:
+Install using pip:
 
 
 ::
 
-    pip install sqlservice
+    pip install cacheout
 
 
-Then, define some ORM models:
+Let's start with some basic caching by creating a cache object:
+
+.. code-block:: python
+
+    from cacheout import Cache
+
+    cache = Cache()
+
+
+By default the ``cache`` object will have a maximum size of ``256``, default TTL (time-to-live) expiration turned off, TTL timer that uses ``time.time`` (meaning TTL is in seconds), and the default for missing keys as ``None``. These values can be set with:
+
+.. code-block:: python
+
+    cache = Cache(maxsize=256, ttl=0, timer=time.time, default=None)  # defaults
+
+
+Set a cache key using ``cache.set()``:
+
+.. code-block:: python
+
+    cache.set(1, 'foobar')
+
+
+Get the value of a cache key with ``cache.get()``:
+
+.. code-block:: python
+
+    assert cache.get(1) == 'foobar'
+
+
+Get a default value when cache key isn't set:
+
+.. code-block:: python
+
+    assert cache.get(2) is None
+    assert cache.get(2, default=False) is False
+    assert 2 not in cache
+
+
+Provide cache values using a default callable:
+
+.. code-block:: python
+
+    assert 2 not in cache
+    assert cache.get(2, default=lambda key: key) == 2
+    assert cache.get(2) == 2
+    assert 2 in cache
+
+
+Provide a global default:
+
+.. code-block:: python
+
+    cache2 = Cache(default=True)
+    assert cache2.get('missing') is True
+    assert 'missing' not in cache2
+
+    cache3 = Cache(default=lambda key: key)
+    assert cache3.get('missing') == 'missing'
+    assert 'missing' in cache3
+
+
+Set the TTL (time-to-live) expiration per entry (default TTL units are in seconds when ``Cache.timer`` is set to the default ``time.time``; otherwise, the units are determined by the custom timer function):
+
+.. code-block:: python
+
+    cache.set(3, {'data': {}}, ttl=1)
+    assert cache.get(3) == {'data': {}}
+    time.sleep(1)
+    assert cache.get(3) is None
+
+
+Memoize a function where cache keys are generated from the called function parameters:
+
+.. code-block:: python
+
+    @cache.memoize()
+    def func(a, b):
+        pass
+
+
+Provide a TTL for the memoized function and incorporate argument types into generated cache keys:
+
+.. code-block:: python
+
+    @cache.memoize(ttl=5, typed=True)
+    def func(a, b):
+        pass
+
+    # func(1, 2) has different cache key than func(1.0, 2.0), whereas,
+    # with "typed=False" (the default), they would have the same key
+
+
+Access the original memoized function:
+
+.. code-block:: python
+
+    @cache.memoize()
+    def func(a, b):
+        pass
+
+    func.uncached(1, 2)
+
+
+Get a copy of the entire cache with ``cache.copy()``:
+
+.. code-block:: python
+
+    assert cache.copy() == {1: 'foobar', 2: ('foo', 'bar', 'baz')}
+
+
+Delete a cache key with ``cache.delete()``:
+
+.. code-block:: python
+
+    cache.delete(1)
+    assert cache.get(1) is None
+
+
+Clear the entire cache with ``cache.clear()``:
+
+.. code-block:: python
+
+    cache.clear()
+    assert len(cache) == 0
+
+
+Perform bulk operations with ``cache.set_many()``, ``cache.get_many()``, and ``cache.delete_many()``:
+
+.. code-block:: python
+
+    cache.set_many({'a': 1, 'b': 2, 'c': 3})
+    assert cache.get_many(['a', 'b', 'c']) == {'a': 1, 'b': 2, 'c': 3}
+    cache.delete_many(['a', 'b', 'c'])
+    assert cache.count() == 0
+
+
+Use complex filtering in ``cache.get_many()`` and ``cache.delete_many()``:
 
 .. code-block:: python
 
     import re
-    import typing as t
+    cache.set_many({'a_1': 1, 'a_2': 2, '123': 3, 'b': 4})
 
-    from sqlalchemy import ForeignKey, orm, types
-    from sqlalchemy.orm import Mapped, mapped_column
+    cache.get_many('a_*') == {'a_1': 1, 'a_2': 2}
+    cache.get_many(re.compile(r'\d')) == {'123': 3}
+    cache.get_many(lambda key: '2' in key) == {'a_2': 2, '123': 3}
 
-    from sqlservice import declarative_base, event
-
-
-    Model = declarative_base()
-
-    class User(Model):
-        __tablename__ = "user"
-
-        id: Mapped[int] = mapped_column(types.Integer(), primary_key=True)
-        name: Mapped[t.Optional[str]] = mapped_column(types.String(100))
-        email: Mapped[t.Optional[str]] = mapped_column(types.String(100))
-        phone: Mapped[t.Optional[str]] = mapped_column(types.String(10))
-
-        roles: Mapped[t.List["UserRole"]] = orm.relationshipship("UserRole")
-
-        @event.on_set("phone", retval=True)
-        def on_set_phone(self, value):
-            # Strip non-numeric characters from phone number.
-            return re.sub("[^0-9]", "", value)
+    cache.delete_many('a_*')
+    assert dict(cache.items()) == {'123': 3, 'b': 4}
 
 
-    class UserRole(Model):
-        __tablename__ = "user_role"
-
-        id: Mapped[int] = mapped_column(types.Integer(), primary_key=True)
-        user_id: Mapped[int] = mapped_column(types.Integer(), ForeignKey("user.id"), nullable=False)
-        role: Mapped[str] = mapped_column(types.String(25), nullable=False)
-
-
-Next, configure the database client:
+Reconfigure the cache object after creation with ``cache.configure()``:
 
 .. code-block:: python
 
-    from sqlservice import AsyncDatabase, Database
-
-    db = Database(
-        "sqlite:///db.sql",
-        model_class=Model,
-        isolation_level="SERIALIZABLE",
-        echo=True,
-        echo_pool=False,
-        pool_size=5,
-        pool_timeout=30,
-        pool_recycle=3600,
-        max_overflow=10,
-        autoflush=True,
-    )
-
-    # Same options as above are supported but will default to compatibility with SQLAlchemy asyncio mode.
-    async_db = AsyncDatabase("sqlite:///db.sql", model_class=Model)
+    cache.configure(maxsize=1000, ttl=5 * 60)
 
 
-Prepare the database by creating all tables:
+Get keys, values, and items from the cache with ``cache.keys()``, ``cache.values()``, and ``cache.items()``:
 
 .. code-block:: python
 
-    db.create_all()
-    await async_db.create_all()
+    cache.set_many({'a': 1, 'b': 2, 'c': 3})
+    assert list(cache.keys()) == ['a', 'b', 'c']
+    assert list(cache.values()) == [1, 2, 3]
+    assert list(cache.items()) == [('a', 1), ('b', 2), ('c', 3)]
 
 
-Finally (whew!), start interacting with the database.
-
-Insert a new record in the database:
-
-.. code-block:: python
-
-    user = User(name='Jenny', email=jenny@example.com, phone='555-867-5309')
-    with db.begin() as session:
-        session.save(user)
-
-    async with db.begin() as session:
-        await session.save(user)
-
-
-Fetch records:
+Iterate over cache keys:
 
 .. code-block:: python
 
-    session = db.session()
-    assert user is session.get(User, user.id)
-    assert user is session.first(User.select())
-    assert user is session.all(User.select().where(User.id == user.id)[0]
+    for key in cache:
+        print(key, cache.get(key))
+        # 'a' 1
+        # 'b' 2
+        # 'c' 3
 
 
-Serialize to a ``dict``:
-
-.. code-block:: python
-
-    assert user.to_dict() == {
-        "id": 1,
-        "name": "Jenny",
-        "email": "jenny@example.com",
-        "phone": "5558675309"
-    }
-
-    assert dict(user) == user.to_dict()
-
-
-Update the record and save:
+Check if key exists with ``cache.has()`` and ``key in cache``:
 
 .. code-block:: python
 
-    user.phone = '222-867-5309'
-    with db.begin() as session:
-        session.save(user)
-
-    async with async_db.begin() as session:
-        await session.save(user)
+    assert cache.has('a')
+    assert 'a' in cache
 
 
-Upsert on primary key automatically:
+Use callbacks to be notified of on-get, on-set, and on-delete events:
 
 .. code-block:: python
 
-    other_user = User(id=1, name="Jenny", email="jenny123@example.com", phone="5558675309")
-    with db.begin() as session:
-        session.save(other_user)
-    assert user is other_user
+    def on_get(key, value, exists):
+        pass
 
-For more details, please see the full documentation at http://sqlservice.readthedocs.io.
+    def on_set(key, new_value, old_value):
+        pass
+
+    def on_delete(key, value, cause):
+        pass
+
+
+Enable cache statistics:
+
+.. code-block:: python
+
+    cache_with_stats = Cache(enable_stats=True)
+
+    # Or via configure()
+    cache.configure(enable_stats=True)
+
+    # Or directly via Cache.stats
+    cache.stats.enable()
+
+
+Get cache statistics:
+
+.. code-block:: python
+
+    print(cache.stats.info())
+
+
+Manage tracking of statistics:
+
+.. code-block:: python
+
+    # Pause tracking (collected stats will not be affected)
+    cache.stats.pause()
+
+    # Resume tracking
+    cache.stats.resume()
+
+    # Reset stats
+    cache.stats.reset()
+
+    # Disable stats (WARNING: This resets stats)
+    cache.stats.disable()
+
+    # Disable via configure() (WARNING: This resets stats)
+    cache.configure(enable_stats=False)
+
+
+Manage multiple caches using ``CacheManager``:
+
+.. code-block:: python
+
+    from cacheout import CacheManager
+
+    cacheman = CacheManager({'a': {'maxsize': 100},
+                             'b': {'maxsize': 200, 'ttl': 900},
+                             'c': {})
+
+    cacheman['a'].set('key1', 'value1')
+    value = cacheman['a'].get('key')
+
+    cacheman['b'].set('key2', 'value2')
+    assert cacheman['b'].maxsize == 200
+    assert cacheman['b'].ttl == 900
+
+    cacheman['c'].set('key3', 'value3')
+
+    cacheman.clear_all()
+    for name, cache in cacheman:
+        assert name in cacheman
+        assert len(cache) == 0
+
+
+For more details, see the full documentation at https://cacheout.readthedocs.io.
 
 
 
-.. |version| image:: http://img.shields.io/pypi/v/sqlservice.svg?style=flat-square
-    :target: https://pypi.python.org/pypi/sqlservice/
+.. |version| image:: https://img.shields.io/pypi/v/cacheout.svg?style=flat-square
+    :target: https://pypi.python.org/pypi/cacheout/
 
-.. |build| image:: https://img.shields.io/github/actions/workflow/status/dgilland/sqlservice/main.yml?branch=master&style=flat-square
-    :target: https://github.com/dgilland/sqlservice/actions
+.. |build| image:: https://img.shields.io/github/actions/workflow/status/dgilland/cacheout/main.yml?branch=master&style=flat-square
+    :target: https://github.com/dgilland/cacheout/actions
 
-.. |coveralls| image:: http://img.shields.io/coveralls/dgilland/sqlservice/master.svg?style=flat-square
-    :target: https://coveralls.io/r/dgilland/sqlservice
+.. |coveralls| image:: https://img.shields.io/coveralls/dgilland/cacheout/master.svg?style=flat-square
+    :target: https://coveralls.io/r/dgilland/cacheout
 
-.. |license| image:: http://img.shields.io/pypi/l/sqlservice.svg?style=flat-square
-    :target: https://pypi.python.org/pypi/sqlservice/
+.. |license| image:: https://img.shields.io/pypi/l/cacheout.svg?style=flat-square
+    :target: https://pypi.python.org/pypi/cacheout/

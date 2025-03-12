@@ -11,5 +11,6 @@ Lead
 Contributors
 ------------
 
-- Dan Sully, `dsully@github <https://github.com/dsully>`_
-- Cooper Benson, `skycoop@github <https://github.com/skycoop>`_
+- John Bergvall , `johnbergvall@github <https://github.com/johnbergvall>`_
+- AllinolCP, `AllinolCP@github <https://github.com/AllinolCP>`_
+- uncle-lv, `uncle-lv@github <https://github.com/uncle-lv>`_

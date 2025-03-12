@@ -92,17 +92,14 @@ To run all unit tests:
 
 ::
 
-    inv test
+    inv unit
 
 
-CI
-++
-
-To run linters, unit tests, and builds:
+To run unit tests and builds:
 
 ::
 
-    inv ci
+    inv test
 
 
 Test on All Supported Python Versions
@@ -182,7 +179,7 @@ CI/CD
 
 This project uses `Github Actions <https://docs.github.com/en/free-pro-team@latest/actions>`_ for CI/CD:
 
-- https://github.com/dgilland/sqlservice/actions
+- https://github.com/dgilland/cacheout/actions
 
 
 .. _pyenv: https://github.com/pyenv/pyenv

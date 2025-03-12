@@ -1,4 +1,4 @@
-.. sqlservice documentation master file
+.. cacheout documentation master file
 
 .. include:: ../README.rst
 
@@ -9,14 +9,15 @@ Guide
     :maxdepth: 3
 
     installation
-    migrating_to_v2.0
-    database
-    session
-    async_database
-    async_session
-    model
-    event
-    api
+    cache
+    fifo
+    lifo
+    lru
+    mru
+    lfu
+    rr
+    memoization
+    manager
     devguide
 
 

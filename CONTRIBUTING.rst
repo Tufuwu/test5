@@ -12,7 +12,7 @@ Types of Contributions
 Report Bugs
 +++++++++++
 
-Report bugs at https://github.com/dgilland/sqlservice.
+Report bugs at https://github.com/dgilland/cacheout.
 
 If you are reporting a bug, please include:
 
@@ -36,13 +36,13 @@ Look through the GitHub issues for features. Anything tagged with "enhancement" 
 Write Documentation
 +++++++++++++++++++
 
-SQLService could always use more documentation, whether as part of the official SQLService docs, in docstrings, or even on the web in blog posts, articles, and such.
+cacheout could always use more documentation, whether as part of the official cacheout docs, in docstrings, or even on the web in blog posts, articles, and such.
 
 
 Submit Feedback
 +++++++++++++++
 
-The best way to send feedback is to file an issue at https://github.com/dgilland/sqlservice.
+The best way to send feedback is to file an issue at https://github.com/dgilland/cacheout.
 
 If you are proposing a feature:
 
@@ -54,16 +54,16 @@ If you are proposing a feature:
 Get Started!
 ------------
 
-Ready to contribute? Here's how to set up ``sqlservice`` for local development.
+Ready to contribute? Here's how to set up ``cacheout`` for local development.
 
-1. Fork the ``sqlservice`` repo on GitHub.
+1. Fork the ``cacheout`` repo on GitHub.
 2. Clone your fork locally::
 
-    $ git clone git@github.com:your_name_here/sqlservice.git
+    $ git clone git@github.com:your_username_here/cacheout.git
 
 3. Install Python dependencies into a virtualenv::
 
-    $ cd sqlservice
+    $ cd cacheout
     $ pip install -r requirements.txt
 
 4. Create a branch for local development::

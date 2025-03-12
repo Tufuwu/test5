@@ -20,12 +20,12 @@ try:
 except ImportError:  # Python 3.7
     import importlib_metadata
 
-pkg_info = importlib_metadata.metadata("sqlservice")
+pkg_info = importlib_metadata.metadata("cacheout")
 
 project = pkg_info["Name"]
 author = pkg_info["Author"]
 description = pkg_info["Summary"]
-copyright = "2016, " + author
+copyright = "2018, " + author
 
 # The short X.Y version
 version = pkg_info["Version"]

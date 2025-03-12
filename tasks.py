@@ -14,11 +14,12 @@ import os
 from invoke import Exit, UnexpectedExit, run as _run, task
 
 
-PACKAGE_NAME = "sqlservice"
+PACKAGE_NAME = "cacheout"
 PACKAGE_SOURCE = f"src/{PACKAGE_NAME}"
 TEST_TARGETS = f"{PACKAGE_SOURCE} tests"
 LINT_TARGETS = f"{TEST_TARGETS} tasks.py"
 EXIT_EXCEPTIONS = (Exit, UnexpectedExit, SystemExit)
+
 
 # Set pyt=True to enable colored output when available.
 run = partial(_run, pty=True)
@@ -48,8 +49,6 @@ def docformatter(ctx):
 @task
 def fmt(ctx):
     """Autoformat code and docstrings."""
-    print("Preparing to run formatters: docformatter, isort, black\n")
-
     print("Running docformatter")
     docformatter(ctx)
 
@@ -99,7 +98,7 @@ def lint(ctx):
 
     if failures:
         failed = ", ".join(failures)
-        raise Exit(f"ERROR: Linters that failed: {failed}")
+        raise Exit(f"ERROR: linters failed: {failed}")
 
 
 @task(help={"args": "Override default pytest arguments"})
