@@ -1,92 +1,42 @@
-[tool.ruff]
-line-length = 127
-target-version = "py37"
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
-extend-exclude = ["circuits/web/parsers/multipart.py"]
-
-[tool.ruff.lint]
-preview = true
-ignore-init-module-imports = true
-select = ["E", "W", "F", "I", "D", "TD"]
-ignore = [
- "E501",  # line-too-long
- "E203",  # whitespace-before-punctuation
- "COM812",  # missing-trailing-comma
- "D203",  # one-blank-line-before-class
- "D212",  # multi-line-summary-first-line
- "D400",  # ends-in-period
- "D415",  # ends-in-punctuation
- "D102",  # Missing docstring in public method
- "D103",  # Missing docstring in public function
- "D101",  # Missing docstring in public class
- "D100",  # Missing docstring in public module
- "D107",  # Missing docstring in `__init__`
- "D205",  # 1 blank line required between summary line and description
- "D105",  # Missing docstring in magic method
- "D401",  # First line of docstring should be in imperative mood: "A shortcut to abspath, escape and lowercase."
- "D402",  # First line should not be the function's signature
- "D404",  # First word of the docstring should not be "This"
- "D104",  # Missing docstring in public package
- "T201", "T203",  # print, p-print
- "TD001",  # invalid-todo-tag
- "TD002",  # missing-todo-author
- "TD003",  # missing-todo-link
+[project]
+name = "django-typed-models"
+description = "Sane single table model inheritance for Django"
+readme = "README.md"
+dynamic = ["version"]
+authors = [{ name = "Craig de Stigter", email = "craig@destigter.nz" }]
+license = "BSD-3-Clause"
+license-files = ["LICENSE.txt"]
+classifiers = [
+    "Environment :: Web Environment",
+    "Framework :: Django",
+    "Framework :: Django :: 4.2",
+    "Framework :: Django :: 5.0",
+    "Framework :: Django :: 5.1",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Utilities",
 ]
+dependencies = ["django_stubs_ext", "typing-extensions"]
+requires-python = ">=3.9"
 
-# Exclude a variety of commonly ignored directories.
-exclude = [
-    ".bzr",
-    ".direnv",
-    ".eggs",
-    ".git",
-    ".hg",
-    ".mypy_cache",
-    ".nox",
-    ".pants.d",
-    ".ruff_cache",
-    ".svn",
-    ".tox",
-    ".venv",
-    "__pypackages__",
-    "_build",
-    "buck-out",
-    "build",
-    "dist",
-    "node_modules",
-    "venv",
-]
+[project.urls]
+Homepage = "http://github.com/craigds/django-typed-models"
 
-# Allow unused variables when underscore-prefixed.
-dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+[tool.hatch.version]
+path = "typedmodels/__init__.py"
 
-task-tags = ["TODO", "FIXME"]
-
-[tool.ruff.lint.mccabe]
-max-complexity = 40
-
-[tool.ruff.lint.flake8-quotes]
-docstring-quotes = "double"
-multiline-quotes = "double"
-inline-quotes = "single"
-
-[tool.ruff.lint.flake8-unused-arguments]
-ignore-variadic-names = true
-
-[tool.ruff.lint.flake8-pytest-style]
-parametrize-names-type = "csv"
-
-[tool.ruff.format]
-quote-style = "single"
-
-[tool.ruff.lint.isort]
-combine-as-imports = true
-#filter-files = true
-#force-grid-wrap = false
-known-first-party = ["circuits"]
-# https://github.com/astral-sh/ruff/issues/2600 :
-#multi-line-output = 5
-#include-trailing-comma = true
-lines-after-imports = 2
-#skip = ".tox,docs,circuits/web/parsers/multipart.py"
-#skip-glob = "venv/*"
-split-on-trailing-comma = false
+[tool.hatch.build.targets.wheel]
+packages = ["typedmodels"]

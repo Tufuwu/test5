@@ -1,91 +1,134 @@
-[![Build Status](https://github.com/circuits/circuits/actions/workflows/python-app.yml/badge.svg)](https://github.com/circuits/circuits/actions/workflows/python-app.yml)
+# django-typed-models
 
-[![codecov](https://codecov.io/gh/circuits/circuits/branch/master/graph/badge.svg)](https://codecov.io/gh/circuits/circuits)
+![example workflow](https://github.com/craigds/django-typed-models/actions/workflows/tests.yml/badge.svg)
 
-circuits is a **Lightweight** **Event** driven and **Asynchronous** **Application Framework** for the [Python Programming Language](http://www.python.org/) with a strong **Component** Architecture.
+## Intro
 
-circuits also includes a lightweight, high performance and scalable HTTP/WSGI compliant web server as well as various I/O and Networking components.
+`django-typed-models` provides an extra type of model inheritance for Django. It is similar to single-table inheritance in Ruby on Rails.
 
--   [Website](http://circuitsframework.com/)
--   [Downloads](https://github.com/circuits/circuits/releases)
--   [Documentation](http://circuits.readthedocs.org/en/latest/)
+The actual type of each object is stored in the database, and when the object is retrieved it is automatically cast to the correct model class.
 
-Got questions?
+Licensed under the New BSD License.
 
--   [Ask a Question](http://stackoverflow.com/questions/ask) (Tag it: `circuits-framework`)
 
-Examples
-========
+## Features
 
-Features
-========
+* Models in querysets have the right class automatically
+* All models subclassing a common base are stored in the same table
+* Object types are stored in a 'type' field in the database
+* No extra queries or joins to retrieve multiple types
 
--   event driven
--   concurrency support
--   component architecture
--   asynchronous I/O components
--   no required external dependencies
--   full featured web framework (circuits.web)
--   coroutine based synchronization primitives
 
-Requirements
-============
+## Usage:
 
--   circuits has no dependencies beyond the [Python Standard Library](http://docs.python.org/library/).
+An example says a bunch of words:
 
-Supported Platforms
-===================
+```python
 
--   Linux, FreeBSD, Mac OS X, Windows
--   Python 3.7, 3.8, 3.9, 3.10, 3.11, 3.12
--   pypy (the newer the better)
+# myapp/models.py
 
-Installation
-============
+from django.db import models
+from typedmodels.models import TypedModel
 
-The simplest and recommended way to install circuits is with pip. You may install the latest stable release from PyPI with pip:
+class Animal(TypedModel):
+    """
+    Abstract model
+    """
+    name = models.CharField(max_length=255)
 
-    $ pip install circuits
+    def say_something(self):
+        raise NotImplemented
 
-If you do not have pip, you may use easy\_install:
+    def __repr__(self):
+        return u'<%s: %s>' % (self.__class__.__name__, self.name)
 
-    $ easy_install circuits
+class Canine(Animal):
+    def say_something(self):
+        return "woof"
 
-Alternatively, you may download the source package from the [PyPi](http://pypi.python.org/pypi/circuits) or the [Downloads](https://github.com/circuits/circuits/releases) extract it and install using:
+class Feline(Animal):
+    mice_eaten = models.IntegerField(
+        default = 0
+        )
 
-    $ python setup.py install
+    def say_something(self):
+        return "meoww"
+```
 
-> **note**
->
-> You can install the [development version](https://github.com/circuits/circuits/archive/master.zip#egg=circuits-dev)
-> via `pip install circuits==dev`.
->
-License
-=======
+Later:
 
-circuits is licensed under the [MIT License](http://www.opensource.org/licenses/mit-license.php).
+```python
+>>> from myapp.models import Animal, Canine, Feline
+>>> Feline.objects.create(name="kitteh")
+>>> Feline.objects.create(name="cheetah")
+>>> Canine.objects.create(name="fido")
+>>> print Animal.objects.all()
+[<Feline: kitteh>, <Feline: cheetah>, <Canine: fido>]
 
-Feedback
-========
+>>> print Canine.objects.all()
+[<Canine: fido>]
 
-We welcome any questions or feedback about bugs and suggestions on how to improve circuits.
+>>> print Feline.objects.all()
+[<Feline: kitteh>, <Feline: cheetah>]
+```
 
-Let us know what you think about circuits. [@pythoncircuits](http://twitter.com/pythoncircuits).
+You can actually change the types of objects. Simply run an update query:
 
-Do you have suggestions for improvement? Then please [Create an Issue](https://github.com/circuits/circuits/issues/new) with details of what you would like to see. I'll take a look at it and work with you to either incorporate the idea or find a better solution.
+```python
+Feline.objects.update(type='myapp.bigcat')
+```
 
-Community
-=========
+If you want to change the type of an object without refreshing it from the database, you can call ``recast``:
 
-There are also several places you can reach out to the circuits community:
+```python
+kitty.recast(BigCat)
+# or kitty.recast('myapp.bigcat')
+kitty.save()
+```
 
--   [Mailing List](http://groups.google.com/group/circuits-users)
--   [\#circuits IRC Channel](https://web.libera.chat/#circuits) on the [Libera.Chat IRC Network](https://libera.chat)
--   [Ask a Question](http://stackoverflow.com/questions/ask) on [Stackoverflow](http://stackoverflow.com/) (Tag it: `circuits-framework`)
 
-------------------------------------------------------------------------
+## Listing subclasses
 
-Disclaimer
-==========
+Occasionally you might need to list the various subclasses of your abstract type.
 
-Whilst I (James Mills) continue to contribute and maintain the circuits project I do not represent the interests or business of my employer Facebook Inc. The contributions I make are of my own free time and have no bearing or relevance to Facebook Inc.
+One current use for this is connecting signals, since currently they don't fire on the base class (see [#1](https://github.com/craigds/django-typed-models/issues/1))
+
+```python
+    for sender in Animal.get_type_classes():
+        post_save.connect(on_animal_saved, sender=sender)
+```
+
+
+## Django admin
+
+If you plan to use typed models with Django admin, consider inheriting from typedmodels.admin.TypedModelAdmin.
+This will hide the type field from subclasses admin by default, and allow to create new instances from the base class admin.
+
+```python
+from django.contrib import admin
+from typedmodels.admin import TypedModelAdmin
+from .models import Animal, Canine, Feline
+
+@admin.register(Animal)
+class AnimalAdmin(TypedModelAdmin):
+    pass
+
+@admin.register(Canine)
+class CanineAdmin(TypedModelAdmin):
+    pass
+
+@admin.register(Feline)
+class FelineAdmin(TypedModelAdmin):
+    pass
+```
+
+## Limitations
+
+* Since all objects are stored in the same table, all fields defined in subclasses are nullable.
+* Fields defined on subclasses can only be defined on *one* subclass, unless the duplicate fields are exactly identical.
+
+
+## Requirements
+
+* Django 4.2+
+* Python 3.9+
