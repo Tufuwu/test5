@@ -1,28 +1,7 @@
-# Created by virtualenvs.in-project setting in poetry.toml
-/.venv/
-
-# Ignore editor files
-.*.swp
-.vs/
-*.sln
-*.pyproj
-*.pyproj.user
-
-# Configuration
-/config*.toml
-/futaba.service
-
-# Artifacts
+*.pyo
+*.pyc
 __pycache__
-unidata-blocks.txt
-
-# Logging
-*.log
-
-# SQLite databases
-*.db
-
-# Misc
-*.bak
-*~
-*#
+*.egg-info
+build
+dist
+.idea
