@@ -1,3 +1,0 @@
-# module feature: features [] exclude_features has-leaf-foo,has-leaf-goo
-module: feature
-  +--rw root

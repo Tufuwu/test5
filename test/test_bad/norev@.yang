@@ -1,6 +1,0 @@
-module norev {
-    namespace "urn:norev";
-    prefix "norev";
-    revision 2017-09-26 {
-    }
-}

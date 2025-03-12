@@ -1,5 +1,0 @@
-module: grouping-bug
-  +--rw root
-  |  +--rw profile-ref?   -> /profiles/name
-  +--rw profiles
-     +--rw name?   yang:yang-identifier

@@ -1,187 +1,179 @@
-# pyang #
+# SKALE Transaction Manager
 
-[![Release](https://img.shields.io/github/v/release/mbj4668/pyang)](https://github.com/mbj4668/pyang/releases) [![Build Status](https://github.com/mbj4668/pyang/actions/workflows/tests.yml/badge.svg)](https://github.com/mbj4668/pyang/actions)
+[![Discord](https://img.shields.io/discord/534485763354787851.svg)](https://discord.gg/vvUtWJB)
 
-## Overview ##
+Microservice used to manage sending concurrent transactions to the Ethereum network
 
-pyang is a YANG validator, transformator and code generator, written
-in python. It can be used to validate YANG modules for correctness, to
-transform YANG modules into other formats, and to write plugins to
-generate code from the modules.
+## API
 
-YANG ([RFC 7950](http://tools.ietf.org/html/rfc7950)) is a data modeling language for NETCONF ([RFC 6241](http://tools.ietf.org/html/rfc6241)), developed by the IETF [NETMOD](http://www.ietf.org/html.charters/netmod-charter.html) WG.
+### sign_and_send
 
-## Documentation ##
+Takes transaction hash, signs and sends it, returns transaction hash.
 
-See [Documentation](https://github.com/mbj4668/pyang/wiki/Documentation).
+-   URL: `/sign-and-send`
+-   Method: `POST`
 
-## Installation ##
+**Request body**:
 
-- **1 PyPI**
-
-Pyang can be installed from [PyPI](https://pypi.python.org/pypi):
-
-```sh
-# pip install pyang
+```json
+{
+    "transaction_dict": "TRANSACTION_DICT_STRING",
+}
 ```
 
-- **2 Source**
+**Success Response**:
 
-> It is reccomended to use a [Python virtual environment](https://docs.python.org/3/tutorial/venv.html)
-
-```sh
-  git clone https://github.com/mbj4668/pyang.git
-  cd pyang
-  pip install -e .
+```json
+{
+    "errors": null,
+    "data": {
+        "transaction_hash": "0x..."
+    }
+}
 ```
 
+**Error response**:
 
-To install in a different location, run:
-
-```sh
-  python setup.py install --prefix=/usr/local
+```json
+{
+    "error": "Error message",
+    "data": null
+}
 ```
 
-If you do this, it is recommended to set the environment variable
-**YANG_INSTALL** to the prefix directory.  This ensures that pyang will
-find standard YANG modules. In addition, make sure that **PYTHONPATH** is set
-to something as follows:
+### sign
 
-```sh
-export PYTHONPATH=/usr/local/lib/python3.10/site-packages
+Takes transaction hash, signs it, returns signed transaction.
+
+-   URL: `/sign`
+-   Method: `POST`
+
+**Data Params**:
+
+```json
+{
+    "data": {
+        "transaction_dict": "TRANSACTION_DICT_STRING",
+    }
+}
 ```
 
-or whatever version of python you are running.
+**Success Response**:
 
-
-Run locally without installing
-
-```sh
-export PATH=`pwd`/bin:$PATH
-export MANPATH=`pwd`/man:$MANPATH
-export PYTHONPATH=`pwd`:$PYTHONPATH
-export YANG_MODPATH=`pwd`/modules:$YANG_MODPATH
-export PYANG_XSLT_DIR=`pwd`/xslt
-export PYANG_RNG_LIBDIR=`pwd`/schema
+```json
+{
+    "errors": null,
+    "data": {
+        "transaction_hash": "0x..."
+    }
+}
 ```
 
-or:
+**Error response**:
 
-```sh
-source ./env.sh
+```json
+{
+    "error": "Error message",
+    "data": null
+}
 ```
 
-## Compatibility ##
+### address
 
-pyang is compatible with the following IETF RFCs:
+Returns wallet address.
 
-  * [RFC 6020: YANG - A Data Modeling Language for the Network Configuration Protocol (NETCONF)](https://tools.ietf.org/html/rfc6020)
-  * [RFC 6087: Guidelines for Authors and Reviewers of YANG Data Model Documents](https://tools.ietf.org/html/rfc6087)
-  * [RFC 6110: Mapping YANG to Document Schema Definition Languages and Validating NETCONF Content](https://tools.ietf.org/html/rfc6110)
-  * [RFC 6643: Translation of Structure of Management Information Version 2 (SMIv2) MIB Modules to YANG Modules](https://tools.ietf.org/html/rfc6643)
-  * [RFC 7950: The YANG 1.1 Data Modeling Languages](https://tools.ietf.org/html/rfc7950)
-  * [RFC 7952: Defining and Using Metadata with YANGs](https://tools.ietf.org/html/rfc7952)
-  * [RFC 8040: RESTCONF Protocols](https://tools.ietf.org/html/rfc8040)
-  * [RFC 8407: Guidelines for Authors and Reviewers of Documents Containing YANG Data Models](https://tools.ietf.org/html/rfc8407)
-  * [RFC 8791: YANG Data Structure Extensions](https://tools.ietf.org/html/rfc8791)
+-   URL: `/address`
+-   Method: `GET`
 
-## Features ##
+**URL Params**:
 
-  * Validate YANG modules.
-  * Convert YANG modules to YIN, and YIN to YANG.
-  * Translate YANG data models to DSDL schemas, which can be used for
-    validating various XML instance documents. See
-    [InstanceValidation](https://github.com/mbj4668/pyang/wiki/InstanceValidation).
-  * Generate UML diagrams from YANG models. See
-    [UMLOutput](https://github.com/mbj4668/pyang/wiki/UMLOutput) for
-    an example.
-  * Generate compact tree representation of YANG models for quick
-    visualization. See
-    [TreeOutput](https://github.com/mbj4668/pyang/wiki/TreeOutput) for
-    an example.
-  * Generate a skeleton XML instance document from the data model.
-  * Schema-aware translation of instance documents encoded in XML to
-    JSON and vice-versa. See
-    [XmlJson](https://github.com/mbj4668/pyang/wiki/XmlJson).
-  * Plugin framework for simple development of other outputs, such as
-    code generation.
+None.
 
-## Usage ##
+**Success Response**:
 
-```sh
-pyang -h
+```json
+{
+    "errors": null,
+    "data": {
+        "address": "0x..."
+    }
+}
 ```
 
-or
+**Error response**:
 
-```sh
-man pyang
+```json
+{
+    "error": "Error message",
+    "data": null
+}
 ```
 
-## Code structure ##
+### public_key
 
-* **bin/**
-  Executable scripts.
+Returns wallet public key.
 
-* **pyang/**
-  Contains the pyang library code.
+-   URL: `/public-key`
+-   Method: `GET`
 
-* **pyang/__init__.py**
-  Initialization code for the pyang library.
+**URL Params**:
 
-* **pyang/context.py**
-  Defines the Context class, which represents a parsing session
+None.
 
-* **pyang/repository.py**
-  Defines the Repository class, which is used to access modules.
+**Success Response**:
 
-* **pyang/syntax.py**
-  Generic syntax checking for YANG and YIN statements.
-  Defines regular expressions for argument checking of core
-  statements.
+```json
+{
+    "errors": null,
+    "data": {
+        "public_key": "0x..."
+    }
+}
+```
 
-* **pyang/grammar.py**
-  Generic grammar for YANG and YIN.
-  Defines chk_module_statements() which validates a parse tree
-  according to the grammar.
+**Error response**:
 
-* **pyang/statements.py**
-  Defines the generic Statement class and all validation code.
+```json
+{
+    "error": "Error message",
+    "data": null
+}
+```
 
-* **pyang/yang_parser.py**
-  YANG tokenizer and parser.
+## Development
 
-* **pyang/yin_parser.py**
-  YIN parser.  Uses the expat library for XML parsing.
+### Run development server
 
-* **pyang/types.py**
-  Contains code for checking built-in types.
+Install dependencies:
 
-* **pyang/plugin.py**
-  Plugin API.  Defines the class PyangPlugin which all plugins
-  inherits from. All output handlers are written as plugins.
+```bash
+pip install -r requirements.txt
+pip install -r requirements-dev.txt
+```
 
-* **pyang/plugins/**
-  Directory where plugins can be installed.  All plugins in this
-  directory are automatically initialized when the library is
-  initialized.
+Run server:
 
-* **pyang/scripts/**
-  Directory where the python cli scripts are located.
-  Installed as entry point.
+```bash
+export $(grep -v '^#' .env | xargs) && python server.py
+```
 
-* **pyang/translators/**
-  Contains output plugins for YANG, YIN, and DSDL translation.
+Build and run test container
 
-* **xslt**
-  Contains XSLT style sheets for generating RELAX NG, Schematron and
-  DSRL schemas and validating instance documents. Also included is the
-  free implementation of ISO Schematron by Rick Jelliffe from
-  http://www.schematron.com/ (files iso_schematron_skeleton_for_xslt1.xsl,
-  iso_abstract_expand.xsl and iso_svrl_for_xslt1.xsl).
+```bash
+docker build -t test-tm .
+docker run  --env-file .env-docker -v ~/.skale:/skale_vol -v ~/.skale/node_data:/skale_node_data test-tm
+```
 
-* **schema**
-  Contains RELAX NG schemas and pattern libraries.
+Run `transaction-manager` container locally
 
+```bash
+VERSION=0.0.1-develop.0 && docker run -p 3008:3008 --env-file .env-docker -v ~/.skale:/skale_vol -v ~/.skale/node_data:/skale_node_data skalelabshub/transaction-manager:$VERSION
+```
 
+## License
 
+[![License](https://img.shields.io/github/license/skalenetwork/transaction-manager.svg)](LICENSE)
+
+All contributions are made under the [GNU Affero General Public License v3](https://www.gnu.org/licenses/agpl-3.0.en.html). See [LICENSE](LICENSE).
+
+All transaction-manager code Copyright (C) SKALE Labs and contributors.

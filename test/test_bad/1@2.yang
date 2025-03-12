@@ -1,8 +1,0 @@
-module one {
-    namespace 'urn:one';
-
-    prefix 'one';
-
-    revision 2002-02-02 {
-    }
-}

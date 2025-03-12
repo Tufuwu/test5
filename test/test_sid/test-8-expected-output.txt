@@ -1,2 +1,0 @@
-
-This YANG module requires 18 SIDs.

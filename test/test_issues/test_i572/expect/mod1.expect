@@ -1,4 +1,0 @@
-mod1.yang:14: error: BAD_ANCESTOR
-mod1.yang:18: error: BAD_ANCESTOR
-mod1.yang:52 (at mod1.yang:29): error: BAD_ANCESTOR
-mod1.yang:52 (at mod1.yang:33): error: BAD_ANCESTOR

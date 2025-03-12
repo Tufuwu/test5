@@ -1,5 +1,0 @@
-submodule s {
-  belongs-to m {
-    prefix m;
-  }
-}

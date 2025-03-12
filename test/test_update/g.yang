@@ -1,9 +1,0 @@
-module g {
-  namespace urn:g;
-  prefix g;
-
-  container a;
-  container b;
-  container c;
-}
-

@@ -1,6 +1,0 @@
-module base {
-    namespace "uri:base";
-    prefix base;
-
-    container root;
-}
