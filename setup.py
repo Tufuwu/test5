@@ -1,81 +1,34 @@
-#!/usr/bin/env python
+import os
 
-# Prepare a release:
-#
-#  - git pull --rebase  # check that there is no incoming changesets
-#  - check version in ptrace/version.py and doc/conf.py
-#  - set release date in doc/changelog.rst
-#  - check that "python3 setup.py sdist" contains all files tracked by
-#    the SCM (Git): update MANIFEST.in if needed
-#  - git commit -a -m "prepare release VERSION"
-#  - Remove untracked files/dirs: git clean -fdx
-#  - run tests, type: tox --parallel auto
-#  - git push
-#  - check GitHub Actions status:
-#    https://github.com/vstinner/python-ptrace/actions
-#
-# Release a new version:
-#
-#  - git tag VERSION
-#  - Remove untracked files/dirs: git clean -fdx
-#  - python3 setup.py sdist bdist_wheel
-#  - git push --tags
-#  - twine upload dist/*
-#
-# After the release:
-#
-#  - increment version in  ptrace/version.py and doc/conf.py
-#  - git commit -a -m "post-release"
-#  - git push
+from setuptools import find_packages, setup
 
-import importlib.util
-from os import path
-try:
-    # setuptools supports bdist_wheel
-    from setuptools import setup
-except ImportError:
-    from distutils.core import setup
+with open(os.path.join("panda_gym", "version.txt"), "r") as file_handler:
+    __version__ = file_handler.read().strip()
 
+with open("README.md", "r") as f:
+    long_description = f.read()
 
-MODULES = ["ptrace", "ptrace.binding", "ptrace.syscall", "ptrace.syscall.linux", "ptrace.debugger"]
-
-SCRIPTS = ("strace.py", "gdb.py")
-
-CLASSIFIERS = [
-    'Intended Audience :: Developers',
-    'Development Status :: 4 - Beta',
-    'Environment :: Console',
-    'License :: OSI Approved :: GNU General Public License v2 (GPLv2)',
-    'Operating System :: OS Independent',
-    'Natural Language :: English',
-    'Programming Language :: Python',
-    'Programming Language :: Python :: 3',
-]
-
-with open('README.rst') as fp:
-    LONG_DESCRIPTION = fp.read()
-
-ptrace_spec = importlib.util.spec_from_file_location("version", path.join("ptrace", "version.py"))
-ptrace = importlib.util.module_from_spec(ptrace_spec)
-ptrace_spec.loader.exec_module(ptrace)
-
-PACKAGES = {}
-for name in MODULES:
-    PACKAGES[name] = name.replace(".", "/")
-
-install_options = {
-    "name": ptrace.PACKAGE,
-    "version": ptrace.__version__,
-    "url": ptrace.WEBSITE,
-    "download_url": ptrace.WEBSITE,
-    "author": "Victor Stinner",
-    "description": "python binding of ptrace",
-    "long_description": LONG_DESCRIPTION,
-    "classifiers": CLASSIFIERS,
-    "license": ptrace.LICENSE,
-    "packages": list(PACKAGES.keys()),
-    "package_dir": PACKAGES,
-    "scripts": SCRIPTS,
-}
-
-setup(**install_options)
+setup(
+    name="panda_gym",
+    description="Set of robotic environments based on PyBullet physics engine and gymnasium.",
+    author="Quentin GALLOUÉDEC",
+    author_email="gallouedec.quentin@gmail.com",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    url="https://github.com/qgallouedec/panda-gym",
+    packages=find_packages(),
+    include_package_data=True,
+    package_data={"panda_gym": ["version.txt"]},
+    version=__version__,
+    install_requires=["gymnasium>=0.26", "pybullet", "numpy<2", "scipy"],
+    extras_require={
+        "develop": ["pytest-cov", "black", "isort", "pytype", "sphinx", "sphinx-rtd-theme"],
+    },
+    classifiers=[
+        "License :: OSI Approved :: MIT License",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+    ],
+)
