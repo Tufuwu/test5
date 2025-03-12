@@ -1,29 +1,22 @@
-name: check-wavelet-prosody-toolkit
-run-name: ${{ github.actor }} is in validation
-on: [push]
+name: Validate CSV
+
+on:
+  pull_request:
+
 jobs:
-  build:
+  test-build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.9", "3.10"]
-
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
 
-      # Setup python
-      - name: Setup python
-        uses: actions/setup-python@v1
+      - name: Setup Python
+        uses: actions/setup-python@v4
         with:
-          python-version: ${{ matrix.python-version }}
-          architecture: x64
+          python-version: "3.9"
 
-      # Install everything
-      - name: Install wavelet-prosody-toolkit
-        run: pip install -e .
+      - name: Install dependencies
+        run: pip install -r linting/requirements.txt
 
-      # Linux and macOS
-      - name: Run the test
-        shell: bash -l {0}
-        run: |
-          bash test/run_test.sh
+      - name: Validate CSV
+        run: python linting/lint-csv.py
