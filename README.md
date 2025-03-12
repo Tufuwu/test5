@@ -1,394 +1,258 @@
-# 🗂️[context_menu](https://github.com/saleguas/context_menu) [![build passing](https://github.com/saleguas/context_menu/actions/workflows/ci.yml/badge.svg)](https://github.com/saleguas/context_menu/actions/workflows/ci.yml)   [![readthedocs](https://img.shields.io/readthedocs/context_menu)](https://context-menu.readthedocs.io/en/latest/) ![pip](https://img.shields.io/badge/pip-context__menu-blue) [![Downloads](https://pepy.tech/badge/context-menu)](https://pepy.tech/project/context-menu)
+[![CI](https://github.com/koiuo/randrctl/actions/workflows/ci.yml/badge.svg)](https://github.com/koiuo/randrctl/actions/workflows/ci.yml)
 
-![logo](media/logo.png)
+# randrctl
 
-💻 A Python library to create and deploy cross-platform native context menus. 💻
+Screen profiles manager for X.org.
 
-
-Documentation available at: https://context-menu.readthedocs.io/en/latest/
-
-* * *
-
-![example usage](media/thumbnail2.gif)
-
-* * *
-
-# Table of Contents
-- [⚙ Features ⚙](#-features-)
-  * [🙋 What is the context menu? 🙋](#-what-is-the-context-menu-)
-  * [🖥️ What Operating Systems are supported? 🖥️](#%EF%B8%8F-what-operating-systems-are-supported-%EF%B8%8F)
-  * [🐍 What Python versions are supported? 🐍](#-what-python-versions-are-supported-)
-- [💽 Installation 💽](#-installation-)
-- [🕹️ Quickstart 🕹️](#%EF%B8%8F-quickstart-%EF%B8%8F)
-- [🤖 Advanced Usage 🤖](#-advanced-usage-)
-  * [The `ContextMenu` Class](#the-contextmenu-class)
-  * [The `ContextCommand` Class](#the-contextcommand-class)
-  * [The `FastCommand` Class](#the-fastcommand-class)
-  * [The `removeMenu` method](#the-removemenu-method)
-  * [The `params` Command Parameter](#the-params-command-parameter)
-  * [`command_vars` Command Parameter](#command_vars-command-parameter)
-  * [Opening on Files](#opening-on-files)
-  * [Activation Types](#activation-types)
-- [🏁 Goals 🏁](#-goals-)
-- [🙌 Contribution 🙌](#-contribution-)
-- [📓 Important notes 📓](#-important-notes-)
-- [💻 Freshen - A context_menu project! 💻](#-freshen---a-context_menu-project-)
-- [💙 Support 💙](#-support-)
-
-# ⚙ Features ⚙
-This library lets you edit the entries on the right click menu for Windows and Linux using pure Python. It also allows you to make cascading context menus!
-
-context_menu was created as due to the lack of an intuitive and easy to use cross-platform context menu library. The
-library allows you to create your own context menu entries and control their behavior seamlessly in native Python. The
-library has the following features:
-
-* Written in pure python with no other dependencies
-* Extremely intuitive design inspired by Keras Tensorflow
-* Swift installation from Python's Package Manager (pip)
-* Painless context menu creation
-* Cascading context menu support
-* The ability to natively integrate python functions from a context entry call
-* Detailed documentation
-
-## 🙋 What is the context menu? 🙋
-
-The context menu is the window that is displayed when you right click:
-
-![img.png](media/context_menu.png)
-
-The context menu is different depending on what was right clicked. For example, right clicking a folder will give you
-different options than right clicking a file.
-
-## 🖥️ What Operating Systems are supported? 🖥️ 
-
-Currently, the only operating systems supported are:
-
-- Windows 7
-- Windows 10
-- Windows 11
-- Linux (Using Nautilus)
-
-## 🐍 What Python versions are supported? 🐍
-
-**All python versions 3.7 and above** are supported.
-
-# 💽 Installation 💽
-
-If you haven't installed Python, download and run an installer from the official
-website: https://www.python.org/downloads/
-
-Once you have Python, the rest is super simple. Simply just run the following command in a terminal to install the
-package:
-
-```commandline
-python -m pip install context_menu
+_randrctl_ remembers your X.org screen configurations (position of displays, rotation, scaling, etc.) and switches
+between them automatically as displays are connected or manually, when necessary:
+```
+randrctl switch-to home
+randrctl switch-to office
 ```
 
-or if you're on Linux:
+## Install
 
-```commandline
-python3 -m pip install context_menu
+_randrctl_ depends on `xrandr` utility and won't work without it. Please install it first.
+
+### Archlinux
+
+https://aur.archlinux.org/packages/randrctl-git/
+https://aur.archlinux.org/packages/randrctl/
+
+```
+$ randrctl setup config > ${XDG_CONFIG_HOME:-$HOME/.config}/randrctl/config.yaml
 ```
 
-_Note: If you're on Windows and it says the command isn't recognized, make sure to
-add [Python to your path](https://datatofish.com/add-python-to-windows-path/) and run the command prompt as
-administrator_
+### PyPi
 
-# 🕹️ Quickstart 🕹️
+```
+# pip install randrctl
 
-Let's say you want to make a basic context menu entry when you right click a file.
+# randrctl setup udev > /etc/udev/rules.d/99-randrctl.rules
+# randrctl setup completion > /usr/share/bash-completion/completions/randrctl
 
-1. If you haven't already Install the library via pip:
-
-```commandline
-python -m pip install context_menu
+$ randrctl setup config > ${XDG_CONFIG_HOME:-$HOME/.config}/randrctl/config.yaml
 ```
 
-2. Create and compile the menu:
+### Manually from sources
 
-It's super easy!
-You can create entries in as little as 3 lines:
+```
+$ git clone https://github.com/edio/randrctl.git
+$ cd randrctl
 
-```python
-from context_menu import menus
+# python setup.py install
 
-fc = menus.FastCommand('Example Fast Command 1', type='FILES', command='echo Hello')
-fc.compile()
+# randrctl setup udev > /etc/udev/rules.d/99-randrctl.rules
+# randrctl setup completion > /usr/share/bash-completion/completions/randrctl
+
+$ randrctl setup config > ${XDG_CONFIG_HOME:-$HOME/.config}/randrctl/config.yaml
 ```
 
-![example fast command](media/example_fast_command.png)
+## Usage
 
-> **Note:** On Windows, the command `echo Hello` may not work as expected because `echo` is a built-in command of the cmd shell. To execute such commands on Windows, you need to prefix them with `cmd /c`. So the command becomes:
-> 
-> ```python
-> fc = menus.FastCommand('Example Fast Command 1', type='FILES', command='cmd /c echo Hello')
-> ```
-> 
-> This ensures that the command is run within the cmd shell.
+Usage is very simple:
 
-All you have to do is import the library and define the type of context entry you want. The options are:
+0. Setup your screen to suit your needs (randrctl does not handle that)
 
-* A context menu (an entry that has more entries)
-* A fast command (a single context menu entry to kick a running script)
-* A context command which can be added to menus for more complex commands
+1. Dump settings with randrctl to a named profile
 
-You can also create much more complicated nested menus:
+  ```randrctl dump -e home```
 
-```Python
-def foo2(filenames, params):
-    print('foo2')
-    print(filenames)
-    input()
+2. Re-apply those settings, whenever you need them
+
+  ```randrctl switch-to home```
+
+3. ... or let randrctl to inspect currently connected displays and choose profile that fits them best
+
+  ```randrctl auto```
+
+  Auto-switching will also happen automatically if provided udev rules are installed to the system.
+  
+4. For more info on usage refer to help
+
+  ```randrctl --help```
+
+### Auto-switching<a name="auto"></a>
+
+```randrctl``` can associate profile with currently connected displays and switch to this profile automatically whenever
+same (or similar) set of displays is connected.
+
+Profile is matched to the set of connected displays by evaluating one or more of the following rules for every connected
+display:
+
+* list of supported modes of connected display includes the current mode
+
+  ```randrctl dump -m profile1```
+
+  You can use this to create profile that is activated whenever connected display supports the mode that is currently
+  set for that output.
+
+* preferred mode of connected display is the current mode
+
+  ```randrctl dump -p profile2```
+
+  Display can support wide range of modes from 640x480 to 1920x1200, but prefer only one of those. When dumped this way,
+  profile is considered a match if connected display prefers the mode, that is currently set for it.
+
+* unique identifier of connected display is exactly tha same
+
+  ```randrctl dump -e profile3```
+
+  Unique identifier (edid) of every display is dumped with the profile, so it matches, only if exactly same displays
+  are connected.
+
+Naturally, the more specific the rule, the bigger weight it has, so in case if you invoked those 3 dump commands above
+with the same displays connected, `profile3` will be chosen as the best (i.e. the most specific) match.
+
+It is possible to specify any combination of `-m -p -e` keys to dump command. In this case randrctl will try to match
+all the rules combining them with logical AND (for example, display must support and at the same time prefer the mode).
+Although such combination of rules might seem redundant (because if the more specific rule matches, the more generic
+will do too), it might have sense if rule is edited manually.
+
+If `randrctl dump` is invoked without additional options, it dumps only screen setup, so profile won't be considered
+during auto-switching.
 
 
-def foo3(filenames, params):
-    print('foo3')
-    print(filenames)
-    input()
+### Prior/Post hooks
 
+randrctl can execute custom commands (hooks) before and after switching to profile or if switching fails. Hooks are
+specified in config file `$XDG_CONFIG_HOME/randrctl/config.yaml`
 
-if __name__ == '__main__':
-    from context_menu import menus
-
-    cm = menus.ContextMenu('Foo menu', type='FILES')
-    cm2 = menus.ContextMenu('Foo Menu 2')
-    cm3 = menus.ContextMenu('Foo Menu 3')
-
-    cm3.add_items([
-        menus.ContextCommand('Foo One', command='echo hello > example.txt'),
-    ])
-    cm2.add_items([
-        menus.ContextCommand('Foo Two', python=foo2),
-        cm3,
-    ])
-    cm.add_items([
-        cm2,
-        menus.ContextCommand('Foo Three', python=foo3)
-    ])
-
-    cm.compile()
+```
+hooks:
+    prior_switch: /usr/bin/killall -SIGSTOP i3
+    post_switch: /usr/bin/killall -SIGCONT i3 && /usr/bin/notify-send -u low "randrctl" "switched to $randr_profile"
+    post_fail: /usr/bin/killall -SIGCONT i3 && /usr/bin/notify-send -u critical "randrctl error" "$randr_error"
 ```
 
-![second Example](media/second_example.png)
+The typical use-case of this is displaying desktop notification with libnotify.
 
-All context menus are **permanent** unless you remove them.
+I also use it to pause i3 window manager as it was known to crash sometimes during the switch.
 
-# 🤖 Advanced Usage 🤖
 
-## The `ContextMenu` Class
+### Profile format
 
-The [ContextMenu](https://context-menu.readthedocs.io/en/latest/context_menu.html#context_menu.menus.ContextMenu) object
-holds other context objects. It expects a name, **the activation type** if it is the root menu(the first menu), and an optional icon path. Only
-compile the root menu.
+Profile is a simple text file in YAML format. It can be edited manually, however it is rarely required in practice
+because `randrctl dump` handles most common cases.
 
-```Python
-ContextMenu(name: str, type: str = None, icon_path: str = None)
+```
+match:
+    LVDS1: {}
+    DP1:
+        prefers: 1920x1080
+outputs:
+    LVDS1:
+        mode: 1366x768
+        panning: 1366x1080
+    DP1:
+        mode: 1920x1080
+        pos: 1366x0
+        rotate: inverted
+primary: DP1
 ```
 
-Menus can be added to menus, creating cascading context menus. You can use
-the [{MENU}.add_items{ITEMS}](https://context-menu.readthedocs.io/en/latest/context_menu.html#context_menu.menus.ContextMenu.add_items)
-function to add context elements together, for example:
+Profile is required to contain 2 sections (`outputs` and `primary`). That is what dumped when `randrctl dump` is invoked
+without additional options.
 
-```Python
-cm = menus.ContextMenu('Foo menu', type='DIRECTORY_BACKGROUND')
-cm.add_items([
-    menus.ContextMenu(...),
-    menus.ContextCommand(...),
-    menus.ContextCommand(...)
-])
-cm.compile()
+The `match` section is optional and is dumped only when one of the auto-switching rules is specified.
+
+
+#### Outputs
+
+Each property of `outputs` section references output as seen in xrandr (i.e. *DP1*, *HDMI2*, etc.). Meaning of the
+properties is the same as in the xrandr utility.
+
+`mode` is mandatory, the others may be omitted.
+
+```
+DP1-2: 
+    mode: 1920x1200
+    panning: 2496x1560+1920+0
+    pos: 1920x0
+    rate: 60
+    rotate: normal
+    scale: 1.3x1.3
 ```
 
-You have to
-call [{MENU}.compile()](https://context-menu.readthedocs.io/en/latest/context_menu.html#context_menu.menus.ContextMenu.compile)
-in order to create the menu.
 
-## The `ContextCommand` Class
+#### Primary
 
-The [ContextCommand](https://context-menu.readthedocs.io/en/latest/context_menu.html#context_menu.menus.ContextCommand)
-class creates the selectable part of the menu (you can click it). It requires a name, and either a Python function or a
-command **(but NOT both)** and has various other options
+Name of the primary output as seen in xrandr.
 
-```Python
-ContextCommand(name: str, command: str = None, python: 'function' = None, params: str = None, command_vars: list = None, icon_path: str = None)
+```
+primary: eDP1
 ```
 
-Python functions can be passed to this method, regardless of their location. **However, the function must accept only
-two parameters `filenames`, which is a list of paths\*, and `params`, the parameters passed to the function**. and if
-the function is in the same file as the menu, you have to surround it with `if __name__ == '__main__':`
+#### Match
 
-```python
-# An example of a valid function
-def valid_function(filenames, params):
-    print('Im valid!')
-    print(filenames)
-    print(params)
+Set of rules for auto-switching.
 
+The minimum rule is
 
-# Examples of invalid functions
-def invalid_function_1(filenames, param1, param2):
-    print('Im invalid!')
-    print(filenames)
-
-
-def invalid_function_2(params):
-    print('Im invalid!')
-    print(params)
+```
+HDMI1: {}
 ```
 
-Any command passed (as a string) will be directly ran from the shell.
+which means, that something must be connected to that output.
 
-## The `FastCommand` Class
+Rule corresponding to `randrctl dump -m` would be
 
-The [FastCommand](https://context-menu.readthedocs.io/en/latest/context_menu.html#context_menu.menus.FastCommand) class
-is an extension of the ContextMenu class and allows you to quickly create a single entry menu. It expects a name, type,
-command/function and an optional icon path.
-
-```python
-FastCommand(
-    name: str, type: str, command: str = None, python: 'function' = None, params: str = '', command_vars: list = None, icon_path: str = None)
+```
+HDMI1:
+    supports: 1920x1080
 ```
 
-```python
-def foo1(filenames, params):
-    print(filenames)
-    input()
+`randrctl dump -p` is
 
-
-if __name__ == '__main__':
-    from context_menu import menus
-
-    fc = menus.FastCommand('Example Fast Command 1', type='FILES', python=foo1)
-    fc.compile()
+```
+HDMI1:
+    prefers: 1920x1080
 ```
 
-## The `removeMenu` method
+and `randrctl dump -e` is
 
-You can remove a context menu entry easily as well. Simply call the ['menus.removeMenu()'](<>) method.
-
-```python
-removeMenu(name: str, type: str)
+```
+HDMI1:
+    edid: efdbca373951c898c5775e1c9d26c77f
 ```
 
-For example, if I wanted to remove the menu 'Foo Menu' that activated on type 'FILES':
+`edid` is md5 hash of actual display's `edid`. To obtain that value, use `randrctl show`.
 
-```python
-from context_menu import menus
+As was mentioned, `prefers`, `supports` and `edid` can be combined in the same rule, so it is possible to manually
+create a more sophisticated rule
 
-menus.removeMenu('Foo Menu', 'FILES')
+```
+match:
+    LVDS1: {}
+    HDMI1:
+        prefers: 1600x1200
+        supports: 800x600
+outputs:
+    LVDS1: 
+        ...
+    HDMI1:
+        ...
 ```
 
-and boom! It's gone 😎
+#### Priority
 
-## The `params` Command Parameter
-
-In both the `ContextCommand` class and `FastCommand` class you can pass in a parameter, defined by the `parameter=None`
-variable. **This value MUST be a string!** This means instead of passing a list or numbers, pass it as a string
-separated by spaces or whatever to delimitate it.
-
-```Python
-fc = menus.FastCommand('Example Fast Command 1', type='FILES', python=foo1, params='a b c d e')
-fc.compile()
+When more than one profile matches current output configuration priority can be used to highlight preferred profile.
 ```
-
-For more information, [see this.](https://github.com/saleguas/context_menu/issues/4)
-
-Works on the `FastCommand` and `ContextCommand` class.
-
-## `command_vars` Command Parameter
-
-If you decide to pass a shell command, you can access a list of special variables. For example, if I wanted to run a
-custom command with the file selected, I could use the following:
-
-```Python
-fc = menus.FastCommand('Weird Copy', type='FILES', command='touch ?x', command_vars=['FILENAME'])
-fc.compile()
+priority: 100
+match:
+    ...
+outputs:
+    ...
 ```
+Default priority is `100`. To set profile priority use `-P <priority>` with `dump` command. Like this:
+`randrctl dump -e default -P 50`
 
-which would create a new file with the name of whatever I selected with an 'x' on the end. The `?` variable is
-interpreted from left to right and replaced with the selected
-values [(see this)](https://github.com/saleguas/context_menu/issues/3).
+## Develop
 
-All of the preset values are as follows:
+### Run tests
 
-| Name          | Function                                |
-| ------------- | --------------------------------------- |
-| FILENAME      | The path to the file selected           |
-| DIR/DIRECTORY | The directory the script was ran in.    |
-| PYTHONLOC     | The location of the python interpreter. |
-
-Works on the `FastCommand` and `ContextCommand` class.
-
-## Opening on Files
-
-Let's say you only want your context menu entry to open on a certain type of file, such as a `.txt` file. You can do
-this by adding a `type` variable to the `ContextCommand` or `FastCommand` class.
-
-```Python
-fc = menus.FastCommand('Weird Copy', type='.txt', command='touch ?x',
-                       command_vars=['FILENAME'])  # opens only on .txt files
-fc.compile()
 ```
-
-Now you'll only see the "Weird Copy" menu entry when you right click a .txt file.
-
-## Activation Types
-
-There are different locations where a context menu can fire. For example, if you right click on a folder you'll get
-different options than if you right click on a file. The `type` variable controls this behavior in the library, and you
-can reference this table to determine the `type`:
-
-| Name                 | Location                                                           | Action                                   |
-| -------------------- | ------------------------------------------------------------------ | ---------------------------------------- |
-| FILES                | HKEY_CURRENT_USER\\Software\\Classes\\\*\\shell\\                  | Opens on a file                          |
-| DIRECTORY            | HKEY_CURRENT_USER\\Software\\Classes\\Directory\\shell             | Opens on a directory                     |
-| DIRECTORY_BACKGROUND | HKEY_CURRENT_USER\\Software\\Classes\\Directory\\Background\\shell | Opens on the background of the Directory |
-| DRIVE                | HKEY_CURRENT_USER\\Software\\Classes\\Drive\\shell                 | Opens on the drives(think USBs)          |
-| DESKTOP              | Software\\Classes\\DesktopBackground\\shell                        | Opens on the background of the desktop   |
-
-* * *
-
-I strongly recommend checking out the [examples folder](examples) for more complicated examples and usage.
-
-You can check out the official documentation [here](https://context-menu.readthedocs.io/en/latest/index.html).
-
-
-* * *
-
-# 🏁 Goals 🏁
-
-This project tackles some pretty big issues, and there's definetly some goals that I'd like to accomplish. The current roadmap is as follows:
-
-* Support for other Linux distributions
-* Better approach to the Linux GNOME integration
-* Mac support
-* Bypass 16 entry limit on windows
-
-If by all means you want to help reach these milestones, see contribution below.
-
-# 🙌 Contribution 🙌
-
-**I _really_ want to add support for MacOS, but I don't have the experience required to implement it.**
-
-Contributing is super simple! Create an additional branch and make a pull request with your changes. If the changes past the automated tests, it will be manually reviewed and merged accordingly.
-
-Any and all help is appreciated, and if you have any questions, feel free to contact me directly.
-
-# 📓 Important notes 📓
-
-- Almost all the errors I've encountered in testing were when the code and the functions were in the same file. You
-  should make a separate file for the code or surround it with `if __name__ == '__main__':`.
-- On windows, there's currently a 16 entry limit on the context menu.
-
-# 💻 Freshen - A context_menu project! 💻
-
-Feel free to check out a [file sorter](https://github.com/saleguas/freshen) program I made that directly implements this library.
-
-[![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=saleguas&repo=freshen)](https://github.com/saleguas/freshen)
-
-# 💙 Support 💙
-
-All my work is and always will be free and open source. If you'd like to support me, **please consider leaving a ⭐ star ⭐**, as it motivates me and the community to keep working on this project.
-
-Thanks for reading!
+$ python setup.py test
+```
 
