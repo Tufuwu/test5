@@ -1,69 +1,41 @@
-# -*- coding: utf-8 -*-
-import sys
+import os
+from setuptools import setup
 
-from setuptools import setup, find_packages
+classifiers = """\
+Development Status :: 5 - Production/Stable
+Intended Audience :: Developers
+License :: OSI Approved :: MIT License
+Programming Language :: Python
+Programming Language :: Python :: 3
+Programming Language :: Python :: 3.6
+Programming Language :: Python :: 3.7
+Programming Language :: Python :: 3.8
+Programming Language :: Python :: 3.9
+Programming Language :: Python :: 3.10
+Programming Language :: Python :: 3.11
+Programming Language :: Python :: 3 :: Only
+Topic :: Software Development :: Libraries :: Python Modules
+Operating System :: Microsoft :: Windows
+Operating System :: Unix
+Operating System :: MacOS :: MacOS X
+"""
 
-if (sys.version_info[:3] < (3, 0)):
-    with open('README.rst') as f:
-        readme = f.read()
-else:
-    with open('README.rst', encoding='utf-8') as f:
-        readme = f.read()
-with open('HISTORY.rst') as f:
-    history = f.read()
-
-test_deps = [
-    "pytest",
-    "mock",
-]
-
-extras = {
-    'test': test_deps,
-}
-
+curr_path = os.path.abspath(os.path.dirname(__file__))
 setup(
-    name='marabunta',
-    use_scm_version=True,
-    description='Migration tool for Odoo',
-    long_description=readme + '\n\n' + history,
-    author='Camptocamp (Guewen Baconnier)',
-    author_email='guewen.baconnier@camptocamp.com',
-    url='https://github.com/camptocamp/marabunta',
-    license='AGPLv3+',
-    packages=find_packages(exclude=('tests', 'docs')),
-    install_requires=[
-        "psycopg2",
-        "ruamel.yaml>=0.15.1",
-        "pexpect",
-        "werkzeug",
-        "future",
-    ],
-    setup_requires=[
-        'setuptools_scm',
-    ],
-    tests_require=test_deps,
-    extras_require=extras,
-    include_package_data=True,
-    package_data={
-        'marabunta': ['html/*.html'],
-    },
-    classifiers=(
-        'Development Status :: 3 - Alpha',
-        'Intended Audience :: Developers',
-        'Natural Language :: English',
-        'License :: OSI Approved :: '
-        'GNU Affero General Public License v3 or later (AGPLv3+)',
-        'Programming Language :: Python',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.7',
-        'Programming Language :: Python :: 3.8',
-        'Programming Language :: Python :: 3.9',
-        'Programming Language :: Python :: 3.10',
-        'Programming Language :: Python :: 3.11',
-        'Programming Language :: Python :: Implementation :: CPython',
-        'Programming Language :: Python :: Implementation :: PyPy',
-    ),
-    entry_points={
-        'console_scripts': ['marabunta = marabunta.core:main']
-    },
+    name='tinyrecord',
+    version='0.2.1',
+    packages=['tinyrecord'],
+    package_data={'tinyrecord': ['py.typed']},
+    python_requires='>=3.6',
+    install_requires=['tinydb >= 4.0.0'],
+    classifiers=filter(None, classifiers.split('\n')),
+    zip_safe=True,
+    author='Eugene Eeo',
+    author_email='141bytes@gmail.com',
+    long_description=open(os.path.join(curr_path, 'README.rst'), 'r').read(),
+    long_description_content_type='text/x-rst',
+    description='Atomic transactions for TinyDB',
+    license='MIT',
+    keywords='tinydb nosql database transaction',
+    url='https://github.com/eugene-eeo/tinyrecord',
 )
