@@ -1,121 +1,103 @@
-# Contributing to python-dispatch
+Contributing
+============
 
-We love your input! We want to make contributing to this project as easy and transparent as possible, whether it's:
+As an open source project, Mesa-Geo welcomes contributions of many forms, and from beginners to experts. If you are curious or just want to see what is happening, we post our development session agendas and development session notes on [Mesa discussions]. We also have a threaded discussion forum on [Matrix] for casual conversation.
 
-- Reporting a bug
-- Discussing the current state of the code
-- Submitting a fix
-- Proposing new features
+In no particular order, examples include:
 
-## Pull Requests
+- Code patches
+- Bug reports and patch reviews
+- New features
+- Documentation improvements
+- Tutorials
 
-Pull requests are the best way to propose changes to the project. We actively welcome your pull requests.
+No contribution is too small. Although, contributions can be too big, so let's discuss via [Matrix] or via an [issue].
 
-### Basic Steps
+[Mesa discussions]: https://github.com/projectmesa/mesa/discussions
+[Matrix]: https://matrix.to/#/#project-mesa:matrix.org
+[issue]: https://github.com/projectmesa/mesa-geo/issues
 
-1. Fork the [repo](https://github.com/nocarryr/python-dispatch) and **create a new
-    branch** from `master`.
-2. If you've added code that should be tested, add tests.
-3. If you've changed APIs, update the documentation.
-4. Ensure the test suite passes.
-5. Issue that pull request!
+**To submit a contribution**
 
-### Your First Code Contribution
+- Create a ticket for the item that you are working on.
+- Fork the Mesa-Geo repository.
+- [Clone your repository] from GitHub to your machine.
+- Create a new branch in your fork: `git checkout -b BRANCH_NAME`
+- Run `git config pull.rebase true`. This prevents messy merge commits when updating your branch on top of Mesa-Geo main branch.
+- Install an editable version with developer requirements locally: `pip install -e ".[dev]"`
+- Edit the code. Save.
+- Git add the new files and files with changes: `git add FILE_NAME`
+- Git commit your changes with a meaningful message: `git commit -m "Fix issue X"`
+- If implementing a new feature, include some documentation in docs folder.
+- Make sure that your submission passes the [GH Actions build]. See "Testing and Standards below" to be able to run these locally.
+- Make sure that your code is formatted according to the [black] standard (you can do it via [pre-commit]).
+- Push your changes to your fork on Github: `git push origin NAME_OF_BRANCH`.
+- [Create a pull request].
+- Describe the change w/ ticket number(s) that the code fixes.
 
-Working on your first Pull Request? Here are a couple of resources to get you started:
+[Clone your repository]: https://help.github.com/articles/cloning-a-repository/
+[GH Actions build]: https://github.com/projectmesa/mesa-geo/actions/workflows/build_lint.yml
+[Create a pull request]: https://help.github.com/articles/creating-a-pull-request/
+[pre-commit]: https://github.com/pre-commit/pre-commit
+[black]: https://github.com/psf/black
 
-- [Github Help: Creating a pull request](https://help.github.com/en/desktop/contributing-to-projects/creating-a-pull-request)
-- [How to Contribute to an Open Source Project on GitHub](https://egghead.io/series/how-to-contribute-to-an-open-source-project-on-github)
-- [The FirstTimersOnly Movement](http://www.firsttimersonly.com/)
+Testing and Code Standards
+--------------------------
 
+[![](https://codecov.io/gh/projectmesa/mesa-geo/branch/main/graph/badge.svg)](https://codecov.io/gh/projectmesa/mesa-geo) [![](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-## Limit Changes per Pull Request
+As part of our contribution process, we practice continuous integration and use GH Actions to help enforce best practices.
 
-- Avoid changes to the project's configuration or meta-data such as
-  - Version Information
-  - Packaging Configuration
-  - Testing / Deployment Configuration
-- Try to avoid making large sets of changes if they could be broken into smaller ones.
-  Instead, split them into separate pull requests.
+If you're changing previous Mesa-Geo features, please make sure of the following:
 
-## Coding Style
+- Your changes pass the current tests.
+- Your changes pass our style standards.
+- Your changes don't break the models or your changes include updated models.
+- Additional features or rewrites of current features are accompanied by tests.
+- New features are demonstrated in a model, so folks can understand more easily.
 
-While this project does not fully (probably not even partially) adhere to [PEP8](https://www.python.org/dev/peps/pep-0008/),
-the existing code-base does maintain a certain level of consistency.  Please try
-to follow the style if possible.  Don't worry about it too much though, there's no
-[flakes](https://pypi.org/project/pyflakes/) or [lint](https://www.pylint.org/) here.
-
-### Basic Guidelines
-
-- 4 spaces for indentation, not tabs.
-- Avoid trailing whitespace.
-- Prefer readability and clarity over complicated/complex: see the
-    [Zen of Python](https://www.python.org/dev/peps/pep-0020/)
-
-
-## Follow the Goals and Philosophy of the Project
-
-- No dependencies should ever be introduced.
-- Keep things simple and light-weight.
-- Avoid adding public methods/attributes to the `Dispatcher` class, especially
-  if the method/attribute names are common.
-  - Since `Dispatcher` is meant to be subclassed by users of this project,
-    it needs to stay out of a developer's way as much as possible.
-- Ensure compatibility across all conceivable platforms and Python versions. (currently 2.7, 3.4, 3.5, 3.6, 3.7)
-
-## Local Development
-
-### Environment / Installation
+To ensure that your submission will not break the build, you will need to install Ruff and pytest.
 
 ```bash
-git clone https://github.com/<gh-user-name>/python-dispatch.git
-cd python-dispatch
+pip install ruff pytest pytest-cov
 ```
 
-It's recommended to use a virtual environment for development and testing.
-See https://virtualenv.pypa.io/en/latest/ or https://docs.python.org/3.7/library/venv.html for details.
+We test by implementing simple models and through traditional unit tests in the tests/ folder. The following only covers unit tests coverage. Ensure that your test coverage has not gone down. If it has and you need help, we will offer advice on how to structure tests for the contribution.
 
-Create a new environment at the root of your working tree and activate it:
 ```bash
-python -m venv venv
-source venv/bin/activate
+pytest --cov=mesa_geo tests/
 ```
 
-Install the project in 'editable' mode:
+With respect to code standards, we follow [PEP8] and the [Google Style Guide]. We recommend to use [black] as an automated code formatter. You can automatically format your code using [pre-commit], which will prevent `git commit` of unstyled code and will automatically apply black style so you can immediately re-run `git commit`. To set up pre-commit run the following commands:
+
 ```bash
-pip install -e .
+pip install pre-commit
+pre-commit install
 ```
 
-Currently, the only dependency for testing is [pytest](https://pypi.org/project/pytest/),
-but to make tests run faster, it's a good idea to install [pytest-xdist](https://pypi.org/project/pytest-xdist/):
+You should no longer have to worry about code formatting. If still in doubt you may run the following command. If the command generates errors, fix all errors that are returned.
+
 ```bash
-pip install pytest pytest-xdist
+ruff .
 ```
 
-### Running Tests
+[PEP8]: https://www.python.org/dev/peps/pep-0008
+[Google Style Guide]: https://google.github.io/styleguide/pyguide.html
+[pre-commit]: https://github.com/pre-commit/pre-commit
+[black]: https://github.com/psf/black
 
-To run the entire test suite:
-```bash
-py.test -n auto
-# -n auto will use all available CPU cores
-```
+Licensing
+---------
 
-For other invocation methods, see the [pytest docs](https://pytest.org/en/latest/)
+The license of this project is located in [LICENSE]. By submitting a contribution to this project, you are agreeing that your contribution will be released under the terms of this license.
 
-There is a test in the suite that will take an *extremely* long time: `tests/test_subclass_init.py`. To avoid having to wait for it every time, you can make
-a change to it, make sure to **revert it** before committing.
+[LICENSE]: https://github.com/projectmesa/mesa-geo/blob/main/LICENSE
 
-`tests/test_subclass_init.py` line 83:
-```python
-for i in range(40000):          # <--- change this to something like 4000
-    before_init = time.time()
-```
+Special Thanks
+--------------
 
-## License
+A special thanks to the following projects who offered inspiration for this contributing file.
 
-By contributing, you agree that your contributions will be licensed under
-project's (MIT) [license](LICENSE.txt).
-
-## References
-
-This document was adapted from the open-source contribution guidelines for [Facebook's Draft](https://github.com/facebook/draft-js/blob/a9316a723f9e918afde44dea68b5f9f39b7d9b00/CONTRIBUTING.md)
+- [Django](https://github.com/django/django/blob/master/CONTRIBUTING.rst)
+- [18F's FOIA](https://github.com/18F/foia-hub/blob/master/CONTRIBUTING.md)
+- [18F's Midas](https://github.com/18F/midas/blob/devel/CONTRIBUTING.md)

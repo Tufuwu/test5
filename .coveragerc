@@ -1,7 +1,7 @@
 [run]
-source = pydispatch
-
+source = mesa_geo
+branch = True
 
 [report]
-exclude_lines =
-    pragma: no cover
+omit =
+    tests/*

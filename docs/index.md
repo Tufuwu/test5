@@ -1,37 +1,39 @@
 # Mesa-Geo: GIS Extension for Mesa Agent-Based Modeling
 
-| | |
-| --- | --- |
-| CI/CD | [![GitHub CI](https://github.com/projectmesa/mesa-geo/workflows/build/badge.svg)](https://github.com/projectmesa/mesa-geo/actions) [![Read the Docs](https://readthedocs.org/projects/mesa-geo/badge/?version=stable)](https://mesa-geo.readthedocs.io/stable) [![Codecov](https://codecov.io/gh/projectmesa/mesa-geo/branch/main/graph/badge.svg)](https://codecov.io/gh/projectmesa/mesa-geo) |
-| Package | [![PyPI](https://img.shields.io/pypi/v/mesa-geo.svg)](https://pypi.org/project/mesa-geo) [![PyPI - License](https://img.shields.io/pypi/l/mesa-geo)](https://pypi.org/project/mesa-geo/) [![PyPI - Downloads](https://img.shields.io/pypi/dw/mesa-geo)](https://pypistats.org/packages/mesa-geo) |
-| Meta | [![linting - Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff) [![code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black) [![Hatch project](https://img.shields.io/badge/%F0%9F%A5%9A-Hatch-4051b5.svg)](https://github.com/pypa/hatch) [![DOI](https://zenodo.org/badge/DOI/10.1145/3557989.3566157.svg)](https://doi.org/10.1145/3557989.3566157) |
-| Chat | [![chat](https://img.shields.io/matrix/project-mesa:matrix.org?label=chat&logo=Matrix)](https://matrix.to/#/#project-mesa:matrix.org) |
+[![GitHub CI](https://github.com/projectmesa/mesa-geo/workflows/build/badge.svg)](https://github.com/projectmesa/mesa-geo/actions)
+[![Read the Docs](https://readthedocs.org/projects/mesa-geo/badge/?version=stable)](https://mesa-geo.readthedocs.io/stable)
+[![Codecov](https://codecov.io/gh/projectmesa/mesa-geo/branch/main/graph/badge.svg)](https://codecov.io/gh/projectmesa/mesa-geo)
+[![Code Style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![PyPI](https://img.shields.io/pypi/v/mesa-geo.svg)](https://pypi.org/project/mesa-geo)
+[![PyPI - License](https://img.shields.io/pypi/l/mesa-geo)](https://pypi.org/project/mesa-geo/)
+[![PyPI - Downloads](https://img.shields.io/pypi/dw/mesa-geo)](https://pypistats.org/packages/mesa-geo)
+[![Matrix Chat](https://img.shields.io/matrix/mesa-geo:matrix.org?label=chat&logo=Matrix)](https://matrix.to/#/#mesa-geo:matrix.org)
+[![DOI](https://zenodo.org/badge/DOI/10.1145/3557989.3566157.svg)](https://doi.org/10.1145/3557989.3566157)
 
 Mesa-Geo implements a `GeoSpace` that can host GIS-based `GeoAgents`, which are like normal Agents, except they have a `geometry` attribute that is a [Shapely object](https://shapely.readthedocs.io/en/latest/manual.html) and a `crs` attribute for its Coordinate Reference System. You can use `Shapely` directly to create arbitrary geometries, but in most cases you will want to import your geometries from a file. Mesa-Geo allows you to create GeoAgents from any vector data file (e.g. shapefiles), valid GeoJSON objects or a GeoPandas GeoDataFrame.
 
 ## Using Mesa-Geo
 
-To install Mesa-Geo, run:
-```bash
-pip install -U mesa-geo
+To install Mesa-Geo on linux or macOS run
+
+```shell
+pip install mesa-geo
 ```
 
-Mesa-Geo pre-releases can be installed with:
-```bash
-pip install -U --pre mesa-geo
+On windows you should first use Anaconda to install some of the requirements with
+
+```shell
+conda install fiona pyproj rtree shapely
+pip install mesa-geo
 ```
 
-You can also use `pip` to install the GitHub version:
-```bash
-pip install -U -e git+https://github.com/projectmesa/mesa-geo.git#egg=mesa-geo
+Since Mesa-Geo is in early development you could also install the latest version directly from Github via
+
+```shell
+pip install -e git+https://github.com/projectmesa/mesa-geo.git#egg=mesa-geo
 ```
 
-Or any other (development) branch on this repo or your own fork:
-``` bash
-pip install -U -e git+https://github.com/YOUR_FORK/mesa-geo@YOUR_BRANCH#egg=mesa-geo
-```
-
-Take a look at the [examples](https://github.com/projectmesa/mesa-examples/tree/main/gis) repository for sample models demonstrating Mesa-Geo features.
+Take a look at the [examples](https://github.com/projectmesa/mesa-examples/tree/main/gis) folder for sample models demonstrating Mesa-Geo features.
 
 For more help on using Mesa-Geo, check out the following resources:
 
@@ -58,3 +60,21 @@ Don't forget to check out the [Contributors guide](https://github.com/projectmes
 ## Citing Mesa-Geo
 
 To cite Mesa-Geo in your publication, you can use the [CITATION.bib](https://github.com/projectmesa/mesa-geo/blob/main/CITATION.bib).
+
+
+```{toctree}
+---
+maxdepth: 2
+hidden: true
+---
+Introduction <self>
+Tutorial <tutorials/intro_tutorial>
+examples/overview
+API Documentation <apis/api_main>
+```
+
+## Indices and tables
+
+- {ref}`genindex`
+- {ref}`modindex`
+- {ref}`search`
