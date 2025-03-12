@@ -1,0 +1,11 @@
+ipykernel
+matplotlib
+pandoc
+sphinx
+sphinx_rtd_theme
+sphinxcontrib-bibtex
+nbsphinx
+pandoc
+argh
+black[jupyter]
+-e .
