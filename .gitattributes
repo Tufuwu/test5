@@ -1,2 +1,0 @@
-# Save the version details for git tarballs in .VERSION file
-.VERSION export-subst

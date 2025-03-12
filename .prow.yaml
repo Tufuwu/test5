@@ -1,0 +1,13 @@
+presubmits:
+- always_run: true
+  context: op1st/prow/pre-commit
+  decorate: true
+  name: pre-commit
+  skip_report: false
+  spec:
+    containers:
+    - command:
+      - pre-commit
+      - run
+      - --all-files
+      image: quay.io/thoth-station/thoth-precommit-py38:v0.15.0
