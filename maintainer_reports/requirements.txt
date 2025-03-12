@@ -1,6 +1,0 @@
-click
-python-dotenv
-requests
-gspread
-python_graphql_client
-google-cloud-bigquery

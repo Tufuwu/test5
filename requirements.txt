@@ -1,4 +1,10 @@
-# This is a stub file to prevent any external calls to this file from breaking.
-# This should be removed when we are sure that nothing references this
-# original requirements location.
--r requirements/base.txt
+dragonfly2>=0.34.0
+pillow==9.5.0
+tomlkit>=0.11.8
+future>=0.18.2
+mock>=3.0.5
+appdirs>=1.4.3
+scandir>=1.10.0
+pyvda==0.0.8
+PySide2>=5.14
+six
