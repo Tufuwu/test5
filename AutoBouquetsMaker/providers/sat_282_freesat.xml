@@ -1,0 +1,189 @@
+<provider>
+	<name>FreeSat UK</name>
+	<streamtype>dvbs</streamtype>
+	<protocol>freesat</protocol>
+	<transponder
+		orbital_position="282"
+		frequency="11426000"
+		symbol_rate="27500000"
+		polarization="0"
+		fec_inner="0"
+		inversion="2"
+		system="0"
+		modulation="1"
+		roll_off="0"
+		pilot="2"
+		sdt_pid="0xbba"
+		bat_pid="0xbba"
+		tsid="2315"
+		onid="59"
+	/>
+	<dvbsconfigs>
+		<configuration key="hd_freesat_110_1" bouquet="0x110" region="0x1">BBC London/ITV London</configuration>
+		<configuration key="hd_freesat_110_2" bouquet="0x110" region="0x2">BBC East (W)/ITV Anglia W 0x2</configuration>
+		<configuration key="hd_freesat_110_3" bouquet="0x110" region="0x3">BBC East (W)/ITV Central S</configuration>
+		<configuration key="hd_freesat_110_4" bouquet="0x110" region="0x4">BBC East (W)/ITV Anglia W 0x4</configuration>
+		<configuration key="hd_freesat_110_5" bouquet="0x110" region="0x5">BBC W Mids/ITV Central W</configuration>
+		<configuration key="hd_freesat_110_6" bouquet="0x110" region="0x6">BBC W Mids/ITV Central SW</configuration>
+		<configuration key="hd_freesat_110_7" bouquet="0x110" region="0x7">BBC N West/ITV Granada 0x7</configuration>
+		<configuration key="hd_freesat_110_8" bouquet="0x110" region="0x8">BBC N West/ITV BorderEng</configuration>
+		<configuration key="hd_freesat_110_9" bouquet="0x110" region="0x9">BBC EYrks&amp;Lin/ITV Yorkshire E</configuration>
+		<configuration key="hd_freesat_110_a" bouquet="0x110" region="0xa">BBC Yorkshire/ITV Yorkshire W 0xa</configuration>
+		<configuration key="hd_freesat_110_b" bouquet="0x110" region="0xb">BBC Yorkshire/ITV Yorkshire E</configuration>
+		<configuration key="hd_freesat_110_c" bouquet="0x110" region="0xc">BBC Yorkshire/ITV Tyne Tees S</configuration>
+		<configuration key="hd_freesat_110_d" bouquet="0x110" region="0xd">BBC E Midlands/ITV Central E</configuration>
+		<configuration key="hd_freesat_110_e" bouquet="0x110" region="0xe">BBC E Midlands/ITV Central W</configuration>
+		<!-- configuration key="hd_freesat_110_f" bouquet="0x110" region="0xf">BBC E Midlands/ITV Central E</configuration --><!-- sequence in this bouquet is duplicated in hd_freesat_110_d -->
+		<configuration key="hd_freesat_110_10" bouquet="0x110" region="0x10">BBC E Midlands/ITV Yorkshire E</configuration>
+		<configuration key="hd_freesat_110_11" bouquet="0x110" region="0x11">BBC East (E)/ITV Anglia S</configuration>
+		<configuration key="hd_freesat_110_12" bouquet="0x110" region="0x12">BBC East (E)/ITV London</configuration>
+		<configuration key="hd_freesat_110_13" bouquet="0x110" region="0x13">BBC East (E)/ITV Anglia E</configuration>
+		<configuration key="hd_freesat_110_14" bouquet="0x110" region="0x14">BBC West/Westcountry W</configuration>
+		<configuration key="hd_freesat_110_15" bouquet="0x110" region="0x15">BBC West/ITV Westcountry W</configuration>
+		<configuration key="hd_freesat_110_16" bouquet="0x110" region="0x16">BBC West/ITV Meridian Thames Valley</configuration>
+		<!-- configuration key="hd_freesat_110_17" bouquet="0x110" region="0x17">BBC West/ITV Meridian Thames Valley</configuration --><!-- sequence in this bouquet is duplicated in hd_freesat_110_16 -->
+		<configuration key="hd_freesat_110_18" bouquet="0x110" region="0x18">BBC S East/ITV Meridian S</configuration>
+		<configuration key="hd_freesat_110_19" bouquet="0x110" region="0x19">BBC S East/ITV Meridian SE</configuration>
+		<configuration key="hd_freesat_110_1a" bouquet="0x110" region="0x1a">BBC S East/ITV Meridian E</configuration>
+		<configuration key="hd_freesat_110_1b" bouquet="0x110" region="0x1b">BBC S East/ITV London</configuration>
+		<configuration key="hd_freesat_110_1c" bouquet="0x110" region="0x1c">BBC South/ITV Meridian S</configuration>
+		<configuration key="hd_freesat_110_1d" bouquet="0x110" region="0x1d">BBC South/ITV Meridian SE</configuration>
+		<configuration key="hd_freesat_110_1e" bouquet="0x110" region="0x1e">BBC South/ITV W Country</configuration>
+		<configuration key="hd_freesat_110_1f" bouquet="0x110" region="0x1f">BBC South/ITV London</configuration>
+		<configuration key="hd_freesat_110_20" bouquet="0x110" region="0x20">BBC South/ITV Meridian N</configuration>
+		<configuration key="hd_freesat_110_21" bouquet="0x110" region="0x21">BBC S West/ITV W Country</configuration>
+		<configuration key="hd_freesat_110_22" bouquet="0x110" region="0x22">BBC NE &amp; C/ITV BorderEng</configuration>
+		<configuration key="hd_freesat_110_23" bouquet="0x110" region="0x23">BBC NE &amp; C/ITV Tyne Tees N</configuration>
+		<configuration key="hd_freesat_110_24" bouquet="0x110" region="0x24">BBC NE &amp; C/ITV Tyne Tees S</configuration>
+		<configuration key="hd_freesat_110_25" bouquet="0x110" region="0x25">BBC Oxford/ITV Central S</configuration>
+		<configuration key="hd_freesat_110_26" bouquet="0x110" region="0x26">BBC Oxford/ITV London</configuration>
+		<configuration key="hd_freesat_110_27" bouquet="0x110" region="0x27">BBC N West/ITV Granada 0x27</configuration>
+		<configuration key="hd_freesat_110_28" bouquet="0x110" region="0x28">BBC Yorkshire/ITV Yorkshire W 0x28</configuration>
+		<configuration key="hd_freesat_110_29" bouquet="0x110" region="0x29">BBC Channel Is/ITV Channel Is</configuration>
+		<configuration key="hd_freesat_110_2a" bouquet="0x110" region="0x2a">BBC Yorkshire/ITV Yorkshire W 0x2a</configuration><!-- West -->
+		<configuration key="hd_freesat_110_2b" bouquet="0x110" region="0x2b">BBC Isle of Man</configuration>
+		<configuration key="hd_freesat_111_3c" bouquet="0x111" region="0x3c">BBC Scotland/STV North</configuration>
+		<configuration key="hd_freesat_111_3d" bouquet="0x111" region="0x3d">BBC Scotland/STV Tayside</configuration>
+		<configuration key="hd_freesat_111_3e" bouquet="0x111" region="0x3e">BBC Scotland/STV BorderSco</configuration>
+		<configuration key="hd_freesat_111_3f" bouquet="0x111" region="0x3f">BBC Scotland/STV Scot (Glasgow)</configuration>
+		<configuration key="hd_freesat_111_40" bouquet="0x111" region="0x40">BBC Scotland/STV Scot (Edinburgh)</configuration>
+		<configuration key="hd_freesat_112_50" bouquet="0x112" region="0x50">BBC Wales</configuration>
+		<configuration key="hd_freesat_113_5a" bouquet="0x113" region="0x5a">BBC Northern Ireland</configuration>
+	</dvbsconfigs>
+	<sections>
+		<section number="101">Entertainment</section>
+		<section number="200">News and Sport</section>
+		<section number="300">Movies</section>
+		<section number="400">Lifestyle</section>
+		<section number="500">Music</section>
+		<section number="600">Children</section>
+		<section number="650">Special Interest</section>
+		<section number="700">Radio</section>
+		<section number="800">Shopping</section>
+		<section number="949">Regional</section>
+		<section number="970">BBC Red Button</section>
+		<section number="998">Freesat 4K</section>
+		<section number="999">Freesat Info</section>
+	</sections>
+	<swapchannels>
+		<channel number="103" with="111" /><!-- ITV HD -->
+	</swapchannels>
+	<servicehacks>
+<![CDATA[
+try:
+	is_assigned
+except:
+	is_assigned = True
+
+	dxHoldName = 0x8 # details of lamedb flags are in README.txt
+
+#These have been placed in the same order as the Sky ones to make name updates easier for maintainers.
+#The Sky ones are sorted by Channel IDs, Freesat and Sky Channel IDs are different!
+	itv_rename = {
+		# ITV regions
+		1023: "STV North",
+		1025: "STV East",
+
+		# +1 Channels
+		33797: "ITV1+1 Central West",
+		1030: "ITV1+1 London",
+		1028: "ITV1+1 Granada",
+		33795: "ITV1+1 Meridian East",
+
+		# HD Channels
+		1115: "ITV1 Tyne Tees HD",
+		1116: "ITV1 Yorkshire West HD",
+		1114: "ITV1 Anglia East HD",
+		10016: "ITV1 Border England HD",
+		10018: "ITV1 West Country SW HD",
+		10017: "ITV1 West Country West HD",
+		1045: "ITV1 Meridian Thames Valley HD",
+		1044: "ITV1 Meridian South Coast HD",
+		1043: "ITV1 Yorkshire East HD",
+		1046: "ITV1 Anglia West HD",
+		1042: "ITV1 Central East HD",
+		1048: "ITV1 Channel Isles HD",
+		1047: "ITV1 Border Scotland HD",
+#		10013: "ITV1 Wales HD",	#This is correct on stream, no need for rename.
+		10011: "ITV1 Meridian East HD",
+		10012: "ITV1 Central West HD",
+		10005: "ITV1 London HD",
+		10007: "ITV1 Granada HD",
+
+		20009: "STV West HD",
+
+#		1040: "UTV HD",	#This is correct on stream, no need for rename.
+	}
+
+	rename = { # channel_id: service_name,
+		36794: 'Arirang TV HD',
+	}
+
+	rename_by_sid = {
+		51118: "WildEarth HD",
+	}
+
+	skiplist = ["Channel moved",]
+
+	servicehack_variable_cache["add_audio_channels_to_video_bouquet"] = True
+
+# Rename channels
+if "channel_id" in service and service["channel_id"] in rename:
+	service["interactive_name"] = rename[service["channel_id"]] # left for backwards compatibility
+	service["service_name"] = rename[service["channel_id"]]
+	service["service_flags"] = dxHoldName
+
+# Rename ITV channels
+if "channel_id" in service and service["channel_id"] in itv_rename:
+	service["interactive_name"] = itv_rename[service["channel_id"]] # left for backwards compatibility
+	service["service_name"] = itv_rename[service["channel_id"]]
+	service["service_flags"] = dxHoldName
+
+# Rename channels by sid
+if "service_id" in service and service["service_id"] in rename_by_sid:
+	service["service_name"] = rename_by_sid[service["service_id"]]
+	service["service_flags"] = dxHoldName
+
+# Correct service type of HD channels not marked as 25
+if "service_info" in service and "HD" in service["service_info"] and service["service_type"] in DvbScanner.VIDEO_ALLOWED_TYPES and service["service_type"] not in DvbScanner.HD_ALLOWED_TYPES:
+	service["service_type"] = 25
+
+if (service["namespace"] >> 16) != 282:
+	skip.skip = True
+elif service["number"] in range(984, 987): # BBC RB 4/5/6
+	service["interactive_name"] = "BBC RB " + str(service["number"] - 980)
+elif service["number"] == 999: # Freesat info
+	service["interactive_name"] = "Freesat Info"
+elif service["number"] > 999 or service["number"] < 101:
+	skip.skip = True
+
+#radio channels
+if service["number"] >= 700 and service["number"] < 800:
+	service["service_type"] = 2
+
+if (service["number"] in skiplist or service["service_name"] in skiplist):
+	skip.skip = True
+
+]]>
+	</servicehacks>
+</provider>

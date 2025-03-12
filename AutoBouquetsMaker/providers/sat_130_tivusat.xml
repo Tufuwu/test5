@@ -1,0 +1,148 @@
+<provider>
+	<name>Tivusat</name>
+	<streamtype>dvbs</streamtype>
+	<protocol>lcn2</protocol>
+	<transponder
+		orbital_position="130"
+		frequency="10992000"
+		symbol_rate="27500000"
+		polarization="1"
+		fec_inner="2"
+		inversion="2"
+		system="0"
+		modulation="1"
+		roll_off="0"
+		pilot="2"
+		tsid="12400"
+		onid="318"
+	/>
+	<sections>
+		<section number="1">Tivusat</section>
+	</sections>
+	<!-- channelsontop only affects HD bouquets -->
+	<hdchannelsontop>
+		<channel number="101" /><!-- Rai 1 HD -->
+		<channel number="102" /><!-- Rai 2 HD -->
+		<channel number="103" /><!-- Rai 3 HD -->
+	</hdchannelsontop>
+
+	<!-- swapchannels affects main and sections bouquets. "number" is the SD channel. "with" is the HD channel. Swap will not occur if target is not HD -->
+	<swapchannels>
+		<channel number="001" with="101" />
+		<channel number="002" with="102" />
+		<channel number="003" with="103" />
+		<channel number="004" with="104" />
+		<channel number="005" with="105" />
+		<channel number="006" with="106" />
+		<channel number="007" with="107" />
+		<channel number="008" with="108" />
+		<channel number="009" with="109" />
+		<channel number="010" with="110" />
+		<channel number="011" with="111" />
+		<channel number="012" with="112" />
+		<channel number="013" with="113" />
+		<channel number="014" with="114" />
+		<channel number="015" with="115" />
+		<channel number="016" with="116" />
+		<channel number="017" with="117" />
+		<channel number="018" with="118" />
+		<channel number="019" with="119" />
+		<channel number="020" with="120" />
+		<channel number="021" with="121" />
+		<channel number="022" with="122" />
+		<channel number="023" with="123" />
+		<channel number="024" with="124" />
+		<channel number="025" with="125" />
+		<channel number="026" with="126" />
+		<channel number="027" with="127" />
+		<channel number="028" with="128" />
+		<channel number="029" with="129" />
+		<channel number="030" with="130" />
+		<channel number="031" with="131" />
+		<channel number="032" with="132" />
+		<channel number="033" with="133" />
+		<channel number="034" with="134" />
+		<channel number="035" with="135" />
+		<channel number="036" with="136" />
+		<channel number="037" with="137" />
+		<channel number="038" with="138" />
+		<channel number="039" with="139" />
+		<channel number="040" with="140" />
+		<channel number="041" with="141" />
+		<channel number="042" with="142" />
+		<channel number="043" with="143" />
+		<channel number="044" with="144" />
+		<channel number="045" with="145" />
+		<channel number="046" with="146" />
+		<channel number="047" with="147" />
+		<channel number="048" with="148" />
+		<channel number="049" with="149" />
+		<channel number="050" with="150" />
+		<channel number="051" with="151" />
+		<channel number="052" with="152" />
+		<channel number="053" with="153" />
+		<channel number="054" with="154" />
+		<channel number="055" with="155" />
+		<channel number="056" with="156" />
+		<channel number="057" with="157" />
+		<channel number="058" with="158" />
+		<channel number="059" with="159" />
+		<channel number="060" with="160" />
+		<channel number="061" with="161" />
+		<channel number="062" with="162" />
+		<channel number="063" with="163" />
+		<channel number="064" with="164" />
+		<channel number="065" with="165" />
+		<channel number="066" with="166" />
+		<channel number="067" with="167" />
+		<channel number="068" with="168" />
+		<channel number="069" with="169" />
+		<channel number="070" with="170" />
+		<channel number="071" with="171" />
+		<channel number="072" with="172" />
+		<channel number="073" with="173" />
+		<channel number="074" with="174" />
+		<channel number="075" with="175" />
+		<channel number="076" with="176" />
+		<channel number="077" with="177" />
+		<channel number="078" with="178" />
+		<channel number="079" with="179" />
+		<channel number="080" with="180" />
+		<channel number="081" with="181" />
+		<channel number="082" with="182" />
+		<channel number="083" with="183" />
+		<channel number="084" with="184" />
+		<channel number="085" with="185" />
+		<channel number="086" with="186" />
+		<channel number="087" with="187" />
+		<channel number="088" with="188" />
+		<channel number="089" with="189" />
+		<channel number="090" with="190" />
+		<channel number="091" with="191" />
+		<channel number="092" with="192" />
+		<channel number="093" with="193" />
+		<channel number="094" with="194" />
+		<channel number="095" with="195" />
+		<channel number="096" with="196" />
+		<channel number="097" with="197" />
+		<channel number="098" with="198" />
+		<channel number="099" with="199" />
+	</swapchannels>
+
+	<servicehacks>
+<![CDATA[
+ftachannels = [1,2,3,20,21,22,23,24,26,28,31,32,33,35,36,37,41,42,43,44,55,57,60,61,62,63,64,65,66,67,68,69,71,73,74,75,76,77,120,122,145,188,701]
+if service["number"] in ftachannels:
+	service["free_ca"] = 0
+
+dxNoSDT = 0x1 # details of lamedb flags are in README.txt
+dxHoldName = 0x8 # details of lamedb flags are in README.txt
+
+service["service_flags"] = dxNoSDT | dxHoldName
+
+# Correct service type of HD channels not marked as such
+if service["service_type"] in DvbScanner.VIDEO_ALLOWED_TYPES and service["service_type"] not in DvbScanner.HD_ALLOWED_TYPES and service["service_name"][-2:] == 'HD':
+	service["service_type"] = 25
+]]>
+	</servicehacks>
+</provider>

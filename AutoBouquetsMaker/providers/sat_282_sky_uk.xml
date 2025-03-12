@@ -1,0 +1,611 @@
+<provider>
+	<name>Sky UK</name>
+	<streamtype>dvbs</streamtype>
+	<protocol>sky</protocol>
+	<transponder
+		orbital_position="282"
+		frequency="11778000"
+		symbol_rate="27500000"
+		polarization="1"
+		fec_inner="0"
+		inversion="2"
+		system="0"
+		modulation="1"
+		roll_off="0"
+		pilot="2"
+		tsid="2004"
+		onid="2"
+	/>
+	<dvbsconfigs>
+		<configuration key="hd_atherstone" bouquet="0x1005" region="0x13">Atherstone HD</configuration>
+		<configuration key="hd_border_england" bouquet="0x1005" region="0x0c">Border England HD</configuration>
+		<configuration key="hd_border_scotland" bouquet="0x1006" region="0x24">Border Scotland HD</configuration>
+		<configuration key="hd_brighton" bouquet="0x1007" region="0x41">Brighton HD</configuration>
+		<configuration key="hd_central_midlands" bouquet="0x1005" region="0x03">Central Midlands HD</configuration>
+		<configuration key="hd_channel_isles" bouquet="0x1008" region="0x22">Channel Isles HD</configuration>
+		<configuration key="hd_dundee" bouquet="0x1006" region="0x27">Dundee HD</configuration>
+		<configuration key="hd_east_midlands" bouquet="0x1005" region="0x14">East Midlands HD</configuration>
+		<configuration key="hd_essex" bouquet="0x1005" region="0x02">Essex HD</configuration>
+		<configuration key="hd_gloucester" bouquet="0x1005" region="0x18">Gloucester HD</configuration>
+		<configuration key="hd_grampian" bouquet="0x1006" region="0x23">Grampian HD</configuration>
+		<configuration key="hd_granada" bouquet="0x1005" region="0x07">Granada HD</configuration>
+		<configuration key="hd_henley_on_thames" bouquet="0x1007" region="0x46">Henley On Thames HD</configuration>
+		<configuration key="hd_htv_wales" bouquet="0x1007" region="0x2b">HTV Wales HD</configuration>
+		<configuration key="hd_htv_west" bouquet="0x1005" region="0x04">HTV West HD</configuration>
+		<configuration key="hd_htv_west_thames_valley" bouquet="0x1007" region="0x3f">HTV West / Thames Valley HD</configuration>
+		<configuration key="hd_humber" bouquet="0x1005" region="0x1d">Humber HD</configuration>
+		<configuration key="hd_london" bouquet="0x1005" region="0x01">London HD</configuration>
+		<configuration key="hd_london_essex" bouquet="0x1005" region="0x12">London / Essex HD</configuration>
+		<configuration key="hd_london_kent" bouquet="0x1007" region="0x40">London / Kent HD</configuration>
+		<configuration key="hd_london_thames_valley" bouquet="0x1007" region="0x42">London / Thames Valley HD</configuration>
+		<configuration key="hd_meridian_east" bouquet="0x1005" region="0x0b">Meridian East HD</configuration>
+		<configuration key="hd_meridian_north" bouquet="0x1007" region="0x44">Meridian North HD</configuration>
+		<configuration key="hd_meridian_south" bouquet="0x1005" region="0x05">Meridian South HD</configuration>
+		<configuration key="hd_meridian_south_east" bouquet="0x1005" region="0x0a">Meridian South East HD</configuration>
+		<configuration key="hd_merseyside" bouquet="0x1007" region="0x2d">Merseyside HD</configuration>
+		<configuration key="hd_norfolk" bouquet="0x1005" region="0x15">Norfolk HD</configuration>
+		<configuration key="hd_north_east_midlands" bouquet="0x1007" region="0x3e">North East Midlands HD</configuration>
+		<configuration key="hd_north_west_yorkshire" bouquet="0x1005" region="0x08">North West Yorkshire HD</configuration>
+		<configuration key="hd_north_yorkshire" bouquet="0x1005" region="0x1a">North Yorkshire HD</configuration>
+		<configuration key="hd_northern_ireland" bouquet="0x1008" region="0x21">Northern Ireland HD</configuration>
+		<configuration key="hd_oxford" bouquet="0x1007" region="0x47">Oxford HD</configuration>
+		<configuration key="hd_ridge_hill" bouquet="0x1007" region="0x29">Ridge Hill HD</configuration>
+		<configuration key="hd_scarborough" bouquet="0x1007" region="0x3d">Scarborough HD</configuration>
+		<configuration key="hd_scottish_east" bouquet="0x1006" region="0x26">Scottish East HD</configuration>
+		<configuration key="hd_scottish_west" bouquet="0x1006" region="0x25">Scottish West HD</configuration>
+		<configuration key="hd_sheffield" bouquet="0x1007" region="0x3c">Sheffield HD</configuration>
+		<configuration key="hd_south_lakeland" bouquet="0x1005" region="0x1c">South Lakeland HD</configuration>
+		<configuration key="hd_south_yorkshire" bouquet="0x1007" region="0x48">South Yorkshire HD</configuration>
+		<configuration key="hd_tees" bouquet="0x1007" region="0x45">Tees HD</configuration>
+		<configuration key="hd_thames_valley" bouquet="0x1005" region="0x09">Thames Valley HD</configuration>
+		<configuration key="hd_tring" bouquet="0x1005" region="0x1b">Tring HD</configuration>
+		<configuration key="hd_tyne" bouquet="0x1005" region="0x0d">Tyne HD</configuration>
+		<configuration key="hd_wales" bouquet="0x1008" region="0x20">Wales HD</configuration>
+		<configuration key="hd_west_anglia" bouquet="0x1005" region="0x19">West Anglia HD</configuration>
+		<configuration key="hd_west_dorset" bouquet="0x1007" region="0x43">West Dorset HD</configuration>
+		<configuration key="hd_westcountry" bouquet="0x1005" region="0x06">Westcountry HD</configuration>
+		<configuration key="hdcustom_atherstone" bouquet="0x1005" region="0x13">Atherstone HD Custom</configuration>
+		<configuration key="hdcustom_border_england" bouquet="0x1005" region="0x0c">Border England HD Custom</configuration>
+		<configuration key="hdcustom_border_scotland" bouquet="0x1006" region="0x24">Border Scotland HD Custom</configuration>
+		<configuration key="hdcustom_brighton" bouquet="0x1007" region="0x41">Brighton HD Custom</configuration>
+		<configuration key="hdcustom_central_midlands" bouquet="0x1005" region="0x03">Central Midlands HD Custom</configuration>
+		<configuration key="hdcustom_channel_isles" bouquet="0x1008" region="0x22">Channel Isles HD Custom</configuration>
+		<configuration key="hdcustom_dundee" bouquet="0x1006" region="0x27">Dundee HD Custom</configuration>
+		<configuration key="hdcustom_east_midlands" bouquet="0x1005" region="0x14">East Midlands HD Custom</configuration>
+		<configuration key="hdcustom_essex" bouquet="0x1005" region="0x02">Essex HD Custom</configuration>
+		<configuration key="hdcustom_gloucester" bouquet="0x1005" region="0x18">Gloucester HD Custom</configuration>
+		<configuration key="hdcustom_grampian" bouquet="0x1006" region="0x23">Grampian HD Custom</configuration>
+		<configuration key="hdcustom_granada" bouquet="0x1005" region="0x07">Granada HD Custom</configuration>
+		<configuration key="hdcustom_henley_on_thames" bouquet="0x1007" region="0x46">Henley On Thames HD Custom</configuration>
+		<configuration key="hdcustom_htv_wales" bouquet="0x1007" region="0x2b">HTV Wales HD Custom</configuration>
+		<configuration key="hdcustom_htv_west" bouquet="0x1005" region="0x04">HTV West HD Custom</configuration>
+		<configuration key="hdcustom_htv_west_thames_valley" bouquet="0x1007" region="0x3f">HTV West / Thames Valley HD Custom</configuration>
+		<configuration key="hdcustom_humber" bouquet="0x1005" region="0x1d">Humber HD Custom</configuration>
+		<configuration key="hdcustom_london" bouquet="0x1005" region="0x01">London HD Custom</configuration>
+		<configuration key="hdcustom_london_essex" bouquet="0x1005" region="0x12">London / Essex HD Custom</configuration>
+		<configuration key="hdcustom_london_kent" bouquet="0x1007" region="0x40">London / Kent HD Custom</configuration>
+		<configuration key="hdcustom_london_thames_valley" bouquet="0x1007" region="0x42">London / Thames Valley HD Custom</configuration>
+		<configuration key="hdcustom_meridian_east" bouquet="0x1005" region="0x0b">Meridian East HD Custom</configuration>
+		<configuration key="hdcustom_meridian_north" bouquet="0x1007" region="0x44">Meridian North HD Custom</configuration>
+		<configuration key="hdcustom_meridian_south" bouquet="0x1005" region="0x05">Meridian South HD Custom</configuration>
+		<configuration key="hdcustom_meridian_south_east" bouquet="0x1005" region="0x0a">Meridian South East HD Custom</configuration>
+		<configuration key="hdcustom_merseyside" bouquet="0x1007" region="0x2d">Merseyside HD Custom</configuration>
+		<configuration key="hdcustom_norfolk" bouquet="0x1005" region="0x15">Norfolk HD Custom</configuration>
+		<configuration key="hdcustom_north_east_midlands" bouquet="0x1007" region="0x3e">North East Midlands HD Custom</configuration>
+		<configuration key="hdcustom_north_west_yorkshire" bouquet="0x1005" region="0x08">North West Yorkshire HD Custom</configuration>
+		<configuration key="hdcustom_north_yorkshire" bouquet="0x1005" region="0x1a">North Yorkshire HD Custom</configuration>
+		<configuration key="hdcustom_northern_ireland" bouquet="0x1008" region="0x21">Northern Ireland HD Custom</configuration>
+		<configuration key="hdcustom_oxford" bouquet="0x1007" region="0x47">Oxford HD Custom</configuration>
+		<configuration key="hdcustom_ridge_hill" bouquet="0x1007" region="0x29">Ridge Hill HD Custom</configuration>
+		<configuration key="hdcustom_scarborough" bouquet="0x1007" region="0x3d">Scarborough HD Custom</configuration>
+		<configuration key="hdcustom_scottish_east" bouquet="0x1006" region="0x26">Scottish East HD Custom</configuration>
+		<configuration key="hdcustom_scottish_west" bouquet="0x1006" region="0x25">Scottish West HD Custom</configuration>
+		<configuration key="hdcustom_sheffield" bouquet="0x1007" region="0x3c">Sheffield HD Custom</configuration>
+		<configuration key="hdcustom_south_lakeland" bouquet="0x1005" region="0x1c">South Lakeland HD Custom</configuration>
+		<configuration key="hdcustom_south_yorkshire" bouquet="0x1007" region="0x48">South Yorkshire HD Custom</configuration>
+		<configuration key="hdcustom_tees" bouquet="0x1007" region="0x45">Tees HD Custom</configuration>
+		<configuration key="hdcustom_thames_valley" bouquet="0x1005" region="0x09">Thames Valley HD Custom</configuration>
+		<configuration key="hdcustom_tring" bouquet="0x1005" region="0x1b">Tring HD Custom</configuration>
+		<configuration key="hdcustom_tyne" bouquet="0x1005" region="0x0d">Tyne HD Custom</configuration>
+		<configuration key="hdcustom_wales" bouquet="0x1008" region="0x20">Wales HD Custom</configuration>
+		<configuration key="hdcustom_west_anglia" bouquet="0x1005" region="0x19">West Anglia HD Custom</configuration>
+		<configuration key="hdcustom_west_dorset" bouquet="0x1007" region="0x43">West Dorset HD Custom</configuration>
+		<configuration key="hdcustom_westcountry" bouquet="0x1005" region="0x06">Westcountry HD Custom</configuration>
+		<configuration key="sd_atherstone" bouquet="0x1001" region="0x13">Atherstone SD</configuration>
+		<configuration key="sd_border_england" bouquet="0x1001" region="0x0c">Border England SD</configuration>
+		<configuration key="sd_border_scotland" bouquet="0x1002" region="0x24">Border Scotland SD</configuration>
+		<configuration key="sd_brighton" bouquet="0x1003" region="0x41">Brighton SD</configuration>
+		<configuration key="sd_central_midlands" bouquet="0x1001" region="0x03">Central Midlands SD</configuration>
+		<configuration key="sd_channel_isles" bouquet="0x1004" region="0x22">Channel Isles SD</configuration>
+		<configuration key="sd_dundee" bouquet="0x1002" region="0x27">Dundee SD</configuration>
+		<configuration key="sd_east_midlands" bouquet="0x1001" region="0x14">East Midlands SD</configuration>
+		<configuration key="sd_essex" bouquet="0x1001" region="0x02">Essex SD</configuration>
+		<configuration key="sd_gloucester" bouquet="0x1001" region="0x18">Gloucester SD</configuration>
+		<configuration key="sd_grampian" bouquet="0x1002" region="0x23">Grampian SD</configuration>
+		<configuration key="sd_granada" bouquet="0x1001" region="0x07">Granada SD</configuration>
+		<configuration key="sd_henley_on_thames" bouquet="0x1003" region="0x46">Henley On Thames SD</configuration>
+		<configuration key="sd_htv_wales" bouquet="0x1003" region="0x2b">HTV Wales SD</configuration>
+		<configuration key="sd_htv_west" bouquet="0x1001" region="0x04">HTV West SD</configuration>
+		<configuration key="sd_htv_west_thames_valley" bouquet="0x1003" region="0x3f">HTV West / Thames Valley SD</configuration>
+		<configuration key="sd_humber" bouquet="0x1001" region="0x1d">Humber SD</configuration>
+		<configuration key="sd_london" bouquet="0x1001" region="0x01">London SD</configuration>
+		<configuration key="sd_london_essex" bouquet="0x1001" region="0x12">London / Essex SD</configuration>
+		<configuration key="sd_london_kent" bouquet="0x1003" region="0x40">London / Kent SD</configuration>
+		<configuration key="sd_london_thames_valley" bouquet="0x1003" region="0x42">London / Thames Valley SD</configuration>
+		<configuration key="sd_meridian_east" bouquet="0x1001" region="0x0b">Meridian East SD</configuration>
+		<configuration key="sd_meridian_north" bouquet="0x1003" region="0x44">Meridian North SD</configuration>
+		<configuration key="sd_meridian_south" bouquet="0x1001" region="0x05">Meridian South SD</configuration>
+		<configuration key="sd_meridian_south_east" bouquet="0x1001" region="0x0a">Meridian South East SD</configuration>
+		<configuration key="sd_merseyside" bouquet="0x1003" region="0x2d">Merseyside SD</configuration>
+		<configuration key="sd_norfolk" bouquet="0x1001" region="0x15">Norfolk SD</configuration>
+		<configuration key="sd_north_east_midlands" bouquet="0x1003" region="0x3e">North East Midlands SD</configuration>
+		<configuration key="sd_north_west_yorkshire" bouquet="0x1001" region="0x08">North West Yorkshire SD</configuration>
+		<configuration key="sd_north_yorkshire" bouquet="0x1001" region="0x1a">North Yorkshire SD</configuration>
+		<configuration key="sd_northern_ireland" bouquet="0x1004" region="0x21">Northern Ireland SD</configuration>
+		<configuration key="sd_oxford" bouquet="0x1003" region="0x47">Oxford SD</configuration>
+		<configuration key="sd_ridge_hill" bouquet="0x1003" region="0x29">Ridge Hill SD</configuration>
+		<configuration key="sd_scarborough" bouquet="0x1003" region="0x3d">Scarborough SD</configuration>
+		<configuration key="sd_scottish_east" bouquet="0x1002" region="0x26">Scottish East SD</configuration>
+		<configuration key="sd_scottish_west" bouquet="0x1002" region="0x25">Scottish West SD</configuration>
+		<configuration key="sd_sheffield" bouquet="0x1003" region="0x3c">Sheffield SD</configuration>
+		<configuration key="sd_south_lakeland" bouquet="0x1001" region="0x1c">South Lakeland SD</configuration>
+		<configuration key="sd_south_yorkshire" bouquet="0x1003" region="0x48">South Yorkshire SD</configuration>
+		<configuration key="sd_tees" bouquet="0x1003" region="0x45">Tees SD</configuration>
+		<configuration key="sd_thames_valley" bouquet="0x1001" region="0x09">Thames Valley SD</configuration>
+		<configuration key="sd_tring" bouquet="0x1001" region="0x1b">Tring SD</configuration>
+		<configuration key="sd_tyne" bouquet="0x1001" region="0x0d">Tyne SD</configuration>
+		<configuration key="sd_wales" bouquet="0x1004" region="0x20">Wales SD</configuration>
+		<configuration key="sd_west_anglia" bouquet="0x1001" region="0x19">West Anglia SD</configuration>
+		<configuration key="sd_west_dorset" bouquet="0x1003" region="0x43">West Dorset SD</configuration>
+		<configuration key="sd_westcountry" bouquet="0x1001" region="0x06">Westcountry SD</configuration>
+		<configuration key="sdcustom_atherstone" bouquet="0x1001" region="0x13">Atherstone SD Custom</configuration>
+		<configuration key="sdcustom_border_england" bouquet="0x1001" region="0x0c">Border England SD Custom</configuration>
+		<configuration key="sdcustom_border_scotland" bouquet="0x1002" region="0x24">Border Scotland SD Custom</configuration>
+		<configuration key="sdcustom_brighton" bouquet="0x1003" region="0x41">Brighton SD Custom</configuration>
+		<configuration key="sdcustom_central_midlands" bouquet="0x1001" region="0x03">Central Midlands SD Custom</configuration>
+		<configuration key="sdcustom_channel_isles" bouquet="0x1004" region="0x22">Channel Isles SD Custom</configuration>
+		<configuration key="sdcustom_dundee" bouquet="0x1002" region="0x27">Dundee SD Custom</configuration>
+		<configuration key="sdcustom_east_midlands" bouquet="0x1001" region="0x14">East Midlands SD Custom</configuration>
+		<configuration key="sdcustom_essex" bouquet="0x1001" region="0x02">Essex SD Custom</configuration>
+		<configuration key="sdcustom_gloucester" bouquet="0x1001" region="0x18">Gloucester SD Custom</configuration>
+		<configuration key="sdcustom_grampian" bouquet="0x1002" region="0x23">Grampian SD Custom</configuration>
+		<configuration key="sdcustom_granada" bouquet="0x1001" region="0x07">Granada SD Custom</configuration>
+		<configuration key="sdcustom_henley_on_thames" bouquet="0x1003" region="0x46">Henley On Thames SD Custom</configuration>
+		<configuration key="sdcustom_htv_wales" bouquet="0x1003" region="0x2b">HTV Wales SD Custom</configuration>
+		<configuration key="sdcustom_htv_west" bouquet="0x1001" region="0x04">HTV West SD Custom</configuration>
+		<configuration key="sdcustom_htv_west_thames_valley" bouquet="0x1003" region="0x3f">HTV West / Thames Valley SD Custom</configuration>
+		<configuration key="sdcustom_humber" bouquet="0x1001" region="0x1d">Humber SD Custom</configuration>
+		<configuration key="sdcustom_london" bouquet="0x1001" region="0x01">London SD Custom</configuration>
+		<configuration key="sdcustom_london_essex" bouquet="0x1001" region="0x12">London / Essex SD Custom</configuration>
+		<configuration key="sdcustom_london_kent" bouquet="0x1003" region="0x40">London / Kent SD Custom</configuration>
+		<configuration key="sdcustom_london_thames_valley" bouquet="0x1003" region="0x42">London / Thames Valley SD Custom</configuration>
+		<configuration key="sdcustom_meridian_east" bouquet="0x1001" region="0x0b">Meridian East SD Custom</configuration>
+		<configuration key="sdcustom_meridian_north" bouquet="0x1003" region="0x44">Meridian North SD Custom</configuration>
+		<configuration key="sdcustom_meridian_south" bouquet="0x1001" region="0x05">Meridian South SD Custom</configuration>
+		<configuration key="sdcustom_meridian_south_east" bouquet="0x1001" region="0x0a">Meridian South East SD Custom</configuration>
+		<configuration key="sdcustom_merseyside" bouquet="0x1003" region="0x2d">Merseyside SD Custom</configuration>
+		<configuration key="sdcustom_norfolk" bouquet="0x1001" region="0x15">Norfolk SD Custom</configuration>
+		<configuration key="sdcustom_north_east_midlands" bouquet="0x1003" region="0x3e">North East Midlands SD Custom</configuration>
+		<configuration key="sdcustom_north_west_yorkshire" bouquet="0x1001" region="0x08">North West Yorkshire SD Custom</configuration>
+		<configuration key="sdcustom_north_yorkshire" bouquet="0x1001" region="0x1a">North Yorkshire SD Custom</configuration>
+		<configuration key="sdcustom_northern_ireland" bouquet="0x1004" region="0x21">Northern Ireland SD Custom</configuration>
+		<configuration key="sdcustom_oxford" bouquet="0x1003" region="0x47">Oxford SD Custom</configuration>
+		<configuration key="sdcustom_ridge_hill" bouquet="0x1003" region="0x29">Ridge Hill SD Custom</configuration>
+		<configuration key="sdcustom_scarborough" bouquet="0x1003" region="0x3d">Scarborough SD Custom</configuration>
+		<configuration key="sdcustom_scottish_east" bouquet="0x1002" region="0x26">Scottish East SD Custom</configuration>
+		<configuration key="sdcustom_scottish_west" bouquet="0x1002" region="0x25">Scottish West SD Custom</configuration>
+		<configuration key="sdcustom_sheffield" bouquet="0x1003" region="0x3c">Sheffield SD Custom</configuration>
+		<configuration key="sdcustom_south_lakeland" bouquet="0x1001" region="0x1c">South Lakeland SD Custom</configuration>
+		<configuration key="sdcustom_south_yorkshire" bouquet="0x1003" region="0x48">South Yorkshire SD Custom</configuration>
+		<configuration key="sdcustom_tees" bouquet="0x1003" region="0x45">Tees SD Custom</configuration>
+		<configuration key="sdcustom_thames_valley" bouquet="0x1001" region="0x09">Thames Valley SD Custom</configuration>
+		<configuration key="sdcustom_tring" bouquet="0x1001" region="0x1b">Tring SD Custom</configuration>
+		<configuration key="sdcustom_tyne" bouquet="0x1001" region="0x0d">Tyne SD Custom</configuration>
+		<configuration key="sdcustom_wales" bouquet="0x1004" region="0x20">Wales SD Custom</configuration>
+		<configuration key="sdcustom_west_anglia" bouquet="0x1001" region="0x19">West Anglia SD Custom</configuration>
+		<configuration key="sdcustom_west_dorset" bouquet="0x1003" region="0x43">West Dorset SD Custom</configuration>
+		<configuration key="sdcustom_westcountry" bouquet="0x1001" region="0x06">Westcountry SD Custom</configuration>
+	</dvbsconfigs>
+	<sections>
+		<section number="101">Entertainment</section>
+		<section number="201">Plus 1</section>
+		<section number="301">Movies</section>
+		<section number="350">Music</section>
+		<section number="401">Sports</section>
+		<section number="490">Pay-Per-View</section>
+		<section number="501">News</section>
+		<section number="560">Specialist</section>
+		<section number="580">Religion</section>
+		<section number="601">Kids</section>
+		<section number="660">Shopping</section>
+		<section number="701">International</section>
+		<section number="801">Secondary Channels</section>
+		<section number="900">Adult</section>
+		<section number="950">Regional</section>
+		<section number="970">BBC Red Button</section>
+		<section number="993">Sky Info</section>
+		<section number="1000">Sky Sports Interactive</section>
+		<section number="1020">Sky Anytime</section>
+		<section number="1030">TNT Sports Interactive</section>
+		<section number="1050">Not indexed</section>
+	</sections>
+
+	<!-- swapchannels affects main and sections bouquets. "number" is the SD channel. "with" is the HD channel. Swap will not occur if target is not HD -->
+	<swapchannels>
+		<channel number="103" with="803"/> <!-- ITV, STV and UTV HD -->
+		<channel number="103" with="176" conditional="'ITV' in service_hd['service_name']"/><!-- ITV HD -->
+		<channel number="105" with="805"/> <!-- Channel 5 HD -->
+		<channel number="106" with="806"/> <!-- Sky Sky Showcase HD -->
+		<channel number="107" with="807"/> <!-- Sky Witness -->
+		<channel number="108" with="808"/> <!-- Sky Atlantic HD -->
+		<channel number="109" with="809"/> <!-- Alibi HD -->
+		<channel number="110" with="810"/> <!-- GOLD HD -->
+		<channel number="111" with="811"/> <!-- Dave HD -->
+		<channel number="112" with="812"/> <!-- Comedy Central HD -->
+		<channel number="113" with="813"/> <!-- Sky Max HD -->
+		<channel number="114" with="814"/> <!-- Sky Comedy HD -->
+		<channel number="118" with="816"/> <!-- ITV2 HD -->
+		<channel number="121" with="819"/> <!-- SkyDocmntrsHD -->
+		<channel number="122" with="820"/> <!-- Sky Crime HD -->
+		<channel number="123" with="821"/> <!-- Sky History HD -->
+		<channel number="124" with="822"/> <!-- Sky Nature HD -->
+		<channel number="125" with="823"/> <!-- Discovery HD -->
+		<channel number="126" with="824"/> <!-- MTV HD -->
+		<channel number="129" with="825"/> <!-- Nat Geo HD -->
+		<channel number="130" with="826"/> <!-- Sky Arts HD -->
+		<channel number="132" with="827"/> <!-- W HD -->
+		<channel number="133" with="828"/> <!-- TLC HD -->
+		<channel number="134" with="829"/> <!-- S4C HD -->
+		<channel number="135" with="830"/> <!-- E4 HD -->
+		<channel number="136" with="831"/> <!-- More4 HD -->
+		<channel number="139" with="836"/> <!-- Sky Sci-Fi HD -->
+		<channel number="144" with="834"/> <!-- Quest HD -->
+		<channel number="152" with="836"/> <!-- Sky Sci-Fi HD -->
+		<channel number="155" with="846"/> <!-- YESTERDAY HD -->
+		<channel number="156" with="837"/> <!-- Crime+Inv HD -->
+		<channel number="159" with="835"/> <!-- E! HD -->
+		<channel number="163" with="840"/> <!-- Sky History 2 HD -->
+		<channel number="165" with="841"/> <!-- Nat Geo Wild HD -->
+		<channel number="313" with="855"/> <!-- Film4 HD -->
+		<channel number="409" with="866"/> <!-- SkySp News HD -->
+		<channel number="410" with="868"/> <!-- TNT Sports1 HD -->
+		<channel number="411" with="869"/> <!-- TNT Sports2 HD -->
+		<channel number="413" with="870"/> <!-- Eurosport 1 HD -->
+		<channel number="414" with="871"/> <!-- Eurosport 2 HD -->
+		<channel number="415" with="872"/> <!-- Sky Sports Racing HD -->
+		<channel number="416" with="873"/> <!-- SkySp Mix HD -->
+		<channel number="417" with="874"/> <!-- TNT Sports3 HD -->
+		<channel number="421" with="876"/> <!-- TNT Sports4 HD -->
+		<channel number="424" with="877"/> <!-- Racing TV HD -->
+		<channel number="501" with="881"/> <!-- Sky News HD -->
+		<channel number="505" with="883"/> <!-- CNBC HD -->
+		<channel number="506" with="884"/> <!-- CNN HD -->
+		<channel number="513" with="886"/> <!-- TRT World HD -->
+		<channel number="601" with="640"/> <!-- Cartoon Network HD -->
+		<channel number="603" with="641"/> <!-- Boomerang HD -->
+		<channel number="604" with="642"/> <!-- Nickelodeon HD -->
+		<channel number="606" with="645"/> <!-- Nick Jr HD -->
+		<channel number="662" with="890"/> <!-- TJC HD -->
+		<channel number="703" with="892"/> <!-- SONY TV HD -->
+		<channel number="705" with="893"/> <!-- Utsav Plus HD -->
+		<channel number="706" with="894"/> <!-- Colors HD -->
+		<channel number="709" with="898"/> <!-- Zee TV HD -->
+		<channel number="715" with="895"/> <!-- SONY MAX HD -->
+		<channel number="717" with="896"/> <!-- Utsav GOLD HD -->
+	</swapchannels>
+	<servicehacks>
+<![CDATA[
+def makeServiceRef(service):
+	return "1:0:%X:%X:%X:%X:%X:0:0:0:" % (
+		service["service_type"],
+		service["service_id"],
+		service["transport_stream_id"],
+		service["original_network_id"],
+		service["namespace"],
+	)
+
+try:
+	from Screens.InfoBarGenerics import streamrelay
+except:
+	streamrelay = None
+
+try:
+	is_assigned
+except:
+	is_assigned = True
+	custom = True if "custom" in bouquet_key else False
+
+	dxNoSDT = 0x1 # details of lamedb flags are in README.txt
+	dxDontshow = 0x2 # details of lamedb flags are in README.txt
+	dxHoldName = 0x8 # details of lamedb flags are in README.txt
+
+	# slot some extra channels into vacant slots in the provider list if "custom" == True
+	########################################################################
+	#
+	# format: "channel name": number,
+	#
+	# example: "ITV2": 118,
+	#
+	########################################################################
+
+	channels_to_add_by_name = {
+		"London TV": 199 #This is only added if you do not have an official local 199 service
+	}
+
+	channels_to_add_by_id = {
+		1285: 407, # SkySp Tennis
+		#slow death section IRL alternatves
+		3705: 112, # ComedyCentral
+		2709: 127, # ComedyXtra
+		2418: 154, # ID
+		1409: 301, #
+		1815: 304, #
+		1808: 306, #
+		1001: 307, #
+		1341: 401, #
+		1326: 402, #
+		3848: 403, #
+		1302: 404, #
+		1324: 405, #
+		1306: 406, #
+		1285: 407, #
+		1333: 408, #
+		3839: 412, #
+		4091: 416, #
+		2517: 604, # Nicelodeon
+		5527: 606, # Nicktoons
+		3356: 615, # Nick Jr
+		3077: 809, # Alibi HD
+		3078: 811, # Dave HD
+		3080: 827, # W HD
+	}
+
+	itv_rename = {
+		6210: "STV North",
+		6371: "STV East",
+
+		# +1 Channels
+		6145: "ITV1+1 Central West",
+		6155: "ITV1+1 London",
+		6355: "ITV1+1 Granada",
+		6365: "ITV1+1 Meridian East",
+
+		# HD Channels
+		1043: "ITV1 Tyne Tees HD",
+		1044: "ITV1 Yorkshire West HD",
+		1045: "ITV1 Anglia East HD",
+		1061: "ITV1 Border England HD",
+		1062: "ITV1 West Country SW HD",
+		1063: "ITV1 West Country West HD",
+		1208: "ITV1 Meridian Thames Valley HD",
+		1209: "ITV1 Meridian South Coast HD",
+		1214: "ITV1 Yorkshire East HD",
+		1217: "ITV1 Anglia West HD",
+		1219: "ITV1 Central East HD",
+		3062: "ITV1 Channel Isles HD",
+		3063: "ITV1 Border Scotland HD",
+#		6501: "ITV1 Wales HD",	#This is correct on stream, no need for rename.
+		6502: "ITV1 Meridian East HD",
+		6503: "ITV1 Central West HD",
+		6504: "ITV1 London HD",
+		6505: "ITV1 Granada HD",
+
+		1167: "STV Dundee HD",
+		1168: "STV North HD",
+		1170: "STV East HD",
+		4055: "STV West HD",
+
+#		6510: "UTV HD",	#This is correct on stream, no need for rename.
+	}
+
+	rename = {
+		# TNT Interactive
+		5030: "TNT Sports Mosaic",
+		5381: "TNT Sports Mosaic 2",
+		5382: "TNT Sports 6",
+		5383: "TNT Sports 7",
+		5384: "TNT Sports 8",
+		5385: "TNT Sports 9",
+		5386: "TNT Sports 10",
+	}
+
+	rename_by_id_conditional = { # channel ID: ("old name", "new name")
+		4019: ("Sky Comedy HD", "Sky Comedy Cinema HD"),
+	}
+
+	rename_by_sid = {
+		51118: "WildEarth HD",
+	}
+
+	whitelist = ['ITV HD',752,]
+
+	whitelist_by_id = [
+		1003, # MUTV HD
+		1372,
+		3080, # W HD
+		3077, # Alibi HD
+		3078, # Dave HD
+		3812,
+		3831,
+		4039,
+		4056,
+		5272, # Racing UK HD
+	]
+
+	blacklist = ["10001", "10002"]
+
+	blacklist_by_id = [
+		1306, # ___4109
+		1307, # ___4110
+	]
+
+	tnt_sports_id = [5030,5381,5031,5382,5383,5384,5385,5386]
+
+#Some channels are encrypted, but they incorrectly have FTA flag.
+	encrypted_by_id = [
+		1024, # 10002
+		1027, # 10001
+	]
+
+#Some channels are FTA, but they incorrectly have Encrypted flag.
+	fta_by_id = [
+		1758, # 4Music
+		1865, # DMAX +1
+		3358, # Sony Crime
+		3216, # Sony Crime+1
+		5237, # TRT World HD
+	]
+
+	broken_TSIDS = [
+		0x7D3,
+		0x7D7,
+		0x7D8,
+		0x7DB,
+		0x7DC,
+		0x7E0,
+		0x7E3,
+		0x7E4,
+		0x7E5,
+		0x7E7,
+		0x7E8,
+		0x7E9,
+		0x7EA,
+		0x7EB,
+		0x7EC,
+		0x7ED,
+		0x7EE,
+		0x7F0,
+		0x7F2,
+	]
+
+	broken_CHIDs = [
+		0x44B,
+		0x48F,
+		0x490,
+		0x492,
+		0x4BA,
+		0x4C2,
+		0x4E2,
+		0x4F6,
+		0x551,
+		0xB00,
+		0xFC2,
+		0xFD2,
+		0xFD6,
+		0x177E,
+	]
+
+# Correct service type of HD channels not marked as such
+if service["service_type"] in DvbScanner.VIDEO_ALLOWED_TYPES and service["service_type"] not in DvbScanner.HD_ALLOWED_TYPES and service["service_name"][-2:] == 'HD':
+	print("[ABM-Hack] Sky UK: %s, changed from type %d to 25" % (service["service_name"], service["service_type"]))
+	service["service_type"] = 25
+
+# Rename channels
+if "channel_id" in service and service["channel_id"] in rename:
+	service["interactive_name"] = rename[service["channel_id"]] # left for backwards compatibility
+	service["service_name"] = rename[service["channel_id"]]
+	service["service_flags"] = dxHoldName
+
+# Rename channels by ID conditionally, change name if chID and service name matches
+if "channel_id" in service and service["channel_id"] in rename_by_id_conditional and rename_by_id_conditional[service["channel_id"]][0] == service["service_name"]:
+	service["interactive_name"] = rename_by_id_conditional[service["channel_id"]][1] # left for backwards compatibility
+	service["service_name"] = rename_by_id_conditional[service["channel_id"]][1]
+	service["service_flags"] = dxHoldName
+
+# Rename channels by sid
+if "service_id" in service and service["service_id"] in rename_by_sid:
+	service["service_name"] = rename_by_sid[service["service_id"]]
+	service["service_flags"] = dxHoldName
+
+# Rename ITV channels
+if "channel_id" in service and service["channel_id"] in itv_rename:
+	service["interactive_name"] = itv_rename[service["channel_id"]] # left for backwards compatibility
+	service["service_name"] = itv_rename[service["channel_id"]]
+	service["service_flags"] = dxHoldName
+
+if service["channel_id"] in encrypted_by_id:
+	service["free_ca"] = 1
+
+if service["channel_id"] in fta_by_id:
+	service["free_ca"] = 0
+
+# Add channels by name
+if custom and service["service_name"] in channels_to_add_by_name and service["service_type"] in DvbScanner.VIDEO_ALLOWED_TYPES and channels_to_add_by_name[service["service_name"]] not in LCNs_in_use:
+	LCNs_in_use.append(channels_to_add_by_name[service["service_name"]])
+	service["number"] = channels_to_add_by_name[service["service_name"]]
+	service["numbers"] = [channels_to_add_by_name[service["service_name"]]]
+
+# Add channels by ID
+if custom and service["channel_id"] in channels_to_add_by_id and service["service_type"] in DvbScanner.VIDEO_ALLOWED_TYPES and channels_to_add_by_id[service["channel_id"]] not in LCNs_in_use:
+	LCNs_in_use.append(channels_to_add_by_id[service["channel_id"]])
+	service["number"] = channels_to_add_by_id[service["channel_id"]]
+	service["numbers"] = [channels_to_add_by_id[service["channel_id"]]]
+
+if service["service_type"] == 0x02 and service["number"] > 3000:
+	service["number"] -= 3000
+
+if service["service_type"] != 2 and (service["number"] in whitelist or service["service_name"] in whitelist or ("channel_id" in service and service["channel_id"] in whitelist_by_id)):
+	pass
+elif custom and service["service_type"] != 2 and (service["number"] in blacklist or service["service_name"] in blacklist):
+	skip.skip = True
+elif streamrelay and service["service_type"] != 2 and service["transport_stream_id"] in broken_TSIDS and service["free_ca"] != 0 and (service["service_type"] not in DvbScanner.HD_ALLOWED_TYPES or "channel_id" in service and service["channel_id"] in broken_CHIDs):
+	sref = makeServiceRef(service)
+	if sref not in streamrelay.data:
+		streamrelay.data += [sref]
+elif custom and service["service_type"] in DvbScanner.HD_ALLOWED_TYPES and service["free_ca"] != 0:
+	while service["number"] in LCNs_in_use:
+		LCNs_in_use.remove(service["number"])
+	skip.skip = True
+elif custom and ("channel_id" in service and service["channel_id"] in blacklist_by_id):
+	skip.skip = True
+
+hidden_sections = config.autobouquetsmaker.hidesections.value.split("|")
+
+new_numbers = []
+for number in service["numbers"]:
+	if number >= 3000 and number <= 3999: # radio
+		new_numbers.append(number - 3000)
+	elif number >= 900 and number < 950 and "sat_282_sky_uk:900" in hidden_sections:
+		service["service_flags"] = dxDontshow
+	elif number >= 1050 and number <= max(LCNs_in_use): # not indexed channels
+		new_numbers.append(number)
+	elif number > 999 or number < 101:
+		if service["channel_id"] > 1470 and service["channel_id"] < 1486: # Sky Sports Interactive
+			new_numbers.append(service["channel_id"] - 471)
+			service["interactive_name"] = "Sky Sports Interactive " + str(service["channel_id"])
+		elif service["channel_id"] > 4093 and service["channel_id"] < 4099: # Sky Anytime
+			new_numbers.append(service["channel_id"] - 3074)
+			service["interactive_name"] = "Sky Anytime " + str(service["channel_id"])
+		elif service["channel_id"] in tnt_sports_id:
+			new_numbers.append(1030 + tnt_sports_id.index(service["channel_id"]))
+		elif service["channel_id"] == 1151 and service["original_network_id"] == 2 and service["transport_stream_id"] == 2004: # IEPG Data channel
+			#service["flags"] = dxNoSDT | dxHoldName
+			#service["service_name"] = "Sky UK EPG data channel"
+			service["free_ca"] = 0
+			skip.skip = True
+			for i in range(994, 1000):
+				if i not in LCNs_in_use:
+					LCNs_in_use.append(i)
+					new_numbers.append(i)
+					service["number"] = i
+					skip.skip = False
+					break
+		else:
+			if extraservices:
+				i = 1450
+				while i > 1049 and i not in LCNs_in_use:
+					i -= 1
+				LCNs_in_use.append(i+1)
+				new_numbers.append(i+1)
+			else:
+				skip.skip = True
+		break
+	elif service["service_name"] in ('Sky Intro') and number < 998: # Sky Intro
+		skip.skip = True
+	else:
+		new_numbers.append(number)
+service["numbers"] = new_numbers
+
+]]>
+	</servicehacks>
+</provider>

@@ -1,0 +1,38 @@
+<provider>
+	<name>HD+ #20</name>
+	<dependent>sat_0192_hd+</dependent>
+	<streamtype>dvbs</streamtype>
+	<protocol>lcn</protocol>
+	<transponder
+		orbital_position="192"
+		frequency="10994000"
+		symbol_rate="22000000"
+		polarization="0"
+		fec_inner="4"
+		inversion="2"
+		system="1"
+		modulation="2"
+		roll_off="0"
+		pilot="2"
+		tsid="1035"
+		onid="1"
+	/>
+	<sections>
+		<section number="1">HD+</section>
+	</sections>
+	<servicehacks>
+<![CDATA[
+# skip test services, interactive services, and chat line spam.
+blacklist = (
+			"SES UHD Demo Channel 02",
+			"SES UHD Demo Channel 03",
+			"SES UHD Demo Channel 04",
+			"SES UHD Demo Channel 05",
+			"SES UHD Demo Channel 06",
+			)
+
+if service["service_name"] in blacklist or "." in service["service_name"]:
+	skip.skip = True
+]]>
+	</servicehacks>
+</provider>
