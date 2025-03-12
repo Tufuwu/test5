@@ -1,3 +1,0 @@
-seqdiag test {
-   A => B => C;
-}
