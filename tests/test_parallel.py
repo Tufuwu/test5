@@ -1,225 +1,83 @@
-'''
-Test parallelization functions and classes
-'''
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# Copyright (c) 2020 Richard Hull and contributors
+# See LICENSE.rst for details.
 
-import sciris as sc
-import numpy as np
-import pylab as pl
-import multiprocessing as mp
+"""
+Tests for the :py:module:`luma.core.interface.parallel` module.
+"""
+
+from unittest.mock import Mock, call
+from luma.core.interface.parallel import bitbang_6800
+import luma.core.error
+
 import pytest
-ut = sc.importbypath(sc.thispath() / 'sc_test_utils.py')
 
-if 'doplot' not in locals(): doplot = False
-
-
-def subheading(label):
-    return sc.printgreen('\n\n' + label)
-
-def f(i):
-    ''' Test function for parallelization -- here to avoid pickling errors '''
-    return i**2
+from helpers import rpi_gpio_missing, assert_only_cleans_whats_setup
 
 
-def test_simple():
-    sc.heading('Example 1 -- simple usage as a shortcut to multiprocessing.map()')
-
-    def f(x):
-        return x*x
-
-    results = sc.parallelize(f, [1,2,3])
-    print(results)
-    return
+gpio = Mock(unsafe=True)
 
 
-def test_embarrassing():
-    sc.heading('Example 2 -- simple usage for "embarrassingly parallel" processing')
-
-    def rnd():
-        import pylab as pl
-        return pl.rand()
-
-    results = sc.parallelize(rnd, 10)
-    print(results)
-    return
-
-
-def test_multiargs():
-    sc.heading('Example 3 -- using multiple arguments')
-
-    def f(x,y):
-        return x*y
-
-    results1 = sc.parallelize(func=f, iterarg=[(1,2),(2,3),(3,4)])
-    results2 = sc.parallelize(func=f, iterkwargs={'x':[1,2,3], 'y':[2,3,4]})
-    results3 = sc.parallelize(func=f, iterkwargs=[{'x':1, 'y':2}, {'x':2, 'y':3}, {'x':3, 'y':4}])
-    assert results1 == results2 == results3
-    print(results1)
-    return
+def setup_function(function):
+    gpio.reset_mock()
+    gpio.HIGH = 200
+    gpio.LOW = 100
+    gpio.RS = 7
+    gpio.E = 8
+    gpio.PINS = [25, 24, 23, 18]
+    gpio.DATA = gpio.HIGH
+    gpio.CMD = gpio.LOW
+    gpio.OUT = 300
 
 
-def test_noniterated(doplot=doplot):
-    sc.heading('Example 4 -- using non-iterated arguments and dynamic load balancing')
+def test_data():
+    eight_to_four = lambda data: [f(x) for x in data for f in (lambda x: x >> 4, lambda x: 0x0F & x)]
 
-    def myfunc(i, x, y):
-        xy = [x+i*pl.randn(100), y+i*pl.randn(100)]
-        return xy
+    data = (0x41, 0x42, 0x43)  # ABC
+    serial = bitbang_6800(gpio=gpio, RS=7, E=8, PINS=[25, 24, 23, 18])
 
-    xylist1 = sc.parallelize(myfunc, kwargs={'x':3, 'y':8}, iterarg=range(5), maxcpu=0.8, interval=0.1) # Use kwargs dict
-    xylist2 = sc.parallelize(myfunc, x=5, y=10, iterarg=[5,10,15]) # Supply kwargs directly
+    serial.command(*eight_to_four([0x80]))
+    serial.data(eight_to_four(data))
 
-    if doplot:
-        for p,xylist in enumerate([xylist1, xylist2]):
-            pl.subplot(2,1,p+1)
-            for i,xy in enumerate(reversed(xylist)):
-                pl.scatter(xy[0], xy[1], label='Run %i'%i)
-            pl.legend()
-    return
+    setup = [call(gpio.RS, gpio.OUT), call(gpio.E, gpio.OUT)] + \
+        [call(gpio.PINS[i], gpio.OUT) for i in range(4)]
+    prewrite = lambda mode: [call(gpio.RS, mode), call(gpio.E, gpio.LOW)]
+    pulse = [call(gpio.E, gpio.HIGH), call(gpio.E, gpio.LOW)]
+    send = lambda v: [call(gpio.PINS[i], (v >> i) & 0x01) for i in range(serial._datalines)]
 
+    calls = \
+        prewrite(gpio.CMD) + send(0x08) + pulse + send(0x00) + pulse + \
+        prewrite(gpio.DATA) + \
+        send(data[0] >> 4) + pulse + \
+        send(data[0]) + pulse + \
+        send(data[1] >> 4) + pulse + \
+        send(data[1]) + pulse + \
+        send(data[2] >> 4) + pulse + \
+        send(data[2]) + pulse
 
-def test_exceptions():
-    sc.heading('Test that exceptions are being handled correctly')
-
-    def good_func(x, y):
-        return sum([(i+x*y)**2 for i in range(int(1e3))])
-
-    def bad_func(x=0):
-        raise ValueError('Intentional failure')
-
-    # Should preserve original exception type
-    with pytest.raises(ValueError):
-        sc.parallelize(bad_func, iterarg=5)
-    with pytest.raises(TypeError):
-        sc.parallelize(bad_func, iterarg=5, kwargs=dict(y='bad kwarg'))
-
-    # Test serial (debug) mode
-    n = 10
-    iterkwargs = dict(x=pl.arange(n), y=pl.linspace(0,1,n))
-    res1 = sc.parallelize(good_func, iterkwargs=iterkwargs)
-    res2 = sc.parallelize(good_func, iterkwargs=iterkwargs, serial=True)
-    assert res1 == res2
-    print(res1)
-
-    return
+    gpio.setup.assert_has_calls(setup)
+    gpio.output.assert_has_calls(calls)
 
 
-def test_class():
-    sc.heading('Testing sc.Parallel class')
-    
-    def slowfunc(i):
-        np.random.seed(i)
-        sc.timedsleep(0.2*np.random.rand())
-        return i**2
-    
-    subheading('Creation and display')
-    P = sc.Parallel(slowfunc, iterarg=range(4), parallelizer='multiprocess-async', ncpus=2) # NB, multiprocessing-async fails with a pickle error
-    print(P)
-    P.disp()
-    
-    subheading('Running asynchronously and monitoring')
-    P.run_async()
-    print(P.running)
-    print(P.ready)
-    print(P.status)
-    P.monitor(interval=0.05)
-    P.finalize()
-    
-    
-    subheading('Checking parallelizers')
-    
-    iterarg = np.arange(4)
-    
-    print('Checking serial with copy and with progress')
-    r1 = sc.parallelize(f, iterarg, parallelizer='serial-copy', progress=True)
-    
-    print('Checking multiprocessing')
-    r2 = sc.parallelize(f, iterarg, parallelizer='multiprocessing')
-    
-    print('Checking fast (concurrent.futures)')
-    r3 = sc.parallelize(f, iterarg, parallelizer='fast')
-    
-    print('Checking thread')
-    r4 = sc.parallelize(f, iterarg, parallelizer='thread')
-    
-    print('Checking custom')
-    with mp.Pool(processes=2) as pool:
-        r5 = sc.parallelize(f, iterarg, parallelizer=pool.imap)
-    
-    assert r1 == r2 == r3 == r4 == r5
-
-    
-    subheading('Other')
-    
-    print('Checking CPUs')
-    sc.Parallel(f, 10, ncpus=0.7)
-    
-    print('Validation: no jobs to run')
-    with pytest.raises(ValueError):
-        sc.Parallel(f, iterarg=[])
-        
-    print('Validation: no CPUs')
-    with pytest.raises(ValueError):
-        sc.Parallel(f, 10, ncpus=-3)
-    
-    print('Validation: invalid parallelizer')
-    with pytest.raises(sc.KeyNotFoundError):
-        sc.Parallel(f, 10, parallelizer='invalid-parallelizer')
-        
-    print('Validation: invalid async')
-    with pytest.raises(ValueError):
-        sc.Parallel(f, 10, parallelizer='serial-async')
-        
-    print('Validation: checking call signatures')
-    ut.check_signatures(sc.parallelize, sc.Parallel.__init__, extras=['self', 'label'], die=True)
-    
-    return P
+def test_wrong_number_of_pins():
+    try:
+        bitbang_6800(gpio=gpio, RS=7, E=8, PINS=[25, 24, 23])
+    except AssertionError as ex:
+        assert str(ex) == 'You\'ve provided 3 pins but a bus must contain either four or eight pins'
 
 
-def test_components():
-    sc.heading('Testing subcomponents directly')
-
-    print('Testing TaskArgs and _task')
-    a = sc.dictobj()
-    a.func         = lambda: None
-    a.index        = 0
-    a.njobs        = 0
-    a.iterval      = 0
-    a.iterdict     = None
-    a.args         = None
-    a.kwargs       = None
-    a.maxcpu       = 0
-    a.maxmem       = 0
-    a.interval     = 0
-    a.embarrassing = True
-    a.callback     = None
-    a.progress     = None
-    a.globaldict   = None
-    a.useglobal    = None
-    a.started      = None
-    a.die          = None
-    taskargs = sc.sc_parallel.TaskArgs(*a.values())
-    task = sc.sc_parallel._task(taskargs)
-    
-    print('Testing progress bar')
-    globaldict = {0:1, 1:1, 2:0, 3:0, 4:0}
-    njobs = 5
-    sc.sc_parallel._progressbar(globaldict, njobs, started=sc.now())
-    return task
+def test_cleanup():
+    serial = bitbang_6800(gpio=gpio)
+    serial._managed = True
+    serial.cleanup()
+    assert_only_cleans_whats_setup(gpio)
 
 
-
-#%% Run as a script
-if __name__ == '__main__':
-    sc.tic()
-
-    doplot = True
-
-    test_simple()
-    test_embarrassing()
-    test_multiargs()
-    test_noniterated(doplot)
-    test_exceptions()
-    P = test_class()
-    test_components()
-
-    sc.toc()
-    print('Done.')
+def test_unsupported_gpio_platform():
+    try:
+        bitbang_6800()
+    except luma.core.error.UnsupportedPlatform as ex:
+        assert str(ex) == 'GPIO access not available'
+    except ImportError:
+        pytest.skip(rpi_gpio_missing)

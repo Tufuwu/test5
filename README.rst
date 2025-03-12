@@ -1,40 +1,101 @@
-Welcome to Sciris
-=================
+luma.core **|** 
+`luma.docs <https://github.com/rm-hull/luma.docs>`__ **|** 
+`luma.emulator <https://github.com/rm-hull/luma.emulator>`__ **|** 
+`luma.examples <https://github.com/rm-hull/luma.examples>`__ **|** 
+`luma.lcd <https://github.com/rm-hull/luma.lcd>`__ **|** 
+`luma.led_matrix <https://github.com/rm-hull/luma.led_matrix>`__ **|** 
+`luma.oled <https://github.com/rm-hull/luma.oled>`__ 
 
-.. image:: https://badgen.net/pypi/v/sciris/?color=blue
- :target: https://pypi.org/project/sciris
+luma.core
+=========
 
-.. image:: https://static.pepy.tech/personalized-badge/sciris?period=total&units=international_system&left_color=grey&right_color=yellow&left_text=Downloads
- :target: https://pepy.tech/project/sciris
+.. image:: https://github.com/rm-hull/luma.core/workflows/luma.core/badge.svg?branch=master
+   :target: https://github.com/rm-hull/luma.core/actions?workflow=luma.core
 
-.. image:: https://img.shields.io/pypi/l/sciris.svg
- :target: https://github.com/sciris/sciris/blob/main/LICENSE
+.. image:: https://coveralls.io/repos/github/rm-hull/luma.core/badge.svg?branch=master
+   :target: https://coveralls.io/github/rm-hull/luma.core?branch=master
 
-.. image:: https://github.com/sciris/sciris/actions/workflows/tests.yaml/badge.svg
- :target: https://github.com/sciris/sciris/actions/workflows/tests.yaml?query=workflow
+.. image:: https://readthedocs.org/projects/luma-core/badge/?version=latest
+   :target: https://luma-core.readthedocs.io/en/latest/
 
+.. image:: https://img.shields.io/pypi/pyversions/luma.core.svg
+   :target: https://pypi.python.org/project/luma.core
 
-What is Sciris?
----------------
+.. image:: https://img.shields.io/pypi/v/luma.core.svg
+   :target: https://pypi.python.org/project/luma.core
 
-Sciris is a library of tools that can help make writing scientific Python code easier and more pleasant. Built on top of `NumPy <https://numpy.org/>`_ and `Matplotlib <https://matplotlib.org/>`_, Sciris provides functions covering a wide range of common math, file I/O, and plotting operations. This means you can get more done with less code, and spend less time looking things up on Stack Overflow. It was originally written to help epidemiologists and neuroscientists focus on doing science, rather than on writing code, but Sciris is applicable across scientific domains (and some nonscientific ones too).
+.. image:: https://img.shields.io/pypi/dm/luma.core
+   :target: https://pypi.python.org/project/luma.core
 
-For more information, see the full `documentation <http://docs.sciris.org/overview.html>`_, the `paper <http://paper.sciris.org>`_, or `GitHub <https://github.com/sciris/sciris>`_.
+**luma.core** is a component library providing a `Pillow <https://pillow.readthedocs.io/>`_-compatible
+drawing canvas for Python 3, and other functionality to support drawing primitives and
+text-rendering capabilities for small displays on the Raspberry Pi and other
+single board computers:
 
-If you have questions, feature suggestions, or would like some help getting started, please reach out to us at info@sciris.org or `open an issue <https://github.com/sciris/sciris/issues/new/choose>`_.
+* scrolling/panning capability,
+* terminal-style printing,
+* state management,
+* color/greyscale (where supported),
+* dithering to monochrome,
+* sprite animation,
+* flexible framebuffering (depending on device capabilities)
 
+Documentation
+-------------
 
-Installation
-------------
+API documentation can be found at https://luma-core.readthedocs.io/en/latest/
 
-Using pip: ``pip install sciris``
+Drivers
+-------
 
-Using conda: ``conda install -c conda-forge sciris``
+Device drivers extend **luma.core** to provide the correct initialization
+sequences for specific physical display devices/chipsets.
 
-*Requires Python >= 3.7*.
+There are several drivers for different classes of device available:
 
+* `luma.oled <https://github.com/rm-hull/luma.oled/>`_
+* `luma.lcd <https://github.com/rm-hull/luma.lcd/>`_
+* `luma.led_matrix <https://github.com/rm-hull/luma.led_matrix/>`_
+* `luma.emulator <https://github.com/rm-hull/luma.emulator/>`_
 
-Tests
------
+Emulators
+---------
 
-Sciris comes with an automated test suite covering all functions. You almost certainly don't need to run these, but if you want to, go to the ``tests`` folder and run ``pytest``. See the readme in that folder for more information.
+There are emulators that run in real-time (with pygame) and others that can
+take screenshots, or assemble animated GIFs, as per the examples below. Source
+code for these are available in the `examples
+<https://github.com/rm-hull/luma.examples/tree/master/examples>`_
+directory of the ``luma.examples`` repository.
+
+.. image:: https://raw.githubusercontent.com/rm-hull/luma.oled/master/doc/images/clock_anim.gif?raw=true
+   :alt: clock
+
+.. image:: https://raw.githubusercontent.com/rm-hull/luma.oled/master/doc/images/invaders_anim.gif?raw=true
+   :alt: invaders
+
+.. image:: https://raw.githubusercontent.com/rm-hull/luma.oled/master/doc/images/crawl_anim.gif?raw=true
+   :alt: crawl
+
+License
+-------
+The MIT License (MIT)
+
+Copyright (c) 2017-2024 Richard Hull and contributors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

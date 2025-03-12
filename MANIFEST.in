@@ -1,6 +1,13 @@
-include LICENSE
-global-include *.txt
-global-include *.rst
-recursive-include sciris *.py
-recursive-include sciris *.mplstyle
-global-exclude *.py[cod] __pycache__
+include README.rst CHANGES.rst CONTRIBUTING.rst LICENSE.rst pyproject.toml setup.cfg tox.ini pytest.ini .coveragerc
+
+recursive-include luma *.py
+
+recursive-include doc *
+prune doc/_build
+
+recursive-exclude * __pycache__
+recursive-exclude * *.py[co]
+recursive-exclude * *~
+recursive-exclude * .coverage
+recursive-exclude * .DS_Store
+recursive-exclude * .ropeproject

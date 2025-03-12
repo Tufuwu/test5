@@ -1,16 +1,40 @@
-============
 Contributing
-============
+------------
 
-Welcome! We are thrilled you are interested in contributing to Sciris. (No, seriously.) This document will help you get started.
+Pull requests (code changes / documentation / typos / feature requests / setup)
+are gladly accepted. If you are intending to introduce some large-scale
+changes, please get in touch first to make sure we're on the same page: try to
+include a docstring for any new method or class, and keep method bodies small,
+readable and PEP8-compliant. Add tests and strive to keep the code coverage
+levels high.
 
-- We are serious about inclusion and believe the open-source software community still has a long way to go. The Sciris community follows a code of conduct. By participating in this project, you agree to abide by its terms.
-- Take a look at our house style guide. Sciris more or less follows Google's Python style guide, but with some exceptions. 
-- Feel free to `open an issue`_ on more or less anything! This project is small enough that we don't need a formal triage system.
-- Pull requests should be made against ``develop``. In addition to following the style guide, please make sure the tests pass (``run_tests`` in the ``tests`` folder; they also run via GitHub actions).
+GitHub
+^^^^^^
+The source code is available to clone at: https://github.com/rm-hull/luma.core
 
-If you have any other questions, please reach out to us: info@sciris.org. Thank you!
-
-.. _code of conduct: https://docs.sciris.org/code_of_conduct.html
-.. _style guide: https://docs.sciris.org/style_guide.html
-.. _open an issue: https://github.com/sciris/sciris/issues/new/choose
+Contributors
+^^^^^^^^^^^^
+* Thijs Triemstra (@thijstriemstra)
+* Christoph Handel (@fragfutter)
+* @Boeeerb
+* @xes
+* Roger Dahl (@rogerdahl)
+* Václav Šmilauer (@eudoxos)
+* Claus Bjerre (@bjerrep)
+* @bkntrx
+* @7754359337
+* @theraspydev
+* @vortigont
+* Maarten Los (@mlos)
+* Jonathan Pereira (@jonathanrjpereira)
+* Daniel Smullen (@drspangle)
+* Hans Liss (@hansliss)
+* Phil Howard (@gadgetoid)
+* Manuel Baesler (@baslr)
+* Dhrone (@dhrone)
+* @jakiee3y
+* Matthew Lovell (@mattblovell)
+* Tiago F. Pimentel (@antropoiese)
+* Maciej Sokolowski (@matemaciek)
+* Jason Kingsbury (@relvacode)
+* Jason Gaunt (@jasongaunt)
