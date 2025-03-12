@@ -1,0 +1,16 @@
+{% extends "myrestaurants/base.html" %}
+{% load static %}
+
+{% block content %}
+
+    <form id="input-form" method="post" enctype="multipart/form-data" action="">
+        {% csrf_token %}
+        <table>
+            {{ form.as_table }}
+        </table>
+        <input type="submit" value="Submit"/>
+    </form>
+
+    <script src="{% static "js/autocomplete.js" %}"></script>
+
+{% endblock %}

@@ -1,8 +1,0 @@
-include README.md
-include LICENSE.txt
-include CHANGELOG.md
-include requirements.txt
-include peekaboo.conf.sample
-include ruleset.conf.sample
-include systemd/peekaboo.service
-graft peekaboo/locale
