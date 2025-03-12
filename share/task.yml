@@ -138,7 +138,7 @@
     # 2020-10-14: Virtualenv needed to be upgraded to get a newer version of pip installed
     # This version was the newest that would work with our version of setuptools.
     - name: virtualenv installed
-      pip: name=virtualenv version=16.7.10 extra_args='--trusted-host pypi.python.org'
+      pip: name=virtualenv version=16.7.10
       sudo: True
 
     - name: check if virtualenv already created
@@ -153,7 +153,7 @@
     # 2021-01-28: Pip 21+ does not support Python 2 so this is as far as we can go.
     - name: update pip
       command: >
-        {{ working_venv_dir }}/bin/pip install --trusted-host pypi.python.org --upgrade pip==20.3.4
+        {{ working_venv_dir }}/bin/pip install --upgrade pip==20.3.4
 
     - name: virtualenv initialized on Debian
       shell: >
