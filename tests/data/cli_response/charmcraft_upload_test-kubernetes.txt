@@ -1,1 +1,0 @@
-Revision 123 of 'test-kubernetes' created

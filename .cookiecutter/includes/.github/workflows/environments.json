@@ -1,0 +1,17 @@
+{
+  "staging": {
+    "github_environment_name": "Staging",
+    "github_environment_url": "https://staging.hyp.is/FiqzonGfEe2o-AfEssZXnw/en.wikipedia.org/wiki/Wikipedia:Terminal_Event_Management_Policy",
+    "aws_region": "us-west-1",
+    "elasticbeanstalk_application": "bouncer",
+    "elasticbeanstalk_environment": "staging"
+  },
+  "production": {
+    "needs": ["staging"],
+    "github_environment_name": "Production",
+    "github_environment_url": "https://hyp.is/FiqzonGfEe2o-AfEssZXnw/en.wikipedia.org/wiki/Wikipedia:Terminal_Event_Management_Policy",
+    "aws_region": "us-west-1",
+    "elasticbeanstalk_application": "bouncer",
+    "elasticbeanstalk_environment": "prod"
+  }
+}

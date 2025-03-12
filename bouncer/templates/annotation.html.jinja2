@@ -1,0 +1,23 @@
+{% extends "templates/base.html.jinja2" %}
+
+{% block content %}
+  <div class="center spinner__stationary-ring">
+    <img alt="{% trans %}Loading annotation for {{ pretty_url }}{% endtrans %}"
+          class="center spinner__icon"
+          height="24"
+          src="{{'bouncer:static/images/hypothesis-icon.svg'|static_path}}"
+          width="28">
+    <div class="spinner__moving-ring"></div>
+  </div>
+  <p class="spinner__text">{% trans %}Loading annotation for {{ pretty_url }}{% endtrans %}</p>
+{% endblock %}
+
+{% block scripts %}
+  <!-- Render a configuration object for the redirect.js to pick up. -->
+  <script class="js-bouncer-settings" type="application/json">
+    {{ data | safe }}
+  </script>
+  <script type="module">
+    {% include '../scripts/redirect.js' %}
+  </script>
+{% endblock %}

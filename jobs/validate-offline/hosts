@@ -1,3 +1,0 @@
-
-[offline]
-3.15.4.243 ansible_python_interpreter=/usr/bin/python3 # ansible_ssh_private_key_file=$HOME/.local/share/juju/ssh/juju_id_rsa

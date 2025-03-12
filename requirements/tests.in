@@ -1,0 +1,7 @@
+pip-tools
+pip-sync-faster
+coverage
+pytest
+factory-boy
+mock
+-r requirements.txt

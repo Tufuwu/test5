@@ -1,3 +1,0 @@
-k8s-ci-charm:
-  test-file: '{out_path}/test-file.txt'
-  test-image: 'test-image'

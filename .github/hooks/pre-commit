@@ -1,3 +1,0 @@
-#!/bin/sh
-
-tox -e py3 -- inv test

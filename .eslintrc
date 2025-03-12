@@ -1,0 +1,6 @@
+{
+  "extends": "hypothesis",
+  "parserOptions": {
+    "sourceType": "module"
+  }
+}
