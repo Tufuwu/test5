@@ -1,0 +1,106 @@
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "sphinx-disqus"
+version = "1.3.0"
+description = "Embed Disqus comments in Sphinx documents/pages."
+readme = "README.md"
+authors = ["Robpol86 <robpol86@gmail.com>"]
+license = "BSD-2-Clause"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: MacOS X",
+    "Environment :: Plugins",
+    "Environment :: Win32 (MS Windows)",
+    "Framework :: Sphinx :: Extension",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: MacOS :: MacOS X",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: POSIX",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Documentation :: Sphinx",
+    "Topic :: Software Development :: Documentation",
+]
+
+[tool.poetry.urls]
+documentation = "https://sphinx-disqus.readthedocs.io"
+repository = "https://github.com/Robpol86/sphinx-disqus"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+sphinx = "*"
+
+[tool.poetry.group.dev]
+optional = true
+
+[tool.poetry.group.dev.dependencies]
+# Docs.
+sphinx-copybutton = "*"
+sphinx-design = "*"
+sphinx-notfound-page = "*"
+sphinx-rtd-theme = "*"
+toml = "*"
+# Linters.
+black = "*"
+flake8 = "*"
+flake8-docstrings = "*"
+flake8-import-order = "*"
+pep8-naming = "*"
+pylint = "*"
+# Tests.
+coverage = {version = "*", extras = ["toml"]}
+pytest = "*"
+pytest-cov = "*"
+pytest-icdiff = "*"
+# Project.
+sphinx = "7.3.7"
+
+[tool.black]
+line-length = 125
+target-version = ["py39", "py310", "py311", "py312"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "^\\s*from",
+    "^\\s*import",
+    "^\\s*raise AssertionError",
+    "^\\s*raise NotImplementedError",
+]
+fail_under = 85
+
+[tool.coverage.run]
+branch = true
+
+[tool.pylint.FORMAT]
+good-names = ["i", "j", "k", "ex", "Run", "_", "x", "y", "z", "fd"]
+ignore = [".venv/*", "build/*", "dist/*"]
+max-args = 6
+max-line-length = 125
+reports = false
+
+[tool.pylint."MESSAGES CONTROL"]
+disable = [
+    "consider-using-f-string",
+]
+
+[tool.pylint.SIMILARITIES]
+ignore-imports = true
+min-similarity-lines = 7
+
+[tool.pylint.TYPECHECK]
+ignored-modules = ["distutils", "py"]
+
+[tool.pytest.ini_options]
+addopts = "--cov-report=term-missing --durations=15 --showlocals --verbose --verbose"
+filterwarnings = [
+    "ignore::DeprecationWarning:sphinx.*:",
+]
+log_level = "DEBUG"
