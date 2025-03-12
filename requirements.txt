@@ -1,0 +1,17 @@
+numpy
+matplotlib
+scikit-learn==1.5.2
+pandas
+plotly
+imbalanced-learn==0.12.4
+pymodm
+scipy
+statsmodels
+prettytable
+seaborn
+joblib
+dask>=2021.10.0
+distributed
+scikit-optimize
+xlrd
+pbr

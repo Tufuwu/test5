@@ -1,57 +1,117 @@
-## Open Screen Protocol
+[![PHOTON LOGO](https://www.photon-ai.com/static/img/photon/photon-logo-github.png)](https://www.photon-ai.com/)
 
-This repository is used to develop
-the [Open Screen Application Protocol](https://www.w3.org/TR/openscreen-application/)
-and [Open Screen Network Protocol](https://www.w3.org/TR/openscreen-network/), a suite of
-network protocols that allow user agents to implement the [Presentation
-API](https://www.w3.org/TR/presentation-api/) and [Remote Playback
-API](https://www.w3.org/TR/remote-playback/) in an interoperable fashion.
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/wwu-mmll/photonai/PHOTONAI%20test%20and%20test%20deploy)](https://github.com/wwu-mmll/photonai/actions)
+[![Coverage Status](https://coveralls.io/repos/github/wwu-mmll/photonai/badge.svg?branch=master)](https://coveralls.io/github/wwu-mmll/photonai?branch=master)
+[![Github Contributors](https://img.shields.io/github/contributors-anon/wwu-mmll/photonai?color=blue)](https://github.com/wwu-mmll/photonai/graphs/contributors)
+[![Github Commits](https://img.shields.io/github/commit-activity/y/wwu-mmll/photonai)](https://github.com/wwu-mmll/photonai/commits/master)
+[![PyPI Version](https://img.shields.io/pypi/v/photonai?color=brightgreen)](https://pypi.org/project/photonai/)
+[![License](https://img.shields.io/github/license/wwu-mmll/photonai)](https://github.com/wwu-mmll/photonai/blob/master/LICENSE)
+[![Twitter URL](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Ftwitter.com%2Fwwu_mmll)](https://twitter.com/wwu_mmll)
 
-The [explainer](explainer.md) goes into more depth regarding the motivation, and
-rationale, and design choices for the protocol.
+#### PHOTONAI is a high level python API for designing and optimizing machine learning pipelines.
 
-This work is in scope for the [W3C Second Screen Working
-Group](https://www.w3.org/2014/secondscreen/)
-([Charter](https://www.w3.org/2024/05/charter-secondscreen-wg.html)).
+We've created a system in which you can easily select and combine both pre-processing and learning algorithms from
+state-of-the-art machine learning toolboxes,
+ and arrange them in simple or parallel pipeline data streams. 
+ 
+ In addition, you can parametrize your training and testing
+ workflow choosing cross-validation schemes, performance metrics and hyperparameter
+ optimization metrics from a list of pre-registered options. 
+ 
+ Importantly, you can integrate custom solutions into your data processing pipeline, 
+ but also for any part of the model training and evaluation process including custom
+ hyperparameter optimization strategies.  
 
-Please refer to the group's [Work
-Mode](https://www.w3.org/wiki/Second_Screen/Work_Mode) for instructions on how
-to contribute.
+For a detailed description, 
+__[visit our website and read the documentation](https://www.photon-ai.com)__
 
-The protocol will meet the [functional and non-functional
-requirements](requirements.md) of the respective APIs as well as [hardware
-requirements](device_specs.md) for prospective implementations.
+or you can read our paper in [PLOS ONE](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0254062)
 
-### Status
 
-The protocol is considered to be complete for the requirements above.  It will
-be published as a First Public Working Draft in mid-March 2021.  The remaining
-issues on the draft are tagged
-[_v1-spec_](https://github.com/w3c/openscreenprotocol/labels/v1-spec) in GitHub
-and noted [inline in the
-spec](https://w3c.github.io/openscreenprotocol/#issues-index).
 
-### Related technologies
+---
+## Getting Started
+In order to use PHOTONAI you only need to have your favourite Python IDE ready.
+Then install the latest stable version simply via pip
+```
+pip install photonai
+# Or try out the latest features if you don't rely on a stable version, using:
+pip install --upgrade git+https://github.com/wwu-mmll/photonai.git@develop
+```
 
-The Open Screen Protocol is built on the following standardized technologies:
+You can setup a full stack machine learning pipeline in a few lines of code:
 
-- [mDNS](https://tools.ietf.org/html/rfc6762)/[DNS-SD](https://tools.ietf.org/html/rfc6763)
-  to allow networked devices that support OSP (Open Screen agents) to discover
-  each other;
-- [TLS 1.3](https://tools.ietf.org/html/rfc8446) and a Password-Authenticated
-  Key Exchange
-  ([PAKE](https://datatracker.ietf.org/doc/draft-irtf-cfrg-spake2/)) to create a
-  secure channel between agents;
-- [QUIC](https://datatracker.ietf.org/doc/draft-ietf-quic-transport/) to
-  transport data and media between agents;
-- [CBOR](https://tools.ietf.org/html/rfc8949) to encode structured data and
-  media on-the-wire.
+```python
+from sklearn.datasets import load_breast_cancer
+from sklearn.model_selection import KFold
 
-### Background Information
+from photonai import Hyperpipe, PipelineElement, FloatRange, Categorical, IntegerRange
 
-The excellent [Discovery and Pairing Literature
-Review](https://github.com/bbc/device-discovery-pairing/blob/master/document.md)
-by [@chrisn](https://github.com/chrisn) and
-[@libbymiller](https://github.com/libbymiller) covers a wide range of existing
-technologies for ad-hoc interconnection among networked devices, including
-mDNS/DNS-SD and SSDP.
+# DESIGN YOUR PIPELINE
+my_pipe = Hyperpipe('basic_svm_pipe',  # the name of your pipeline
+                    # which optimizer PHOTONAI shall use
+                    optimizer='sk_opt',
+                    optimizer_params={'n_configurations': 25},
+                    # the performance metrics of your interest
+                    metrics=['accuracy', 'precision', 'recall', 'balanced_accuracy'],
+                    # after hyperparameter optimization, this metric declares the winner config
+                    best_config_metric='accuracy',
+                    # repeat hyperparameter optimization three times
+                    outer_cv=KFold(n_splits=3),
+                    # test each configuration five times respectively,
+                    inner_cv=KFold(n_splits=5),
+                    verbosity=1,
+                    project_folder='./tmp/')
+
+
+# first normalize all features
+my_pipe.add(PipelineElement('StandardScaler'))
+
+# then do feature selection using a PCA
+my_pipe += PipelineElement('PCA', 
+                           hyperparameters={'n_components': IntegerRange(5, 20)}, 
+                           test_disabled=True)
+
+# engage and optimize the good old SVM for Classification
+my_pipe += PipelineElement('SVC', 
+                           hyperparameters={'kernel': Categorical(['rbf', 'linear']),
+                                            'C': FloatRange(0.5, 2)}, gamma='scale')
+
+# train pipeline
+X, y = load_breast_cancer(return_X_y=True)
+my_pipe.fit(X, y)
+```
+---
+## Features
+
+#### Easy access to established ML implementations
+We pre-registered diverse preprocessing and learning algorithms from 
+state-of-the-art toolboxes e.g. scikit-learn, keras and imbalanced learn to 
+rapidly build custom pipelines
+
+#### Hyperparameter Optimization
+With PHOTONAI you can seamlessly switch between diverse hyperparameter 
+optimization strategies, such as (random) grid-search
+ or bayesian optimization (scikit-optimize, smac3).
+
+#### Extended ML Pipeline
+You can build custom sequences of processing and learning algorithms with a simple syntax. 
+PHOTONAI offers extended pipeline functionality such as parallel sequences, custom callbacks in-between pipeline 
+elements, AND- and OR- Operations, as well as the possibility to flexibly position data augmentation, class balancing
+or learning algorithms anywhere in the pipeline.
+
+#### Model Sharing
+PHOTONAI provides a standardized format for sharing and loading optimized pipelines across 
+platforms with only one line of code.
+
+#### Automation
+While you concentrate on selecting appropriate processing steps, learning algorithms, hyperparameters and
+training parameters, PHOTONAI automates the nested cross-validated optimization and evaluation loop for any custom pipeline.
+
+#### Results Visualization
+PHOTONAI comes with extensive logging of all information in the training, testing and hyperparameter 
+optimization process. In addition, optimum performances and the hyperparameter optimization progress 
+are visualized in the [PHOTONAI Explorer](https://explorer.photon-ai.com).
+
+#### For more use cases, examples, contribution guidelines and API details visit our website
+## [www.photon-ai.com](https://www.photon-ai.com)  
