@@ -1,1 +1,0 @@
-recursive-include proton_driver *.pyx
