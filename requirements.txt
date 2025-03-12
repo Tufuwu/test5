@@ -1,0 +1,2 @@
+openfermion>=1.0
+pyscf
