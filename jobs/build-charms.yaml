@@ -1,0 +1,158 @@
+# Builds and releases charms
+
+- job:
+    name: 'promote-charms'
+    description: |
+      Promotes all charms from channel -> to channel
+    node: runner-cloud
+    project-type: freestyle
+    scm:
+      - k8s-jenkins-jenkaas
+    parameters:
+      - global-params
+      - string:
+          name: FILTER_BY_TAG
+          default: 'k8s,k8s-operator'
+      - string:
+          name: FROM_CHANNEL
+          default: 'edge'
+      - string:
+          name: TO_CHANNEL
+          default: 'beta'
+      - string:
+          name: CHARM_LIST
+          default: "jobs/includes/charm-support-matrix.inc"
+    properties:
+      - build-discarder:
+          num-to-keep: 10
+    wrappers:
+      - default-job-wrapper
+      - ci-creds
+    builders:
+      - set-env:
+          JOB_SPEC_DIR: "jobs/build-charms"
+      - run-tox:
+          JOB_SPEC_DIR: "jobs/build-charms"
+          COMMAND: |
+            #!/bin/bash
+            set -eux
+            IS_DRY_RUN=""
+            if [[ $DRY_RUN = "true" ]]; then
+              IS_DRY_RUN="--dry-run"
+            fi
+            tox -e py38 -- python jobs/build-charms/main.py promote \
+                --from-channel $FROM_CHANNEL \
+                --to-channel $TO_CHANNEL \
+                --charm-list $CHARM_LIST \
+                --filter-by-tag $FILTER_BY_TAG $IS_DRY_RUN
+
+# Builds and releases latest bundles
+- job:
+    name: 'promote-bundles'
+    description: |
+      Promotes bundles from channel -> to channel
+    node: runner-cloud
+    project-type: freestyle
+    scm:
+      - k8s-jenkins-jenkaas
+    parameters:
+      - string:
+          name: FILTER_BY_TAG
+          default: 'k8s'
+      - string:
+          name: FROM_CHANNEL
+          default: 'edge'
+      - string:
+          name: TO_CHANNEL
+          default: 'beta'
+      - string:
+          name: BUNDLE_LIST
+          default: "jobs/includes/charm-bundles-list.inc"
+    properties:
+      - build-discarder:
+          num-to-keep: 10
+    wrappers:
+      - default-job-wrapper
+      - ci-creds
+    builders:
+      - set-env:
+          JOB_SPEC_DIR: "jobs/build-charms"
+      - run-venv:
+          JOB_SPEC_DIR: "jobs/build-charms"
+          COMMAND: |
+            #!/bin/bash
+            set -eux
+            tox -e py38 -- python jobs/build-charms/main.py promote \
+                --to-channel $TO_CHANNEL \
+                --from-channel $FROM_CHANNEL \
+                --charm-list $BUNDLE_LIST \
+                --filter-by-tag $FILTER_BY_TAG
+
+- job:
+    name: 'build-charms'
+    node: runner-amd64
+    project-type: freestyle
+    scm:
+      - k8s-jenkins-jenkaas
+    parameters:
+      - charm-params
+    triggers:
+        - timed: "@daily"
+    wrappers:
+      - default-job-wrapper
+      - ci-creds
+    builders:
+      - set-env:
+          JOB_SPEC_DIR: "jobs/build-charms"
+      - run-tox:
+          JOB_SPEC_DIR: "jobs/build-charms"
+          COMMAND: |-
+            #!/bin/bash
+            set -eux
+
+            . $WORKSPACE/jobs/build-charms/charmcraft-lib.sh
+            
+            sudo chown -R jenkins:jenkins /var/lib/jenkins/.config/ || true
+
+            IS_FORCE=""
+            if [[ $FORCE = "true" ]]; then
+              IS_FORCE="--force"
+            fi
+
+            WITH_CHARM_BRANCH=""
+            if [[ -n ${{CHARM_BRANCH:-}} ]]; then
+              WITH_CHARM_BRANCH="--charm-branch $CHARM_BRANCH"
+            fi 
+
+            rm -rf "$WORKSPACE/charms" || true
+
+            # Cleanup old charmcraft containers
+            ci_lxc_delete "$JOB_NAME"
+            
+            # Configure cleanup routine for exit
+            export charmcraft_lxc="$JOB_NAME-$BUILD_NUMBER"
+            trap 'ci_lxc_delete $charmcraft_lxc' EXIT
+            ci_charmcraft_launch $charmcraft_lxc
+
+            set +e
+
+            EXIT_STATUS=0
+            tox -e py38 -- python jobs/build-charms/main.py build \
+              --charm-list "$CHARM_LIST" \
+              --to-channel "$TO_CHANNEL" \
+              --resource-spec "$RESOURCE_SPEC" \
+              --filter-by-tag "$FILTER_BY_TAG" \
+              --layer-index  "$LAYER_INDEX" \
+              --layer-list "$LAYER_LIST" \
+              --layer-branch "$LAYER_BRANCH" \
+              $WITH_CHARM_BRANCH \
+              $IS_FORCE || EXIT_STATUS=$?
+
+            tox -e py38 -- python jobs/build-charms/main.py build-bundles \
+                --to-channel "$TO_CHANNEL" \
+                --bundle-list "$BUNDLE_LIST" \
+                --bundle-branch "$BUNDLE_BRANCH" \
+                --filter-by-tag "$FILTER_BY_TAG" || EXIT_STATUS=$?
+            
+            set -e
+            exit $EXIT_STATUS

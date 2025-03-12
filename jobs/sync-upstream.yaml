@@ -1,0 +1,352 @@
+# Syncs upstream charms, layers, snap branches, whatevs
+
+- job:
+    name: 'sync-snaps'
+    node: runner-cloud
+    description: |
+      Sync all release tags from upstream.
+
+      If the job fails to create snap recipes with 401 Unauthorized, you may
+      need to update launchpad_creds:
+
+      $ python3
+      >>> from launchpadlib.credentials import Credentials
+      >>> credentials = Credentials("k8s-jenkaas-bot")
+      >>> request_token_info = credentials.get_request_token(web_root="production")
+      >>> request_token_info
+      'https://launchpad.net/+authorize-token?oauth_token=<some_token>'
+      >>> # access above URL in your browser to login as k8s-team-ci, credentials are in LastPass
+      >>> credentials.exchange_request_token_for_access_token(web_root="production")
+      >>> with open('launchpad_creds', 'wb') as f:
+      ...     f.write(credentials.serialize())
+      ...
+      >>> exit()
+
+      Then upload the launchpad_creds file to the launchpad_creds credential in Jenkins.
+
+      If the job fails to retrieve snap channel information (e.g., you get an
+      "invalid channel map" error), you may need to update surl-creds:
+
+      sudo snap install surl
+      surl -e cdkbot@gmail.com -s production -a production-creds
+      # above creds are in LastPass
+
+      Then upload ~/snap/surl/common/production-creds.surl to the surl-creds credential
+      in Jenkins.
+    project-type: freestyle
+    scm:
+      - k8s-jenkins-jenkaas
+    wrappers:
+      - default-job-wrapper
+      - ci-creds
+    properties:
+      - build-discarder:
+          num-to-keep: 10
+    parameters:
+      - global-params
+    triggers:
+        - timed: "@daily"
+    builders:
+      - set-env:
+          JOB_SPEC_DIR: "jobs/sync-upstream"
+      - run-tox:
+          COMMAND: |
+            IS_DRY_RUN=""
+            if [[ $DRY_RUN = "true" ]]; then
+              IS_DRY_RUN="--dry-run"
+            fi
+            snapcraft login --with /var/lib/jenkins/snapcraft-creds
+            cp /var/lib/jenkins/snap/surl/common/production-creds.surl production-creds.surl
+            tox -e py38 -- python jobs/sync-upstream/sync.py snaps $IS_DRY_RUN
+
+- job:
+    name: 'sync-debs'
+    disabled: true
+    node: runner-cloud
+    description: |
+      Build all debian packages (disabled until we need k8s debs again)
+    project-type: freestyle
+    scm:
+      - k8s-jenkins-jenkaas
+    wrappers:
+      - default-job-wrapper
+      - ci-creds
+    parameters:
+      - global-params
+    triggers:
+        - timed: "@daily"
+    builders:
+      - set-env:
+          JOB_SPEC_DIR: "jobs/build-debs"
+      - run-tox:
+          COMMAND: |
+            pip install ansible wheel semver sh click
+            bin/lxd-launcher teardown --container-name deb-build || true
+            bin/lxd-launcher build \
+              --container-name deb-build \
+              --playbook jobs/build-debs/debuilder-playbook.yml
+            sudo lxc exec deb-build -- bash -c "/root/jenkins/run.sh"
+            bin/lxd-launcher teardown --container-name deb-build
+
+- job:
+    name: 'sync-internal-tags'
+    node: runner-cloud
+    description: |
+      Syncs all internal k8s tags
+    project-type: freestyle
+    scm:
+      - k8s-jenkins-jenkaas
+    wrappers:
+      - default-job-wrapper
+      - ci-creds
+    parameters:
+      - global-params
+    triggers:
+        - timed: "H */12 * * *"
+    properties:
+      - build-discarder:
+          num-to-keep: 10
+    builders:
+      - set-env:
+          JOB_SPEC_DIR: "jobs/sync-upstream"
+      - run-tox:
+          COMMAND: |
+            IS_DRY_RUN=""
+            if [[ $DRY_RUN = "true" ]]; then
+              IS_DRY_RUN="--dry-run"
+            fi
+            tox -e py38 -- python jobs/sync-upstream/sync.py sync-internal-tags $IS_DRY_RUN
+
+- job:
+    name: 'sync-ppas'
+    disabled: true
+    node: runner-cloud
+    description: |
+      Syncs all ppas (disabled until we need k8s debs again)
+    project-type: freestyle
+    scm:
+      - k8s-jenkins-jenkaas
+    wrappers:
+      - default-job-wrapper
+      - ci-creds
+    parameters:
+      - global-params
+    triggers:
+        - timed: "@daily"
+    properties:
+      - build-discarder:
+          num-to-keep: 10
+    builders:
+      - set-env:
+          JOB_SPEC_DIR: "jobs/sync-upstream"
+      - run-tox:
+          COMMAND: |
+            IS_DRY_RUN=""
+            if [[ $DRY_RUN = "true" ]]; then
+              IS_DRY_RUN="--dry-run"
+            fi
+            tox -e py38 -- python jobs/sync-upstream/sync.py ppas $IS_DRY_RUN
+
+- job:
+    name: 'sync-upstream'
+    node: runner-cloud
+    description: |
+      Syncs the upstream components into a controlled organization
+      (github/charmed-kubernetes). This allows more control over release
+      process.
+    project-type: freestyle
+    scm:
+      - k8s-jenkins-jenkaas
+    properties:
+      - build-discarder:
+          num-to-keep: 10
+    parameters:
+      - global-params
+    wrappers:
+      - default-job-wrapper
+      - ci-creds
+    triggers:
+        - timed: "@daily"
+    builders:
+      - set-env:
+          JOB_SPEC_DIR: "jobs/sync-upstream"
+      - run-tox:
+          COMMAND: |
+            IS_DRY_RUN=""
+            if [[ $DRY_RUN = "true" ]]; then
+              IS_DRY_RUN="--dry-run"
+            fi
+            tox -e py38 -- python jobs/sync-upstream/sync.py forks $IS_DRY_RUN
+
+- job:
+    name: 'sync-stable-tag-bundle-rev'
+    description: |
+      Tags all downstream stable branches with bundle revision
+    project-type: freestyle
+    node: runner-cloud
+    scm:
+      - k8s-jenkins-jenkaas
+    properties:
+      - build-discarder:
+          num-to-keep: 10
+    wrappers:
+      - default-job-wrapper
+      - ci-creds
+    parameters:
+      - global-params
+      - string:
+          name: K8S_VERSION
+          description: Stable K8S version to tag branches against.
+      - string:
+          name: BUNDLE_REV
+          description: bundle revision to tag stable branches with
+      - string:
+          name: FILTER_BY_TAG
+          default: 'k8s,k8s-operator'
+    builders:
+      - set-env:
+          JOB_SPEC_DIR: "jobs/sync-upstream"
+      - run-tox:
+          COMMAND: |
+            IS_DRY_RUN=""
+            if [[ $DRY_RUN = "true" ]]; then
+              IS_DRY_RUN="--dry-run"
+            fi
+            tox -e py38 -- python jobs/sync-upstream/sync.py tag-stable \
+                     --layer-list jobs/includes/charm-layer-list.inc \
+                     --charm-list jobs/includes/charm-support-matrix.inc \
+                     --bundle-revision $BUNDLE_REV \
+                     --k8s-version $K8S_VERSION \
+                     --filter-by-tag $FILTER_BY_TAG \
+                     $IS_DRY_RUN
+
+- job:
+    name: 'sync-stable-tag-bugfix-rev'
+    description: |
+      Tags all downstream stable branches with bugfix revision
+    project-type: freestyle
+    node: runner-amd64
+    scm:
+      - k8s-jenkins-jenkaas
+    properties:
+      - build-discarder:
+          num-to-keep: 10
+    wrappers:
+      - default-job-wrapper
+      - ci-creds
+    parameters:
+      - global-params
+      - string:
+          name: K8S_VERSION
+          description: Stable K8S version to tag branches against.
+      - string:
+          name: BUGFIX_REV
+          description: bugfix revision to tag stable branches with, (ie ck1)
+      - string:
+          name: FILTER_BY_TAG
+          default: 'k8s,k8s-operator'
+    builders:
+      - set-env:
+          JOB_SPEC_DIR: "jobs/sync-upstream"
+      - run-tox:
+          COMMAND: |
+            IS_DRY_RUN=""
+            if [[ $DRY_RUN = "true" ]]; then
+              IS_DRY_RUN="--dry-run"
+            fi
+            tox -e py38 -- python jobs/sync-upstream/sync.py tag-stable \
+              --layer-list jobs/includes/charm-layer-list.inc \
+              --charm-list jobs/includes/charm-support-matrix.inc \
+              --bundle-revision $BUGFIX_REV \
+              --k8s-version $K8S_VERSION \
+              --filter-by-tag $FILTER_BY_TAG \
+              --bugfix \
+              $IS_DRY_RUN
+
+- job:
+    name: 'cut-stable-release'
+    description: |
+      Resets all layer stable branches from default branches.
+    project-type: freestyle
+    node: runner-cloud
+    scm:
+      - k8s-jenkins-jenkaas
+    properties:
+      - build-discarder:
+          num-to-keep: 10
+    parameters:
+      - global-params
+      - string:
+          name: STABLE_RELEASE
+          description: |
+            If blank, automatically determined based on last key of SNAP_K8S_TRACK_LIST
+            otherwise, this should be the major.minor release number (eg. 1.30)
+          default: ''
+      - string:
+          name: FILTER_BY_TAG
+          default: 'k8s,k8s-operator'
+    wrappers:
+      - default-job-wrapper
+      - ci-creds
+    builders:
+      - set-env:
+          JOB_SPEC_DIR: "jobs/sync-upstream"
+      - run-tox:
+          COMMAND: |
+            IS_DRY_RUN=""
+            if [[ $DRY_RUN = "true" ]]; then
+              IS_DRY_RUN="--dry-run"
+            fi
+            tox -e py38 -- python jobs/sync-upstream/sync.py cut-stable-release \
+               --layer-list jobs/includes/charm-layer-list.inc \
+               --charm-list jobs/includes/charm-support-matrix.inc \
+               --ancillary-list jobs/includes/ancillary-list.inc \
+               --stable-release $STABLE_RELEASE \
+               --filter-by-tag $FILTER_BY_TAG $IS_DRY_RUN \
+               $IS_DRY_RUN
+
+- job:
+    name: 'rename-branch'
+    description: |
+      Renames all CK branches from one name to another.
+    project-type: freestyle
+    node: runner-cloud
+    scm:
+      - k8s-jenkins-jenkaas
+    properties:
+      - build-discarder:
+          num-to-keep: 10
+    parameters:
+      - global-params
+      - string:
+          name: FROM_BRANCH
+          description: |
+            Name of a branch present in supported layers + charms
+            If the branch doesn't exist in a repo, the entity is skipped
+      - string:
+          name: TO_BRANCH
+          description: |
+            Name of a branch present in supported layers + charms
+            If the branch already exists in a repo, the entity is skipped
+      - string:
+          name: FILTER_BY_TAG
+          default: 'k8s,k8s-operator'
+    wrappers:
+      - default-job-wrapper
+      - ci-creds
+    builders:
+      - set-env:
+          JOB_SPEC_DIR: "jobs/sync-upstream"
+      - run-tox:
+          COMMAND: |
+            IS_DRY_RUN=""
+            if [[ $DRY_RUN = "true" ]]; then
+              IS_DRY_RUN="--dry-run"
+            fi
+            tox -e py38 -- python jobs/sync-upstream/sync.py rename-branch \
+               --layer-list jobs/includes/charm-layer-list.inc \
+               --charm-list jobs/includes/charm-support-matrix.inc \
+               --ancillary-list jobs/includes/ancillary-list.inc \
+               --from-name $FROM_BRANCH \
+               --to-name $TO_BRANCH \
+               --filter-by-tag $FILTER_BY_TAG $IS_DRY_RUN

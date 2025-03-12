@@ -1,0 +1,438 @@
+# -*- mode:python; -*-
+""" Script for generating HTML output
+"""
+
+from datetime import datetime, timedelta
+from collections import OrderedDict, defaultdict
+from boto3.dynamodb.conditions import Key, Attr
+import boto3
+import click
+import sh
+import json
+import uuid
+import requests
+import dill
+import os
+from multiprocessing.pool import ThreadPool
+from pathlib import Path
+from pprint import pformat, pprint
+from cilib import log, run, html
+from prettytable import PrettyTable
+from kv import KV
+
+session = boto3.Session(region_name="us-east-1")
+s3 = session.resource("s3")
+dynamodb = session.resource("dynamodb")
+bucket = s3.Bucket("jenkaas")
+
+OBJECTS = bucket.objects.all()
+
+SERIES = ["focal", "bionic", "xenial"]
+
+REPORT_HOST = "https://jenkaas.s3.amazonaws.com"
+
+
+class Storage:
+    def __init__(self, numdays=None):
+        numdays = numdays or 30
+        self.objects = self.get_all_s3_prefixes(numdays)
+
+    def get_all_s3_prefixes(self, numdays=30):
+        """Grabs all s3 prefixes for at most `numdays`"""
+        date_of_last = datetime.today() - timedelta(days=numdays)
+        date_of_last = date_of_last.strftime("%Y-%m-%d")
+        output = run.capture(
+            f"aws s3api list-objects-v2 --bucket jenkaas --query 'Contents[?LastModified > `{date_of_last}`]'",
+            shell=True,
+        )
+        if output.ok:
+            return json.loads(output.stdout.decode())
+        return []
+
+    @property
+    def reports(self):
+        """Return mapping of report files."""
+        _report_map = defaultdict(list)
+        for item in self.objects:
+            key_p = Path(item["Key"])
+            _report_map[key_p.parent].append(
+                (
+                    key_p.name,
+                    int(item["Size"]),
+                    datetime.strptime(item["LastModified"], "%Y-%m-%dT%H:%M:%S.000Z"),
+                )
+            )
+        return _report_map
+
+
+def has_file(filename, files):
+    return any([name == filename for name, _, _ in files])
+
+
+def get_file_name(filename, files):
+    for name, size, modified in files:
+        if name == filename:
+            return (name, size, modified)
+    return (None, None, None)
+
+
+def get_file_prefix(prefix, files, normalize=True):
+    for name, size, modified in files:
+        if prefix.rstrip("-") == name.split("-")[0]:
+            if normalize:
+                name = name.lstrip(prefix)
+            return (name, size, modified)
+    return (None, None, None)
+
+
+def _gen_days(numdays=30):
+    """Generates last numdays, date range"""
+    base = datetime.today()
+    date_list = [
+        (base - timedelta(days=x)).strftime("%Y-%m-%d") for x in range(0, numdays)
+    ]
+    return date_list
+
+
+def get_data():
+    storage_p = Path("storage_dill.pkl")
+    log.info("Generating metadata...")
+    items = []
+
+    if storage_p.exists():
+        log.info("Loading local copy")
+        items = dill.loads(storage_p.read_bytes())
+    else:
+        log.info("Pulling from dynamo")
+        table = dynamodb.Table("CIBuilds")
+
+        # Required because only 1MB are returned
+        # See: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/GettingStarted.Python.04.html
+        response = table.scan()
+        for item in response["Items"]:
+            items.append(item)
+        while "LastEvaluatedKey" in response:
+            response = table.scan(ExclusiveStartKey=response["LastEvaluatedKey"])
+            for item in response["Items"]:
+                if "build_endtime" not in item:
+                    continue
+                day = datetime.strptime(item["build_endtime"], "%Y-%m-%dT%H:%M:%S.%f")
+                date_of_last_30 = datetime.today() - timedelta(days=30)
+                if "job_id" not in item:
+                    continue
+                if day < date_of_last_30:
+                    continue
+                log.debug(f"Adding record {item}")
+                items.append(item)
+        log.info("Storing local copy")
+        storage_p.write_bytes(dill.dumps(items))
+    return items
+
+
+def _gen_metadata(numdays=None):
+    """Generates metadata"""
+    _storage = Storage(numdays)
+    db = OrderedDict()
+    debug_host_url = "https://jenkaas.s3.amazonaws.com"
+
+    for prefix_id, files in _storage.reports.items():
+        prefix_id = str(prefix_id)
+        if "meta" in prefix_id:
+            prefix_id = prefix_id.split("/")[0]
+
+        obj = {}
+        obj["job_id"] = prefix_id
+        obj["debug_host"] = debug_host_url
+
+        job_name, _, _ = get_file_prefix("name-", files)
+        if not job_name:
+            continue
+
+        obj.update(**_job_metadata(prefix_id) or {})
+        obj["test_result"], _, obj["build_endtime"] = get_file_prefix("result-", files)
+        if not obj["build_endtime"]:
+            continue
+
+        for key, value in obj.items():
+            if isinstance(value, str) and any(key.endswith(_) for _ in ["starttime", "endtime"]):
+                obj[key] = datetime.fromisoformat(value)
+
+        # Validate jobs are now cloud-specific; drop old jobs from the report
+        if "validate-ck-amd64" in job_name:
+            continue
+        # Keep all other validate jobs; skip anything else
+        if "validate" not in job_name:
+            continue
+
+        obj["artifacts"] = f"{REPORT_HOST}/{prefix_id}/artifacts.tar.gz"
+        obj["index"] = f"{REPORT_HOST}/{prefix_id}/index.html"
+        obj["columbo_results"] = f"{REPORT_HOST}/{prefix_id}/columbo.html"
+
+        if job_name not in db:
+            db[job_name] = {}
+
+        result = obj["test_result"]
+        deploy = obj.get("deploy_result") or "Unknown"
+        stage = obj.get("deploy_stage") or "Unknown"
+
+        if deploy != "True" and stage == "bootstrap":
+            # juju bootstrap failed
+            hover_text = "Bootstrap Failed"
+            result_style = "test-bootstrap-fail"
+        elif deploy == "False":
+            # juju deploy failed
+            hover_text = f"Deploy Failed ({stage})"
+            result_style = "test-deploy-fail"
+        elif deploy == "Timeout":
+             # juju deployment timeout
+            hover_text = f"Deploy Timeout ({stage})"
+            result_style = "test-deploy-timeout"
+        elif deploy == "True" and result == "Timeout":
+            # juju deploys, tests timeout
+            hover_text = "Test Timeout"
+            result_style = "test-test-timeout"
+        elif deploy == "True" and result == "False":
+            # juju deploys, tests failed
+            hover_text = "Test Failures"
+            result_style = "test-test-failure"
+        elif deploy == "True" and result == "True":
+            # juju deploys, tests pass
+            hover_text = "Test Pass"
+            result_style = "test-test-passing"
+            obj["font_awesome_icon"] = "fa-laugh-squint"
+        else:
+            hover_text = f"Unknown status deploy={deploy} result={result}"
+            result_style = "test-unknown-status"
+
+        obj["result_style"] = result_style
+        obj["hover_text"] = hover_text
+
+        day = obj["build_endtime"].strftime("%Y-%m-%d")
+        if day not in db[job_name]:
+            db[job_name][day] = []
+        db[job_name][day].append(obj)
+    return db
+
+
+def _gen_rows():
+    """Generates reports"""
+    numdays = 15
+    days = _gen_days(numdays)
+    metadata = _gen_metadata(numdays)
+    rows = []
+    for jobname, jobdays in sorted(metadata.items()):
+        sub_item = [jobname]
+        for day in days:
+            try:
+                dates_to_test = [obj["build_endtime"] for obj in jobdays[day]]
+                max_date_for_day = max(dates_to_test)
+                for job in jobdays[day]:
+                    _day = job["build_endtime"]
+                    if _day == max_date_for_day:
+                        sub_item.append(job)
+            except:
+                sub_item.append(
+                    {
+                        "job_name": jobname,
+                        "bg_class": "",
+                        "build_endtime": day,
+                        "build_datetime": day,
+                    }
+                )
+        rows.append(sub_item)
+    return rows
+
+
+@click.group()
+def cli():
+    pass
+
+
+@cli.command()
+@click.option("--job-id", help="ID of Job to parse")
+@click.option("--metadata-db", help="Database of job metadata")
+@click.option("--columbo-json", help="JSON report of Columbo results")
+def job_result(job_id, metadata_db, columbo_json):
+    """Creates a report file of the finished job"""
+    db = KV(metadata_db)
+    columbo_data = json.loads(Path(columbo_json).read_text())
+    if Path("report.html").exists():
+        db["pytest_report"] = f"{REPORT_HOST}/{job_id}/report.html"
+
+    db["artifacts"] = f"{REPORT_HOST}/{job_id}/artifacts.tar.gz"
+
+    log.info(f"{job_id} :: processing report")
+
+    tmpl = html.template("columbo.html")
+    context = {"obj": db, "columbo_results": columbo_data}
+    rendered = tmpl.render(context)
+    html_p = Path(f"{job_id}-columbo.html")
+    html_p.write_text(rendered)
+    run.cmd_ok(
+        f"python bin/s3 cp {job_id}-columbo.html index.html",
+        shell=True,
+    )
+    run.cmd_ok(f"rm -rf {html_p}")
+
+
+def _job_metadata(job_id):
+    url = f"{REPORT_HOST}/{job_id}/metadata.json"
+    log.info(f"{job_id} :: Fetching {url}")
+    metadata = requests.get(url)
+    if metadata.ok:
+        try:
+            return metadata.json()
+        except json.decoder.JSONDecodeError:
+            log.error(f"{job_id} :: Invalid JSON {url}")
+            return None
+    log.error(f"{job_id} :: Missing Metadata {url}")
+    return None
+
+
+@cli.command()
+@click.option("--job-id", help="ID of Job to parse")
+def job_info(job_id):
+    """Get metadata info for job"""
+    obj = _job_metadata(job_id)
+    click.echo(pformat(obj))
+
+
+@cli.command()
+@click.option("--max-days", help="Max number of previous days to report on", default=15)
+def sync_missing_reports(max_days):
+    """syncs reports that are missing"""
+    obj = Storage(numdays=int(max_days))
+    table = PrettyTable()
+    table.field_names = ["ID", "Index HTML", "Metadata JSON", "Columbo JSON"]
+    table.align = "l"
+
+    for prefix_id, files in obj.reports.items():
+        if "meta" in str(prefix_id):
+            continue
+
+        has_index_html = has_file("index.html", files)
+        if has_index_html:
+            continue
+
+        os.environ["JOB_ID"] = str(prefix_id)
+        has_metadata_json = has_file("metadata.json", files)
+        has_columbo_json = has_file("columbo-report.json", files)
+        if has_metadata_json and has_columbo_json:
+            log.info(f"{prefix_id} :: writing report and storing it")
+            has_metadata = requests.get(f"{REPORT_HOST}/{prefix_id}/metadata.json")
+            metadata = has_metadata.json()
+            has_columbo = requests.get(f"{REPORT_HOST}/{prefix_id}/columbo-report.json")
+            columbo = has_columbo.json()
+            tmpl = html.template("columbo.html")
+            context = {"obj": metadata, "columbo_results": columbo}
+            rendered = tmpl.render(context)
+            html_p = Path(f"{prefix_id}-columbo.html")
+            html_p.write_text(rendered)
+            run.cmd_ok(
+                f"python bin/s3 cp {prefix_id}-columbo.html index.html",
+                shell=True,
+            )
+            run.cmd_ok(f"rm -rf {html_p}")
+        try:
+            table.add_row(
+                [prefix_id, has_index_html, has_metadata_json, has_columbo_json]
+            )
+        except KeyError as e:
+            click.echo(e)
+    click.echo(table)
+
+
+@cli.command()
+@click.option("--max-days", help="Max number of previous days to report on", default=10)
+@click.option("--job-filter", help="Job to filter on")
+def summary(max_days, job_filter):
+    """Get summary of last X days"""
+    obj = Storage(numdays=int(max_days))
+    table = PrettyTable()
+    table.field_names = ["Job", "Test Result", "Date"]
+    table.align = "l"
+
+    for prefix_id, files in obj.reports.items():
+        job_name, _, _ = get_file_prefix("name-", files)
+        test_result, _, modified = get_file_prefix("result-", files)
+        if not job_name:
+            log.debug(f"{prefix_id} :: missing name, skipping")
+            continue
+
+        if not test_result:
+            test_result = "FAIL"
+        else:
+            test_result = "PASS" if test_result == "True" else "FAIL"
+
+        if job_filter and job_filter not in job_name:
+            continue
+
+        print(job_name, test_result, modified)
+        try:
+            table.add_row([job_name, test_result, modified])
+        except KeyError:
+            click.echo(metadata)
+    click.echo(table)
+
+
+@cli.command()
+def migrate():
+    """Migrate dynamodb data"""
+    data = get_data()
+
+    def _migrate(obj):
+        if "build_endtime" not in obj:
+            return
+
+        day = datetime.strptime(obj["build_endtime"], "%Y-%m-%dT%H:%M:%S.%f")
+        date_of_last_30 = datetime.today() - timedelta(days=30)
+        if day < date_of_last_30:
+            return
+
+        if "job_id" not in obj:
+            return
+
+        job_id = obj["job_id"]
+        has_metadata = requests.get(f"{REPORT_HOST}/{job_id}/metadata.json")
+        if has_metadata.ok:
+            log.debug(
+                f"{job_id} :: metadata exists, skipping migration of {obj['job_name']} @ {day}"
+            )
+            return
+
+        metadata_p = Path(f"{job_id}-metadata.json")
+        metadata_p.write_text(json.dumps(obj))
+        log.info(f"Migrating {job_id} :: {obj['job_name']} @ {day} :: to metadata.json")
+        run.cmd_ok(
+            f"aws s3 cp {job_id}-metadata.json s3://jenkaas/{job_id}/metadata.json",
+            shell=True,
+        )
+        run.cmd_ok(f"rm -rf {job_id}-metadata.json", shell=True)
+
+    pool = ThreadPool()
+    pool.map(_migrate, data)
+
+
+@cli.command()
+def build():
+    """Generate a report"""
+    tmpl = html.template("index.html")
+
+    ci_results_context = {
+        "rows": _gen_rows(),
+        "headers": [
+            datetime.strptime(day, "%Y-%m-%d").strftime("%m-%d")
+            for day in _gen_days(15)
+        ],
+        "modified": datetime.now(),
+    }
+    rendered = tmpl.render(ci_results_context)
+    index_html_p = Path("index.html")
+    index_html_p.write_text(rendered)
+    run.cmd_ok("aws s3 cp index.html s3://jenkaas/index.html", shell=True)
+    run.cmd_ok("aws s3 cp index.json s3://jenkaas/index.json", shell=True)
+    run.cmd_ok("aws s3 cp --recursive jobs/templates/images s3://jenkaas/images", shell=True)
+
+
+if __name__ == "__main__":
+    cli()

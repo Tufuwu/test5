@@ -1,0 +1,43 @@
+async-generator
+asyncio-extras
+awscli>=1.18.3
+backoff
+black
+boto3
+bs4
+dill
+drypy
+loguru
+flake8
+invoke
+jenkins-job-builder
+jinja2
+juju
+kv
+loguru
+mkdocs-material>=5.3.0
+mkdocs
+requests
+pymacaroons
+pyyaml>=5.1.2
+pytest-asyncio<0.22
+pytest-json-report
+pytest-html
+pytest-mock
+flaky
+pytest<8
+python-dotenv
+lazr.restfulclient
+launchpadlib
+semver
+sh
+surl
+retry
+prettytable
+wheel
+# The following websocket requirements are environment marked because of juju
+# https://github.com/juju/python-libjuju/blob/master/setup.py#L38-L39
+websockets>=8.1,<9.0; python_version=="3.8"
+websockets>=9.0,<10.0; python_version=="3.9"
+websockets>=10.0,<11.0 ; python_version=="3.10"
+websockets>=11.0,<12.0 ; python_version=="3.11"

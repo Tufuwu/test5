@@ -1,0 +1,83 @@
+---
+- hosts: all
+#  connection: local
+  gather_facts: yes
+  become: true
+  tasks:
+    - name: add golang ppa
+      apt_repository:
+        repo: "ppa:longsleep/golang-backports"
+    - name: install apt deps
+      shell: |
+        apt-get update
+        apt-get install -qyf \
+          build-essential \
+          fakeroot \
+          curl \
+          dh-systemd \
+          debhelper \
+          gcc \
+          make \
+          golang-1.15 \
+          golang \
+          ubuntu-dev-tools \
+          wget \
+          python3-dev \
+          python3-pip \
+          tox
+    - name: remove apt deps
+      shell: |
+          apt remove --autoremove -qyf tox
+      ignore_errors: yes
+    - name: upgrade system pip
+      shell: |
+        pip3 install pip tox --upgrade
+    - name: copy lp creds
+      copy:
+        src: "{{ lookup('env', 'LPCREDS') }}"
+        dest: /root/lpcreds.ini
+        owner: root
+        group: root
+        mode: 0600
+        force: yes
+    - name: copy ssh creds
+      copy:
+        src: "{{ lookup('env', 'CDKBOTSSHCREDS') }}"
+        dest: /root/.ssh/cdkbot_rsa
+        owner: root
+        group: root
+        mode: 0600
+        force: yes
+    - name: copy gpg public key
+      copy:
+        src: "{{ lookup('env', 'K8STEAMCI_GPG_PUB') }}"
+        dest: /root/gpg-pub.key
+        owner: root
+        group: root
+        mode: 0644
+    - name: copy gpg private key
+      copy:
+        src: "{{ lookup('env', 'K8STEAMCI_GPG_PRIVATE') }}"
+        dest: /root/gpg-private.key
+        owner: root
+        group: root
+        mode: 0644
+    - name: import gpg keys
+      ignore_errors: yes
+      shell: |
+        gpg --batch --import gpg-pub.key
+        gpg --batch --import gpg-private.key
+    - name: copy devscripts
+      copy:
+        src: "devscripts"
+        dest: "/root/.devscripts"
+        owner: root
+    - name: clone jenkins repo
+      shell: |
+        git clone https://github.com/charmed-kubernetes/jenkins
+    - name: copy run script
+      template:
+        src: "run.sh.j2"
+        dest: "/root/jenkins/run.sh"
+        owner: root
+        mode: 775

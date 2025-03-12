@@ -1,0 +1,60 @@
+#!/bin/bash
+# shellcheck disable=SC2034,SC1090
+
+set -x
+
+###############################################################################
+# INITIALIZE
+###############################################################################
+: "${WORKSPACE:=$(pwd)}"
+
+. "$WORKSPACE/ci.bash"
+. "$WORKSPACE/juju.bash"
+
+###############################################################################
+# FUNCTION OVERRIDES
+###############################################################################
+
+# Reference: https://ubuntu.com/kubernetes/docs/gpu-workers
+function juju::deploy
+{
+    tee overlay.yaml <<EOF > /dev/null
+series: null
+default-base: $(juju::base::from_series $SERIES)
+applications:
+  containerd:
+    options:
+      gpu_driver: none
+  kubernetes-control-plane:
+    options:
+      allow-privileged: "true"
+      channel: $SNAP_VERSION
+  kubernetes-worker:
+    constraints: "instance-type=p3.2xlarge root-disk=128G"
+    channel: $SNAP_VERSION
+EOF
+
+    juju deploy -m "$JUJU_CONTROLLER:$JUJU_MODEL" \
+         --overlay overlay.yaml \
+         --force \
+         --channel "$JUJU_DEPLOY_CHANNEL" "$JUJU_DEPLOY_BUNDLE"
+}
+
+###############################################################################
+# ENV
+###############################################################################
+SNAP_VERSION=${1:-1.26/edge}
+SERIES=${2:-jammy}
+JUJU_DEPLOY_BUNDLE=charmed-kubernetes
+JUJU_DEPLOY_CHANNEL=${3:-edge}
+JUJU_CLOUD=aws/us-east-2
+JUJU_CONTROLLER=validate-$(identifier::short)
+JUJU_MODEL=validate-nvidia
+ARCH=${4:-amd64}
+JOB_NAME_CUSTOM="validate-ck-nvidia-$SERIES-$SNAP_VERSION"
+JOB_ID=$(identifier)
+
+###############################################################################
+# START
+###############################################################################
+ci::run

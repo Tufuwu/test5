@@ -1,0 +1,133 @@
+#!/bin/bash
+# shellcheck disable=SC2034,SC1090
+
+set -x
+
+###############################################################################
+# INITIALIZE
+###############################################################################
+: "${WORKSPACE:=$(pwd)}"
+
+. "$WORKSPACE/ci.bash"
+. "$WORKSPACE/juju.bash"
+
+###############################################################################
+# FUNCTION OVERRIDES
+###############################################################################
+function juju::bootstrap
+{
+    # VPC with multiple subnets and IPv6, created with:
+    # NUM_SUBNETS=2 jobs/integration/tigera_aws.py create-vpc
+    vpc_id=vpc-004c1e2386cc4712f
+    if [ "$ROUTING_MODE" = "bgp-simple" ]; then
+      # VPC with a single subnet and IPv6, created with:
+      # NUM_SUBNETS=1 jobs/integration/tigera_aws.py create-vpc
+      vpc_id=vpc-01fb8cb84a901aa98
+    fi
+
+    juju bootstrap "$JUJU_CLOUD" "$JUJU_CONTROLLER" \
+      --add-model "$JUJU_MODEL" \
+      --bootstrap-base "$(juju::base::from_series $SERIES)" \
+      --force \
+      --bootstrap-constraints arch="$ARCH" \
+      --model-default test-mode=true \
+      --model-default resource-tags=owner=$JUJU_OWNER \
+      --model-default image-stream=daily \
+      --model-default automatically-retry-hooks=true \
+      --model-default logging-config="<root>=DEBUG" \
+      --model-default vpc-id=$vpc_id
+
+    juju::deploy-report $? "bootstrap"
+
+    if [ "$ROUTING_MODE" = "bgp-router" ]; then
+      echo "Deploying bgp router"
+      python3 $WORKSPACE/jobs/integration/tigera_aws.py deploy-bgp-router
+
+      ret=$?
+      if (( ret > 0 )); then
+          # Fail Deploy Early
+          juju::deploy-report $ret "bgp-setup"
+      fi
+    fi
+}
+
+function juju::deploy::overlay
+{
+    if [ "$ROUTING_MODE" = "vxlan" ]; then
+      # Calico does not support VXLAN + IPv6, so we need to skip the IPv6 CIDRs
+      cat <<EOF > overlay.yaml
+series: null
+default-base: $(juju::base::from_series $SERIES)
+applications:
+  kubernetes-control-plane:
+    options:
+      channel: $SNAP_VERSION
+  kubernetes-worker:
+    options:
+      channel: $SNAP_VERSION
+  calico:
+    options:
+      vxlan: Always
+EOF
+      vxlan_mode=Always
+    else
+      # No VXLAN, so we'll test IPv6
+      cat <<EOF > overlay.yaml
+series: null
+default-base: $(juju::base::from_series $SERIES)
+applications:
+  kubernetes-control-plane:
+    options:
+      channel: $SNAP_VERSION
+      service-cidr: "10.152.183.0/24,fd00:c00b:2::/112"
+  kubernetes-worker:
+    options:
+      channel: $SNAP_VERSION
+  calico:
+    options:
+      cidr: "192.168.0.0/16,fd00:c00b:1::/112"
+      vxlan: Never
+EOF
+    fi
+}
+
+function juju::deploy
+{
+    juju deploy -m "$JUJU_CONTROLLER:$JUJU_MODEL" \
+         --overlay overlay.yaml \
+         --force \
+         --channel "$JUJU_DEPLOY_CHANNEL" "$JUJU_DEPLOY_BUNDLE"
+
+    (
+      set -e
+      if [[ "$ROUTING_MODE" = bgp* ]]; then
+        python $WORKSPACE/jobs/integration/tigera_aws.py disable-source-dest-check
+        python $WORKSPACE/jobs/integration/tigera_aws.py assign-ipv6-addrs
+      fi
+
+      if [ "$ROUTING_MODE" = "bgp-router" ]; then
+        python $WORKSPACE/jobs/integration/tigera_aws.py configure-bgp
+      fi
+    )
+    juju::deploy-report $? "bgp-setup"
+}
+
+###############################################################################
+# ENV
+###############################################################################
+SNAP_VERSION=${1:-1.26/edge}
+SERIES=${2:-jammy}
+JUJU_DEPLOY_BUNDLE=charmed-kubernetes
+JUJU_DEPLOY_CHANNEL=${3:-edge}
+JUJU_CLOUD=aws/us-east-1
+JUJU_CONTROLLER=validate-$(identifier::short)
+JUJU_MODEL=validate-calico
+ARCH=${4:-amd64}
+ROUTING_MODE=${5:bgp-simple}
+JOB_NAME_CUSTOM="validate-ck-calico-$ROUTING_MODE-$SERIES-$SNAP_VERSION"
+JOB_ID=$(identifier)
+
+###############################################################################
+# START
+###############################################################################
+ci::run

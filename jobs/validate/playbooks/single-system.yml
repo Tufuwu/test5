@@ -1,0 +1,85 @@
+---
+- hosts: all
+  gather_facts: yes
+  become: true
+  tasks:
+    - name: update /etc/environment
+      copy:
+        src: "files/environment"
+        dest: /etc/environment
+        owner: root
+        group: root
+        mode: 0644
+        force: yes
+    - name: remove unused debs
+      apt:
+        name:
+          - juju
+          - lxd
+          - lxd-client
+          - lxcfs
+          - lxc-common
+          - liblxc1
+        state: absent
+    - name: add necessary debs
+      apt:
+        name:
+          - libffi-dev
+          - python3-dev
+          - python3-venv
+          - python3.8
+          - python3.8-venv
+          - parallel
+    - name: install snap deps
+      command: "snap install {{item}}"
+      ignore_errors: yes
+      loop:
+        - "juju --channel=3/stable"
+        - "juju-wait --classic"
+        - "juju-crashdump --classic --edge"
+        - "lxd"
+    - name: update ubuntu user
+      user:
+        name: ubuntu
+        groups: lxd,sudo
+    - name: reset ssh connection
+      meta: reset_connection
+    - name: setup lxd network
+      command: "/snap/bin/lxd init --auto"
+      ignore_errors: yes
+      become: false
+    - name: disable ipv6 in lxd
+      become: false
+      shell: |
+        export PATH=/snap/bin:$PATH
+        lxc network set lxdbr0 ipv6.address none
+        lxc network set lxdbr1 ipv6.address none
+      ignore_errors: true
+    - name: fix lxd config profile
+      shell: |
+        cat <<EOF> profile-update.yaml
+        config: {}
+        description: Default LXD profile - updated
+        devices:
+          eth0:
+            name: eth0
+            parent: lxdbr0
+            nictype: bridged
+            type: nic
+          root:
+            path: /
+            pool: default
+            type: disk
+        EOF
+        cat profile-update.yaml | lxc profile edit default
+    - name: grab jenkins ci repo
+      command: "git clone https://github.com/charmed-kubernetes/jenkins"
+      become: false
+    - name: install python deps
+      become: true
+      shell: |
+        pip3 install tox
+        pip3 install pip-tools
+        pip-sync
+      args:
+        chdir: jenkins

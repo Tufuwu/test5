@@ -1,0 +1,13 @@
+acl lxd dst  10.254.86.0/24 # whatever lxdbr0 is
+http_access allow lxd
+
+acl apt dst 172.31.5.0/24
+http_access allow apt
+
+acl rockscc dstdomain rocks.canonical.com
+http_access allow rockscc
+
+http_access allow localhost
+
+http_access deny all
+http_port 3128
