@@ -1,41 +1,88 @@
-name: CI
-on: [push, pull_request]
-env:
-    CI: 'true'
-    LC_ALL: en_US.UTF-8
-    LANG: en_US.UTF-8
+name: OpenWISP CI Build
+
+on:
+  push:
+    branches:
+      - master
+      - dev
+  pull_request:
+    branches:
+      - master
+      - dev
 
 jobs:
-    test:
-        name: Test on ${{ matrix.os }} Python ${{ matrix.pyver }})
-        runs-on: ${{ matrix.os }}
-        strategy:
-            matrix:
-                include:
-                    - { pyver: 2.7, os: ubuntu-latest }
-                    - { pyver: 3.6, os: ubuntu-latest }
-                    - { pyver: 3.8, os: ubuntu-latest }
-                    - { pyver: 3.9, os: ubuntu-latest }
 
-                    - { pyver: 3.8, os: macos-latest }
-                    - { pyver: 3.8, os: windows-latest }
+  build:
+    name: Python==${{ matrix.python-version }} | ${{ matrix.django-version }}
+    runs-on: ubuntu-latest
 
-        steps:
-            - name: Checkout source code
-              uses: actions/checkout@master
-              with:
-                fetch-depth: 10
+    services:
+      redis:
+        image: redis
+        ports:
+          - 6379:6379
 
-            - name: Set up Python ${{ matrix.pyver }}
-              uses: actions/setup-python@master
-              with:
-                python-version: ${{ matrix.pyver }}
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.9", "3.10"]
+        django-version:
+          - django~=2.2
+          - django~=3.0
+          - django~=3.1
 
-            - name: Install dependencies
-              run: python -m pip install chardet flake8
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        ref: ${{ github.event.pull_request.head.sha }}
 
-            - name: Check code quality
-              run: flake8 src
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
 
-            - name: Run tests
-              run: python setup.py test
+    - name: Install system packages
+      run: |
+        sudo apt update
+        sudo apt-get -qq -y install sqlite3 gdal-bin
+
+    - name: Install python dependencies
+      run: |
+        pip install -U pip wheel
+        pip install ${{ matrix.django-version }}
+        pip install -U -r requirements-test.txt
+
+    - name: Install npm dependencies
+      run: sudo npm install -g jshint stylelint
+
+    - name: Install openwisp-notifications
+      run: python setup.py -q develop
+
+    - name: QA checks
+      run: |
+        ./run-qa-checks
+
+    - name: Tests
+      run: |
+        SAMPLE_APP=1 coverage run --source=openwisp_notifications runtests.py
+        coverage run -a --source=openwisp_notifications runtests.py
+
+    - name: Upload Coverage
+      run: coveralls
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        COVERALLS_FLAG_NAME: python-${{ matrix.python-version }}-${{ matrix.django-version }}
+        COVERALLS_PARALLEL: true
+
+  coveralls:
+    name: Finish Coveralls
+    needs: build
+    runs-on: ubuntu-latest
+    container: python:3-slim
+    steps:
+      - name: Finished
+        run: |
+          pip3 install --upgrade coveralls
+          coveralls --finish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

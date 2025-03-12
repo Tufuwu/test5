@@ -1,72 +1,69 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
-# License: LGPLv3 Copyright: 2019, Kovid Goyal <kovid at kovidgoyal.net>
-
-import ast
-import re
-import sys
 import os
+import sys
 
 from setuptools import find_packages, setup
-from setuptools.command.test import test
 
-# extract the version without importing the module
-VERSION = open('src/css_parser/version.py', 'rb').read().decode('utf-8')
-VERSION = '.'.join(map(str, ast.literal_eval(re.search(r'^version\s+=\s+(.+)', VERSION, flags=re.M).group(1))))
-long_description = '\n' + open('README.md', 'rb').read().decode('utf-8') + '\n'  # + read('CHANGELOG.txt')
+from openwisp_notifications import get_version
 
 
-class Test(test):
+def get_install_requires():
+    """
+    parse requirements.txt, ignore links, exclude comments
+    """
+    requirements = []
+    for line in open('requirements.txt').readlines():
+        # skip to next iteration if comment or empty line
+        if (
+            line.startswith('#')
+            or line == ''
+            or line.startswith('http')
+            or line.startswith('git')
+        ):
+            continue
+        # add line to requirements
+        requirements.append(line)
+    return requirements
 
-    user_options = [
-        ('which-test=', 'w', "Specify which test to run as either"
-            " the test method name (without the leading test_)"
-            " or a module name with a trailing period"),
-    ]
 
-    def initialize_options(self):
-        self.which_test = None
-
-    def finalize_options(self):
-        pass
-
-    def run(self):
-        import importlib
-        orig = sys.path[:]
-        try:
-            sys.path.insert(0, os.getcwd())
-            m = importlib.import_module('run_tests')
-            which_test = (self.which_test,) if self.which_test else ()
-            m.run_tests(which_test)
-        finally:
-            sys.path = orig
+if sys.argv[-1] == 'publish':
+    # delete any *.pyc, *.pyo and __pycache__
+    os.system('find . | grep -E "(__pycache__|\.pyc|\.pyo$)" | xargs rm -rf')
+    os.system("python setup.py sdist bdist_wheel")
+    os.system("twine upload -s dist/*")
+    os.system("rm -rf dist build")
+    args = {'version': get_version()}
+    print("You probably want to also tag the version now:")
+    print("  git tag -a %(version)s -m 'version %(version)s'" % args)
+    print("  git push --tags")
+    sys.exit()
 
 
 setup(
-    name='css-parser',
-    version=VERSION,
-    package_dir={'': 'src'},
-    packages=find_packages('src'),
-    description='A CSS Cascading Style Sheets library for Python',
-    long_description=long_description,
-    long_description_content_type='text/markdown',
-    cmdclass={'test': Test},
-    author='Various People',
-    author_email='redacted@anonymous.net',
-    url='https://github.com/ebook-utils/css-parser',
-    license='LGPL 3.0 or later',
-    keywords='CSS, Cascading Style Sheets, CSSParser, DOM Level 2 Stylesheets, DOM Level 2 CSS',
+    name='openwisp-notifications',
+    version=get_version(),
+    license='GPL3',
+    author='OpenWISP',
+    author_email='support@openwisp.io',
+    description='Notifications module of OpenWISP',
+    long_description=open('README.rst').read(),
+    url='http://openwisp.org',
+    download_url='https://github.com/openwisp/openwisp-notifications/releases',
+    platforms=['Platform Independent'],
+    keywords=['django', 'netjson', 'notification', 'openwisp', 'monitoring'],
+    packages=find_packages(exclude=['tests*', 'docs*']),
+    include_package_data=True,
+    zip_safe=False,
+    install_requires=get_install_requires(),
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
+        'Topic :: Internet :: WWW/HTTP',
+        'Topic :: System :: Networking',
         'Intended Audience :: Developers',
-        'License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)',
+        'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
         'Operating System :: OS Independent',
-        'Programming Language :: Python',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 3',
-        'Topic :: Internet',
-        'Topic :: Software Development :: Libraries :: Python Modules',
-        'Topic :: Text Processing :: Markup :: HTML'
-    ]
+        'Framework :: Django',
+        'Programming Language :: Python :: 3.8',
+    ],
 )
