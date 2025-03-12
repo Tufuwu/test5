@@ -1,4 +1,4 @@
-name: beancount-ing-diba
+name: beancount-dkb
 
 on: [push, pull_request]
 
@@ -23,7 +23,11 @@ jobs:
         poetry install
     - name: Lint with flake8
       run: |
-        poetry run flake8 beancount_ing_diba/ tests/
+        poetry run flake8 beancount_dkb/ tests/
+    - name: Lint with black
+      if: matrix.python-version != '3.5'
+      run: |
+        poetry run black --check beancount_dkb/ tests/
     - name: Test with py.test
       run: |
         poetry run py.test tests/

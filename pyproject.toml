@@ -1,12 +1,13 @@
 [tool.poetry]
-name = "beancount-ing"
-version = "1.0.1"
-description = "Beancount Importer for ING (DE) CSV exports"
+name = "beancount-dkb"
+version = "1.5.0"
+description = "Beancount Importer for DKB CSV exports"
 readme = "README.md"
 authors = ["Siddhant Goel <me@sgoel.dev>"]
 license = "MIT"
 classifiers = [
-    "Development Status :: 4 - Beta",
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
     "Environment :: Plugins",
     "Intended Audience :: End Users/Desktop",
     "Intended Audience :: Financial and Insurance Industry",
@@ -16,16 +17,20 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Office/Business :: Financial",
+    "Topic :: Office/Business :: Financial :: Accounting",
 ]
 include = ["README.md", "LICENSE.txt"]
-repository = "https://github.com/siddhantgoel/beancount-ing"
+repository = "https://github.com/siddhantgoel/beancount-dkb"
 keywords = ["banking", "beancount", "cli-accounting", "finance"]
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.8"
 beancount = "^3.0.0"
 beangulp = ">=0.1.1,<0.3.0"
+babel = "^2.16.0"
 
 [tool.poetry.group.dev.dependencies]
 taskipy = "^1.12.0"
@@ -33,10 +38,11 @@ ruff = ">=0.5.1,<0.10.0"
 pytest = "^8.2.2"
 
 [tool.poetry.scripts]
-beancount-ing-ec = "beancount_ing.cli:ec"
+beancount-dkb-ec = "beancount_dkb.cli:ec"
+beancount-dkb-credit = "beancount_dkb.cli:credit"
 
 [tool.taskipy.tasks]
-lint = "ruff check beancount_ing/ tests/"
+lint = "ruff check beancount_dkb/ tests/"
 test = "pytest tests/"
 
 [build-system]
