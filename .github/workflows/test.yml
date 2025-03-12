@@ -1,158 +1,81 @@
-name: Modoboa DMARC plugin
+name: Build pghoard
 
 on:
   push:
-    branches: [ master ]
+    branches:
+      - master
+    tags:
+      - '**'
   pull_request:
-    branches: [ master ]
-  release:
-    branches: [ master ]
-
-env:
-  POSTGRES_HOST: localhost
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres:11
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: postgres
-        ports:
-        # will assign a random free host port
-        - 5432/tcp
-        # needed because the postgres container does not provide a healthcheck
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-      mysql:
-        image: mysql:8.0
-        env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_USER: modoboa
-          MYSQL_PASSWORD: modoboa
-          MYSQL_DATABASE: modoboa
-        ports:
-          - 3306/tcp
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
+  lint:
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        database: ['postgres', 'mysql']
+        # only use one version for the lint step
         python-version: ["3.9", "3.10"]
-      fail-fast: false
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python ${{ matrix.python-version }}
+
+      - id: checkout-code
+        uses: actions/checkout@v2
+
+      - id: prepare-python
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install dependencies
+
+      - id: dependencies
         run: |
-          sudo apt-get update -y && sudo apt-get install -y librrd-dev rrdtool
+          pip install -r requirements.txt
+          pip install -r requirements.dev.txt
+
+      - id: pylint
+        run: make lint
+
+      - id: validate-style
+        run: |
+          make fmt
+          if [ $(git diff --name-only --diff-filter=ACMR | wc -l ) != 0 ]; then
+            echo "Reformatting failed! Please run make fmt on your commits and resubmit!" 1>&2;
+            git diff;
+            exit 1;
+          fi
+
+  test:
+    runs-on: ubuntu-latest
+    needs: lint
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: ["3.9", "3.10"]
+        pg-version: [9.6, 10, 11, 12]
+
+    steps:
+      - id: checkout-code
+        uses: actions/checkout@v2
+
+      - id: prepare-python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - id: dependencies
+        run: |
+          # Setup the Postgres repositories
+          sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+          wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+          sudo apt-get update
+          # Setup build deps
+          sudo apt-get install -y libsnappy-dev
+          sudo apt-get install -y postgresql-${{ matrix.pg-version }}
+          # Setup common python dependencies
           python -m pip install --upgrade pip
-          pip install -e git+https://github.com/modoboa/modoboa.git#egg=modoboa
           pip install -r requirements.txt
-          pip install -r test-requirements.txt
-          python setup.py develop
-      - name: Install postgres requirements
-        if: ${{ matrix.database == 'postgres' }}
-        run: |
-          pip install 'psycopg2-binary>=2.8,<2.9'
-          pip install coverage
-          echo "DB=postgres" >> $GITHUB_ENV
-      - name: Install mysql requirements
-        if: ${{ matrix.database == 'mysql' }}
-        run: |
-          pip install 'mysqlclient<2.0.4'
-          echo "DB=mysql" >> $GITHUB_ENV
-      - name: Test with pytest
-        if: ${{ matrix.python-version != '3.8' || matrix.database != 'postgres' }}
-        run: |
-          cd test_project
-          python3 manage.py test modoboa_amavis
-        env:
-          # use localhost for the host here because we are running the job on the VM.
-          # If we were running the job on in a container this would be postgres
-          POSTGRES_PORT: ${{ job.services.postgres.ports[5432] }} # get randomly assigned published port
-          MYSQL_HOST: 127.0.0.1
-          MYSQL_PORT: ${{ job.services.mysql.ports[3306] }} # get randomly assigned published port
-          MYSQL_USER: root
+          pip install --upgrade -r requirements.dev.txt
+          pip install -e .
 
-      - name: Test with pytest and coverage
-        if: ${{ matrix.python-version == '3.8' && matrix.database == 'postgres' }}
-        run: |
-          cd test_project
-          coverage run --source ../modoboa_amavis manage.py test modoboa_amavis
-        env:
-          # use localhost for the host here because we are running the job on the VM.
-          # If we were running the job on in a container this would be postgres
-          POSTGRES_PORT: ${{ job.services.postgres.ports[5432] }} # get randomly assigned published port
-          MYSQL_HOST: 127.0.0.1
-          MYSQL_PORT: ${{ job.services.mysql.ports[3306] }} # get randomly assigned published port
-          MYSQL_USER: root
-      - name: Upload coverage result
-        if: ${{ matrix.python-version == '3.8' }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-results
-          path: test_project/.coverage
-
-  coverage:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python 3.8
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.9'
-      - name: Install dependencies
-        run: |
-          pip install codecov
-      - name: Download coverage results
-        uses: actions/download-artifact@v2
-        with:
-          name: coverage-results
-      - name: Report coverage
-        run: |
-          coverage report
-          codecov
-
-  release:
-    needs: coverage
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - name: Set up Python 3.8
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.9'
-      - name: Build packages
-        run: |
-          sudo apt-get install librrd-dev rrdtool libssl-dev gettext
-          python -m pip install --upgrade pip setuptools wheel
-          pip install -r requirements.txt
-          cd modoboa_amavis
-          django-admin compilemessages
-          cd ..
-          python setup.py sdist bdist_wheel
-      - name: Publish to Test PyPI
-        if: endsWith(github.event.ref, '/master')
-        uses: pypa/gh-action-pypi-publish@master
-        with:
-          user: __token__
-          password: ${{ secrets.test_pypi_password }}
-          repository_url: https://test.pypi.org/legacy/
-          skip_existing: true
-      - name: Publish distribution to PyPI
-        if: startsWith(github.event.ref, 'refs/tags') || github.event_name == 'release'
-        uses: pypa/gh-action-pypi-publish@master
-        with:
-          user: __token__
-          password: ${{ secrets.pypi_password }}
-          skip_existing: true
+      - id: unittest
+        run: make unittest

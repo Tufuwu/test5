@@ -1,44 +1,60 @@
-.. modoboa-amavis documentation master file, created by
-   sphinx-quickstart on Sun Feb 22 14:35:42 2015.
+.. PGHoard documentation index file, created by
+   sphinx-quickstart on Tue Jul 27 13:52:50 2021.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to modoboa-amavis's documentation!
-==========================================
+PGHoard
+=======
 
-This plugin provides a simple management frontend for `amavisd-new
-<http://www.amavis.org>`_. The supported features are:
+.. |BuildStatus| image:: https://github.com/aiven/pghoard/actions/workflows/build.yml/badge.svg?branch=main
+.. _BuildStatus: https://github.com/aiven/pghoard/actions
 
-* SQL quarantine management: available to administrators or users,
-  possibility to delete or release messages
-* Per domain customization (using policies): specify how amavisd-new
-  will handle traffic
-* Manual training of `SpamAssassin
-  <http://spamassassin.apache.org/>`_ using quarantine's content
 
-.. note::
-
-   The per-domain policies feature only works for new
-   installations. Currently, you can't use modoboa with an existing
-   database (ie. with data in ``users`` and ``policies`` tables).
-
-.. note::
-
-   This plugin requires amavisd-new version **2.7.0** or higher. If
-   you're planning to use the :ref:`selfservice`, you'll need version
-   **2.8.0**.
-
-.. note::
-
-   ``$sql_partition_tag`` should remain undefined in ``amavisd.conf``. Modoboa
-   does not support the use of ``sql_partition_tag``, setting this value can
-   result in quarantined messages not showing or the wrong messages being
-   released or learnt as ham/spam.
-
-Contents:
+``pghoard`` is a PostgreSQL backup daemon and restore tooling that stores backup data in cloud object stores.
 
 .. toctree::
    :maxdepth: 2
+   :caption: Contents:
 
+   about
+   quickstart
+   architecture
    install
-   setup
+   commands
+   monitoring
+   configuration
+   development
+
+License
+=======
+
+PGHoard is licensed under the Apache License, Version 2.0. Full license text
+is available in the ``LICENSE`` file and at
+http://www.apache.org/licenses/LICENSE-2.0.txt
+
+
+Credits
+=======
+
+PGHoard was created by Hannu Valtonen <hannu.valtonen@aiven.io> for
+`Aiven`_ and is now maintained by Aiven developers <opensource@aiven.io>.
+
+.. _`Aiven`: https://aiven.io/
+
+Recent contributors are listed on the GitHub project page,
+https://github.com/aiven/pghoard/graphs/contributors
+
+
+Contact
+=======
+
+Bug reports and patches are very welcome, please post them as GitHub issues
+and pull requests at https://github.com/aiven/pghoard .  Any possible
+vulnerabilities or other serious issues should be reported directly to the
+maintainers <opensource@aiven.io>.
+
+
+Copyright
+=========
+
+Copyright (C) 2015 Aiven Ltd
