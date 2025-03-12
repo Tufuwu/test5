@@ -1,123 +1,87 @@
-name: 'CI'
+name: lint-test-coverage
 
 on:
-  pull_request:
-  workflow_dispatch:
   push:
-    branches: [ develop ]
-
-permissions:
-  contents: read
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
+  workflow_dispatch:
 
 jobs:
-  base_setup:
-    runs-on: ubuntu-latest
-    timeout-minutes: 60
 
+  lint:
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         python-version: ["3.9", "3.10"]
 
-    name: Base (${{ matrix.python-version }})
-
-    services:
-      mariadb:
-        image: mariadb:10.6
-        env:
-          MARIADB_ROOT_PASSWORD: travis
-        ports:
-          - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=2s --health-retries=3
-
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - name: checkout-code
+        uses: actions/checkout@v3
+
+      - name: prepare-python
+        uses: actions/setup-python@v3
         with:
           python-version: ${{ matrix.python-version }}
-      - uses: actions/setup-node@v3
+
+      - name: install-poetry
+        uses: snok/install-poetry@v1
         with:
-          node-version: 14
-      - run: |
-          wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.focal_amd64.deb;
-          sudo apt install ./wkhtmltox_0.12.6-1.focal_amd64.deb;
-          sudo apt install redis-server
+          version: 1.1.14
 
-          python -m pip install -U --no-cache-dir --force-reinstall urllib3 pyOpenSSL ndg-httpsclient pyasn1 wheel setuptools pip;
-          python -m pip install -U -e ${GITHUB_WORKSPACE};
+      - name: install-dependencies
+        run: |
+          poetry install
 
-      - run: python ${GITHUB_WORKSPACE}/bench/tests/test_init.py TestBenchInit.basic
+      - name: check-fmt
+        run: |
+          make check-fmt
 
-  production_setup:
+      - name: lint-code
+        run: |
+          make flake
+          make lint
+
+  test:
+    needs: lint
     runs-on: ubuntu-latest
-    timeout-minutes: 60
-
+    env:
+      PYTHONHASHSEED: 0
+      USING_COVERAGE: '3.9'
     strategy:
+      fail-fast: false
       matrix:
         python-version: ["3.9", "3.10"]
 
-    name: Production (${{ matrix.python-version }})
-
-    services:
-      mariadb:
-        image: mariadb:10.6
-        env:
-          MARIADB_ROOT_PASSWORD: travis
-        ports:
-          - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=2s --health-retries=3
-
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - name: checkout-code
+        uses: actions/checkout@v3
+
+      - name: prepare-python
+        uses: actions/setup-python@v3
         with:
           python-version: ${{ matrix.python-version }}
-      - uses: actions/setup-node@v3
+
+      - name: install-poetry
+        uses: snok/install-poetry@v1
         with:
-          node-version: 14
-      - run: |
-          wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.focal_amd64.deb;
-          sudo apt install ./wkhtmltox_0.12.6-1.focal_amd64.deb;
-          sudo apt install redis-server
+          version: 1.1.14
 
-          python -m pip install -U --no-cache-dir --force-reinstall urllib3 pyOpenSSL ndg-httpsclient pyasn1 wheel setuptools pip;
-          python -m pip install -U -e ${GITHUB_WORKSPACE};
+      - name: install-dependencies
+        run: |
+          poetry install
 
-      - run: python bench/tests/test_setup_production.py TestSetupProduction.production
+      - name: run-tests
+        run: |
+          poetry run py.test -n auto
 
-  tests:
-    runs-on: ubuntu-latest
-    timeout-minutes: 60
-    needs: [base_setup]
+      - name: create-coverage-report
+        if: "contains(env.USING_COVERAGE, matrix.python-version)"
+        run: |
+          make coverage
 
-    strategy:
-      matrix:
-        python-version: ["3.9", "3.10"]
-
-    name: Tests (${{ matrix.python-version }})
-
-    services:
-      mariadb:
-        image: mariadb:10.6
-        env:
-          MARIADB_ROOT_PASSWORD: travis
-        ports:
-          - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=2s --health-retries=3
-
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - name: submit-to-codecov-io
+        if: "contains(env.USING_COVERAGE, matrix.python-version)"
+        uses: codecov/codecov-action@v3
         with:
-          python-version: ${{ matrix.python-version }}
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 14
-      - run: |
-          wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.focal_amd64.deb;
-          sudo apt install ./wkhtmltox_0.12.6-1.focal_amd64.deb;
-          sudo apt install redis-server
-
-          python -m pip install -U --no-cache-dir --force-reinstall urllib3 pyOpenSSL ndg-httpsclient pyasn1 wheel setuptools pip;
-          python -m pip install -U -e ${GITHUB_WORKSPACE};
-
-      - run: python -m unittest -v bench.tests.test_utils && python -m unittest -v bench.tests.test_init
+          fail_ci_if_error: true

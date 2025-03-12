@@ -1,15 +1,21 @@
-# Root editor config file
+# EditorConfig is awesome: http://EditorConfig.org
+
+# top-most EditorConfig file
 root = true
 
-# Common settings
 [*]
-end_of_line = lf
-insert_final_newline = true
-trim_trailing_whitespace = true
 charset = utf-8
+end_of_line = lf
+trim_trailing_whitespace = true
+insert_final_newline = true
 
-# python, js indentation settings
-[{*.py,*.js,*.vue,*.css,*.scss,*.html}]
-indent_style = tab
+[*.py]
+indent_style = space
 indent_size = 4
-max_line_length = 99
+
+# isort
+lines_after_imports = 2
+not_skip=__init__.py
+
+[Makefile]
+indent_style = tab
