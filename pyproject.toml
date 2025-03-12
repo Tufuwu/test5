@@ -1,40 +1,21 @@
-[tool.black]
-line-length = 88
-target-version = ['py310', 'py311']
+[build-system]
+requires = ["flit_core >=2,<4"]
+build-backend = "flit_core.buildapi"
 
-[tool.coverage.run]
-omit = ["*/tests/*", "members/migrations"]
+[tool.flit.metadata]
+module = "nashpy"
+author = "Vince Knight, James Campbell"
+author-email = "vince@vknight.org"
+requires = [
+    "numpy >=1.21.0",
+    "scipy >=0.19.0",
+    "networkx >= 3.0.0",
+    "deprecated >= 1.2.14"
+]
+home-page = "https://github.com/drvinceknight/Nashpy"
+requires-python= ">=3.8"
+description-file = "README.md"
+classifiers = [ "License :: OSI Approved :: MIT License",]
 
-[tool.poetry]
-package-mode = false
-name = "forenings_medlemmer"
-version = "1.2"
-description = "Forenings system for Coding Pirates"
-authors = ["Kristoffer Rath Hansen <kristoffer@codingpirates.dk>"]
-
-[tool.poetry.dependencies]
-python = "^3.10"
-black = "24.10.0"
-dj-database-url = "2.3.0"
-dj-email-url = "1.0.6"
-django = "4.2.18"
-django-bootstrap5 = "24.3"
-django-cors-headers = "3.5.0"
-django-crispy-forms = "2.3"
-django-cron = "0.6.0"
-django-extensions = "3.2.1"
-environs = "8.0.0"
-factory-boy = "3.0.1"
-flake8 = "3.8.4"
-freezegun = "1.2.2"
-graphene_django = "3.0.0"
-gunicorn = "22.0.0"
-psycopg2 = "2.9.5"
-quickpay-api-client = "2.0.1"
-sentry-sdk = "2.8.0"
-tqdm = "4.66.3"
-whitenoise = "5.2.0"
-pydotplus = "2.0.2"
-selenium = "4.9.0"
-crispy-bootstrap5 = "2024.10"
-pytz = "2024.2"
+[tool.flit.metadata.requires-extra]
+doc = ["sphinx==6.2.1", "sphinx-rtd-theme", "sphinx-togglebutton", "matplotlib", "sphinxcontrib.mermaid"]

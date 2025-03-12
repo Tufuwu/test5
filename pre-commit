@@ -1,3 +1,0 @@
-#!/bin/bash
-echo "Formatting with black..."
-python3 -m black .
