@@ -1,7 +1,1 @@
-include CHANGELOG.rst
-include COPYING-GPLv3.txt
-include README.rst
-
-recursive-include tests *
-recursive-exclude * __pycache__
-recursive-exclude * *.py[co]
+include LICENSE
