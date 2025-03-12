@@ -1,15 +1,16 @@
-# sphinx build folder
-_build
-# translated schema build folder
-_build_schema
-.ve
-node_modules
-*~
-*.swp
-*.pytest_cache*
-*.mo
-/schema/testing
-tx
-tests/__pycache__/
-src/
-.tx/*bak
+syntax: glob
+*.pyc
+*.egg-info
+*.egg
+EGG-INFO
+dist
+build
+py2*
+py3*
+.tox
+*.wpr
+*.wpu
+*.bak
+*.class
+.venv
+.env
