@@ -1,0 +1,115 @@
+{% extends "_base_page.html" %}
+
+
+{% block pageTitle %}
+  Your {{ framework.name }} declaration – Digital Marketplace
+{% endblock %}
+
+{% block breadcrumb %}
+  {{ govukBreadcrumbs({
+    "items": [
+      {
+        "text": "Digital Marketplace",
+        "href": "/"
+      },
+      {
+        "text": "Your account",
+        "href": url_for('.dashboard')
+      },
+      {
+        "text": ("Apply to "+framework.name) if framework.status == "open" else ("Your "+framework.name+" application"),
+        "href": url_for(".framework_dashboard", framework_slug=framework.slug)
+      },
+      {
+        "text": "Your declaration overview"
+      }
+    ]
+  }) }}
+{% endblock %}
+
+
+{% macro make_declaration_button_block() %}
+  {% if framework.status == "open" %}
+    {% if validates %}
+      {% if supplier_framework.declaration.status != "complete" %}
+      <form method="POST" action="">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+        {{ govukButton({
+          "text": "Make declaration"
+        }) }}
+      </form>
+      {% endif %}
+      <p class="govuk-body">
+        You can come back and edit your answers at any time before
+        {% if supplier_framework.declaration.status == "complete" %}
+          {{ framework.applicationsCloseAt | nbsp }}.
+        {% else %}
+          the deadline.
+        {% endif %}
+      </p>
+    {% endif %}
+  {% endif %}
+{% endmacro %}
+
+
+{% block mainContent %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">Your declaration overview</h1>
+    </div>
+  </div>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {% if framework.status == "open" and supplier_framework.declaration.status != "complete" %}
+        <p class="govuk-body">
+          You must {% if not validates %}answer all questions and{% endif %} make your declaration
+          before {{ framework.applicationsCloseAt | nbsp }} to apply to {{ framework.name }}.
+        </p>
+      {% endif %}
+      {{ make_declaration_button_block() }}
+    </div>
+  </div>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+
+      {% for section_slug, (section, section_errors) in sections_errors.items() %}
+        <h2 class="govuk-heading-m dm-summary-list-heading" id="{{ section.slug }}">
+          {{ section.name }}
+        </h2>
+        {% if section.editable %}
+          {% if framework.status == 'open' %}
+          <div class="dm-section-action-link">
+            <a class="govuk-link" href="{{ url_for('.framework_supplier_declaration_edit', framework_slug=framework.slug, section_id=section.id)}}">
+              Edit
+              <span class="govuk-visually-hidden">{{ section.name }}</span>
+            </a>
+          </div>
+          {% endif %}
+        {% endif %}
+        {% if section.summary_page_description %}
+          <p class="govuk-body">{{ section.summary_page_description }}</p>
+        {% endif %}
+        {{ govukSummaryList({
+          "rows": section.summary_list,
+          "classes": "dm-govuk-summary-list dm-govuk-summary-list--top-border govuk-!-margin-bottom-9"
+        })}}
+      {% endfor %}
+
+      <hr class="govuk-section-break govuk-section-break--m">
+
+      {{ make_declaration_button_block() }}
+
+      <p class="govuk-body">
+        <a class="govuk-link govuk-link--no-visited-state"
+           href="{{ url_for('.framework_dashboard', framework_slug=framework.slug) }}"
+        >
+          Return to application
+        </a>
+      </p>
+
+    </div>
+  </div>
+
+
+{% endblock %}

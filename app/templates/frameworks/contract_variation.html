@@ -1,0 +1,161 @@
+{% extends "_base_page.html" %}
+{% import "toolkit/summary-table.html" as summary %}
+
+{% block pageTitle %}
+  {{ framework.name }} contract variation – Digital Marketplace
+{% endblock %}
+
+{% block breadcrumb %}
+  {{ govukBreadcrumbs({
+    "items": [
+      {
+        "text": "Digital Marketplace",
+        "href": "/"
+      },
+      {
+        "text": "Your account",
+        "href": url_for('.dashboard')
+      },
+      {
+        "text": framework.name,
+        "href": url_for(".framework_dashboard", framework_slug=framework.slug)
+      },
+      {
+        "text": framework.name + " contract variation"
+      }
+    ]
+  }) }}
+{% endblock %}
+
+{% block mainContent %}
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        {% if errors %}
+         {% with
+            message = "You must <a class=\"govuk-link\" href=\"#{}\">accept the changes</a> to continue.".format(errors.accept_changes.input_name)|safe, type = "destructive" %}
+            {% include "toolkit/notification-banner.html" %}
+          {% endwith %}
+        {% endif %}
+      </div>
+    </div>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+
+          <h1 class="govuk-heading-l">{{ '{} contract variation for {}'.format('The' if variation_details.get('countersignedAt') or agreed_details else 'Accept the', framework.name) }}</h1>
+
+          <div class="section-description">
+          {% if variation_details.get('countersignedAt') and agreed_details %}
+            {{ variation.variation_description_in_place }}
+          {% elif not variation_details.get('countersignedAt') and agreed_details and variation.variation_description_not_in_place_but_agreed %}
+             {{ variation.variation_description_not_in_place_but_agreed }}
+          {% else %}
+            {{ variation.variation_description_not_in_place }}
+            {% if not agreed_details and variation.variation_not_yet_agreed_extra %}
+              {{ variation.not_agreed_extra }}
+            {% endif %}
+          {% endif %}
+          </div>
+
+      </div>
+    </div>
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+
+          {% if agreed_details %}
+          <div class="section-summary">
+            {{ summary.heading("Contract variation status", id="contract_variation_status") }}
+            {% call(item) summary.list_table(
+              [
+                {"key": "Agreed by", "value": ("%s<br />%s<br />%s" % (agreed_details.agreedUserName, agreed_details.agreedUserEmail, agreed_details.agreedAt|datetimeformat))|safe},
+                {"key": "Countersigned by", "value": ("%s<br />%s<br />%s" %
+                  (
+                    variation_details.countersignerName,
+                    variation_details.countersignerRole,
+                    variation_details.countersignedAt|dateformat
+                  )
+                )|safe if variation_details.get('countersignedAt') else "Waiting for CCS to countersign"}
+              ],
+              caption="Contract variation status",
+              field_headings=[
+              "Field",
+              "Value"
+              ],
+              field_headings_visible=False
+            ) %}
+              {% call summary.row() %}
+                {{ summary.field_name(item.key) }}
+                {{ summary.text(item.value) }}
+              {% endcall %}
+            {% endcall %}
+          </div>
+          {% endif %}
+
+          {{ summary.heading("Framework agreement", id="framework_agreement_changes") }}
+          {% call(item) summary.list_table(
+            variation.framework_agreement_changes,
+            caption="Framework agreement",
+            empty_message="There are no changes to the framework agreement",
+            field_headings=[
+            "Clause",
+            "Change"
+            ],
+            field_headings_visible=True
+            ) %}
+            {% call summary.row() %}
+              {{ summary.field_name(item.clause) }}
+              {{ summary.text(item.change) }}
+            {% endcall %}
+          {% endcall %}
+
+          {{ summary.heading("Call-off contract", id="call_off_contract_changes") }}
+          {% call(item) summary.list_table(
+            variation.call_off_contract_changes,
+            caption="Call-off contract",
+            empty_message="There are no changes to the call-off contract",
+            field_headings=[
+            "Clause",
+            "Change"
+            ],
+            field_headings_visible=True
+            ) %}
+            {% call summary.row() %}
+              {{ summary.field_name(item.clause) }}
+              {{ summary.text(item.change) }}
+            {% endcall %}
+          {% endcall %}
+
+          {% if not agreed_details %}
+
+            <form method="post" class="supplier-declaration">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+              {{ form.accept_changes }}
+
+              <p>
+                {% if variation.variation_comes_in_effect_description %}
+                  {{ variation.variation_comes_in_effect_description }}
+                {% else%}
+                  We’ll tell you when CCS has countersigned the changes and they come into effect.
+                {% endif %}
+              </p>
+              {{ govukButton({
+                "text": "I accept",
+              }) }}
+            </form>
+
+          {% else %}
+
+            <p class="govuk-body">
+              <a class="govuk-link govuk-link--no-visited-state"
+                 href="{{ url_for('.framework_dashboard', framework_slug=framework.slug) }}"
+              >
+                Return to your documents page
+              </a>
+            </p>
+
+          {% endif %}
+
+        </div>
+      </div>
+
+{% endblock %}

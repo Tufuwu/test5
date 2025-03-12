@@ -1,0 +1,51 @@
+{% extends "_base_page.html" %}
+{% import "macros/toolkit_forms.html" as forms %}
+
+{% block pageTitle %}
+  {{ section.name }} – Digital Marketplace
+{% endblock %}
+
+{% block mainContent %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {% include 'frameworks/_session_timeout.html' %}
+
+      <h1 class="govuk-heading-l">{{ section.name }}</h1>
+
+      {% if section.description %}
+        <div class="section-description">
+          {{ section.description }}
+        </div>
+      {% endif %}
+
+    </div>
+  </div>
+
+  <div>
+    <form method="post" enctype="multipart/form-data" action="{{ request.path }}">
+
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+
+            {% for question in section.questions %}
+              {% if errors and (errors[question.id] or question.type == 'multiquestion') %}
+                {{ forms[question.type](question, service_data, errors) }}
+              {% else %}
+                {{ forms[question.type](question, service_data, {}) }}
+              {% endif %}
+            {% endfor %}
+
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+            {% block save_button %}{% endblock %}
+
+            {% block return_to_service_link %}
+              <a class="govuk-link govuk-!-display-block" href="{% block return_to_service %}{% endblock %}">Return to service summary</a>
+            {% endblock %}
+
+        </div>
+      </div>
+
+    </form>
+  </div>
+{% endblock %}

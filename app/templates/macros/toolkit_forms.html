@@ -1,0 +1,118 @@
+{#
+The following form macros extend on top of of the macros found in the front end toolkit so we can support additional
+functionality needed for forms for applying for a framework.
+
+Because questions for the supplier framework declaration form have hints, questions and errors that are supposed to
+reference the numbers of other questions, after we get the manifest (which allows us to know the number for each
+question) from the content loader, we must replace the placeholders for question references with their corresponding
+question number. This is done using the `question_references` helper. This behaviour does not seem to be needed for any
+of our other forms. Note, it may be an idea in the future to move this functionality into the content loader as it
+doesn't feel quite right being at the templating level.
+
+So we can format the value of a form upload to be a 'pretty' datetime string for file uploads for editing a service, we
+set a custom filter on its value.
+#}
+
+{% import "toolkit/forms/macros/forms.html" as upstream_forms %}
+
+{% from "./pricing-input/content-loader-macro.j2" import clPricingInput %}
+
+{% macro text(question_content, service_data, errors) -%}
+  {{ upstream_forms.text(question_content, service_data, errors,
+    error=errors.get(question_content.id)['message']|question_references(kwargs.get_question),
+    hint=(question_content.hint or '')|question_references(kwargs.get_question),
+    question=question_content.question|question_references(kwargs.get_question),
+    **kwargs
+  ) }}
+{%- endmacro %}
+
+{% macro textbox_large(question_content, service_data, errors) -%}
+  {{ upstream_forms.textbox_large(question_content, service_data, errors,
+    error=errors.get(question_content.id)['message']|question_references(kwargs.get_question),
+    hint=(question_content.hint or '')|question_references(kwargs.get_question),
+    question=question_content.question|question_references(kwargs.get_question),
+    **kwargs
+  ) }}
+{%- endmacro %}
+
+{% macro list(question_content, service_data, errors) -%}
+  {{ upstream_forms.list(question_content, service_data, errors,
+    error=errors.get(question_content.id)['message']|question_references(kwargs.get_question),
+    hint=(question_content.hint or '')|question_references(kwargs.get_question),
+    question=question_content.question|question_references(kwargs.get_question),
+    **kwargs
+  ) }}
+{%- endmacro %}
+
+{% macro checkboxes(question_content, service_data, errors) -%}
+  {{ upstream_forms.checkboxes(question_content, service_data, errors,
+    error=errors.get(question_content.id)['message']|question_references(kwargs.get_question),
+    hint=(question_content.hint or '')|question_references(kwargs.get_question),
+    question=question_content.question|question_references(kwargs.get_question),
+    **kwargs
+  ) }}
+{%- endmacro %}
+
+{% macro radios(question_content, service_data, errors) -%}
+  {{ upstream_forms.radios(question_content, service_data, errors,
+    error=errors.get(question_content.id)['message']|question_references(kwargs.get_question),
+    hint=(question_content.hint or '')|question_references(kwargs.get_question),
+    question=question_content.question|question_references(kwargs.get_question),
+    **kwargs
+  ) }}
+{%- endmacro %}
+
+{% macro boolean(question_content, service_data, errors) -%}
+  {{ upstream_forms.boolean(question_content, service_data, errors,
+    error=errors.get(question_content.id)['message']|question_references(kwargs.get_question),
+    hint=(question_content.hint or '')|question_references(kwargs.get_question),
+    question=question_content.question|question_references(kwargs.get_question),
+    **kwargs
+  ) }}
+{%- endmacro %}
+
+{% macro checkbox_tree(question_content, service_data, errors) -%}
+  {{ upstream_forms.checkbox_tree(question_content, service_data, errors,
+    error=errors.get(question_content.id)['message']|question_references(kwargs.get_question),
+    hint=(question_content.hint or '')|question_references(kwargs.get_question),
+    question=question_content.question|question_references(kwargs.get_question),
+    **kwargs
+  ) }}
+{%- endmacro %}
+
+{% macro upload(question_content, service_data, errors) -%}
+  {{ upstream_forms.upload(question_content, service_data, errors,
+    error=errors.get(question_content.id)['message']|question_references(kwargs.get_question),
+    hint=(question_content.hint or '')|question_references(kwargs.get_question),
+    question=question_content.question|question_references(kwargs.get_question),
+    value="Document uploaded {}".format(
+      service_data[question_content.id]|parse_document_upload_time|datetimeformat
+    ) if service_data[question_content.id] else service_data[question_content.id],
+    **kwargs
+  ) }}
+{%- endmacro %}
+
+{% macro pricing(question_content, service_data, errors) -%}
+  {{ clPricingInput(question_content, service_data, errors,
+    error=errors.get(question_content.id)['message']|question_references(kwargs.get_question),
+    hint=(question_content.hint or '')|question_references(kwargs.get_question),
+    question=question_content.question|question_references(kwargs.get_question),
+    **kwargs
+  ) }}
+{%- endmacro %}
+
+{% macro number(question_content, service_data, errors) -%}
+  {{ upstream_forms.number(question_content, service_data, errors,
+    error=errors.get(question_content.id)['message']|question_references(kwargs.get_question),
+    hint=(question_content.hint or '')|question_references(kwargs.get_question),
+    question=question_content.question|question_references(kwargs.get_question),
+    **kwargs
+  ) }}
+{%- endmacro %}
+
+{#
+  we want to be able to import and use this file as though it's the toolkit's forms.html, but imports don't seem to get
+  re-exported in jinja, so this seems to be the least-ugly way to forward definitions:
+#}
+{% macro boolean_list() %}{{ upstream_forms.boolean_list(*varargs, **kwargs) }}{% endmacro %}
+{% macro multiquestion() %}{{ upstream_forms.multiquestion(*varargs, **kwargs) }}{% endmacro %}

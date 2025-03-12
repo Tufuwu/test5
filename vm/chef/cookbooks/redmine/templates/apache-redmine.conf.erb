@@ -1,9 +1,0 @@
-<VirtualHost *:80>
-  DocumentRoot /var/www/html/redmine/public
-  PassengerRuby /usr/local/rvm/wrappers/ruby-<%= node['redmine']['ruby']['version'] %>/ruby
-
-  <Directory /var/www/html/redmine/public>
-    AllowOverride all
-    Options -MultiViews
-  </Directory>
-</VirtualHost>

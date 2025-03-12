@@ -1,0 +1,243 @@
+{% extends "_base_page.html" %}
+{% block pageTitle %}
+  Your company details – Digital Marketplace
+{% endblock %}
+
+{% block breadcrumb %}
+  {% with items = [
+      {
+        "text": "Digital Marketplace",
+        "href": "/"
+      },
+      {
+        "text": "Your account",
+        "href": url_for('.dashboard')
+      },
+    ]
+  %}
+    {% if currently_applying_to %}
+      {{ govukBreadcrumbs({"items": items + [
+        {
+          "text": "Apply to " + currently_applying_to.name,
+          "href": url_for(".framework_dashboard", framework_slug=currently_applying_to.slug)
+        },
+        {
+          "text": "Your company details"
+        }
+      ]}) }}
+    {% else %}
+      {{ govukBreadcrumbs({"items": items + [{"text": "Your company details"}]}) }}
+    {% endif %}
+  {% endwith %}
+{% endblock %}
+
+
+{% block mainContent %}
+  <div class='govuk-grid-row'>
+    <div class='govuk-grid-column-full{% if currently_applying_to or (supplier_company_details_complete and not supplier_company_details_confirmed) %} padding-bottom-small{% endif %}'>
+      <h1 class="govuk-heading-l">Your company details</h1>
+        <h2 class="govuk-heading-m" id="what_buyers_will_see">What buyers will see</h2>
+        {{ govukSummaryList({
+          'rows': [
+            {
+              'key': {
+                'text': "Contact name"
+              },
+              'value': {
+                'text': supplier.contact.contactName
+              },
+              'actions': {
+                  'items': [{
+                    'href': url_for('.edit_what_buyers_will_see', _anchor = 'contactName'),
+                    'text': 'Edit',
+                    'visuallyHiddenText': 'contact name'
+                    }]}
+            },
+            {
+              'key': {
+                'text': "Contact email"
+              },
+              'value': {
+                'text': supplier.contact.email
+              },
+              'actions': {
+                    'items': [{
+                        'href': url_for('.edit_what_buyers_will_see', _anchor = 'email'),
+                        'text': 'Edit',
+                        'visuallyHiddenText': 'contact email'
+                        }]}
+                },
+            {
+              'key': {
+                'text': "Contact phone number"
+              },
+              'value': {
+                'text': supplier.contact.phoneNumber
+              },
+              'actions': {
+                    'items': [{
+                        'href': url_for('.edit_what_buyers_will_see', _anchor = 'phoneNumber'),
+                        'text': 'Edit',
+                        'visuallyHiddenText': 'contact phone number'
+                        }]}
+            },
+            {
+              'key': {
+                'text': "Summary" if supplier.description else "Summary (optional)"
+              },
+              'value': {
+                'text': supplier.description
+              },
+              'actions': {
+                    'items': [
+                    {
+                        'href': url_for('.edit_what_buyers_will_see', _anchor = 'description'),
+                        'text': 'Edit',
+                        'visuallyHiddenText': 'summary'
+                        }]}
+            },
+        ]}) }}
+        <h2 class="govuk-heading-m" id="registration_information">Company details for your framework applications</h2>
+        {%  set has_address = supplier.contact.get("postcode") and supplier.contact.get("address1") and supplier.contact.get("city") and country_name %}
+        {{ govukSummaryList({
+          'rows': [
+            {
+              'key': {
+                'text': "Registered company name"
+              },
+              'value': {
+                'text': supplier.registeredName
+              },
+              'actions': {
+                  'items': [{
+                    'href': url_for('.edit_supplier_registered_name'),
+                    'text': 'Edit' if supplier.registeredName else 'Answer required',
+                    'visuallyHiddenText': 'registered company name' if supplier.registeredName else 'for registered company name'
+                    }]}
+                },
+            {
+              'key': {
+                'text': "Registered company address"
+              },
+              'value': {
+                'html': '<br />'.join([supplier.contact.get("address1"), supplier.contact.get("city"), supplier.contact.get("postcode"), country_name]|select)
+              },
+              'actions': {
+                    'items': [{
+                        'href': url_for(".edit_registered_address"),
+                        'text': 'Edit' if has_address else 'Answer required',
+                        'visuallyHiddenText': 'registered company address' if has_address else 'for registered company address'
+                        }]}
+            },
+            {
+              'key': {
+                'text': "Registration number"
+              },
+              'value': {
+                'text': company_details.get('registration_number')
+              },
+              'actions': {
+                    'items': [{
+                        'href': url_for(".edit_supplier_registration_number"),
+                        'text': 'Edit' if company_details.get('registration_number') else 'Answer required',
+                        'visuallyHiddenText': 'registration number' if company_details.get('registration_number') else 'for registration number'
+                        }]}
+                },
+            {
+              'key': {
+                'text': "Trading status"
+              },
+              'value': {
+                'text': supplier.tradingStatus|capitalize_first
+              },
+              'actions': {
+                    'items': [
+                    {
+                        'href': url_for(".edit_supplier_trading_status"),
+                        'text': 'Edit' if supplier.tradingStatus else 'Answer required',
+                        'visuallyHiddenText': 'trading status' if supplier.tradingStatus else 'for trading status'
+                        }]}
+            },
+            {
+              'key': {
+                'text': "Company size"
+              },
+              'value': {
+                'text': supplier.organisationSize|capitalize_first
+              },
+              'actions': {
+                    'items': [
+                    {
+                        'href': url_for(".edit_supplier_organisation_size"),
+                        'text': 'Edit' if supplier.organisationSize else 'Answer required',
+                        'visuallyHiddenText': 'company size' if supplier.organisationSize else 'for company size'
+                        }]}
+            },
+            {
+              'key': {
+                'text': "DUNS number"
+              },
+              'value': {
+                'text': supplier.dunsNumber
+              },
+              'actions': {
+                    'items': [
+                    {
+                        'href': url_for(".edit_supplier_duns_number"),
+                        'text': 'Edit' if supplier.dunsNumber else 'Answer required',
+                        'visuallyHiddenText': 'DUNS number' if supplier.dunsNumber else 'for DUNS number'
+                        }]}
+                },
+            ]
+        })}}
+    </div>
+  </div>
+
+  {% if supplier_company_details_confirmed == False or unconfirmed_open_supplier_framework_names|length > 0 %}
+    {% if supplier_company_details_complete %}
+    <br>
+    <div class='govuk-grid-row'>
+      <div class='govuk-grid-column-two-thirds'>
+        <form method="POST" action="{{ url_for('.confirm_supplier_details') }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+          {% if supplier_company_details_confirmed == False %}
+          <p class="govuk-body">Once you confirm your information you'll need to contact support to correct a mistake in your:</p>
+          <ul class="govuk-list govuk-list--bullet">
+            <li>registered company name</li>
+            <li>registration number</li>
+            <li>DUNS number</li>
+          </ul>
+          {% else %}
+          <p class="govuk-body">You must confirm that your company details are correct for your {{ pluralize(unconfirmed_open_supplier_framework_names|length, 'application', 'applications') }} to {{
+            unconfirmed_open_supplier_framework_names|smartjoin }}.</p>
+          {% endif %}
+
+          {{ govukButton({
+            "text": "Save and confirm",
+          }) }}
+        </form>
+      </div>
+    </div>
+    {% elif currently_applying_to %}
+    <div class='govuk-grid-row'>
+      <div class='govuk-grid-column-two-thirds'>
+        <p class="govuk-body">You must complete your company details to make an application.</p>
+      </div>
+    </div>
+    {% endif %}
+  {% endif %}
+
+  {% if currently_applying_to %}
+  <div class='govuk-grid-row'>
+    <div class='govuk-grid-column-two-thirds'>
+      <p class="govuk-body">
+        <a class="govuk-link govuk-link--no-visited-state"
+           href="{{ url_for('.framework_dashboard', framework_slug=currently_applying_to.slug) }}"
+        >
+          Return to your {{ currently_applying_to.name }} application
+        </a>
+      </p>
+    </div>
+  </div>
+  {% endif %}
+{% endblock %}

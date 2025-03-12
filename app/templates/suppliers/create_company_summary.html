@@ -1,0 +1,119 @@
+{% extends "_base_page.html" %}
+
+{% block pageTitle %}
+  Check your information – Create a supplier account – Digital Marketplace
+{% endblock %}
+
+{% block breadcrumb %}
+  {{ govukBreadcrumbs({
+    "items": [
+      {
+        "text": "Digital Marketplace",
+        "href": "/"
+      },
+      {
+        "text": "Become a supplier",
+        "href": url_for('.become_a_supplier')
+      },
+      {
+        "text": "Create an account",
+        "href": url_for('.create_new_supplier')
+      },
+      {
+        "text": "Check your information"
+      }
+    ]
+  }) }}
+{% endblock %}
+
+{% block mainContent %}
+
+  {% if missing_fields %}
+  <div class="banner-destructive-without-action">
+    <p class="banner-message">
+      You must answer all the questions.
+    </p>
+  </div>
+  {% endif %}
+
+<div class="company-information-summary">
+
+  <h1 class="govuk-heading-l">Check your information </h1>
+
+  <h2 class="govuk-heading-m">Your company details</h2>
+  {{ govukSummaryList({
+    "rows": [{
+      "key": {"text": "DUNS number"},
+      "value": {"text": session.get("duns_number", "You must answer this question.")},
+      "actions": {
+        "items": [{
+          "href": url_for(".duns_number", _anchor="duns_number"),
+          "text": "Change",
+          "visuallyHiddenText": "DUNS number",
+        }],
+      },
+    }, {
+      "key": {"text": "Company name"},
+      "value": {"text": session.get("company_name", "You must answer this question.")},
+      "actions": {
+        "items": [{
+          "href": url_for(".company_details", _anchor="company_name"),
+          "text": "Change",
+          "visuallyHiddenText": "company name",
+        }],
+      },
+    }, {
+      "key": {"text": "Contact name"},
+      "value": {"text": session.get("contact_name", "You must answer this question.")},
+      "actions": {
+        "items": [{
+          "href": url_for(".company_details", _anchor="contact_name"),
+          "text": "Change",
+          "visuallyHiddenText": "contact name",
+        }],
+      },
+    }, {
+      "key": {"text": "Contact email"},
+      "value": {"text": session.get("email_address", "You must answer this question.")},
+      "actions": {
+        "items": [{
+          "href": url_for(".company_details", _anchor="email_address"),
+          "text": "Change",
+          "visuallyHiddenText": "contact email",
+        }],
+      },
+    }, {
+      "key": {"text": "Contact phone number"},
+      "value": {"text": session.get("phone_number", "You must answer this question.")},
+      "actions": {
+        "items": [{
+          "href": url_for(".company_details", _anchor="phone_number"),
+          "text": "Change",
+          "visuallyHiddenText": "contact phone number",
+        }],
+      },
+    }],
+  }) }}
+
+  <h2 class="govuk-heading-m">Your login details</h2>
+  {{ govukSummaryList({
+    "rows": [{
+      "key": {"text": "Email address"},
+      "value": {"text": session.get("account_email_address", "You must answer this question.")},
+      "actions": {
+        "items": [{
+          "href": url_for(".create_your_account", _anchor="email_address"),
+          "text": "Change",
+          "visuallyHiddenText": "login email address",
+        }],
+      },
+    }],
+  }) }}
+</div>
+<form action="{{ url_for('.submit_company_summary')}}" method="POST">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+  {{ govukButton({
+    "text": "Create account",
+  }) }}
+</form>
+{% endblock %}

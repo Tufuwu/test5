@@ -1,40 +1,26 @@
-# Copyright 2019 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#      http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 
-# TODO(wgrzelak): Invoke targets into the container.
+.DEFAULT_GOAL := bootstrap
 
-.DEFAULT_GOAL := help
+%:
+	-@[ -z "$$TERM" ] || tput setaf 1  # red
+	@>&2 echo warning: calling '`make`' is being deprecated in this repo, you should use '`invoke` (https://pyinvoke.org)' instead.
+	-@[ -z "$$TERM" ] || tput setaf 9  # default
+	@# pass goals to '`invoke`'
+	invoke $(or $(MAKECMDGOALS), $@)
+	@exit
 
-.PHONY: help
-help: ## Shows help
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+help:
+	invoke --list
 
-.PHONY: python-test
-python-test: ## Runs tests for Python scripts
-	@python --version
-	@python -m unittest discover -s scripts -p "*_test.py"
+.PHONY: bootstrap
+bootstrap:
+	pip install digitalmarketplace-developer-tools
+	@echo done
+	-@[ -z "$$TERM" ] || tput setaf 2  # green
+	@>&2 echo dmdevtools has been installed globally, run developer tasks with '`invoke`'
+	-@[ -z "$$TERM" ] || tput setaf 9  # default
 
-.PHONY: vm-lint
-vm-lint: ## Runs lint for Chef cookbooks
-	@docker pull chef/chefworkstation
-	# cookstyle print version
-	@docker run --rm --entrypoint cookstyle -v $(PWD)/vm/chef:/chef:ro chef/chefworkstation --version
-	# cookstyle on cookbooks
-	@docker run --rm --entrypoint cookstyle -v $(PWD)/vm/chef:/chef:ro chef/chefworkstation /chef/cookbooks
-	# cookstyle on tests
-	@docker run --rm --entrypoint cookstyle -v $(PWD)/vm/tests:/tests:ro chef/chefworkstation /tests/solutions
-
-.PHONY: vm-generate-triggers
-vm-generate-triggers: ## Generates and displays GCB triggers for VM
-	@python scripts/triggers_vm_generator.py
+.PHONY: build
+build:
+	docker build -t digitalmarketplace-aws-supplier-frontend-http --build-arg DM_APP_NAME=supplier-frontend -f docker-aws/Dockerfile.http .
+	docker build -t digitalmarketplace-aws-supplier-frontend-wsgi -f docker-aws/Dockerfile.wsgi .

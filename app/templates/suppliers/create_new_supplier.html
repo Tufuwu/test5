@@ -1,0 +1,64 @@
+{% extends "_base_page.html" %}
+
+{% block pageTitle %}
+  Create a supplier account – Digital Marketplace
+{% endblock %}
+
+{% block breadcrumb %}
+  {{ govukBreadcrumbs({
+    "items": [
+      {
+        "text": "Digital Marketplace",
+        "href": "/"
+      },
+      {
+        "text": "Become a supplier",
+        "href": url_for('.become_a_supplier')
+      },
+      {
+        "text": "Create a supplier account"
+      }
+    ]
+  }) }}
+{% endblock %}
+
+{% block mainContent %}
+
+<div class="start-page">
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds dmspeak">
+      <h1 class="govuk-heading-l">Create a supplier account</h1>
+
+      <div>
+        <p class="govuk-body-m">You must provide:</p>
+
+        <ul class="govuk-list govuk-list--bullet">
+          <li>a company name and company details that buyers may use to contact you</li>
+          <li>your own details to create a login</li>
+          <li>a DUNS number</li>
+        </ul>
+
+        <p class="govuk-body">It will take about 5 minutes to create your account.</p>
+      </div>
+
+      <h2 class="heading-xmedium">If your company isn’t registered with Companies&nbsp;House</h2>
+      <div>
+        <p class="govuk-body">If your company isn’t <a class="govuk-link" href="https://beta.companieshouse.gov.uk/" rel="external">registered with Companies House</a>,
+           you may need to <a class="govuk-link" href="https://www.dnb.co.uk/duns-number/lookup/request-a-duns-number.html" rel="external">apply for a DUNS number</a>
+           before you can create a supplier account.
+        </p>
+
+        <p class="govuk-body">
+          It could take 3 to 5 days to get your DUNS number.
+        </p>
+      </div>
+      <br />
+      {{ govukButton({
+        "text": "Start",
+        "href": url_for(".duns_number"),
+        "classes": "govuk-button--start",
+      }) }}
+    </div>
+  </div>
+</div>
+{% endblock %}

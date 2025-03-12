@@ -1,8 +1,0 @@
-Chef/Style/CommentFormat:
-  Enabled: false
-
-Style/HashSyntax:
-  Enabled: false
-
-Style/RegexpLiteral:
-  Enabled: false

@@ -1,0 +1,47 @@
+{% import "toolkit/summary-table.html" as summary %}
+{% if frameworks.standstill %}
+  <div class='pending-services-table'>
+    {{ summary.heading("Pending services") }}
+    {% call(framework) summary.list_table(
+      frameworks.standstill,
+      caption='Pending services',
+      field_headings=[
+        'Framework name',
+        'Services',
+        ''
+      ],
+      field_headings_visible=False
+    ) %}
+      {% call summary.row(complete=not framework.needs_to_return_agreement) %}
+        {% call summary.field(first=True) %}
+          <p class="govuk-body">
+            {{ framework.name }}
+          </p>
+          {% if framework.onFramework %}
+            <p class='second-line'>
+              Live from {{ framework.frameworkLiveAt }}
+            </p>
+          {% endif %}
+        {% endcall %}
+        {% call summary.field() %}
+          <p class="govuk-body">
+            {{ framework.complete_drafts_count }} service{{ 's' if framework.complete_drafts_count != 1 }} {{ 'submitted' if not framework.onFramework }}
+          </p>
+          <p class="govuk-body">
+          <a class="govuk-link" href="{{ url_for('.framework_dashboard', framework_slug=framework.slug) }}">
+            View your services
+          </a>
+          </p>
+          {% if framework.needs_to_return_agreement %}
+            <p class="govuk-body">
+            {% set sign_agreement_route = url_for('.legal_authority', framework_slug=framework.slug) %}
+              <a class="govuk-link" href="{{ sign_agreement_route }}">
+                You must sign the {{ framework.contract_title | lower }} to sell these services
+              </a>
+            </p>
+          {% endif %}
+        {% endcall %}
+      {% endcall %}
+    {% endcall %}
+  </div>
+{% endif %}

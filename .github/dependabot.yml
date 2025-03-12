@@ -1,0 +1,30 @@
+version: 2
+updates:
+- package-ecosystem: pip
+  directory: "/"
+  schedule:
+    interval: weekly
+    time: "03:00"
+  open-pull-requests-limit: 10
+  allow:
+  - dependency-type: production
+  ignore:
+  - dependency-name: "govuk-frontend"
+    update-types: ["version-update:semver-major"]
+  - dependency-name: "digitalmarketplace-govuk-frontend"
+    update-types: ["version-update:semver-major"]
+- package-ecosystem: "npm"
+  directory: "/"
+  schedule:
+    interval: weekly
+    time: "03:00"
+- package-ecosystem: docker
+  directory: "/"
+  schedule:
+    interval: weekly
+    time: "03:00"
+- package-ecosystem: "github-actions"
+  directory: "/"
+  schedule:
+    interval: weekly
+    time: "03:00"

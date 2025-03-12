@@ -1,0 +1,86 @@
+{% extends "_base_page.html" %}
+{% block pageTitle %}
+  Your account – Digital Marketplace
+{% endblock %}
+
+{% block breadcrumb %}
+  {{ govukBreadcrumbs({
+    "items": [
+      {
+        "text": "Digital Marketplace",
+        "href": "/"
+      },
+      {
+        "text": "Your account"
+      }
+    ]
+  }) }}
+{% endblock %}
+
+{% block mainContent %}
+  {% if are_new_frameworks_live %}
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        {{ dmNewFrameworkBanner({ 'gCloudLive': g_cloud_framework_live }) }}
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <span class="govuk-caption-xl">{{ current_user.email_address }}</span>
+      <h1 class="govuk-heading-xl">{{ current_user.supplier_name }}</h1>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+    {% include 'suppliers/_frameworks_coming.html' %}
+    {% include 'suppliers/_frameworks_open.html' %}
+    {% include 'suppliers/_frameworks_pending.html' %}
+    {% include 'suppliers/_frameworks_standstill.html' %}
+    <h2 class="visually-hidden">Your services</h2>
+    <div class="dmspeak">
+      {% include 'suppliers/_frameworks_live.html' %}
+    </div>
+    </div>
+    <div class="govuk-grid-column-one-third dmspeak">
+      <h2 class="heading-xmedium">Your company</h2>
+      <ul class="govuk-list">
+        <li>
+          <a class="govuk-link" href="{{ url_for('.supplier_details') }}">Your company details</a>
+        </li>
+        <li>
+          <a class="govuk-link" href="{{ url_for('.list_users') }}">Contributors</a>
+        </li>
+      </ul>
+      <h2 class="heading-xmedium">Account settings</h2>
+      <ul class="govuk-list">
+        <li>
+          <a class="govuk-link" href="{{ url_for('external.change_password') }}">Change your password</a>
+        </li>
+        <li>
+          <a class="govuk-link" href="{{ url_for('external.cookie_settings') }}">Change your cookie settings</a>
+        </li>
+        <li>
+          <a
+            class="govuk-link"
+            href="{{ url_for('external.user_research_consent') }}"
+            data-analytics="trackEvent"
+            data-analytics-category="user-research"
+            data-analytics-action="account-settings-link"
+          >
+            {% if not current_user.user_research_opted_in %}
+              Join the user research mailing list
+            {% else %}
+              Unsubscribe from the user research mailing list
+            {% endif %}
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+
+
+{% endblock %}

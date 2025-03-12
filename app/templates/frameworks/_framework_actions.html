@@ -1,0 +1,105 @@
+{% if framework.status in ['standstill', 'live'] and application_made and not countersigned_agreement_file %}
+  {% if not (framework.frameworkAgreementVersion and supplier_is_on_framework) %}
+  <li class="browse-list-item">
+    <a class="browse-list-item-link" href="{{ url_for('.download_agreement_file', framework_slug=framework.slug, document_name='result-letter.pdf') }}" download>
+      <span>Download your application {% if supplier_is_on_framework %}award{% else %}result{% endif %} letter (.pdf)</span>
+    </a>
+    {% if supplier_is_on_framework %}
+      <p class="govuk-body">This letter is a record of your successful {{ framework.name }} application.</p>
+    {% else %}
+      <p class="govuk-body">This letter informs you if your {{ framework.name }} application has been successful.</p>
+    {% endif %}
+
+  </li>
+  {% endif %}
+
+  {% if supplier_is_on_framework and not supplier_framework.agreementReturned %}
+  {% set sign_agreement_route = url_for('.legal_authority', framework_slug=framework.slug) %}
+  <li class="browse-list-item">
+    <a class="browse-list-item-link" href="{{ sign_agreement_route }}">
+      <span>Sign and return your {{ contract_title | lower }}</span>
+    </a>
+    <p class="govuk-body">Your {{ contract_title | lower }} will need to be signed by both you and the Crown Commercial Service before you can sell {{framework.name}} services.</p>
+  </li>
+  {% endif %}
+{% endif %}
+
+{% if framework.status == 'open' %}
+ {% if application_made %}
+    {% if counts.draft %}
+      {{ dmAlert({
+        "titleText": "Your application is complete and will be submitted automatically.",
+        "text": "You still have {count} unsubmitted draft {service_string}. You can edit or remove draft services at any time before the deadline.".format(count=counts.draft, service_string=pluralize(counts.draft, 'service', 'services')),
+        "type" : "success"
+        })
+      }}
+    {% else %}
+      {{ dmAlert({
+        "titleText": "Your application is complete and will be submitted automatically.",
+        "text": "You can change it at any time before the deadline.",
+        "type" : "success"
+        })
+      }}
+    {% endif %}
+  {% endif %}
+  <h2 class="govuk-heading-m">Application progress</h2>
+  <ul class="dm-task-list dm-task-list__items">
+    <li class="dm-task-list__item">
+      <span class="dm-task-list__task-name">
+        <a href="{{ url_for('.supplier_details') }}">
+          Confirm your company details
+        </a>
+      </span>
+      {% if application_company_details_confirmed %}
+        <strong class="govuk-tag dm-task-list__tag" id="dm-companydetails-done">Completed</strong>
+      {% elif supplier_company_details_complete %}
+        {# Supplier details exist from a previous framework application, but haven't yet been confirmed for this one #}
+        <strong class="govuk-tag govuk-tag--blue dm-task-list__tag" id="dm-companydetails-inprogress">In progress</strong>
+      {% else %}
+        <strong class="govuk-tag govuk-tag--grey dm-task-list__tag" id="dm-companydetails-todo">Not started</strong>
+      {% endif %}
+    </li>
+    <li class="dm-task-list__item">
+      <span class="dm-task-list__task-name">
+        {% if application_company_details_confirmed %}
+          {% if declaration_status == 'unstarted' %}
+            <a href="{{ url_for('.framework_start_supplier_declaration', framework_slug=framework.slug) }}">Make your supplier declaration</a>
+          {% else %}
+            <a href="{{ url_for('.framework_supplier_declaration_overview', framework_slug=framework.slug) }}">Make your supplier declaration</a>
+          {% endif %}
+        {% else %}
+        <span class="dm-task-list__text">Make your supplier declaration</span>
+        {% endif %}
+      </span>
+      {% if not application_company_details_confirmed %}
+        <strong class="govuk-tag govuk-tag--grey dm-task-list__tag" id="dm-declaration-cantstart">Cannot start yet</strong>
+      {% elif declaration_status == 'unstarted' %}
+        <strong class="govuk-tag govuk-tag--grey dm-task-list__tag" id="dm-declaration-todo">Not started</strong>
+      {% elif declaration_status == 'started' %}
+        <strong class="govuk-tag govuk-tag--blue dm-task-list__tag" id="dm-declaration-inprogress">In progress</strong>
+      {% elif declaration_status == 'complete' %}
+        <strong class="govuk-tag dm-task-list__tag" id="dm-declaration-done">Completed</strong>
+      {% endif %}
+    </li>
+    <li class="dm-task-list__item">
+      <span class="dm-task-list__task-name">
+        {% if application_company_details_confirmed %}
+        <a href="{{ url_for('.framework_submission_lots', framework_slug=framework.slug) }}">
+          Add, edit and complete services
+        </a>
+        {% else %}
+        <span class="dm-task-list__text">Add, edit and complete services</span>
+        {% endif %}
+      </span>
+      {% if not application_company_details_confirmed %}
+        <strong class="govuk-tag govuk-tag--grey dm-task-list__tag" id="dm-services-cantstart">Cannot start yet</strong>
+      {% elif not counts.draft and not counts.complete %}
+        <strong class="govuk-tag govuk-tag--grey dm-task-list__tag" id="dm-services-todo">Not started</strong>
+      {% elif counts.draft %}
+        <strong class="govuk-tag govuk-tag--blue dm-task-list__tag" id="dm-services-inprogress">In progress</strong>
+      {% else %}
+        <strong class="govuk-tag dm-task-list__tag" id="dm-services-done">{{ counts.complete }} {{ pluralize(counts.complete, 'service', 'services') }}</strong>
+      {% endif %}
+    </li>
+  </ul>
+{% endif %}

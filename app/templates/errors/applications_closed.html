@@ -1,0 +1,29 @@
+{% extends "_base_page.html" %}
+
+{% block pageTitle %}
+  Applications closed - Digital Marketplace
+{% endblock %}
+
+{% block mainContent %}
+
+<div class="error-page">
+  <h1 class="govuk-heading-l">You can no longer apply to {{ framework['name'] }}</h1>
+
+  <div class="dmspeak">
+    <p class="govuk-body">
+        The deadline for applying was {{ framework['applicationsCloseAt'] }}.
+    </p>
+    {% if following_framework_content %}
+      <p class="govuk-body">
+          {{ following_framework_content.name }} is expected to open in {{ following_framework_content.coming }}. <a class="govuk-link" href="{{ url_for('.join_open_framework_notification_mailing_list') }}">Sign up for emails</a> about when you can apply.
+      </p>
+    {% endif %}
+  </div>
+
+  <p class="govuk-body">
+    <a class="govuk-link" href="{{ url_for('.dashboard') }}">Return to your account</a>
+  </p>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends "_base_page.html" %}
+
+{% block pageTitle %}Confirm company – Create a supplier account – Digital Marketplace{% endblock %}
+
+{% block breadcrumb %}
+  {{ govukBreadcrumbs({
+    "items": [
+      {
+        "href": "/",
+        "text": "Digital Marketplace"
+      },
+      {
+        "href": url_for('.become_a_supplier'),
+        "text": "Become a supplier"
+      },
+      {
+        "href": url_for('.create_new_supplier'),
+        "text": "Create an account"
+      },
+      {
+        "text": "Confirm company"
+      },
+
+    ]
+  }) }}
+{% endblock %}
+
+{% block mainContent %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">We found these details</h1>
+
+      {{ govukSummaryList({
+        "rows": [{
+          "key": {"text": "DUNS number"},
+          "value": {"text": session.get("duns_number")},
+        }, {
+          "key": {"text": "Company name"},
+          "value": {"text": session.get("company_name")},
+        }],
+      }) }}
+
+      <form method="POST" action="{{ url_for('.confirm_company') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+
+        {% with question = "Is this the company you want to create an account for?",
+          name = "confirmed",
+          value = form.confirmed.value,
+          error = errors.get("confirmed", {}).get("message", None),
+          type = 'boolean'
+        %}
+          {% include "toolkit/forms/selection-buttons.html" %}
+        {% endwith %}
+
+        <p>You can change how the name appears later on.</p>
+
+        {{ govukButton({"text": "Continue"}) }}
+
+      </form>
+
+    </div>
+  </div>
+
+{% endblock %}

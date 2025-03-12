@@ -1,3 +1,0 @@
-https://github.com/hashicorp/errwrap
-https://github.com/hashicorp/go-multierror
-https://github.com/therootcompany/xz

@@ -1,0 +1,14 @@
+-c requirements.txt
+
+cssselect
+flake8
+freezegun
+lxml
+mock
+pytest
+python-dotenv  # used to load .flaskenv
+requests-mock
+watchdog
+mypy
+
+digitalmarketplace-test-utils

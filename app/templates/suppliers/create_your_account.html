@@ -1,0 +1,59 @@
+{% extends "_base_page.html" %}
+
+{% block pageTitle %}
+  Create login — Create a supplier account – Digital Marketplace
+{% endblock %}
+
+{% block breadcrumb %}
+  {{ govukBreadcrumbs({
+    "items": [
+      {
+        "text": "Digital Marketplace",
+        "href": "/"
+      },
+      {
+        "text": "Become a supplier",
+        "href": url_for('.become_a_supplier')
+      },
+      {
+        "text": "Create an account",
+        "href": url_for('.create_new_supplier')
+      },
+      {
+        "text": "Create login"
+      }
+    ]
+  }) }}
+{% endblock %}
+
+{% block mainContent %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-l">Create login</h1>
+
+    <div class="dmspeak">
+       <p class="govuk-body">Use your work email address to create your account.</p>
+       <p class="govuk-body">It won’t be visible on the Digital Marketplace.</p>
+       <p class="govuk-body">You can add other email addresses to your supplier account later.</p>
+    </div>
+    <form method="POST" action="{{ url_for('.create_your_account') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+      {%
+        with
+          question = "Your email address",
+          name = "email_address",
+          value = email_address,
+          error = errors.get("email_address", {}).get("message", None),
+          hint = "This should be your individual work email address"
+      %}
+        {% include "toolkit/forms/textbox.html" %}
+      {% endwith %}
+      {{ govukButton({
+        "text": "Continue",
+      }) }}
+    </form>
+  </div>
+</div>
+
+{% endblock %}

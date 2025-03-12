@@ -1,0 +1,62 @@
+{% extends "_base_page.html" %}
+
+{% block pageTitle %}
+  Change your {{ completed_data_description }} – Digital Marketplace
+{% endblock %}
+
+{% block breadcrumb %}
+  {{ govukBreadcrumbs({
+    "items": [
+      {
+        "text": "Digital Marketplace",
+        "href": "/"
+      },
+      {
+        "text": "Your account",
+        "href": url_for('.dashboard')
+      },
+      {
+        "text": "Your company details",
+        "href": url_for('.supplier_details')
+      },
+      {
+        "text": "Change your " + completed_data_description
+      }
+    ]
+  }) }}
+{% endblock %}
+
+{% block mainContent %}
+
+<div class="single-question-page">
+  <div class="govuk-grid-row">
+
+    <div class="govuk-grid-column-two-thirds dmspeak">
+      <h1 class="govuk-heading-l">{{ 'Correct a mistake in your {}'.format(completed_data_description) }}</h1>
+
+      <div class="explanation-list">
+      <p class="govuk-body-m">Contact <a class="govuk-link" href="mailto:{{ company_details_change_email }}">{{ company_details_change_email }}</a> to correct a mistake in your:</p>
+
+      <ul class="govuk-list govuk-list--bullet">
+        <li>registered company name</li>
+        <li>registration number</li>
+        <li>DUNS number</li>
+      </ul>
+      <h2 class="heading-xmedium">If you have a new {{ completed_data_description }}</h2>
+      <p class="govuk-body">You must <a class="govuk-link" href="{{ url_for('.create_new_supplier') }}">create a new supplier account</a> using a different login email address
+        if you want to change your {{ completed_data_description }}.</p>
+      </div>
+
+      <p class="govuk-body">
+        <a class="govuk-link govuk-link--no-visited-state"
+           href="{{ url_for('.supplier_details') }}"
+        >
+          Return to company details
+        </a>
+      </p>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}

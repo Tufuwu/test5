@@ -1,0 +1,38 @@
+{% for framework in frameworks.last_dos + frameworks.live %}
+  {% if framework.onFramework %}
+    <h3 class="heading-xmedium">{{ framework.name }}</h3>
+    {% if framework.needs_to_return_agreement %}
+      {% set sign_agreement_route = url_for('.legal_authority', framework_slug=framework.slug) %}
+      <p class="govuk-body">
+        <a class="govuk-link" href="{{ sign_agreement_route }}">
+        You must sign the {{ framework.contract_title | lower }} to sell these services
+        </a>
+      </p>
+    {% endif %}
+    <ul class="govuk-list">
+      {% if framework.framework == 'digital-outcomes-and-specialists' %}
+      <li>
+        <a class="govuk-link" href="{{ url_for('external.opportunities_dashboard', framework_slug=framework.slug) }}">
+          View your opportunities
+        </a>
+      </li>
+      {% endif %}
+      {% if framework in frameworks.live %}
+      <li>
+        <a class="govuk-link" href="{{ url_for('.list_services', framework_slug=framework.slug) }}">
+        View services
+        </a>
+      </li>
+      <li>
+        <a class="govuk-link" href="{{ url_for('.framework_dashboard', framework_slug=framework.slug) }}">
+        View documents
+        </a>
+      </li>
+    </ul>
+  {% endif %}
+{% else %}
+  <p class="govuk-body">
+    You don't have any services on the Digital Marketplace
+  </p>
+{% endif %}
+{% endfor %}
