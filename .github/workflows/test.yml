@@ -1,41 +1,25 @@
-name: test
+name: Test
 
 on:
-  push:
-    branches: [main]
   pull_request:
-    branches: [main]
+    types: [opened, synchronize, reopened, labeled, unlabeled]
 
 jobs:
-
-  test:
-    runs-on: ${{ matrix.os }}
-    name: ${{ matrix.os }} - ${{ matrix.python }}
+  tests:
     strategy:
       matrix:
-        os: [windows-latest, ubuntu-latest]
         python: ["3.9", "3.10"]
-        include:
-          - os: ubuntu-latest
-            python: 3.9
-          - os: ubuntu-latest
-            python: 3.9
-          - os: ubuntu-latest
-            python: pypy3
-          - os: windows-latest
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+      with:
+        submodules: recursive
     - name: Set up Python ${{ matrix.python }}
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python }}
-    - name: Install
-      # pyperformance must be installed:
-      # pyperformance/tests/test_compare.py imports it
+    - name: Test
       run: |
-        python -m pip install --upgrade pip setuptools
-        python -m pip install -e .
-    - name: Display Python version
-      run: python -c "import sys; print(sys.version)"
-    - name: Run Tests
-      run: python runtests.py
+        pip install -r requirements.txt
+        pip install -r tests/requirements.txt
+        python -m unittest discover -s tests

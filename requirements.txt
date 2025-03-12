@@ -1,1 +1,3 @@
-pyperformance/requirements/requirements.txt
+Pillow
+numpy
+rospkg
