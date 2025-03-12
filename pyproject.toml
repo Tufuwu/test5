@@ -1,64 +1,34 @@
-[build-system]
-requires = ["hatchling", "hatch-vcs"]
-build-backend = "hatchling.build"
-
 [project]
-name = "matplotlib-scalebar"
-dynamic = ["version"]
-description = "Artist for matplotlib to display a scale bar"
-readme = "README.md"
-license = "BSD-2-clause"
-requires-python = ">=3.9"
+name = "kanboard"
+version = "1.1.6"
+description = "Client library for Kanboard"
+readme = "README.rst"
+requires-python = ">=3.7"
+license = {file = "LICENSE"}
+keywords = ["kanboard", "api", "client"]
 authors = [
-    { name = "Philippe Pinard", email = "philippe.pinard@gmail.com" },
-]
-maintainers = [
-    { name = "Philippe Pinard", email = "philippe.pinard@gmail.com" },
-]
-keywords = [
-    "bar",
-    "matplotlib",
-    "micron",
-    "scale",
+  { name = "Frédéric Guillot", email = "fred@kanboard.net" }
 ]
 classifiers = [
-    "Development Status :: 5 - Production/Stable",
-    "Framework :: Matplotlib",
-    "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: BSD License",
-    "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
-    "Topic :: Scientific/Engineering :: Visualization",
-]
-dependencies = [
-    "matplotlib",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3 :: Only",
 ]
 
 [project.urls]
-Homepage = "https://github.com/ppinard/matplotlib-scalebar"
-Tracker = "https://github.com/ppinard/matplotlib-scalebar/issues"
-Source = "https://github.com/ppinard/matplotlib-scalebar"
+"Homepage" = "https://github.com/kanboard/python-api-client"
+"Bug Reports" = "https://github.com/kanboard/python-api-client/issues"
+"Source" = "https://github.com/kanboard/python-api-client"
 
-[tool.hatch.version]
-source = "vcs"
-
-[tool.hatch.build.hooks.vcs]
-version-file = "matplotlib_scalebar/_version.py"
-
-[tool.hatch.envs.default]
-dependencies = [
-  "pytest",
-  "pytest-cov",
-  "ruff"
-]
-
-[tool.hatch.envs.default.scripts]
-test = "pytest -W error::Warning --cov=matplotlib_scalebar --cov-report term --cov-report xml"
-lint = "ruff check ."
-
-[tool.ruff.per-file-ignores]
-"__init__.py" = ["F401"]
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"

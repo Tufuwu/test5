@@ -1,40 +1,32 @@
-name: Python package
+name: CI
 
 on:
-  push:
-    branches: [master]
   pull_request:
-    branches: [master]
-  schedule:
-    - cron: '0 0 1 * *'
+    branches:
+    - master
 
 jobs:
-  build:
+  tests:
+
     runs-on: ${{ matrix.os }}
     strategy:
+      max-parallel: 4
       matrix:
-        os: [ubuntu-latest]
+        os: [ubuntu-latest, windows-latest]
         python-version: ["3.9", "3.10"]
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v1
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Cache pip
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-            ${{ runner.os }}-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip codecov
-          pip install --upgrade -e .[dev]
-      - name: Test with pytest
-        run: pytest
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v1
+    - uses: actions/checkout@v1
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        pip install flake8
+    - name: Unit tests
+      run: |
+        python setup.py test
+    - name: PEP8
+      run: |
+        flake8 --max-line-length 120 *.py
