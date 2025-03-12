@@ -1,0 +1,4 @@
+Reports
+=======
+
+.. automodule:: tenable.reports
