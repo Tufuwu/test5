@@ -1,39 +1,83 @@
 [build-system]
-requires = ["setuptools>=51.1.1", "wheel", "setuptools_scm[toml]>=5.0"]
+requires = ["setuptools>=62"]
+build-backend = "setuptools.build_meta"
 
-[tool.mypy]
-exclude = "build/"
-check_untyped_defs = true
+[project]
+name = "matching"
+authors = [
+    { name="Henry Wilde", email="henrydavidwilde@gmail.com" },
+    { name="Vince Knight" },
+]
+description = "A package for solving matching games"
+readme = "README.md"
+requires-python = ">=3.5"
+license = {text = "MIT License"}
+keywords = [
+    "game-theory",
+    "gale-shapley",
+    "matching-games",
+    "stable-marriage",
+    "hospital-resident",
+    "stable-roommates",
+    "project-allocation",
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+]
+dependencies = [
+    "numpy>=1.19.2"
+]
+dynamic = ["version"]
 
-[tool.setuptools_scm]
-write_to = "solcx/version.py"
+[project.optional-dependencies]
+test = [
+    "hypothesis>=6.31.6",
+    "nbval>=0.10.0",
+    "pytest>=6.2.5",
+    "pytest-cov>=3.0.0",
+    "pytest-randomly>=3.10",
+]
+docs = [
+    "ipython>=7.10",
+    "matplotlib>=3",
+    "nbsphinx>=0.8.8",
+    "pandas>=1.1.5",
+    "PyYAML>=6",
+    "quartodoc>=0.5.0; python_version>'3.8'",
+]
+dev = [
+    "black[jupyter]>=22.6.0,<23",
+    "flake8>=4.0.1",
+    "interrogate>=1.5.0",
+    "isort>=5.10.1",
+    "matching[docs,test]",
+]
 
-# NOTE: you have to use single-quoted strings in TOML for regular expressions.
-# It's the equivalent of r-strings in Python.  Multiline strings are treated as
-# verbose regular expressions by Black.  Use [ ] to denote a significant space
-# character.
+[project.urls]
+homepage = "https://github.com/daffidwilde/matching"
+documentation = "https://daffidwilde.github.io/matching"
+changelog = "https://github.com/daffidwilde/matching/blob/main/CHANGES.md"
+
+[tool.setuptools.dynamic]
+version = {attr = "matching.__version__"}
 
 [tool.black]
-line-length = 100
-target-version = ['py38', 'py39', 'py310', 'py311']
-include = '\.pyi?$'
-
-[tool.pytest.ini_options]
-addopts = """
-    -p no:ape_test
-    --cov-branch
-    --cov-report term
-    --cov-report html
-    --cov-report xml
-    --cov=ape_solidity
-"""
-python_files = "test_*.py"
-testpaths = "tests"
-markers = "fuzzing: Run Hypothesis fuzz test suite"
+line-length = 79
 
 [tool.isort]
-line_length = 100
-force_grid_wrap = 0
-include_trailing_comma = true
-multi_line_output = 3
-use_parentheses = true
+profile = "black"
+line_length = 79
+
+[tool.interrogate]
+ignore-init-method = true
+ignore-init-module = true
+ignore-magic = true
+fail-under = 100
+verbose = 1
+
+[tool.coverage.report]
+omit = ["src/**/__init__.py"]

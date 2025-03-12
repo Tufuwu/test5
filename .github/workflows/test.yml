@@ -1,97 +1,54 @@
-on: ["push", "pull_request"]
+name: CI/CD
 
-name: py-solc-x workflow
+on:
+  push:
+  pull_request:
+  # Run daily at 0:01 UTC
+  schedule:
+  - cron:  '1 0 * * *'
 
 jobs:
+  test:
 
-  lint:
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v1
-
-    - name: Setup Python 3.6
-      uses: actions/setup-python@v1
-      with:
-        python-version: 3.9
-
-    - name: Install Tox
-      run: pip install tox
-
-    - name: Run Tox
-      run: tox -e lint
-
-
-  py36:
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v1
-    
-    - name: Setup Python 3.6
-      uses: actions/setup-python@v1
-      with:
-        python-version: 3.9
-    
-    - name: Install Tox
-      run: pip install tox
-
-    - name: Run Tox
-      run: tox -e py36
-
-    - name: Upload coverage to Codecov  
-      uses: codecov/codecov-action@v1
-      with:
-        file: ./coverage.xml
-        fail_ci_if_error: true
-
-
-  py37:
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v1
-    
-    - name: Setup Python 3.7
-      uses: actions/setup-python@v1
-      with:
-        python-version: 3.9
-    
-    - name: Install Tox
-      run: pip install tox
-
-    - name: Run Tox
-      run: tox -e py37
-
-    - name: Upload coverage to Codecov  
-      uses: codecov/codecov-action@v1
-      with:
-        file: ./coverage.xml
-        fail_ci_if_error: true
-
-
-  py38:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest, macOS-latest]
+        python-version: ["3.9", "3.10"]
 
     steps:
-    - uses: actions/checkout@v1
-    
-    - name: Setup Python 3.8
-      uses: actions/setup-python@v1
+    - uses: actions/checkout@master
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v1.1.1
       with:
-        python-version: 3.9
-    
-    - name: Install Tox
-      run: pip install tox
-
-    - name: Run Tox
-      run: tox -e py38
-
-    - name: Upload coverage to Codecov  
-      uses: codecov/codecov-action@v1
-      with:
-        file: ./coverage.xml
-        fail_ci_if_error: true
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip setuptools wheel
+        python -m pip install -r requirements.txt
+        python -m pip install -q --no-cache-dir -e .
+        python -m pip install -q --no-cache-dir pytest pytest-cov isort black
+        python -m pip install -q --no-cache-dir sphinx sphinx_rtd_theme
+        python -m pip install -q --no-cache-dir nbval sphinxcontrib-bibtex
+        python -m pip install -q --no-cache-dir matplotlib pandas PyYAML
+        python -m pip list
+    - name: Lint with Black
+      if: matrix.python-version == 3.7 && matrix.os == 'ubuntu-latest'
+      run: |
+        black --check --diff -l 80 .
+    - name: Lint imports with isort
+      if: matrix.python-version == 3.7 && matrix.os == 'ubuntu-latest'
+      run: |
+        isort -rc src --check-only
+    - name: Test with pytest 
+      run: |
+        python -m pytest --cov=matching --cov-fail-under=100 tests
+    - name: Doctesting
+      run: |
+        python -m pytest --nbval --current-env docs
+        python -m doctest paper.md
+        python -m doctest README.rst
+    - name: Check pip install
+      run: |
+          python -m pip uninstall -y matching
+          python -m pip install matching

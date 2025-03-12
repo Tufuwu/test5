@@ -1,79 +1,22 @@
-*.py[cod]
-
-# Binaries
-bin
-solcx/temp
-
-# C extensions
-*.so
-
-# Packages
-*.eggs
-*.egg-info
-dist
-build
-eggs
-parts
-var
-sdist
-develop-eggs
-.installed.cfg
-lib
-lib64
-venv
-env
-
-# Installer logs
-pip-log.txt
-
-# Unit test / coverage reports
-.coverage
-.tox
-coverage.xml
-nosetests.xml
-.hypothesis/
-.coverage.*
-
-# Translations
-*.mo
-
-# Mr Developer
-.mr.developer.cfg
-.project
-.pydevproject
-
-# Complexity
-output/*.html
-output/*/index.html
-
-# Sphinx
-docs/_build
-
-# Blockchain
-**/chains/*/nodes/*
-**/chains/*/nodekey
-**/chains/*/dapp/*
-**/chains/*/chaindata/*
-
-# Known Contracts
-**/known_contracts.json
-
-# py.test cache
+*build*
 .cache
-
-# npm
-node_modules
-
-# setuptools-scm
-version.py
-
-# Ape stuff
-.build/
-
-# other
-.vscode
-.idea
-.mypy_cache/
-**/.DS_Store
+*cov*
+dist/
+*.json
+*.aux
+*.log
+*.pdf
+*.DS_Store
+*egg-info*
+htmlcov/
+*.hypothesis/*
+*.ipynb_checkpoints*
+*pyc
 *.swp
-*.swo
+
+
+!img/*.pdf
+!tests/**/data/*.json
+
+/.quarto/
+/_site/
