@@ -1,12 +1,7 @@
 version: 2
 updates:
-- package-ecosystem: pip
-  directory: "/"
-  schedule:
-    interval: daily
-    time: "04:00"
-  open-pull-requests-limit: 10
-  reviewers:
-  - michadenheijer
-  labels:
-  - dependency
+    # Adding new check for github-actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+        interval: "weekly"

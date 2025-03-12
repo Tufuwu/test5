@@ -1,46 +1,53 @@
-import setuptools
-import os
+"""Install openedx-webhooks."""
 
-location = os.path.abspath(os.path.dirname(__file__))
+import re
 
-about_module = {}
-with open(
-    os.path.join(location, "pynytimes", "__version__.py"),
-    mode="r",
-    encoding="utf-8",
-) as f:
-    exec(f.read(), about_module)
+from setuptools import find_packages, setup
 
-with open("README.md", "r") as fh:
-    long_description = fh.read()
 
-setuptools.setup(
-    name="pynytimes",
-    version=about_module["__version__"],
-    description=about_module["__description__"],
-    long_description=long_description,
-    long_description_content_type="text/markdown",
-    author=about_module["__author__"],
-    author_email=about_module["__author_email__"],
-    python_requires=">=3.9, <4",
-    packages=setuptools.find_packages(),
-    include_package_data=True,
-    url=about_module["__url__"],
-    license=about_module["__license__"],
-    install_requires=["requests>=2.10.0,<3.0.0", "urllib3>=2.0.0"],
-    classifiers=[
-        "License :: OSI Approved :: MIT License",
-        "Development Status :: 5 - Production/Stable",
-        "Intended Audience :: Developers",
-        "Intended Audience :: Information Technology",
-        "Intended Audience :: Science/Research",
-        "Natural Language :: English",
-        "Programming Language :: Python :: 3.9",
-        "Programming Language :: Python :: 3.10",
-        "Programming Language :: Python :: 3.11",
-        "Programming Language :: Python :: 3.12",
-        "Programming Language :: Python :: Implementation :: CPython",
-        "Programming Language :: Python :: Implementation :: PyPy",
-        "Topic :: Sociology",
-    ],
+# UPDATED VIA SEMGREP - if you need to remove/modify this method remove this line and add a comment specifying why
+def is_requirement(line):
+    """
+    Return True if the requirement line is a package requirement.
+
+    Returns:
+        bool: True if the line is not blank, a comment,
+        a URL, or an included file
+    """
+    return line and line.strip() and not line.startswith(('-r', '#', '-e', 'git+', '-c'))
+
+
+def get_requirements(path):
+    with open(path) as f:
+        lines = f.readlines()
+    return [line.strip() for line in lines if is_requirement(line)]
+
+
+version = ''
+with open('openedx_webhooks/__init__.py', 'r') as fd:
+    version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]',
+                        fd.read(), re.MULTILINE).group(1)
+
+if not version:
+    raise RuntimeError('Cannot find version information')
+
+
+setup(
+    name="openedx_webhooks",
+    version=version,
+    description="Automated tasks for Open edX",
+    long_description=open('README.rst').read(),
+    author="Open Source Community Managers at edX",
+    author_email="oscm@edx.org",
+    url="https://github.com/openedx/openedx_webhooks",
+    packages=find_packages(),
+    install_requires=get_requirements("requirements.txt"),
+    license='Apache 2.0',
+    classifiers=(
+        'License :: OSI Approved :: Apache Software License',
+        'Framework :: Flask',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 3.12',
+    ),
+    zip_safe=False,
 )
