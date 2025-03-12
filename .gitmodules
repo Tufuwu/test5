@@ -1,4 +1,0 @@
-[submodule "vendor/libfaketime"]
-	path = libfaketime/vendor/libfaketime
-	url = https://github.com/wolfcw/libfaketime.git
-	branch = python-libfaketime

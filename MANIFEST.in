@@ -1,7 +1,1 @@
-include CHANGELOG.md LICENSE README.md
-recursive-include libfaketime *.py
-include libfaketime/vendor/libfaketime/Makefile
-include libfaketime/vendor/libfaketime/src/Makefile
-include libfaketime/vendor/libfaketime/src/Makefile.OSX
-include libfaketime/vendor/libfaketime/COPYING
-recursive-include libfaketime/vendor/libfaketime/src *.c *.h *.map
+include LICENSE.txt
