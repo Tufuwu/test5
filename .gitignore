@@ -1,62 +1,67 @@
-# Packaging
-*.pyc
-__pycache__
-*.egg-info
-/dist/
-/build/
-/node_modules/
+# IDE
+.vscode/
+.idea/
 
-# venv
-/bin/
-/lib/
-/share
-/pyvenv.cfg
-/pip-selfcheck.json
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
 
-# Vagrant
-.vagrant
+# C extensions
+*.so
 
-# Temporary/OS files
-*.swp
-*.swo
-*.*~
-.~lock.*
-*.DS_Store
-.python-version
+# Distribution / packaging
+.Python
+env/
+venv/
+bin/
+build/
+develop-eggs/
+dist/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
 
-# IDE files
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+.tox/
+.coverage
+.coverage-*
+.cache
+nosetests.xml
+coverage.xml
+.pytest_cache/
+reports/
+
+# Translations
+*.mo
+
+# Mr Developer
+.mr.developer.cfg
 .project
 .pydevproject
-.settings
-.idea
-.vscode
 
-# Docs
-/docs/build/*
-/src/oscar/static/
-*.pdf
-TODO
-venv
+# Rope
+.ropeproject
 
-# Test files
-.coverage
-.coverage\.*
-.noseids
-coverage.xml
-violations.txt
-nosetests.xml
-/.cache/
-/.pytest_cache/
-/htmlcov/*
-/.tox/*
+# Django stuff:
+*.log
+*.pot
 
-# Sandbox content
-settings_local.py
-/sandbox/*.sqlite
-/sandbox/assets/
-/sandbox/public/
-/sandbox/whoosh_index/
-/sandbox/logs/
+# Sphinx documentation
+doc/_build/
+doc/gallery/
 
-# test stuff
-/tests/whoosh_index/
+# Miscellaneous
+*.csv
+*.sh
+*.txt
+issues

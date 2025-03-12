@@ -1,16 +1,36 @@
 repos:
--   repo: git://github.com/pre-commit/pre-commit-hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-added-large-files
+      - id: check-case-conflict
+      - id: check-merge-conflict
+      - id: check-symlinks
+      - id: check-yaml
+      - id: debug-statements
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+  - repo: https://github.com/pycqa/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+  - repo: https://github.com/psf/black
+    rev: 24.10.0
+    hooks:
+      - id: black
+  - repo: https://github.com/codespell-project/codespell
     rev: v2.3.0
     hooks:
-    -   id: trailing-whitespace
-        language_version: python3
--   repo: https://gitlab.com/PyCQA/flake8
-    rev: 3.8.3
+      - id: codespell
+  - repo: https://github.com/PyCQA/pydocstyle
+    rev: 6.3.0
     hooks:
-    -   id: flake8
-        language_version: python3
-        exclude: migrations
--   repo: https://github.com/PyCQA/isort
-    rev: 5.7.0
+      - id: pydocstyle
+        additional_dependencies: ["tomli"]
+        exclude: "tests"
+  - repo: https://github.com/PyCQA/flake8
+    rev: 7.1.1
     hooks:
-    -   id: isort
+      - id: flake8
+ci:
+  autoupdate_schedule: quarterly
