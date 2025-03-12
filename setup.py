@@ -1,27 +1,36 @@
-import setuptools
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
-with open(file="README.md", mode="r", encoding="utf-8") as fh:
+"""
+A setuptools based setup module.
 
-    long_description = fh.read()
+See:
+https://packaging.python.org/en/latest/distributing.html
+"""
 
-setuptools.setup(name='vtt_to_srt3',
-                 version='0.2.0.4',
-                 author="Jeison Cardoso",
-                 author_email="j@jsonzilla.com",
-                 maintainer="Jeison Cardoso",
-                 description="vtt to srt subtitles converter package",
-                 long_description=long_description,
-                 long_description_content_type="text/markdown",
-                 url="https://github.com/jsonzilla/vtt_to_srt3",
-                 packages=setuptools.find_packages(exclude=["tests", "tests.*"]),
-                 classifiers=["Programming Language :: Python :: 3.7",
-                              "Programming Language :: Python :: 3.8",
-                              "Programming Language :: Python :: 3.9",
-                              "Programming Language :: Python :: 3.10",
-                              "Programming Language :: Python :: 3.11",
-                              "Operating System :: OS Independent"],
-                 entry_points={
-                     "console_scripts":
-                     ["vtt_to_srt=vtt_to_srt.vtt_to_srt:main"]
-                 },
-                 )
+from os import path
+
+from setuptools import setup, find_packages
+
+
+def local_scheme(version):
+    """
+    Skip the local version (eg. +xyz of 0.6.1.dev4+gdf99fe2)
+    to be able to upload to Test PyPI
+    """
+    return ""
+
+
+if __name__ == "__main__":
+    HERE = path.abspath(path.dirname(__file__))
+
+    with open(path.join(HERE, "README.rst"), encoding="utf-8") as readme:
+        LONG_DESCRIPTION = readme.read()
+
+    setup(
+        long_description=LONG_DESCRIPTION,
+        packages=find_packages(exclude=["test_project"]),
+        include_package_data=True,
+        zip_safe=False,
+        use_scm_version={"local_scheme": local_scheme},
+    )

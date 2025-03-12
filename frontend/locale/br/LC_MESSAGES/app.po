@@ -1,0 +1,162 @@
+# English translations for modoboa-contacts package.
+# Copyright (C) 2017 THE modoboa-contacts'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the modoboa-contacts package.
+# Automatically generated, 2017.
+# 
+# Translators:
+# Irriep Nala Novram <allannkorh@yahoo.fr>, 2019
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: modoboa-contacts 1.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-10-12 11:07+0200\n"
+"PO-Revision-Date: 2018-01-30 10:28+0000\n"
+"Last-Translator: Irriep Nala Novram <allannkorh@yahoo.fr>, 2019\n"
+"Language-Team: Breton (https://www.transifex.com/tonio/teams/13749/br/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: br\n"
+"Plural-Forms: nplurals=5; plural=((n%10 == 1) && (n%100 != 11) && (n%100 !=71) && (n%100 !=91) ? 0 :(n%10 == 2) && (n%100 != 12) && (n%100 !=72) && (n%100 !=92) ? 1 :(n%10 ==3 || n%10==4 || n%10==9) && (n%100 < 10 || n% 100 > 19) && (n%100 < 70 || n%100 > 79) && (n%100 < 90 || n%100 > 99) ? 2 :(n != 0 && n % 1000000 == 0) ? 3 : 4);\n"
+
+#: src/components/ContactList.vue:8
+msgid "Add"
+msgstr "Ouzhpennañ"
+
+#: src/App.vue:13 src/components/CategoryForm.vue:3
+msgid "Add category"
+msgstr "Ouzhpennañ ur rummad"
+
+#: src/components/ContactDetail.vue:50 src/components/ContactForm.vue:164
+#: src/components/EmailField.vue:38
+msgid "Address"
+msgstr "Chomlec'h"
+
+#: src/components/AddressBookDetail.vue:3
+msgid "Address book information"
+msgstr "Chomlec'h titouroù al levr"
+
+#: src/components/ContactCategoriesForm.vue:20
+msgid "Apply"
+msgstr "Arloañ"
+
+#: src/components/ContactDetail.vue:22
+msgid "at"
+msgstr "da"
+
+#: src/components/ContactForm.vue:161
+msgid "Birth date"
+msgstr "Deiziad ganedigezh"
+
+#: src/App.vue:7 src/components/ContactCategoriesForm.vue:3
+msgid "Categories"
+msgstr "Rummadoù"
+
+#: src/components/ContactForm.vue:170
+msgid "City"
+msgstr "Kêr"
+
+#: src/components/AddressBookDetail.vue:13 src/components/CategoryForm.vue:15
+#: src/components/ContactCategoriesForm.vue:19
+#: src/components/ContactForm.vue:109
+msgid "Close"
+msgstr "Serriñ"
+
+#: src/components/ContactForm.vue:155
+msgid "Company"
+msgstr "Embregerezh"
+
+#: src/App.vue:5
+msgid "Contacts"
+msgstr "Darempredoù"
+
+#: src/components/ContactForm.vue:173
+msgid "Country"
+msgstr "Bro"
+
+#: src/components/ContactForm.vue:152 src/components/ContactList.vue:23
+msgid "Display name"
+msgstr "Diskouez an anv"
+
+#: src/components/ContactForm.vue:4
+msgid "Edit contact"
+msgstr "Aozañ an darempred"
+
+#: src/components/ContactList.vue:24
+msgid "Email"
+msgstr "Postel"
+
+#: src/components/ContactForm.vue:146
+msgid "First name"
+msgstr "Anv bihan"
+
+#: src/components/ContactForm.vue:149
+msgid "Last name"
+msgstr "Anv familh"
+
+#: src/components/ContactForm.vue:107
+msgid "More"
+msgstr "Muioc'h"
+
+#: src/components/CategoryForm.vue:35
+msgid "Name"
+msgstr "Anv"
+
+#: src/components/ContactForm.vue:6
+msgid "New contact"
+msgstr "Darempred nevez"
+
+#: src/components/ContactDetail.vue:64 src/components/ContactForm.vue:179
+msgid "Note"
+msgstr "Notenn"
+
+#: src/components/ContactList.vue:25
+msgid "Phone"
+msgstr "Pellgomz"
+
+#: src/components/PhoneNumberField.vue:38
+msgid "Phone number"
+msgstr "Niverenn pellgomz"
+
+#: src/components/ContactForm.vue:158
+msgid "Position"
+msgstr "Lec'hiadur"
+
+#: src/components/CategoryForm.vue:16
+msgid "Save"
+msgstr "Enrollañ"
+
+#: src/components/SearchForm.vue:23
+msgid "Search"
+msgstr "Klask"
+
+#: src/components/ContactForm.vue:176
+msgid "State/Province"
+msgstr "Stad/Proviñs"
+
+#: src/components/ContactDetail.vue:16
+msgid "Summary"
+msgstr "Berradenn"
+
+#: src/components/ContactList.vue:16
+msgid "Synchronize your address book"
+msgstr "Sinkronelaat ho levr chomlec'hioù"
+
+#: src/components/AddressBookDetail.vue:10
+msgid "The credentials are the same than the ones you use to access Modoboa."
+msgstr ""
+"An titouroù anaout a vez ar memes re hag ar re a implijit da dizhout "
+"Modoboa."
+
+#: src/components/AddressBookDetail.vue:6
+msgid ""
+"To access this address book from the outside (such as Mozilla Thunderbird or"
+" your smartphone), use the following URL:"
+msgstr ""
+"Evit tizhoù al levr chomlec'hioù-mañ adalek an diavaez (evel da skouer "
+"Mozilla Thunderbird war ho poellgomzer), implijit an URL da-heul:"
+
+#: src/components/ContactForm.vue:167
+msgid "Zip Code"
+msgstr "Kod Zip"

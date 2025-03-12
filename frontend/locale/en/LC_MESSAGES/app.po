@@ -1,0 +1,169 @@
+# English translations for modoboa-contacts package.
+# Copyright (C) 2017 THE modoboa-contacts'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the modoboa-contacts package.
+# Automatically generated, 2017.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: modoboa-contacts 1.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-05-06 14:15+0200\n"
+"PO-Revision-Date: 2020-05-06 14:17+0200\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: src/components/ContactList.vue:8
+msgid "Add"
+msgstr "Add"
+
+#: src/App.vue:17 src/components/CategoryForm.vue:4
+msgid "Add category"
+msgstr "Add category"
+
+#: src/components/ContactDetail.vue:50 src/components/ContactForm.vue:164
+#: src/components/EmailField.vue:40
+msgid "Address"
+msgstr "Address"
+
+#: src/components/AddressBookDetail.vue:3
+msgid "Address book information"
+msgstr "Address book information"
+
+#: src/components/ContactCategoriesForm.vue:20
+msgid "Apply"
+msgstr "Apply"
+
+#: src/components/ContactDetail.vue:22
+msgid "at"
+msgstr "at"
+
+#: src/components/ContactForm.vue:161
+msgid "Birth date"
+msgstr "Birth date"
+
+#: src/App.vue:7 src/components/ContactCategoriesForm.vue:3
+msgid "Categories"
+msgstr "Categories"
+
+#: src/components/ContactForm.vue:170
+msgid "City"
+msgstr "City"
+
+#: src/components/AddressBookDetail.vue:13 src/components/CategoryForm.vue:16
+#: src/components/ContactCategoriesForm.vue:19
+#: src/components/ContactForm.vue:109
+msgid "Close"
+msgstr "Close"
+
+#: src/components/ContactForm.vue:155
+msgid "Company"
+msgstr "Company"
+
+#: src/App.vue:5
+msgid "Contacts"
+msgstr "Contacts"
+
+#: src/components/ContactForm.vue:173
+msgid "Country"
+msgstr "Country"
+
+#: src/App.vue:43
+msgid "Delete this category"
+msgstr "Delete this category"
+
+#: src/App.vue:64
+msgid "Delete this category?"
+msgstr "Delete this category?"
+
+#: src/components/ContactForm.vue:152 src/components/ContactList.vue:23
+msgid "Display name"
+msgstr "Display name"
+
+#: src/components/CategoryForm.vue:3
+msgid "Edit category"
+msgstr "Edit category"
+
+#: src/components/ContactForm.vue:4
+msgid "Edit contact"
+msgstr "Edit contact"
+
+#: src/components/ContactList.vue:24
+msgid "Email"
+msgstr "Email"
+
+#: src/components/ContactForm.vue:146
+msgid "First name"
+msgstr "First name"
+
+#: src/components/ContactForm.vue:149
+msgid "Last name"
+msgstr "Last name"
+
+#: src/App.vue:46
+msgid "Modify this category"
+msgstr "Modify this category"
+
+#: src/components/ContactForm.vue:107
+msgid "More"
+msgstr "More"
+
+#: src/components/CategoryForm.vue:42
+msgid "Name"
+msgstr "Name"
+
+#: src/components/ContactForm.vue:6
+msgid "New contact"
+msgstr "New contact"
+
+#: src/components/ContactDetail.vue:64 src/components/ContactForm.vue:179
+msgid "Note"
+msgstr "Note"
+
+#: src/components/ContactList.vue:25
+msgid "Phone"
+msgstr "Phone"
+
+#: src/components/PhoneNumberField.vue:38
+msgid "Phone number"
+msgstr "Phone number"
+
+#: src/components/ContactForm.vue:158
+msgid "Position"
+msgstr "Position"
+
+#: src/components/CategoryForm.vue:17
+msgid "Save"
+msgstr "Save"
+
+#: src/components/SearchForm.vue:23
+msgid "Search"
+msgstr "Search"
+
+#: src/components/ContactForm.vue:176
+msgid "State/Province"
+msgstr "State/Province"
+
+#: src/components/ContactDetail.vue:16
+msgid "Summary"
+msgstr "Summary"
+
+#: src/components/ContactList.vue:16
+msgid "Synchronize your address book"
+msgstr "Synchronize your address book"
+
+#: src/components/AddressBookDetail.vue:10
+msgid "The credentials are the same than the ones you use to access Modoboa."
+msgstr "The credentials are the same than the ones you use to access Modoboa."
+
+#: src/components/AddressBookDetail.vue:6
+msgid "To access this address book from the outside (such as Mozilla Thunderbird or your smartphone), use the following URL:"
+msgstr "To access this address book from the outside (such as Mozilla Thunderbird or your smartphone), use the following URL:"
+
+#: src/components/ContactForm.vue:167
+msgid "Zip Code"
+msgstr "Zip Code"
