@@ -1,84 +1,29 @@
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
-
-[project]
-name = "aiotg"
-dynamic = ["version"]
-description = "Asynchronous Python API for building Telegram bots"
-readme = "README.rst"
+[tool.poetry]
+name = "futaba"
+version = "0.6.2"
+description = "A Discord Mod bot for the Programming server"
+authors = ["Your Name <you@example.com>"]
 license = "MIT"
-authors = [
-    { name = "Stepan Zastupov", email = "stepan.zastupov@gmail.com" },
-]
-keywords = [
-    "asyncio",
-    "telegram",
-]
-classifiers = [
-    "Development Status :: 4 - Beta",
-    "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
-    "Programming Language :: Python :: 3.6",
-    "Topic :: Software Development",
-    "Topic :: Software Development :: Libraries",
-]
-dependencies = [
-    "aiohttp>=3.8.0",
-    "watchdog>=0.9.0",
-]
+readme = "README.md"
 
-[project.urls]
-Homepage = "http://szastupov.github.io/aiotg"
+[tool.poetry.dependencies]
+python = "^3.8"
+sqlalchemy = ">=1.3,<2"
+aiohttp = ">=3.7.4"
+confusable-homoglyphs = ">=3.2.0"
+dateparser = ">=0.7"
+discord-py = ">=2"
+psycopg2-binary = ">=2.8"
+schema = ">=0.7"
+textdistance = ">=4.2"
+toml = ">=0.10"
+tree-format = ">=0.1.2"
+python-jose = ">=3.2.0"
 
-[tool.hatch.version]
-path = "aiotg/__init__.py"
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.1.9"
+pylint = ">=2.5"
 
-[tool.hatch.build.targets.sdist]
-include = [
-    "/aiotg",
-]
-
-[tool.hatch.envs.test]
-dependencies = [
-    "pytest",
-    "testfixtures",
-]
-
-[tool.hatch.envs.test.scripts]
-run = "pytest"
-
-[tool.hatch.envs.lint]
-detached = true
-dependencies = [
-  "black>=22.10.0",
-  "flake8"
-]
-
-[tool.hatch.envs.lint.scripts]
-style = [
-    "flake8 {args:.}",
-    "black --check --diff {args:.}"
-]
-fmt = [
-  "black {args:.}",
-  "style",
-]
-all = [
-    "style"
-]
-
-[tool.black]
-exclude = '''
-/(
-    \.git
-  | \.hg
-  | \.mypy_cache
-  | \.tox
-  | \.venv
-  | \.eggs
-  | _build
-  | build
-  | dist
-)/
-'''
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
