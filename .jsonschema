@@ -1,0 +1,111 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://json-schema.org/draft-07/schema#",
+    "description": "The root schema comprises the entire JSON document.",
+    "examples": [
+        {
+            "Name": "Acme Corporation",
+            "Website": "https://acme.corp",
+            "Swag": [
+                "stickers",
+                "shirt",
+                "plant trees"
+            ],
+            "Description": "Create one or more merged pull requests.",
+            "Details": "https://acme.corp/blog/acme-hacktoberfest/",
+          	"IsSponsor": false
+        }
+    ],
+    "required": [
+        "Name",
+        "Website",
+        "Swag",
+        "Description",
+        "Details"
+    ],
+    "title": "The root schema",
+    "properties": {
+        "Name": {
+            "examples": [
+                "Acme Corporation"
+            ],
+            "title": "The Name schema"
+        },
+        "Website": {
+            "examples": [
+                "https://www.acme.corp"
+            ],
+            "title": "The Website schema",
+            "pattern": "^https?://"
+        },
+        "Swag": {
+            "examples": [
+                [
+                    "shirt",
+                    "swag"
+                ]
+            ],
+            "title": "The Swag schema",
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "additionalItems": false,
+            "items": {
+                "enum": [
+                    "mask",
+                    "facemask",
+                    "face-mask",
+                    "face mask",
+                    "glasses",
+                    "laptop",
+                    "mug",
+                    "shirt",
+                    "tshirt",
+                    "t-shirt",
+                    "tee-shirt",
+                    "teeshirt",
+                    "socks",
+                    "stickers",
+                    "sticker",
+                    "swag",
+                    "tree",
+                    "trees",
+                    "plant tree",
+                    "plant trees",
+                    "other"
+                ],
+                "anyOf": [
+                    {
+                        "$id": "#/properties/Swag/items/anyOf/0",
+                        "type": "string",
+                        "title": "The first anyOf schema",
+                        "examples": [
+                            "stickers",
+                            "shirt",
+                            "plant trees"
+                        ]
+                    }
+                ]
+            }
+        },
+        "Description": {
+            "examples": [
+                "Create one or more merged pull requests."
+            ],
+            "title": "The Description schema",
+            "minLength": 25
+        },
+        "Details": {
+            "examples": [
+                "https://acme.corp/blog/acme-hacktoberfest/"
+            ],
+            "title": "The Details schema",
+            "pattern": "^https?://"
+        },
+        "IsSponsor": {
+            "title": "The IsSponsor schema",
+            "type": "boolean"
+        }
+    },
+    "additionalProperties": false
+}
