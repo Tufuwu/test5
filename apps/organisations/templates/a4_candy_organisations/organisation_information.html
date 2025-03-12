@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static ckeditor_tags i18n thumbnail wagtailcore_tags %}
+
+<!-- ensure cookie overlay for embedded videos -->
+{% block extra_css %}
+  {{ block.super }}
+    <link rel="stylesheet" href="{% static 'dsgvo_video_embed.css' %}" />
+{% endblock %}
+
+{% block extra_js %}
+  {{ block.super }}
+    <script type="text/javascript" src="{% static 'dsgvo_video_embed.js' %}"></script>
+{% endblock %}
+
+{% block title %}{% translate 'Information' %} &mdash; {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="u-bg-light py-5">
+    <div class="container px-0 px-sm-3 u-bg-light">
+        <div class="container--shadow">
+            <div class="hero-unit" style="background-image: url({% thumbnail organisation.image "1500x610" crop %});">
+                {% if organisation.image_copyright %}
+                <div class="header__copyright copyright">© {{ organisation.image_copyright }}</div>
+                {% endif %}
+                {% include 'header_lower.html' with organisation=organisation %}
+            </div>
+
+            <div class="row">
+                <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+                    <h1>{% translate 'Information' %}</h1>
+                    <div class="ck-content">
+                        {{ organisation.information | transform_collapsibles | richtext }}
+                    </div>
+                </div>
+            </div>
+
+            {% if organisation.has_social_share %}
+            <div class="col-12 bg-light">
+                <div class="py-3 text-center my-4">
+                    <h2>{% translate 'More about ' %}{{ organisation.name }}</h2>
+                    <p>{% translate 'Find us on social media and share your insights of this participation.' %}</p>
+                      {% if organisation.facebook_handle  %}
+                      <div class="d-flex flex-row justify-content-center">
+                      <a href="https://www.facebook.com/{{ organisation.facebook_handle }}" target="_blank"><div class="organisation__social-link m-2"><i class="fab fa-facebook-f"></i></div></a>
+                      {% endif %}
+                      {% if organisation.twitter_handle %}
+                      <a href="https://twitter.com/{{ organisation.twitter_handle }}" target="_blank"><div class="organisation__social-link m-2"><i class="fab fa-twitter"></i></div></a>
+                      {% endif %}
+                      {% if organisation.instagram_handle %}
+                      <a href="https://www.instagram.com/{{ organisation.instagram_handle }}" target="_blank">
+                        <div class="organisation__social-link m-2"><i class="fab fa-instagram"></i></div></a>
+                      </div>
+                      {% endif %}
+                </div>
+            </div>
+            {% endif %}
+            {% include 'footer_upper.html' with organisation=organisation %}
+        </div>
+    </div>
+</div>
+{% endblock %}

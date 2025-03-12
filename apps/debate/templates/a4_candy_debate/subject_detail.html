@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load i18n react_comments_async module_tags react_ratings wagtailcore_tags thumbnail %}
+
+{% block title %}{{object.name}} &mdash; {{ block.super }}{% endblock %}
+{% block content %}
+<div class="u-bg-light py-5">
+    <div class="container u-bg-light">
+        <div class="col-12 container--shadow">
+            <div class="row">
+                <div class="col-md-10 col-lg-8 offset-md-1 offset-lg-2 pt-5">
+                    <div class="row py-4">
+                        <div class=" col-sm-3 offset-sm-9 position-relative header-lower__position--right">
+                            {% include 'header_lower.html' with organisation=module.project.organisation %}
+                        </div>
+                    </div>
+
+                    <nav class="breadcrumbs" aria-label="{% translate 'breadcrumbs' %}">
+                        <ul>
+                            <li>
+							  {% with navigate_url=request.META.HTTP_REFERER %}
+								{% if module.get_detail_url in navigate_url %}
+								  <a href="{{navigate_url}}#index">
+									<i class="fa fa-arrow-left" aria-hidden="true"></i>
+									  {% translate 'go back' %}
+								  </a>
+								{% else %}
+								  <a href="{{ module.get_detail_url }}#index">
+									<i class="fa fa-arrow-left" aria-hidden="true"></i>
+									  {% translate 'go to overview' %}
+								  </a>
+								{% endif %}
+							  {% endwith %}
+                            </li>
+                        </ul>
+                    </nav>
+
+                    <div class="item-detail">
+                        <h1 class="item-detail__title">{{ object.name }}</h1>
+                        <p class="item-detail__description">{{ object.description }}</p>
+
+                        {% react_comments_async obj=object with_categories=True no_control_bar=True %}
+                    </div>
+                </div>
+            </div>
+            {% include 'footer_upper.html' with organisation=module.project.organisation %}
+        </div>
+    </div>
+</div>
+{% endblock %}

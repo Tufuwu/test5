@@ -1,0 +1,40 @@
+site_name: Adhocracy+
+
+nav:
+  - Home: index.md
+  - HOWTO: 
+    - install for development: installation_dev.md
+    - django basics: django_shell_basics.md 
+    - management commands: management_commands.md 
+    - translations: languages_and_translations.md 
+    - create documentation: howtomkdocs.md
+    - install on production: installation_prod.md
+  - Diagrams: 
+    - participation modules: diagrams_modules.md
+  - API:
+    - code reference: api.md
+  - Explanations:
+    - authentication: authentication.md 
+    - celery: celery.md 
+    - ckeditor: ckeditor.md 
+    - images: img_saving_and_deletion.md 
+    - open poll: open_poll.md 
+    - project insights: project_insights.md 
+      #- reference: reference.md 
+    - images: img_saving_and_deletion.md 
+    - architecture: software_architecture.md 
+    - tests: tests.md
+  - Repository:
+    - source code: https://github.com/liqd/adhocracy-plus
+    - contribute: contributing.md
+
+
+theme:
+  name: "readthedocs"
+
+plugins:
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [src]
+

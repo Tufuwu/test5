@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load i18n react_comments_async react_ratings wagtailcore_tags %}
+
+{% block title %}{{ paragraph.name }} &mdash; {{ paragraph.chapter.project.name }} &mdash; {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="py-3 mt-4">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 offset-md-2">
+                <nav class="breadcrumbs" aria-label="{% translate 'breadcrumbs' %}">
+                    <ul>
+                      <li>
+                          <a href="{{ paragraph.chapter.get_absolute_url }}">
+                              <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                              {% translate 'back to chapter' %}</a>
+                      </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <article class="item-detail item-detail--bottom-divider">
+                <h1 class="item-detail__title">
+                    {{ paragraph.name }}
+                </h1>
+                <div class="item-detail__content ck-content">
+                    {{ paragraph.text | richtext }}
+                </div>
+            </article>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            {% react_comments_async obj=paragraph no_control_bar=True %}
+        </div>
+    </div>
+</div>
+{% endblock %}

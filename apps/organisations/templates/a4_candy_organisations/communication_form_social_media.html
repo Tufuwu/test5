@@ -1,0 +1,94 @@
+{% extends "a4dashboard/communication_form_base.html" %}
+{% load i18n %}
+
+{% block title %}{% translate "Settings" %} &mdash; {{ block.super }}{% endblock %}
+
+{% block communication_form %}
+    <div class="col-md-9">
+        <h1 class="u-first-heading">{% translate "Create Content" %}</h1>
+
+        <form enctype="multipart/form-data" action="{% url 'a4dashboard:communication-content' organisation_slug=organisation.slug %}" method="post">
+            {% csrf_token %}
+            {% include 'a4_candy_contrib/includes/form_field.html' with field=project_form.format %}
+            {% include 'a4_candy_contrib/includes/form_field.html' with field=project_form.project %}
+            <div class="d-flex justify-content-end mb-3">
+                <button type="submit" class="btn btn--default">{% translate 'Select' %}</button>
+            </div>
+        </form>
+        {{ project_form.media }}
+
+        <form enctype="multipart/form-data" action="{{ request.path }}" method="post">
+            {% csrf_token %}
+            {% if content_form %}
+                {% include 'a4_candy_contrib/includes/form_field.html' with field=content_form.title %}
+                {% include 'a4_candy_contrib/includes/form_field.html' with field=content_form.description %}
+                {% include 'a4_candy_contrib/includes/form_field.html' with field=content_form.image %}
+                <div class="form-group">
+                    <div class="checkbox-btn">
+                        <label class="checkbox-btn__label--light" for="logo_1">
+                            <input class="checkbox-btn__input"
+                                   type="checkbox"
+                                   id="logo_1"
+                                   name="add_aplus_logo"
+                                   value="add a+ logo"
+                                   {% if content_form.add_aplus_logo.value %} checked{% endif %}
+                            >
+                            <span class="checkbox-btn__text--icon">{% translate 'Add a+ logo' %}</span>
+                        </label>
+                    </div>
+                    <div class="checkbox-btn">
+                        <label class="checkbox-btn__label--light" for="logo_2">
+                            <input
+                                class="checkbox-btn__input"
+                                type="checkbox"
+                                id="logo_2"
+                                name="add_orga_logo"
+                                value="add own logo"
+                                {% if organisation.logo %}
+                                    {% if content_form.add_orga_logo.value %}checked{% endif %}
+                                {% else %}
+                                    disabled
+                                {% endif %}
+                            >
+                            <span class="checkbox-btn__text checkbox-btn__text--icon">{% translate 'Add logo' %}</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>{% translate 'Preview' %}</label>
+                    <p class="form-hint" id="hint_image_preview">
+                        {% if image_preview %}
+                            {% translate 'To view content changes, click refresh' %}
+                        {% else %}
+                            {% translate 'To view the sharepic, click generate' %}
+                        {% endif %}
+                    </p>
+                    {% if image_preview %}
+                        <div class="col-sm-6">
+                            <img id="image_preview"
+                              src="data:image/png;base64,{{image_preview}}"
+                              data-image-preview=""
+                              alt="sharepic preview"
+                             >
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="d-flex justify-content-end mb-3">
+                    <button type="submit" class="btn btn--primary btn--icon">
+                        {% if image_preview %}
+                            <i class="fas fa-sync-alt"></i>{% translate 'Refresh' %}
+                        {% else %}
+                            {% translate 'Generate' %}
+                        {% endif %}
+                    </button>
+                    {% if image_preview %}
+                        <a class="btn btn--primary ms-3" href="data:image/png;base64,{{image_preview}}" download="sharepic">{% translate 'Download' %}</a>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </form>
+        {{ content_form.media }}
+    </div>
+{% endblock %}

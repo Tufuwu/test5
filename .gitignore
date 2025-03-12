@@ -6,35 +6,6 @@ __pycache__/
 # C extensions
 *.so
 
-# Distribution / packaging
-.Python
-env/
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-*.egg-info/
-.installed.cfg
-*.egg
-.python-version
-
-# PyInstaller
-#  Usually these files are written by a python script from a template
-#  before PyInstaller builds the exe, so as to inject date/other infos into it.
-*.manifest
-*.spec
-
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
-
 # Unit test / coverage reports
 htmlcov/
 .tox/
@@ -43,37 +14,60 @@ htmlcov/
 .cache
 nosetests.xml
 coverage.xml
-*,cover
+*.cover
 .hypothesis/
+.pytest_cache
+coverage/
 
 # Translations
 *.mo
 *.pot
 
-# Django stuff:
-*.log
+# Environments
+venv/
+/pyvenv.cfg
+/pip-selfcheck.json
+.python-version
 
-# Sphinx documentation
-docs/_build/
-
-# PyBuilder
-target/
-
-#Ipython Notebook
-.ipynb_checkpoints
-
-# IDE
-.idea
-.vscode
-
-# db
-tests/db.sqlite3
-
-# node
+# Node
 node_modules/
 package-lock.json
-package.json
+npm-debug.log*
+/webpack-stats.json
 
+# IDEs
+.idea/
 
-# tcpserver
-mjml-tcpserver/
+# Django databases
+*.sqlite3
+db.sqlite3*
+
+# Local instance specific settings
+adhocracy-plus/config/settings/local.py
+
+# Generated static files
+adhocracy-plus/static/
+static/
+
+# Media
+media/
+
+# setuptools
+/build
+/dist
+/*.egg-info
+/share
+
+# OS
+.DS_Store
+
+# sass
+.sass-cache
+
+# test data
+*.key
+*.pem
+
+# vim backups
+*.swp
+site/

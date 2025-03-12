@@ -1,0 +1,108 @@
+{% load i18n project_tags a4_candy_project_tags contrib_tags thumbnail rules static %}
+
+<li class="tile tile--{{ orientation }}">
+    <a class="tile__link" aria-labelledby="tile-title-{{ object.pk }}" href="{{ url }}">
+        <h3 class="visually-hidden" id="tile-title-{{ object.pk }}">
+            {{ object.name }}
+        </h3>
+    </a>
+    {% if type == 'project' %}
+    {% project_tile_image object as project_image %}
+    {% project_tile_image_copyright object as project_image_copyright %}
+    {% project_tile_image_alt_text object as project_image_alt_text %}
+    <div class="tile__head">
+        <div class="tile__image"
+          {% if project_image %}
+              style="background-image: url({{ project_image|thumbnail_url:'project_thumbnail' }})"
+              role="img"
+              aria-label="{% if project_image_alt_text %}{{ project_image_alt_text }}{% else %}{% translate 'Here you can find a decorative picture.' %}{% endif %}"
+          {% endif %}>
+          {% if project_image_copyright %}
+              <div class="tile__image__copyright copyright">© {{ project_image_copyright }}</div>
+          {% endif %}
+          {% if object.is_private %}
+            <div class="tile__private-badge">
+                <div class="tile__private-badge--top"></div>
+                    <i class="fas fa-lock" title="{% translate 'Project is private.' %}" aria-label="{% translate 'Project is private.' %}"></i>
+                <div class="tile__private-badge--left"></div>
+            </div>
+          {% elif object.is_semipublic %}
+            <div class="tile__private-badge">
+                <div class="tile__private-badge--top"></div>
+                    <i class="fas fa-eye" title="{% translate 'Project is semi-public.' %}" aria-label="{% translate 'Project is semi-public.' %}"></i>
+                <div class="tile__private-badge--left"></div>
+            </div>
+          {% endif %}
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="tile__body tile__body--status">
+        <h3 class="tile__title" id="tile-title-{{ object.pk }}">
+            {{ object.name }}
+        </h3>
+        {% if type == 'project' %}
+            <p class="tile__text">{{ object.description }}</p>
+        {% elif type == 'module' %}
+            {% if object.blueprint_type %}
+            <p class="tile__extra-info">
+                <img class="tile__module-icon" aria-hidden="true" src="{% static 'images/icon-'|add:object.blueprint_type|lower|add:'.svg' %}" />
+                <span class="visually-hidden">{% translate 'Type of participation: ' %}</span>
+                <span class="u-capitalise">{{ object.get_blueprint_type_display }}</span>
+            </p>
+            {% endif %}
+            <div class="tile__extra-info">
+                <i class="far fa-comment" aria-hidden="true"></i>
+                {% get_num_entries object as num_entries %}
+                {% blocktranslate count num_entries=num_entries %}{{ num_entries }} Contribution{% plural %}{{ num_entries }} Contributions{% endblocktranslate %}
+            </div>
+        {% endif %}
+
+        {% if object.module_running_time_left %}
+        <div class="status-item">
+            <div class="status-bar__active">
+                <span class="status-bar__active-fill" style="width:{{ object.module_running_progress }}%"></span>
+            </div>
+            <div class="d-flex justify-content-between">
+                <span class="status-bar__status"><i class="far fa-clock" aria-hidden="true"></i>
+                {% if type == 'project' %}
+                    {% if object.module_running_days_left < 365 %}
+                        {% blocktranslate with time_left=object.module_running_time_left %} {{ time_left }} remaining {% endblocktranslate %}
+                    {% else %}
+                        <span>{% translate 'more than 1 year remaining' %}</span>
+                    {% endif %}
+                {% else %}
+                    {% if object.module_running_days_left < 365 %}
+                        {% comment %}module_running_time_left_abbreviated is defined in a4 and given as a list in the order [number, abbreviation, title]{% endcomment %}
+                        {{ object.module_running_time_left_abbreviated.0 }} <abbr title="{% blocktranslate with abbr_unit=object.module_running_time_left_abbreviated.2 %} {{ abbr_unit }} {% endblocktranslate %}">{{ object.module_running_time_left_abbreviated.1 }}</abbr>
+                    {% else %}
+                        <abbr title="{% translate 'more than 1 year' %}">{% translate '> 1 Y' context 'abbreviation "more than 1 year"' %}</abbr>
+                    {% endif %}
+                {% endif %}
+                </span>
+                {% has_perm 'a4projects.participate_in_project' request.user project as user_may_participate_in_project %}
+                {% if user_may_participate_in_project %}
+                    <span class="list-item__cta list-item__hover">{% translate 'JOIN IN' %}</span>
+                {% else %}
+                    <span class="list-item__cta list-item__hover">{% translate 'READ' %}</span>
+                {% endif %}
+            </div>
+        </div>
+        {% elif object.future_modules or object.module_in_future %}
+        <div class="status-item status__future">
+            <span class="status-bar__status">
+                <i class="far fa-clock" aria-hidden="true"></i>
+                {% if type == 'project' %}
+                    {% blocktranslate with date=object.future_modules.first.module_start|date:"d.m.Y" %} Participation: from {{ date }}{% endblocktranslate %}
+                {% else %}
+                    {% blocktranslate with date=object.module_start|date:"d.m.Y" %} Participation: from {{ date }}{% endblocktranslate %}
+                {% endif %}
+            </span>
+        </div>
+        {% else %}
+        <div class="status-item status-bar__past">
+            {% blocktranslate %}Participation ended. Read result.{% endblocktranslate %}
+        </div>
+        {% endif %}
+    </div>
+</li>

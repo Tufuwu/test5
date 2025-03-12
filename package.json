@@ -1,0 +1,116 @@
+{
+  "name": "adhocracy-plus",
+  "version": "1.0.0-dev.1",
+  "license": "AGPL-3.0+",
+  "author": {
+    "name": "Liquid Democracy e.V.",
+    "email": "info@liqd.net",
+    "url": "https://liqd.net"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "files": [
+    "adhocracy-plus"
+  ],
+  "repository": "https://github.com/liqd/adhocracy-plus.git",
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "5.15.4",
+    "@maplibre/maplibre-gl-leaflet": "0.0.22",
+    "@react-leaflet/core": "^2.1.0",
+    "adhocracy4": "git+https://github.com/liqd/adhocracy4#aplus-v2501.1.2",
+    "autoprefixer": "10.4.20",
+    "bootstrap": "5.2.3",
+    "css-loader": "7.1.2",
+    "datepicker": "git+https://github.com/liqd/datePicker.git",
+    "dsgvo-video-embed": "git+https://github.com/liqd/dsgvo-video-embed.git",
+    "file-saver": "2.0.5",
+    "flatpickr": "4.6.13",
+    "glob": "11.0.1",
+    "immutability-helper": "3.1.1",
+    "jquery": "3.7.1",
+    "js-cookie": "3.0.5",
+    "kleur": "4.1.5",
+    "leaflet": "1.9.4",
+    "leaflet-draw": "1.0.4",
+    "leaflet.markercluster": "git+https://github.com/liqd/Leaflet.markercluster#liqd2212",
+    "maplibre-gl": "3.6.2",
+    "maplibregl-mapbox-request-transformer": "0.0.2",
+    "mini-css-extract-plugin": "2.9.2",
+    "path-browserify": "1.0.1",
+    "postcss-loader": "8.1.1",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-flip-move": "3.0.5",
+    "react-leaflet": "4.2.1",
+    "react-markdown": "9.0.3",
+    "react-slick": "0.30.3",
+    "sass": "1.83.4",
+    "sass-loader": "16.0.4",
+    "select2": "4.0.13",
+    "shpjs": "6.1.0",
+    "slick-carousel": "git+https://github.com/liqd/slick#pm-2019-07-overwrites",
+    "terser-webpack-plugin": "5.3.11",
+    "timeago.js": "4.0.2"
+  },
+  "devDependencies": {
+    "@babel/core": "7.26.0",
+    "@babel/eslint-parser": "7.26.5",
+    "@babel/plugin-transform-modules-commonjs": "7.26.3",
+    "@babel/plugin-transform-runtime": "7.25.9",
+    "@babel/preset-env": "7.26.0",
+    "@babel/preset-react": "7.26.3",
+    "@babel/runtime": "7.26.0",
+    "@testing-library/jest-dom": "6.6.3",
+    "@testing-library/react": "16.1.0",
+    "babel-loader": "9.2.1",
+    "copy-webpack-plugin": "12.0.2",
+    "eslint": "8.41.0",
+    "eslint-config-standard": "17.0.0",
+    "eslint-config-standard-jsx": "11.0.0",
+    "eslint-plugin-import": "2.27.5",
+    "eslint-plugin-jest": "27.2.1",
+    "eslint-plugin-jsx-a11y": "6.7.1",
+    "eslint-plugin-promise": "6.1.1",
+    "eslint-plugin-react": "7.32.2",
+    "husky": "9.1.7",
+    "jest": "29.7.0",
+    "jest-environment-jsdom": "29.7.0",
+    "lint-staged": "15.3.0",
+    "postcss": "8.5.1",
+    "stylelint": "16.13.2",
+    "stylelint-config-standard-scss": "14.0.0",
+    "stylelint-declaration-strict-value": "1.10.7",
+    "webpack": "5.97.1",
+    "webpack-cli": "6.0.1",
+    "webpack-merge": "6.0.1"
+  },
+  "scripts": {
+    "build:prod": "webpack --config webpack.prod.js",
+    "build": "webpack --config webpack.dev.js",
+    "watch": "webpack --config webpack.dev.js --watch",
+    "lint": "eslint apps adhocracy-plus/assets --ext .js,.jsx && stylelint 'adhocracy-plus/assets/scss/**/*.scss'",
+    "lint-staged": "lint-staged",
+    "lint-fix": "eslint --fix --ext .js,.jsx . && stylelint --fix 'adhocracy-plus/assets/scss/**/*.scss'",
+    "prepare": "husky",
+    "test": "jest --passWithNoTests",
+    "testDebug": "jest -o --coverage=false",
+    "testNoCov": "jest --coverage=false",
+    "updateSnapshots": "jest -u --coverage=false"
+  },
+  "browserslist": "defaults and not dead and >= 0.5%, ie >= 11",
+  "lint-staged": {
+    "*.{js,jsx}": [
+      "eslint"
+    ],
+    "*.scss": [
+      "stylelint"
+    ],
+    "*.html": [
+      "make lint-html-files"
+    ],
+    "*.py": [
+      "make lint-python-files"
+    ]
+  }
+}
