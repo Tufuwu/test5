@@ -1,0 +1,288 @@
+[
+    {
+        "Id": "b8fcfaac37de0d13494d5e165903b26f98896a30b73c52f1b47f3a20432d741b",
+        "Created": "2020-08-03T16:42:57.544562109+02:00",
+        "Path": "/bin/bash",
+        "Args": [
+            "/bin/bash"
+        ],
+        "State": {
+            "OciVersion": "1.0.2-dev",
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 530277,
+            "ConmonPid": 530272,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2020-08-03T16:42:58.009875371+02:00",
+            "FinishedAt": "0001-01-01T00:00:00Z",
+            "Healthcheck": {
+                "Status": "",
+                "FailingStreak": 0,
+                "Log": null
+            }
+        },
+        "Image": "00ff39a8bf19f810a7e641f7eb3ddc47635913a19c4996debd91fafb6b379069",
+        "ImageName": "registry.fedoraproject.org/fedora:latest",
+        "Rootfs": "",
+        "Pod": "",
+        "ResolvConfPath": "/var/run/containers/storage/overlay-containers/b8fcfaac37de0d13494d5e165903b26f98896a30b73c52f1b47f3a20432d741b/userdata/resolv.conf",
+        "HostnamePath": "/var/run/containers/storage/overlay-containers/b8fcfaac37de0d13494d5e165903b26f98896a30b73c52f1b47f3a20432d741b/userdata/hostname",
+        "HostsPath": "/var/run/containers/storage/overlay-containers/b8fcfaac37de0d13494d5e165903b26f98896a30b73c52f1b47f3a20432d741b/userdata/hosts",
+        "StaticDir": "/var/lib/containers/storage/overlay-containers/b8fcfaac37de0d13494d5e165903b26f98896a30b73c52f1b47f3a20432d741b/userdata",
+        "OCIConfigPath": "/var/lib/containers/storage/overlay-containers/b8fcfaac37de0d13494d5e165903b26f98896a30b73c52f1b47f3a20432d741b/userdata/config.json",
+        "OCIRuntime": "crun",
+        "LogPath": "/var/lib/containers/storage/overlay-containers/b8fcfaac37de0d13494d5e165903b26f98896a30b73c52f1b47f3a20432d741b/userdata/ctr.log",
+        "LogTag": "",
+        "ConmonPidFile": "/var/run/containers/storage/overlay-containers/b8fcfaac37de0d13494d5e165903b26f98896a30b73c52f1b47f3a20432d741b/userdata/conmon.pid",
+        "Name": "eloquent_booth",
+        "RestartCount": 0,
+        "Driver": "overlay",
+        "MountLabel": "system_u:object_r:container_file_t:s0:c241,c976",
+        "ProcessLabel": "system_u:system_r:container_t:s0:c241,c976",
+        "AppArmorProfile": "",
+        "EffectiveCaps": [
+            "CAP_AUDIT_WRITE",
+            "CAP_CHOWN",
+            "CAP_DAC_OVERRIDE",
+            "CAP_FOWNER",
+            "CAP_FSETID",
+            "CAP_KILL",
+            "CAP_MKNOD",
+            "CAP_NET_BIND_SERVICE",
+            "CAP_NET_RAW",
+            "CAP_SETFCAP",
+            "CAP_SETGID",
+            "CAP_SETPCAP",
+            "CAP_SETUID",
+            "CAP_SYS_CHROOT"
+        ],
+        "BoundingCaps": [
+            "CAP_AUDIT_WRITE",
+            "CAP_CHOWN",
+            "CAP_DAC_OVERRIDE",
+            "CAP_FOWNER",
+            "CAP_FSETID",
+            "CAP_KILL",
+            "CAP_MKNOD",
+            "CAP_NET_BIND_SERVICE",
+            "CAP_NET_RAW",
+            "CAP_SETFCAP",
+            "CAP_SETGID",
+            "CAP_SETPCAP",
+            "CAP_SETUID",
+            "CAP_SYS_CHROOT"
+        ],
+        "ExecIDs": [],
+        "GraphDriver": {
+            "Name": "overlay",
+            "Data": {
+                "LowerDir": "/var/lib/containers/storage/overlay/0ccfac04663bbe8813b5f24502ee0b7371ce5bf3c5adeb12e4258d191c2cf7bc/diff",
+                "MergedDir": "/var/lib/containers/storage/overlay/707cb47b828a17213b22d7e533ced21976a752a613687f31072aff3fb33e9e63/merged",
+                "UpperDir": "/var/lib/containers/storage/overlay/707cb47b828a17213b22d7e533ced21976a752a613687f31072aff3fb33e9e63/diff",
+                "WorkDir": "/var/lib/containers/storage/overlay/707cb47b828a17213b22d7e533ced21976a752a613687f31072aff3fb33e9e63/work"
+            }
+        },
+        "Mounts": [],
+        "Dependencies": [],
+        "NetworkSettings": {
+            "EndpointID": "",
+            "Gateway": "10.88.0.1",
+            "IPAddress": "10.88.0.241",
+            "IPPrefixLen": 16,
+            "IPv6Gateway": "",
+            "GlobalIPv6Address": "",
+            "GlobalIPv6PrefixLen": 0,
+            "MacAddress": "fa:11:eb:b8:66:47",
+            "Bridge": "",
+            "SandboxID": "",
+            "HairpinMode": false,
+            "LinkLocalIPv6Address": "",
+            "LinkLocalIPv6PrefixLen": 0,
+            "Ports": {
+                "63140/tcp": [
+                    {
+                        "HostIp": "",
+                        "HostPort": "63140"
+                    }
+                ]
+            },
+            "SandboxKey": "/var/run/netns/cni-7eb38b61-500c-127d-8724-e1394fbb89b4"
+        },
+        "ExitCommand": [
+            "/usr/bin/podman",
+            "--root",
+            "/var/lib/containers/storage",
+            "--runroot",
+            "/var/run/containers/storage",
+            "--log-level",
+            "error",
+            "--cgroup-manager",
+            "systemd",
+            "--tmpdir",
+            "/var/run/libpod",
+            "--runtime",
+            "crun",
+            "--storage-driver",
+            "overlay",
+            "--storage-opt",
+            "overlay.mountopt=nodev,metacopy=on",
+            "--events-backend",
+            "file",
+            "container",
+            "cleanup",
+            "b8fcfaac37de0d13494d5e165903b26f98896a30b73c52f1b47f3a20432d741b"
+        ],
+        "Namespace": "",
+        "IsInfra": false,
+        "Config": {
+            "Hostname": "b8fcfaac37de",
+            "Domainname": "",
+            "User": "",
+            "AttachStdin": false,
+            "AttachStdout": false,
+            "AttachStderr": false,
+            "Tty": true,
+            "OpenStdin": true,
+            "StdinOnce": false,
+            "Env": [
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "TERM=xterm",
+                "container=podman",
+                "DISTTAG=f32container",
+                "FGC=f32",
+                "HOSTNAME=b8fcfaac37de",
+                "HOME=/root"
+            ],
+            "Cmd": [
+                "/bin/bash"
+            ],
+            "Image": "registry.fedoraproject.org/fedora:latest",
+            "Volumes": null,
+            "WorkingDir": "/",
+            "Entrypoint": "",
+            "OnBuild": null,
+            "Labels": {
+                "license": "MIT",
+                "name": "fedora",
+                "vendor": "Fedora Project",
+                "version": "32"
+            },
+            "Annotations": {
+                "io.container.manager": "libpod",
+                "io.kubernetes.cri-o.Created": "2020-08-03T16:42:57.544562109+02:00",
+                "io.kubernetes.cri-o.TTY": "true",
+                "io.podman.annotations.autoremove": "FALSE",
+                "io.podman.annotations.init": "FALSE",
+                "io.podman.annotations.privileged": "FALSE",
+                "io.podman.annotations.publish-all": "FALSE",
+                "org.opencontainers.image.stopSignal": "15"
+            },
+            "StopSignal": 15,
+            "CreateCommand": [
+                "/bin/podman",
+                "run",
+                "-it",
+                "-p",
+                "63140:63140",
+                "fedora"
+            ]
+        },
+        "HostConfig": {
+            "Binds": [],
+            "CgroupMode": "private",
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "k8s-file",
+                "Config": null
+            },
+            "NetworkMode": "bridge",
+            "PortBindings": {
+                "63140/tcp": [
+                    {
+                        "HostIp": "",
+                        "HostPort": "63140"
+                    }
+                ]
+            },
+            "RestartPolicy": {
+                "Name": "",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "CapAdd": [],
+            "CapDrop": [],
+            "Dns": [],
+            "DnsOptions": [],
+            "DnsSearch": [],
+            "ExtraHosts": [],
+            "GroupAdd": [],
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Cgroups": "default",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "private",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": [],
+            "Tmpfs": {},
+            "UTSMode": "private",
+            "UsernsMode": "",
+            "ShmSize": 65536000,
+            "Runtime": "oci",
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 0,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": null,
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": [],
+            "DiskQuota": 0,
+            "KernelMemory": 0,
+            "MemoryReservation": 0,
+            "MemorySwap": 0,
+            "MemorySwappiness": 0,
+            "OomKillDisable": false,
+            "PidsLimit": 2048,
+            "Ulimits": [
+                {
+                    "Name": "RLIMIT_NOFILE",
+                    "Soft": 1048576,
+                    "Hard": 1048576
+                },
+                {
+                    "Name": "RLIMIT_NPROC",
+                    "Soft": 4194304,
+                    "Hard": 4194304
+                }
+            ],
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0
+        }
+    }
+]
