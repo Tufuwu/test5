@@ -1,173 +1,67 @@
-# Face Recognition
+# pycron
 
-Detect facial landmarks from Python using the world's most accurate face alignment network, capable of detecting points in both 2D and 3D coordinates.
+![Test Status](https://github.com/kipe/pycron/actions/workflows/python-test.yml/badge.svg?branch=main)
 
-Build using [FAN](https://www.adrianbulat.com)'s state-of-the-art deep learning based face alignment method. 
-
-<p align="center"><img src="docs/images/face-alignment-adrian.gif" /></p>
-
-**Note:** The lua version is available [here](https://github.com/1adrianb/2D-and-3D-face-alignment).
-
-For numerical evaluations it is highly recommended to use the lua version which uses indentical models with the ones evaluated in the paper. More models will be added soon.
-
-[![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)  [![Test Face alignmnet](https://github.com/1adrianb/face-alignment/workflows/Test%20Face%20alignmnet/badge.svg)](https://github.com/1adrianb/face-alignment/actions?query=workflow%3A%22Test+Face+alignmnet%22) [![Anaconda-Server Badge](https://anaconda.org/1adrianb/face_alignment/badges/version.svg)](https://anaconda.org/1adrianb/face_alignment)
-[![PyPI version](https://badge.fury.io/py/face-alignment.svg)](https://pypi.org/project/face-alignment/)
-
-## Features
-
-#### Detect 2D facial landmarks in pictures
-
-<p align='center'>
-<img src='docs/images/2dlandmarks.png' title='3D-FAN-Full example' style='max-width:600px'></img>
-</p>
-
-```python
-import face_alignment
-from skimage import io
-
-fa = face_alignment.FaceAlignment(face_alignment.LandmarksType.TWO_D, flip_input=False)
-
-input = io.imread('../test/assets/aflw-test.jpg')
-preds = fa.get_landmarks(input)
-```
-
-#### Detect 3D facial landmarks in pictures
-
-<p align='center'>
-<img src='https://www.adrianbulat.com/images/image-z-examples.png' title='3D-FAN-Full example' style='max-width:600px'></img>
-</p>
-
-```python
-import face_alignment
-from skimage import io
-
-fa = face_alignment.FaceAlignment(face_alignment.LandmarksType.THREE_D, flip_input=False)
-
-input = io.imread('../test/assets/aflw-test.jpg')
-preds = fa.get_landmarks(input)
-```
-
-#### Process an entire directory in one go
-
-```python
-import face_alignment
-from skimage import io
-
-fa = face_alignment.FaceAlignment(face_alignment.LandmarksType.TWO_D, flip_input=False)
-
-preds = fa.get_landmarks_from_directory('../test/assets/')
-```
-
-#### Detect the landmarks using a specific face detector.
-
-By default the package will use the SFD face detector. However the users can alternatively use dlib, BlazeFace, or pre-existing ground truth bounding boxes.
-
-```python
-import face_alignment
-
-# sfd for SFD, dlib for Dlib and folder for existing bounding boxes.
-fa = face_alignment.FaceAlignment(face_alignment.LandmarksType.TWO_D, face_detector='sfd')
-```
-
-#### Running on CPU/GPU
-In order to specify the device (GPU or CPU) on which the code will run one can explicitly pass the device flag:
-
-```python
-import torch
-import face_alignment
-
-# cuda for CUDA, mps for Apple M1/2 GPUs.
-fa = face_alignment.FaceAlignment(face_alignment.LandmarksType.TWO_D, device='cpu')
-
-# running using lower precision
-fa = fa = face_alignment.FaceAlignment(face_alignment.LandmarksType.TWO_D, dtype=torch.bfloat16, device='cuda')
-```
-
-Please also see the ``examples`` folder
-
-#### Supported face detectors
-
-```python
-
-# dlib (fast, may miss faces)
-model = FaceAlignment(landmarks_type= LandmarksType.TWO_D, face_detector='dlib')
-
-# SFD (likely best results, but slowest)
-model = FaceAlignment(landmarks_type= LandmarksType.TWO_D, face_detector='sfd')
-
-# Blazeface (front camera model)
-model = FaceAlignment(landmarks_type= LandmarksType.TWO_D, face_detector='blazeface')
-
-# Blazeface (back camera model)
-model = FaceAlignment(landmarks_type= LandmarksType.TWO_D, face_detector='blazeface', face_detector_kwargs={'back_model': True})
-
-```
+Simple cron-like parser for Python, which determines if current datetime matches conditions.
 
 ## Installation
 
-### Requirements
+`pip install pycron`
 
-* Python 3.5+ (it may work with other versions too). Last version with support for python 2.7 was v1.1.1
-* Linux, Windows or macOS
-* pytorch (>=1.5)
+## Usage
 
-While not required, for optimal performance(especially for the detector) it is **highly** recommended to run the code using a CUDA enabled GPU.
-
-### Binaries
-
-The easiest way to install it is using either pip or conda:
-
-| **Using pip**                | **Using conda**                            |
-|------------------------------|--------------------------------------------|
-| `pip install face-alignment` | `conda install -c 1adrianb face_alignment` |
-|                              |                                            |
-
-Alternatively, bellow, you can find instruction to build it from source.
-
-### From source
-
- Install pytorch and pytorch dependencies. Please check the [pytorch readme](https://github.com/pytorch/pytorch) for this.
-
-#### Get the Face Alignment source code
-```bash
-git clone https://github.com/1adrianb/face-alignment
-```
-#### Install the Face Alignment lib
-```bash
-pip install -r requirements.txt
-python setup.py install
+```python
+import pycron
+pycron.is_now('*/5 * * * *')  # True every 5 minutes
+pycron.is_now('0 * * * *')    # True every hour, on minute 0
 ```
 
-### Docker image
+## Help
 
-A Dockerfile is provided to build images with cuda support and cudnn. For more instructions about running and building a docker image check the orginal Docker documentation.
-```
-docker build -t face-alignment .
-```
+The formats currently supported are
 
-## How does it work?
+- `*/5` (for "every X" function),
+- `4-10` (for time ranges),
+- `6,8,23` (for a list of values),
+- `*` (for wildcard),
+- and of course a single number.
 
-While here the work is presented as a black-box, if you want to know more about the intrisecs of the method please check the original paper either on arxiv or my [webpage](https://www.adrianbulat.com).
+The module includes `is_now(s, dt=None)`, where `s` is the cron-style string
+and `dt` is the datetime to use (defaults to current datetime, if not set).
+The function returns `True`, if `dt` matches the format.
 
-## Contributions
+It also includes `has_been(s, since, dt=None)`, where `s` is the cron-style string,
+`since` is a datetime in the past and `dt` is the datetime to use (defaults to current datetime, if not set).
+The function returns `True`, if `dt` would have matched the format at some point during the period.
+This behaves much like like [anacron](https://en.wikipedia.org/wiki/Anacron) and is useful for applications which do not run continuously.
 
-All contributions are welcomed. If you encounter any issue (including examples of images where it fails) feel free to open an issue. If you plan to add a new features please open an issue to discuss this prior to making a pull request.
+All functions are compatible with both timezone aware and naive datetimes.
 
-## Citation
+There are couple of helpers available, mainly for use with Django.
+They give out list of tuples, as required by Django field choices.
 
-```
-@inproceedings{bulat2017far,
-  title={How far are we from solving the 2D \& 3D Face Alignment problem? (and a dataset of 230,000 3D facial landmarks)},
-  author={Bulat, Adrian and Tzimiropoulos, Georgios},
-  booktitle={International Conference on Computer Vision},
-  year={2017}
-}
-```
+The available helpers are
 
-For citing dlib, pytorch or any other packages used here please check the original page of their respective authors.
+- `pycron.MINUTE_CHOICES`,
+- `pycron.HOUR_CHOICES`,
+- `pycron.DOM_CHOICES`, for day of month
+- `pycron.MONTH_CHOICES`, for month names
+- `pycron.DOW_CHOICES`, for day names
 
-## Acknowledgements
+## Support for alternative datetime -libraries
 
-* To the [pytorch](http://pytorch.org/) team for providing such an awesome deeplearning framework
-* To [my supervisor](http://www.cs.nott.ac.uk/~pszyt/) for his patience and suggestions.
-* To all other python developers that made available the rest of the packages used in this repository.
+Currently supported "alternative" datetime libraries are:
+
+- [Arrow](http://arrow.readthedocs.io/en/latest/)
+- [Delorean](http://delorean.readthedocs.io/en/latest/)
+- [Pendulum](https://pendulum.eustace.io/)
+- [udatetime](https://github.com/freach/udatetime)
+
+#### Notes
+
+This was done, as I personally needed something like this to implement proper timers for my Django-project and
+every available library felt too complicated for my use-case. Also, this was a good coding exercise...
+
+As the Django -helper choices are quite limited, I've expanded them in my own project by adding values like
+`('*/5', 'every 5 minutes')`, `('1-5', 'on weekdays')`, and `('0,6', 'on weekends')`.
+I haven't included them in the code, as every use-case is different, this was just to give an idea on how to use this ;)
