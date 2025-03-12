@@ -1,52 +1,37 @@
-import os
-from importlib.machinery import SourceFileLoader
-from pathlib import Path
+import setuptools
+from pydatastructs import utils
+from pydatastructs import linear_data_structures
+from pydatastructs import miscellaneous_data_structures
+from pydatastructs import trees
 
-from setuptools import setup
-from setuptools.command.install import install
+with open("README.md", "r") as fh:
+    long_description = fh.read()
 
-# avoid loading the package before requirements are installed:
-version = SourceFileLoader('version', 'pydf/version.py').load_module()
+extensions = []
 
-description = 'PDF generation in python using wkhtmltopdf suitable for heroku'
-THIS_DIR = Path(__file__).resolve().parent
-readme_path = THIS_DIR / 'README.rst'
-if readme_path.exists():
-    long_description = readme_path.read_text()
-else:
-    long_description = description
+extensions.extend(utils._extensions.extensions)
+extensions.extend(linear_data_structures._extensions.extensions)
+extensions.extend(miscellaneous_data_structures._extensions.extensions)
+extensions.extend(trees._extensions.extensions)
 
-
-class OverrideInstall(install):
-    def run(self):
-        install.run(self)
-        for filepath in self.get_outputs():
-            if filepath.endswith('pydf/bin/wkhtmltopdf'):
-                os.chmod(filepath, 0o775)
-
-
-setup(
-    name='python-pdf',
-    cmdclass={'install': OverrideInstall},
-    version=version.VERSION,
-    description=description,
+setuptools.setup(
+    name="cz-pydatastructs",
+    version="1.0.1-dev",
+    author="PyDataStructs Development Team",
+    author_email="pydatastructs@googlegroups.com",
+    description="A python package for data structures",
     long_description=long_description,
-    author='Samuel Colvin',
-    license='MIT',
-    author_email='s@muelcolvin.com',
-    url='https://github.com/tutorcruncher/pydf',
-    packages=['pydf'],
-    platforms='any',
-    package_data={'pydf': ['bin/*']},
+    long_description_content_type="text/markdown",
+    url="https://github.com/codezonediitj/pydatastructs",
+    packages=setuptools.find_packages(),
     classifiers=[
-        'Development Status :: 5 - Production/Stable',
-        'Environment :: Web Environment',
-        'Intended Audience :: Developers',
-        'License :: OSI Approved :: MIT License',
-        'Programming Language :: Python',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.11',
-        'Topic :: Internet :: WWW/HTTP',
-        ],
-    zip_safe=False
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: BSD License",
+        "Operating System :: OS Independent",
+        "Topic :: Scientific/Engineering",
+        "Topic :: Scientific/Engineering :: Information Analysis",
+        "Topic :: Software Development :: Libraries"
+    ],
+    python_requires='>=3.5',
+    ext_modules=extensions
 )
