@@ -1,5 +1,0 @@
-Please click on the link bellow to confirm subscription to {{ site_url }}
-
-{{ site_url }}{{ verification_url }}
-
-Thank You

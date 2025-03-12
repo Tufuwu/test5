@@ -1,11 +1,9 @@
-include CONTRIBUTING.rst
+include readme.rst
 include LICENSE
-include README.rst
+include pylintrc
 
-recursive-include newsfeed/static *
-recursive-include newsfeed/migrations *
-recursive-include newsfeed/templates *
-recursive-include newsfeed/utils *
+graft docs
+prune docs/build
 
-global-exclude __pycache__
-global-exclude *.py[co]
+graft test
+global-exclude *.pyc
