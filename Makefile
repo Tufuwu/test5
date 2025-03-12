@@ -1,20 +1,28 @@
-development:
-	tox -e venv
+FILES=*.py tests/*.py
 
-.PHONY: test
-test:
-	tox
+.PHONY: all
+all: black flake8 pylint pytest mypy
 
-.PHONY: clean
-clean:
-	find -name '*.pyc' -delete
-	find -name '__pycache__' -delete
+.PHONY: black
+black:
+	@black --check $(FILES)
 
-.PHONY: purge
-purge:
-	find -name '.tox' | xargs --no-run-if-empty rm -r
-	find -name '*.egg-info' | xargs --no-run-if-empty rm -r
+.PHONY: flake8
+flake8:
+	@flake8 --ignore=E501 $(FILES)
 
-.PHONY: vulnerable_app
-vulnerable_app:
-	FLASK_ENV='development' python -m testing.vulnerable_app
+.PHONY: pylint
+pylint:
+	@pylint --disable=line-too-long $(FILES)
+
+.PHONY: pytest
+pytest:
+	@pytest --capture=sys -v --cov --cov-report term-missing
+
+.PHONY: mypy
+mypy:
+	@mypy $(FILES)
+
+.PHONY: e2e
+e2e:
+	@bash tests/e2e.sh
