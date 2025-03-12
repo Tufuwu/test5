@@ -1,0 +1,7 @@
+-r ../requirements.txt
+biplist
+coverage
+defusedxml
+lxml
+pytz==2021.1
+PyYAML
