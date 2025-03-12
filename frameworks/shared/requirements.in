@@ -1,4 +1,0 @@
-psutil>=5.4
-
-pyarrow>=4.0
-# tables>=3.6    # if using hdf serializer (let the client choose)
