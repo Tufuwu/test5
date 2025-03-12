@@ -1,2 +1,0 @@
-def bogus():
-    return 'bogus'

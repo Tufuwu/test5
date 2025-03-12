@@ -1,10 +1,13 @@
+<<<<<<< HEAD
+*.pyc
+=======
 *.py[cod]
 
 # C extensions
 *.so
 
 # Packages
-*.egg*
+*.egg
 *.egg-info
 dist
 build
@@ -22,28 +25,15 @@ lib64
 pip-log.txt
 
 # Unit test / coverage reports
-cover/
-.coverage*
+.coverage
 .tox
-.venv
-.pytest_cache/
-.mypy_cache/
+nosetests.xml
 
 # Translations
 *.mo
 
-# Complexity
-output/*.html
-output/*/index.html
-
-# Sphinx
-doc/build
-
-# pbr
-AUTHORS
-ChangeLog
-
-# Editors
-*~
-.*.swp
-.*sw?
+# Mr Developer
+.mr.developer.cfg
+.project
+.pydevproject
+>>>>>>> 435c833443ef2651b6ae1fc59c08a5896bff9a3b
