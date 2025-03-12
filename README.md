@@ -1,51 +1,35 @@
-# core-workflow
+# IBL Python Libraries
+[![Coverage badge](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fibllib.hooks.internationalbrainlab.org%2Fcoverage%2Fibllib%2Fmaster)](https://ibllib.hooks.internationalbrainlab.org/coverage/master)
+[![Tests status badge](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fibllib.hooks.internationalbrainlab.org%2Ftests%2Fibllib%2Fmaster)](https://ibllib.hooks.internationalbrainlab.org/logs/records/master)
+[![Tests status badge](https://img.shields.io/endpoint?label=develop&url=https%3A%2F%2Fibllib.hooks.internationalbrainlab.org%2Ftests%2Fibllib%2Fdevelop)](https://ibllib.hooks.internationalbrainlab.org/logs/records/develop)
 
-[![Lint](https://github.com/python/core-workflow/actions/workflows/lint.yml/badge.svg)](https://github.com/python/core-workflow/actions/workflows/lint.yml)
-[![Python Discourse chat](https://img.shields.io/badge/Discourse-join_chat-brightgreen.svg)](https://discuss.python.org/)
+## Description
+Library used to implement the International Brain Laboratory data pipeline. Currently in active development.
+The library is currently 2 main modules:
+-   **brainbox**: neuroscience analysis oriented library
+-   **ibllib**: general purpose library containing I/O, signal processing and IBL data pipelines utilities.
 
-Issue tracker and relevant tools for CPython's workflow.
+[Release Notes here](release_notes.md)
 
-## Core workflow tools
+## Requirements
+**OS**: Only tested on Linux. Windows and Mac may work, but are not supported.
 
-<table>
-<tr>
-<th>Name
-<th>Description
-<th>Issue tracker
-<th>Owner/Maintainer
-<tr>
-<td><a href="https://github.com/python/bedevere">python/bedevere</a>
-<td>Bot to help identify missing information for CPython pull requests
-<td><a href="https://github.com/python/bedevere/issues">GitHub</a>
-<td><a href="https://github.com/brettcannon">Brett Cannon</a>
-<tr>
-<td><a href="https://github.com/python/blurb">python/blurb</a>
-<td><code>blurb add</code> on the command line
-<td><a href="https://github.com/python/blurb/issues">GitHub</a>
-<td>
-<tr>
-<td><a href="https://github.com/python/blurb_it">python/blurb_it</a>
-<td><code>blurb add</code> on the web
-<td><a href="https://github.com/python/blurb_it/issues">GitHub</a>
-<td><a href="https://github.com/mariatta">Mariatta</a>
-<tr>
-<td><a href="https://github.com/python/cherry-picker">python/cherry-picker</a>
-<td>Command line tool for backporting CPython pull requests
-<td><a href="https://github.com/python/cherry-picker/issues">GitHub</a>
-<td><a href="https://github.com/mariatta">Mariatta</a>
-<tr>
-<td><a href="https://github.com/python/miss-islington">python/miss-islington</a>
-<td>Bot for backporting CPython pull requests
-<td><a href="https://github.com/python/miss-islington/issues">GitHub</a>
-<td><a href="https://github.com/mariatta">Mariatta</a>
-<tr>
-<td><a href="https://github.com/ambv/cla-bot">ambv/cla-bot</a>
-<td>CLA enforcement bot for Python organization projects
-<td>
-<td><a href="https://github.com/ambv">Łukasz Langa</a>
-<tr>
-<td><a href="https://github.com/berkerpeksag/cpython-emailer-webhook">berkerpeksag/cpython-emailer-webhook</a>
-<td>Webhook to send every CPython commit to python-checkins mailing list
-<td><a href="https://github.com/berkerpeksag/cpython-emailer-webhook/issues">GitHub</a>
-<td><a href="https://github.com/berkerpeksag">Berker Peksag</a>
-</table>
+**Python Module**: Python 3.10 or higher, Python 3.12 recommended
+
+## Installation, documentation and examples
+https://docs.internationalbrainlab.org
+
+
+## Contribution and development practices
+See https://int-brain-lab.github.io/iblenv/07_contribution.html
+
+We use Semantic Versioning.
+
+Before committing to your branch:
+-   run tests
+-   flake8
+This is also enforced by continuous integration.
+
+
+## Matlab Library
+The Matlab library has moved to its own repository here: https://github.com/int-brain-lab/ibllib-matlab/
