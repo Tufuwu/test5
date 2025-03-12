@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Pull requests" %}{% endblock %}
+<!-- Open Graph tags -->
+{% block og_title %}{% trans "Pull requests by" %} {{ request.resolver_match.kwargs.slug }}{% endblock og_title %}
+<!-- End Open Graph tags -->
+{% block header %}{% trans "Pull requests" %}{% endblock %}
+{% block content %}
+  {% include 'components/search_by_name_and_state.html' %}
+  {% include 'components/tables/contributor_prs.html' %}
+  {% include 'components/pagination.html' %}
+{% endblock content %}

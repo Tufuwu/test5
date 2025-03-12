@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{{ repository.full_name }}{% endblock %}
+<!-- Open Graph tags -->
+{% block og_title %}{% trans "Repository" %} {{ repository.name }}{% endblock og_title %}
+<!-- End Open Graph tags -->
+{% block header %}{{ repository.name }}{% endblock %}
+{% block additional %}
+  <p class="h5">
+    {% trans "Owner" %}:
+    {% if repository.organization %}
+      <a href="{{ repository.organization.get_absolute_url }}">{{ repository.organization }}</a>
+    {% else %}
+      <a href="{{ repository.owner.get_absolute_url }}">{{ repository.owner }}</a>
+    {% endif %}
+    <br>
+    {% if repository.project %}
+      {% trans "Project" %}:
+      <a href="{{ repository.project.get_absolute_url }}">{{ repository.project }}</a>
+      <br>
+    {% endif %}
+    <a href="{{ repository.html_url }}" target="_blank"><span class="badge bg-dark">GitHub</span></a>
+    {% include 'components/repo_tags_list.html' %}
+  </p>
+  <h2>{% trans "Contributors" %}</h2>
+{% endblock additional %}
+{% block content %}
+  {% include 'components/sort_and_search_form.html' %}
+  {% include 'components/tables/contributors_list.html' %}
+  {% include 'components/pagination.html' %}
+{% endblock content %}

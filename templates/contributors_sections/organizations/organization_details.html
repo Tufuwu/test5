@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{{ organization.name }}{% endblock %}
+<!-- Open Graph tags -->
+{% block og_title %}{% trans "Details for organization" %} {{ organization.name }}{% endblock og_title %}
+<!-- End Open Graph tags -->
+{% block header %}{{ organization.name }}{% endblock %}
+{% block additional %}
+  <p class="h5">
+    <a href="{{ organization.html_url }}"><span class="badge bg-dark">GitHub</span></a>
+  </p>
+  <h2>{% trans "Repositories" %}</h2>
+{% endblock additional %}
+{% block content %}
+  {% include 'components/sort_and_search_form.html' %}
+  {% include 'components/tables/repositories_list.html' %}
+  {% include 'components/pagination.html' %}
+{% endblock content %}

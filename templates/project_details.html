@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block head_scripts %}
+  {% include 'components/activity_chart/scripts.html' %}
+{% endblock head_scripts %}
+
+{% block title %}{{ project.name }}{% endblock %}
+<!-- Open Graph tags -->
+{% block og_title %}{{ project.name }}{% endblock og_title %}
+<!-- End Open Graph tags -->
+{% block additional %}
+  <h2>{% trans "Project" %} {{ project.name }}</h2>
+  {% include 'components/activity_chart/chart.html' %}
+    <p>
+    {{ project.description }}
+    </p>
+    <p>
+    <a href='{{ project.html_url }}' target="_blank">{{ project.html_url }}</a>
+    </p>
+{% endblock additional %}
+{% block content %}
+     <p class="h5">
+    {% trans "Project related repositories" %}:
+     </p>
+  {% include 'components/tables/repositories_list.html' %}
+{% endblock content %}

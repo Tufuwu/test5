@@ -1,0 +1,284 @@
+{% extends 'base.html' %}
+{% load i18n static %}
+{% block head_scripts %}
+  {% include 'components/activity_chart/scripts.html' %}
+{% endblock head_scripts %}
+{% block title %}{{ contributor.login }}{% endblock %}
+<!-- Open Graph tags -->
+{% block og_title %}{% trans "Contributor" %} {{ contributor.login }}{% endblock og_title %}
+<!-- End Open Graph tags -->
+{% block content %}
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card user-card" style="width: 270px;">
+        <img src="{{ contributor.avatar_url }}" class="card-img-top" alt="">
+        <div class="card-body">
+          {% if contributor.name %}<h1 class="h4 card-title">{{ contributor.name }}</h1>{% endif %}
+          <h2 class="h5 card-subtitle font-weight-light">{{ contributor.login }}</h2>
+          <a href="{{ contributor.html_url }}" target="_blank">
+            <span class="badge bg-dark">GitHub</span>
+          </a>
+          <h2 class="h5 card-subtitle font-weight-light mt-3">
+            <a href="{% url 'contributors:contributor_achievements' contributor.login %}">
+              {% trans 'Achievements' %}
+            </a>
+          </h2>
+
+          {% if contributor.additions|add:contributor.deletions|add:contributor.pull_requests|add:contributor.issues|add:contributor.comments > 0 %}
+            <img class="img"
+                 alt="{% trans "Hexlet friend" %}"
+                 title="{% trans "Hexlet friend" %}"
+                 src="{% static 'images/achievments_icons/friend.svg' %}"
+                 data-toggle="tooltip"
+                 width="50">
+          {% endif %}
+
+          {% if contributor.pull_requests >= 100 %}
+            <img src="{% static 'images/achievments_icons/pull_requests-100.svg' %}"
+                 alt="{% trans 'Pull requests' %}: {{ contributor.pull_requests }}"
+                 title="{% trans 'Pull requests' %}: {{ contributor.pull_requests }}"
+                 data-toggle="tooltip"
+                 width="50">
+          {% elif contributor.pull_requests >= 50 %}
+            <img src="{% static 'images/achievments_icons/pull_requests-50.svg' %}"
+                 alt="{% trans 'Pull requests' %}: {{ contributor.pull_requests }}"
+                 title="{% trans 'Pull requests' %}: {{ contributor.pull_requests }}"
+                 data-toggle="tooltip"
+                 width="50">
+          {% elif contributor.pull_requests >= 25 %}
+            <img src="{% static 'images/achievments_icons/pull_requests-25.svg' %}"
+                 alt="{% trans 'Pull requests' %}: {{ contributor.pull_requests }}"
+                 title="{% trans 'Pull requests' %}: {{ contributor.pull_requests }}"
+                 data-toggle="tooltip"
+                 width="50">
+          {% elif contributor.pull_requests >= 10 %}
+            <img src="{% static 'images/achievments_icons/pull_requests-10.svg' %}"
+                 alt="{% trans 'Pull requests' %}: {{ contributor.pull_requests }}"
+                 title="{% trans 'Pull requests' %}: {{ contributor.pull_requests }}"
+                 data-toggle="tooltip"
+                 width="50">
+          {% elif contributor.pull_requests >= 1 %}
+            <img src="{% static 'images/achievments_icons/pull_request-1.svg' %}"
+                 alt="{% trans 'Pull requests' %}: {{ contributor.pull_requests }}"
+                 title="{% trans 'Pull requests' %}: {{ contributor.pull_requests }}"
+                 data-toggle="tooltip"
+                 width="50">
+          {% endif %}
+
+          {% if contributor.commits >= 200 %}
+            <img src="{% static 'images/achievments_icons/commits-200.svg' %}"
+                 alt="{% trans 'Commits' %}: {{ contributor.commits }}"
+                 title="{% trans 'Commits' %}: {{ contributor.commits }}"
+                 data-toggle="tooltip"
+                 width="50">
+          {% elif contributor.commits >= 100 %}
+            <img src="{% static 'images/achievments_icons/commits-100.svg' %}"
+                 alt="{% trans 'Commits' %}: {{ contributor.commits }}"
+                 title="{% trans 'Commits' %}: {{ contributor.commits }}"
+                 data-toggle="tooltip"
+                 width="50">
+          {% elif contributor.commits >= 50 %}
+            <img src="{% static 'images/achievments_icons/commits-50.svg' %}"
+                 alt="{% trans 'Commits' %}: {{ contributor.commits }}"
+                 title="{% trans 'Commits' %}: {{ contributor.commits }}"
+                 data-toggle="tooltip"
+                 width="50">
+          {% elif contributor.commits >= 25 %}
+            <img src="{% static 'images/achievments_icons/commits-25.svg' %}"
+                 alt="{% trans 'Commits' %}: {{ contributor.commits }}"
+                 title="{% trans 'Commits' %}: {{ contributor.commits }}"
+                 data-toggle="tooltip"
+                 width="50">
+          {% elif contributor.commits >= 1 %}
+            <img src="{% static 'images/achievments_icons/commit-1.svg' %}"
+                 alt="{% trans 'Commits' %}: {{ contributor.commits }}"
+                 title="{% trans 'Commits' %}: {{ contributor.commits }}"
+                 data-toggle="tooltip"
+                 width="50">
+          {% endif %}
+
+          {% if contributor.issues >= 50 %}
+            <img src="{% static 'images/achievments_icons/issues-50.svg' %}"
+                 alt="{% trans 'Issues' %}: {{ contributor.issues }}"
+                 title="{% trans 'Issues' %}: {{ contributor.issues }}"
+                 data-toggle="tooltip"
+                 width="50">
+          {% elif contributor.issues >= 25 %}
+            <img src="{% static 'images/achievments_icons/issues-25.svg' %}"
+                 alt="{% trans 'Issues' %}: {{ contributor.issues }}"
+                 title="{% trans 'Issues' %}: {{ contributor.issues }}"
+                 data-toggle="tooltip"
+                 width="50">
+          {% elif contributor.issues >= 10 %}
+            <img src="{% static 'images/achievments_icons/issues-10.svg' %}"
+                 alt="{% trans 'Issues' %}: {{ contributor.issues }}"
+                 title="{% trans 'Issues' %}: {{ contributor.issues }}"
+                 data-toggle="tooltip"
+                 width="50">
+          {% elif contributor.issues >= 5 %}
+            <img src="{% static 'images/achievments_icons/issues-5.svg' %}"
+                 alt="{% trans 'Issues' %}: {{ contributor.issues }}"
+                 title="{% trans 'Issues' %}: {{ contributor.issues }}"
+                 data-toggle="tooltip"
+                 width="50">
+          {% elif contributor.issues >= 1 %}
+            <img src="{% static 'images/achievments_icons/issue-1.svg' %}"
+                 alt="{% trans 'Issues' %}: {{ contributor.issues }}"
+                 title="{% trans 'Issues' %}: {{ contributor.issues }}"
+                 data-toggle="tooltip"
+                 width="50">
+          {% endif %}
+
+          {% if contributor.comments >= 200 %}
+            <img src="{% static 'images/achievments_icons/comments-200.svg' %}"
+                 alt="{% trans 'Comments' %}: {{ contributor.comments }}"
+                 title="{% trans 'Comments' %}: {{ contributor.comments }}"
+                 data-toggle="tooltip"
+                 width="50">
+          {% elif contributor.comments >= 100 %}
+            <img src="{% static 'images/achievments_icons/comments-100.svg' %}"
+                 alt="{% trans 'Comments' %}: {{ contributor.comments }}"
+                 title="{% trans 'Comments' %}: {{ contributor.comments }}"
+                 data-toggle="tooltip"
+                 width="50">
+          {% elif contributor.comments >= 50 %}
+            <img src="{% static 'images/achievments_icons/comments-50.svg' %}"
+                 alt="{% trans 'Comments' %}: {{ contributor.comments }}"
+                 title="{% trans 'Comments' %}: {{ contributor.comments }}"
+                 data-toggle="tooltip"
+                 width="50">
+          {% elif contributor.comments >= 25 %}
+            <img src="{% static 'images/achievments_icons/comments-25.svg' %}"
+                 alt="{% trans 'Comments' %}: {{ contributor.comments }}"
+                 title="{% trans 'Comments' %}: {{ contributor.comments }}"
+                 data-toggle="tooltip"
+                 width="50">
+          {% elif contributor.comments >= 1 %}
+            <img src="{% static 'images/achievments_icons/comment-1.svg' %}"
+                 alt="{% trans 'Comments' %}: {{ contributor.comments }}"
+                 title="{% trans 'Comments' %}: {{ contributor.comments }}"
+                 data-toggle="tooltip"
+                 width="50">
+          {% endif %}
+
+          {% if contributor.additions|add:contributor.deletions >= 1000 %}
+            <img src="{% static 'images/achievments_icons/code_editioins-1000.svg' %}"
+                 alt="{% trans 'Additions and deletions' %}: {{ contributor.additions|add:contributor.deletions }}"
+                 title="{% trans 'Additions and deletions' %}: {{ contributor.additions|add:contributor.deletions }}"
+                 data-toggle="tooltip"
+                 width="50">
+          {% elif contributor.additions|add:contributor.deletions >= 500 %}
+            <img src="{% static 'images/achievments_icons/code_editions-500.svg' %}"
+                 alt="{% trans 'Additions and deletions' %}: {{ contributor.additions|add:contributor.deletions }}"
+                 title="{% trans 'Additions and deletions' %}: {{ contributor.additions|add:contributor.deletions }}"
+                 data-toggle="tooltip"
+                 width="50">
+          {% elif contributor.additions|add:contributor.deletions >= 250 %}
+            <img src="{% static 'images/achievments_icons/code_editions-250.svg' %}"
+                 alt="{% trans 'Additions and deletions' %}: {{ contributor.additions|add:contributor.deletions }}"
+                 title="{% trans 'Additions and deletions' %}: {{ contributor.additions|add:contributor.deletions }}"
+                 data-toggle="tooltip"
+                 width="50">
+          {% elif contributor.additions|add:contributor.deletions >= 100 %}
+            <img src="{% static 'images/achievments_icons/code_editions-100.svg' %}"
+                 alt="{% trans 'Additions and deletions' %}: {{ contributor.additions|add:contributor.deletions }}"
+                 title="{% trans 'Additions and deletions' %}: {{ contributor.additions|add:contributor.deletions }}"
+                 data-toggle="tooltip"
+                 width="50">
+          {% elif contributor.additions|add:contributor.deletions >= 1 %}
+            <img src="{% static 'images/achievments_icons/code_edition-1.svg' %}"
+                 alt="{% trans 'Additions and deletions' %}: {{ contributor.additions|add:contributor.deletions }}"
+                 title="{% trans 'Additions and deletions' %}: {{ contributor.additions|add:contributor.deletions }}"
+                 data-toggle="tooltip"
+                 width="50">
+          {% endif %}
+
+        </div>
+
+        <nav class="nav">
+          <a class="nav-link" href="{% url 'contributors:contributor_pullrequests' contributor.login %}">
+            {% trans 'Pull requests' %}
+          </a>
+          <a class="nav-link" href="{% url 'contributors:contributor_issues' contributor.login %}">
+            {% trans 'Issues' %}
+          </a>
+        </nav>
+      </div>
+    </div>
+    <div class="col">
+      <h2>
+        {% trans "Past year activity" %}
+        {% if user.is_authenticated and object.user != user%}
+          <a class="btn btn-outline-primary"
+            href="{% url 'contributors:contributor_details' current_contributor %}?compare=yes">
+            {% trans "Compare with yourself" %}
+          </a>
+          {% endif %}
+      </h2>
+      {% include 'components/activity_chart/chart.html' %}
+
+      <div class="container my-3">
+        <h5>{% trans "Summary" %}</h5>
+        <table class="table fw-lighter text-center">
+            <thead>
+                <tr>
+                    <th class="h4">{% trans "Commits" %}</th>
+                    <th class="h4">{% trans "Pull requests" %}</th>
+                    <th class="h4">{% trans "Issues" %}</th>
+                    <th class="h4">{% trans "Comments" %}</th>
+                </tr>
+            </thead>
+            <div class="latest-contributions">
+              {% if user.is_authenticated and object.user != user %}
+              <div class="my-2">
+                <a href="{% url 'contributors:compare_with_yourself' slug=contributor.login %}">
+                <button class="btn btn-primary">
+                  {% trans "Compare with yourself" %}
+                </button>
+                </a>
+              </div>
+              {% endif %}
+                {% include 'components/tables/contributor_summary.html' %}
+            </div>
+        </table>
+      </div>
+
+      <h2 class="mr-5">{% trans "All-time contributions" %}</h2>
+      <input type="text" name="name" id="repo-search-field" class="form-control col-3"
+             placeholder="{% trans "Filter by name" %}">
+
+      <table id="contrib-details" class="table table-sm">
+        <thead>
+        <tr>
+          <th scope="col" id="repo-name" data-sorting="asc">{% trans "Repository" %}</th>
+          <th scope="col" id="cit" data-sorting="" title="{% trans 'Commits' %}"></th>
+          <th scope="col" id="cit-add" data-sorting="" title="{% trans 'Additions' %}"></th>
+          <th scope="col" id="cit-del" data-sorting="" title="{% trans 'Deletions' %}"></th>
+          <th scope="col" id="pr" data-sorting="" title="{% trans 'Pull requests' %}"></th>
+          <th scope="col" id="iss" data-sorting="" title="{% trans 'Issues' %}"></th>
+          <th scope="col" id="cnt" data-sorting="" title="{% trans 'Comments' %}"></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for repo in repositories %}
+          <tr class="repo-contributions">
+            <td data-field="repo-name"><a href="{{ repo.get_absolute_url }}">{{ repo.full_name }}</a></td>
+            <td data-field="cit">{{ repo.commits }}</td>
+            <td data-field="cit-add">{{ repo.additions }}</td>
+            <td data-field="cit-del">{{ repo.deletions }}</td>
+            <td data-field="pr">{{ repo.pull_requests }}</td>
+            <td data-field="iss">{{ repo.issues }}</td>
+            <td data-field="cnt">{{ repo.comments }}</td>
+          </tr>
+        {% endfor %}
+        <tfoot>
+        {% include 'components/tables/contributor_total.html' %}
+        </tfoot>
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock content %}
+{% block body_end_scripts %}
+  <script src="{% static 'js/contribDataSortAndSearch.js' %}"></script>
+{% endblock %}

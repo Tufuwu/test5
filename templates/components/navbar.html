@@ -1,0 +1,115 @@
+{% load i18n static %}
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container">
+    <a class="navbar-brand" href="{% url 'contributors:home' %}">{{ PROJECT_NAME }}</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'contributors:organizations_list' %}">
+            {% trans "Organizations" %}
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'contributors:repositories_list' %}">
+            {% trans "Repositories" %}
+          </a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+             aria-expanded="false">
+            {% trans "Leaderboard" %}
+          </a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="{% url 'contributors:leaderboard_commits' %}">{% trans "Commits" %}</a>
+            <a class="dropdown-item" href="{% url 'contributors:leaderboard_prs' %}">{% trans "Pull requests" %}</a>
+            <a class="dropdown-item" href="{% url 'contributors:leaderboard_issues' %}">{% trans "Issues" %}</a>
+          </div>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+             aria-expanded="false">
+            {% trans "Contributors" %}
+          </a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="{% url 'contributors:contributors_for_week' %}">{% trans "For period" %}</a>
+            <a class="dropdown-item" href="{% url 'contributors:contributors_list' %}">{% trans "All-time" %}</a>
+          </div>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'contributors:open_issues' %}">
+            {% trans "Issues" %}
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-nowrap" href="{% url 'contributors:pull_requests_list' %}">
+            {% trans "Pull requests" %}
+          </a>
+        </li>
+      </ul>
+      <ul class="navbar-nav ml-auto btn-group">
+        {% if user.is_authenticated %}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+               aria-expanded="false">
+              {{ user.username }}
+            </a>
+            <div class="dropdown-menu dropdown-menu-right">
+              {% if user.is_staff %}
+                <a class="dropdown-item" href="{% url 'admin:index' %}">{% trans "Admin" %}</a>
+              {% endif %}
+              {% if user.contributor %}
+                <a class="dropdown-item" href="{{ user.contributor.get_absolute_url }}">{% trans "My statistics" %}</a>
+              {% endif %}
+              {% if user.contributor %}
+                <a class="dropdown-item" href="{% url 'contributors:user_settings' slug=user.contributor.login %}">{% trans "Settings" %}</a>
+              {% endif %}
+              <form class="dropdown-item" method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit">{% trans "Log out" %}</button>
+              </form>
+            </div>
+          </li>
+        {% else %}
+          <li class="nav-item text-nowrap">
+            <a class="nav-link" href="{% url 'auth:github' %}">
+              <img src="{% static 'images/github_icons/mark-github.svg' %}" alt="GitHub">
+              {% trans "Log in" %}
+            </a>
+          </li>
+        {% endif %}
+      </ul>
+      <ul class="navbar-nav btn-group">
+        <li>
+          <a class="nav-link dropdown-toggle" data-bs-toggle='dropdown' role='button' aria-expanded='false'>
+            <img class="mt-auto" src="{% static 'images/locale_icons/'|add:LANGUAGE_CODE|add:'.svg' %}"
+                 alt="current language is {{ LANGUAGE_CODE }}" width="25">
+            {{ LANGUAGE_CODE|upper }}
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end" role='menu'>
+            <li>
+              <form name="setLanguage" action="{% url 'set_language' %}" method="post">
+                {% csrf_token %}
+                {% get_available_languages as AVAILABLE_LANGUAGES %}
+                {% get_language_info_list for AVAILABLE_LANGUAGES as languages %}
+                {% for language in languages %}
+                  {% if language.code != LANGUAGE_CODE %}
+                    <input name="language" type="hidden" value="{{ language.code|lower }}"/>
+                    <a class="dropdown-item" href="javascript:document.setLanguage.submit()">
+                      <img src="{% static 'images/locale_icons/'|add:language.code|add:'.svg' %}"
+                           alt="set language to {{ language.code }}" width="25">
+                      {{ language.name_local }}
+                    </a>
+                  {% endif %}
+                {% endfor %}
+              </form>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

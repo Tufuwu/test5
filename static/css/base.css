@@ -1,0 +1,210 @@
+html {
+  overflow-y: scroll;
+}
+
+body {
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+main {
+  flex-grow: 1;
+}
+
+.time-note {
+  display: inline-block;
+  cursor: default;
+  border-bottom-style: dotted;
+  border-bottom-width: 1px;
+  margin-bottom: 8px;
+}
+
+.time-note:hover {
+  text-decoration: none;
+}
+
+.form-inline .form-group {
+  margin-right: 1rem;
+}
+
+.top-10 {
+  min-width: 340px;
+}
+
+.top-10 .card-header {
+  padding-top: 0.45rem;
+}
+
+.top-10 .list-group .list-group-item:first-child {
+  border-top: 0;
+}
+
+.top-10 .list-group {
+  border-top: initial;
+  border-bottom: initial;
+}
+
+.top-list-number {
+  margin-right: 1em;
+}
+
+.top-list-number::before {
+  content: "0";
+}
+
+.list-group-item:nth-child(n+10) .top-list-number::before {
+  content: "";
+}
+
+.card .list-group-item .badge {
+  position: absolute;
+  right: 0;
+  margin-top: 0.35em;
+  margin-right: 1.7em;
+}
+
+@media (max-width: 768px) {
+  .latest-issues-heading {
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+  }
+}
+
+.chart-container {
+  height: 350px;
+  position: relative;
+}
+
+th.sortable {
+  position: relative;
+}
+
+th.sortable::after {
+  position: absolute;
+  top: 0.8em;
+  right: 0.5em;
+}
+
+th.sortable[data-sorting="desc"]::after {
+  content: "\25bc";
+}
+
+th.sortable[data-sorting="asc"]::after {
+  content: "\25b2";
+}
+
+/* Contributor's details */
+#contrib-details td {
+  text-align: center;
+}
+
+#contrib-details td:first-child {
+  text-align: left;
+}
+
+#contrib-details th {
+  border-top: none;
+  cursor: pointer;
+  user-select: none;
+  background-repeat: no-repeat;
+  background-position: center;
+  position: relative;
+  width: 9%;
+}
+
+#contrib-details th:first-child {
+  width: 46%;
+}
+
+#contrib-details [data-sorting]::after {
+  position: absolute;
+  top: 0.3em;
+  right: 0.5em;
+}
+
+#contrib-details [data-sorting="desc"]::after {
+  content: "\2193";
+}
+
+#contrib-details [data-sorting="asc"]::after {
+  content: "\2191";
+}
+
+#contrib-details #cit {
+  background-image: url("../images/github_icons/git-commit.svg");
+}
+
+#contrib-details #cit-add {
+  background-image: url("../images/github_icons/diff-added.svg");
+}
+
+#contrib-details #cit-del {
+  background-image: url("../images/github_icons/diff-removed.svg");
+}
+
+#contrib-details #pr {
+  background-image: url("../images/github_icons/git-pull-request.svg");
+}
+
+#contrib-details #iss {
+  background-image: url("../images/github_icons/issue-opened.svg");
+}
+
+#contrib-details #cnt {
+  background-image: url("../images/github_icons/comment.svg");
+}
+
+.user-card {
+  position: sticky;
+  top: 48px;
+}
+
+/* Django admin styles */
+caption.app-header {
+  position: relative;
+}
+
+#config-button {
+  background-color: greenyellow;
+  margin-top: -8px;
+  padding: 8px;
+  position: absolute;
+  right: 0;
+}
+
+.repo-list {
+  padding-left: 0;
+  columns: 100px 2;
+}
+
+.repo-list li {
+  list-style-type: none;
+}
+
+.accordion .card-header {
+  cursor: pointer;
+}
+
+.text-underline-hover {
+  text-decoration: none;
+}
+
+.text-underline-hover:hover {
+  text-decoration: underline;
+}
+
+a:not([class]) {
+  text-decoration: none;
+}
+
+a:not([class]):hover {
+  text-decoration: underline;
+}
+
+.x-vw {
+    width: 50vw;
+}
+
+.x-h {
+    height: max-content;
+}

@@ -1,0 +1,40 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+    volumes:
+      - postgres_volume:/var/lib/postgresql/data
+
+    ports:
+      - 5433:5432
+
+  memcached:
+    image: memcached:alpine
+    ports:
+      - "11211:11211"
+
+  django:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: "make start"
+    env_file:
+      - .env
+    environment:
+      POSTGRES_HOST: db
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+      CACHE_LOCATION: memcached
+      CACHE_USERNAME:
+      CACHE_PASSWORD:
+    volumes:
+      - .:/usr/local/src/hexlet-friends
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+      - memcached
+
+volumes:
+  postgres_volume:
