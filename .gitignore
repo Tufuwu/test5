@@ -1,12 +1,6 @@
 *.pyc
-# Don't commit Cython generated c files
-# (setup.py will now use Cython to autogenerate them)
-*.c
-.cache
-.pytest_cache
-.ipynb_checkpoints
-
-build
-docs/_build
-hatchet/cython_modules/libs/graphframe_modules.*.so
-hatchet/cython_modules/libs/reader_modules.*.so
+.pypirc
+build/
+dist/
+.DS_Store
+.idea

@@ -1,17 +1,11 @@
-# Copyright 2017-2024 Lawrence Livermore National Security, LLC and other
-# Hatchet Project Developers. See the top-level LICENSE file for details.
-#
-# SPDX-License-Identifier: MIT
-
 # Minimal makefile for Sphinx documentation
 #
 
 # You can set these variables from the command line.
 SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
-SPHINXPROJ    = hatchet
-SOURCEDIR     = .
-BUILDDIR      = _build
+SOURCEDIR     = source
+BUILDDIR      = build
 
 # Put it first so that "make" without argument is like "make help".
 help:
