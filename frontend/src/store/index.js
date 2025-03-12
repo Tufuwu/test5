@@ -1,19 +1,15 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import * as actions from './actions'
-import categories from './modules/categories'
-import detail from './modules/detail'
-import list from './modules/list'
+import calendar from './modules/calendar'
+import event from './modules/event'
 
 Vue.use(Vuex)
 
 const options = {
-    actions,
     modules: {
-        categories,
-        detail,
-        list
+        calendar,
+        event
     },
     strict: process.env.NODE_ENV !== 'production'
 }

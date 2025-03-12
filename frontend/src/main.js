@@ -2,15 +2,25 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 import Cookies from 'js-cookie'
-import moment from 'moment'
-import GetTextPlugin from 'vue-gettext'
 
-import store from './store'
+import GetTextPlugin from 'vue-gettext'
+import Multiselect from 'vue-multiselect'
+import flatpickr from 'flatpickr'
+import VueFlatPickr from 'vue-flatpickr-component'
+import 'flatpickr/dist/flatpickr.css'
+import VuejsDialog from 'vuejs-dialog'
+import Notifications from 'vue-notification'
+import Acl from './tools/permissions'
+
 import App from './App.vue'
+import router from './router'
+import store from './store'
 import translations from './translations.json'
-import ContactDetail from './components/ContactDetail.vue'
-import ContactList from './components/ContactList.vue'
+
+import Calendar from './components/Calendar.vue'
 import Modal from './components/Modal.vue'
+
+import 'vuejs-dialog/dist/vuejs-dialog.min.css'
 
 Vue.use(GetTextPlugin, {
     availableLanguages: {
@@ -19,41 +29,45 @@ Vue.use(GetTextPlugin, {
     },
     translations: translations
 })
+/* global userLang */
+Vue.config.language = userLang
+
 Vue.use(VueRouter)
+Vue.use(VuejsDialog)
+Vue.use(Notifications)
+Vue.use(Acl)
 
+/* Configure flatpick widget */
+if (userLang !== 'en') {
+    import(`flatpickr/dist/l10n/${userLang}.js`).then((locale) => {
+        flatpickr.localize(locale.default[userLang])
+    })
+}
+Vue.use(VueFlatPickr)
+
+Vue.component('calendar', Calendar)
 Vue.component('modal', Modal)
+Vue.component('multiselect', Multiselect)
 
-Vue.filter('formatDate', (value) => {
-    if (value) {
-        return moment(String(value)).format('MM/DD/YYYY')
+/* Global event bus */
+const EventBus = new Vue()
+
+Object.defineProperties(Vue.prototype, {
+    $bus: {
+        get: function () {
+            return EventBus
+        }
     }
 })
-Vue.filter('translate', value => {
-    return !value ? '' : Vue.prototype.$gettext(value.toString())
-})
 
+/* Deal with django CSRF protection */
 const csrftoken = Cookies.get('csrftoken')
 Vue.http.headers.common['X-CSRFTOKEN'] = csrftoken
 
-const routes = [
-    { path: '/', name: 'contact-list', component: ContactList },
-    { path: '/:pk(\\d+)', name: 'contact-detail', component: ContactDetail },
-    { path: '/:category([\\w%]+)', name: 'contact-list-filtered', component: ContactList }
-]
-
-export var router = new VueRouter({
-    routes,
-    linkActiveClass: 'active'
-})
-
-Vue.config.productionTip = false
-
 // eslint-disable-next-line no-new
 new Vue({
+    el: '#app',
     render: h => h(App),
     router,
     store
-}).$mount('#app')
-
-/* global userLang */
-Vue.config.language = userLang
+})

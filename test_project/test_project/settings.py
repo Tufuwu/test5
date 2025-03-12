@@ -24,7 +24,7 @@ BASE_DIR = os.path.realpath(os.path.dirname(os.path.dirname(__file__)))
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'w537@nm@5n)=+e%-7*z-jxf21a#0k%uv^rbu**+cj4=_u57e(8'
+SECRET_KEY = '8ic41*pm@ag55fc$k-=ox@0_(xxvu&amp;fj+*bse$1ndjix96p%fe'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = 'DEBUG' in os.environ
@@ -75,8 +75,14 @@ MODOBOA_APPS = (
     'modoboa.relaydomains',
     'modoboa.limits',
     'modoboa.parameters',
+    'modoboa.dnstools',
+    'modoboa.policyd',
+    'modoboa.maillog',
+    'modoboa.pdfcredentials',
+    'modoboa.dmarc',
+    'modoboa.imap_migration',
     # Modoboa extensions here.
-    'modoboa_contacts',
+    'modoboa_radicale',
 )
 
 INSTALLED_APPS += MODOBOA_APPS
@@ -86,7 +92,7 @@ AUTH_USER_MODEL = 'core.User'
 MIDDLEWARE = (
     'x_forwarded_for.middleware.XForwardedForMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    "corsheaders.middleware.CorsMiddleware",
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -184,6 +190,24 @@ REST_FRAMEWORK = {
 
 MODOBOA_API_URL = 'https://api.modoboa.org/1/'
 
+# REDIS
+
+REDIS_HOST = os.environ.get('REDIS_HOST', '127.0.0.1')
+REDIS_PORT = os.environ.get('REDIS_PORT', 6379)
+REDIS_QUOTA_DB = 0
+REDIS_URL = 'redis://{}:{}/{}'.format(REDIS_HOST, REDIS_PORT, REDIS_QUOTA_DB)
+
+# RQ
+
+RQ_QUEUES = {
+    'dkim': {
+        'URL': REDIS_URL,
+    },
+    'modoboa': {
+        'URL': REDIS_URL,
+    },
+}
+
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
 
@@ -277,8 +301,9 @@ LOGGING = {
 }
 
 # Load settings from extensions
-try:
-    from modoboa_contacts import settings as modoboa_contacts_settings
-    modoboa_contacts_settings.apply(globals())
-except AttributeError:
-    from modoboa_contacts.settings import *  # noqa
+from modoboa_radicale import settings as modoboa_radicale_settings
+
+modoboa_radicale_settings.apply(globals())
+
+WEBPACK_LOADER["CALENDAR"]["STATS_FILE"] = os.path.join(
+    os.path.dirname(__file__), "webpack-stats.json")

@@ -9,7 +9,6 @@ https://packaging.python.org/en/latest/distributing.html
 """
 
 from os import path
-
 from setuptools import setup, find_packages
 
 
@@ -29,7 +28,7 @@ if __name__ == "__main__":
 
     setup(
         long_description=LONG_DESCRIPTION,
-        packages=find_packages(exclude=["test_project"]),
+        packages=find_packages(exclude=["docs", "test_project"]),
         include_package_data=True,
         zip_safe=False,
         use_scm_version={"local_scheme": local_scheme},

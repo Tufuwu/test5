@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0", "setuptools_scm[toml]>=6.4"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "modoboa-contacts"
+name = "modoboa-radicale"
 dynamic = [
    "version",
    "dependencies",
@@ -12,7 +12,7 @@ dynamic = [
 authors = [
   { name="Antoine Nguyen", email="tonio@ngyn.org" },
 ]
-description = "Address book for Modoboa"
+description = "The Radicale frontend of Modoboa"
 readme = "README.rst"
 requires-python = ">=3.9"
 classifiers = [
@@ -30,17 +30,17 @@ classifiers = [
     "Topic :: Communications :: Email",
     "Topic :: Internet :: WWW/HTTP",
 ]
-keywords = ["email"]
+keywords = ["modoboa", "email", "radicale", "calendar", "caldav"]
 license = {file = "LICENSE"}
 
 [project.urls]
 Homepage = "https://modoboa.org/"
 Documentation = "https://modoboa.readthedocs.io/en/latest/"
-Repository = "https://github.com/modoboa/modoboa-contacts"
-Changelog = "https://github.com/modoboa/modoboa-contacts/blob/master/CHANGELOG.md"
-Issues = "https://github.com/modoboa/modoboa-contacts/issues"
+Repository = "https://github.com/modoboa/modoboa-radicale"
+Changelog = "https://github.com/modoboa/modoboa-radicale/blob/master/CHANGELOG.md"
+Issues = "https://github.com/modoboa/modoboa-radicale/issues"
 
 [tool.setuptools.dynamic]
-version = {attr = "modoboa_contacts.version.get_version"}
+version = {attr = "modoboa_radicale.version.get_version"}
 dependencies = {file = ["requirements.txt"]}
 optional-dependencies.test = { file = ["test-requirements.txt"] }

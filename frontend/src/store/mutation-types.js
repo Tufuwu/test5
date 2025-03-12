@@ -1,14 +1,12 @@
-// list module mutations
-export const ADD_CONTACT = 'ADD_CONTACT'
-export const DELETE_CONTACT = 'DELETE_CONTACT'
-export const SET_CONTACTS = 'SET_CONTACTS'
-export const UPDATE_CONTACT = 'UPDATE_CONTACT'
+// calendar module mutations
+export const SET_CALENDARS = 'SET_CALENDARS'
+export const ADD_CALENDAR = 'ADD_CALENDAR'
+export const UPDATE_CALENDAR = 'UPDATE_CALENDAR'
+export const DELETE_CALENDAR = 'DELETE_CALENDAR'
+export const SET_SHARED_CALENDARS = 'SET_SHARED_CALENDARS'
+export const ADD_SHARED_CALENDAR = 'ADD_SHARED_CALENDAR'
+export const UPDATE_SHARED_CALENDAR = 'UPDATE_SHARED_CALENDAR'
+export const DELETE_SHARED_CALENDAR = 'DELETE_SHARED_CALENDAR'
 
-// detail module mutations
-export const SET_CONTACT = 'SET_CONTACT'
-
-// categories module mutations
-export const ADD_CATEGORY = 'ADD_CATEGORY'
-export const SET_CATEGORIES = 'SET_CATEGORIES'
-export const UPDATE_CATEGORY = 'UPDATE_CATEGORY'
-export const DELETE_CATEGORY = 'DELETE_CATEGORY'
+// event module mutations
+export const SET_ATTENDEES = 'SET_ATTENDEES'

@@ -3,82 +3,139 @@ import VueResource from 'vue-resource'
 
 Vue.use(VueResource)
 
-var customAddressBookActions = {
-    default: { method: 'GET', url: '/api/v1/address-books/default/' },
-    sync: { method: 'GET', url: '/api/v1/address-books/sync_to_cdav/' }
-}
-var addressBookResource = Vue.resource(
-    '/api/v1/address-books{/pk}/', {}, customAddressBookActions)
-var categoryResource = Vue.resource('/api/v1/categories{/pk}/')
-var contactResource = Vue.resource('/api/v1/contacts{/pk}/')
+// user-calendars API
+var userCalendarResource = Vue.resource('/api/v1/user-calendars{/pk}/')
 
-// address book API
-const getDefaultAddressBook = () => {
-    return addressBookResource.default()
+export const getUserCalendars = (data) => {
+    return userCalendarResource.get()
 }
 
-const syncAddressBook = () => {
-    return addressBookResource.sync()
+export const getUserCalendar = (pk) => {
+    return userCalendarResource.get({ pk: pk })
 }
 
-// categories API
-const createCategory = (data) => {
-    return categoryResource.save(data)
+export const createUserCalendar = (data) => {
+    return userCalendarResource.save(data)
 }
 
-const getCategories = () => {
-    return categoryResource.get()
+export const updateUserCalendar = (pk, data) => {
+    return userCalendarResource.update({ pk: pk }, data)
 }
 
-const updateCategory = (pk, data) => {
-    return categoryResource.update({ pk: pk }, data)
+export const deleteUserCalendar = (pk) => {
+    return userCalendarResource.delete({ pk: pk })
 }
 
-const deleteCategory = (pk) => {
-    return categoryResource.delete({ pk: pk })
+// shared calendars API
+var sharedCalendarResource = Vue.resource('/api/v1/shared-calendars{/pk}/')
+
+export const getSharedCalendars = () => {
+    return sharedCalendarResource.get()
 }
 
-// contacts API
-const createContact = (data) => {
-    return contactResource.save(data)
+export const getSharedCalendar = (pk) => {
+    return sharedCalendarResource.get({ pk: pk })
 }
 
-const deleteContact = (pk) => {
-    return contactResource.delete({ pk: pk })
+export const createSharedCalendar = (data) => {
+    return sharedCalendarResource.save(data)
 }
 
-const getContact = (pk) => {
-    return contactResource.get({ pk: pk })
+export const updateSharedCalendar = (pk, data) => {
+    return sharedCalendarResource.update({ pk: pk }, data)
 }
 
-const getContacts = (query, category) => {
+export const deleteSharedCalendar = (pk) => {
+    return sharedCalendarResource.delete({ pk: pk })
+}
+
+// events API
+var customEventActions = {
+    patch: { method: 'PATCH', url: '/api/v1{/type}-calendars{/calendar_pk}/events{/pk}/' },
+    importEvents: { method: 'POST', url: '/api/v1{/type}-calendars{/calendar_pk}/events/import_from_file/' }
+}
+var eventResource = Vue.resource(
+    '/api/v1{/type}-calendars{/calendar_pk}/events{/pk}/',
+    {},
+    customEventActions
+)
+
+export const getEvent = (calendarPk, calendarType, pk) => {
+    return eventResource.get({ type: calendarType, calendar_pk: calendarPk, pk: pk })
+}
+
+export const createEvent = (calendar, data) => {
+    var type = (calendar.domain) ? 'shared' : 'user'
+    return eventResource.save({ type: type, calendar_pk: calendar.pk }, data)
+}
+
+export const updateEvent = (calendar, pk, data) => {
+    var newCalType = (data.calendar.domain) ? 'shared' : 'user'
+    if (newCalType !== calendar.type) {
+        data['new_calendar_type'] = newCalType // eslint-disable-line dot-notation
+    }
+    data.calendar = data.calendar.pk
+    return eventResource.update({
+        type: calendar.type, calendar_pk: calendar.pk, pk: pk
+    }, data)
+}
+
+export const patchEvent = (calendar, pk, data) => {
+    var type = (calendar.domain) ? 'shared' : 'user'
+    return eventResource.patch({ type: type, calendar_pk: calendar.pk, pk: pk }, data)
+}
+
+export const deleteEvent = (calendar, pk) => {
+    var type = (calendar.domain) ? 'shared' : 'user'
+    return eventResource.delete({ type: type, calendar_pk: calendar.pk, pk: pk })
+}
+
+export const importEvents = (calendar, data) => {
+    var type = (calendar.domain) ? 'shared' : 'user'
+    return eventResource.importEvents({ type: type, calendar_pk: calendar.pk }, data)
+}
+
+// attendees API
+var attendeeResource = Vue.resource('/api/v1/attendees{/pk}/')
+
+export const getAttendees = () => {
+    return attendeeResource.get()
+}
+
+// mailboxes API
+var mailboxResource = Vue.resource('/api/v1/mailboxes{/pk}/')
+
+export const getMailboxes = () => {
+    return mailboxResource.get()
+}
+
+// access rules API
+var accessRuleResource = Vue.resource('/api/v1/accessrules{/pk}/')
+
+// domains API
+var domainResource = Vue.resource('/api/v1/domains{/pk}/')
+
+export const getDomains = () => {
+    return domainResource.get()
+}
+
+export const getAccessRules = (calendarPk) => {
     var params = {}
 
-    if (query !== undefined) {
-        params.search = query
+    if (calendarPk !== undefined) {
+        params.calendar = calendarPk
     }
-    if (category !== undefined) {
-        params.category = category
-    }
-    return contactResource.get(params)
+    return accessRuleResource.get(params)
 }
 
-const updateContact = (pk, data) => {
-    return contactResource.update({ pk: pk }, data)
+export const createAccessRule = (data) => {
+    return accessRuleResource.save(data)
 }
 
-export {
-    getDefaultAddressBook,
-    syncAddressBook,
+export const updateAccessRule = (pk, data) => {
+    return accessRuleResource.update({ pk: pk }, data)
+}
 
-    createCategory,
-    getCategories,
-    updateCategory,
-    deleteCategory,
-
-    createContact,
-    deleteContact,
-    getContact,
-    getContacts,
-    updateContact
+export const deleteAccessRule = (pk) => {
+    return accessRuleResource.delete({ pk: pk })
 }

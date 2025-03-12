@@ -1,4 +1,4 @@
-name: Modoboa contacts plugin
+name: Modoboa radicale plugin
 
 on:
   push:
@@ -51,7 +51,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
         run: |
-          sudo apt-get update -y && sudo apt-get install -y librrd-dev rrdtool
+          sudo apt-get update -y && sudo apt-get install -y librrd-dev rrdtool 
           python -m pip install --upgrade pip
           pip install -e git+https://github.com/modoboa/modoboa.git#egg=modoboa
           pip install -r requirements.txt
@@ -72,7 +72,7 @@ jobs:
         if: ${{ matrix.python-version != '3.9' || matrix.database != 'postgres' }}
         run: |
           cd test_project
-          python3 manage.py test modoboa_contacts
+          python3 manage.py test modoboa_radicale
         env:
           # use localhost for the host here because we are running the job on the VM.
           # If we were running the job on in a container this would be postgres
@@ -85,7 +85,7 @@ jobs:
         if: ${{ matrix.python-version == '3.9' && matrix.database == 'postgres' }}
         run: |
           cd test_project
-          coverage run --source ../modoboa_contacts manage.py test modoboa_contacts
+          coverage run --source ../modoboa_radicale manage.py test modoboa_radicale
         env:
           # use localhost for the host here because we are running the job on the VM.
           # If we were running the job on in a container this would be postgres
@@ -145,7 +145,7 @@ jobs:
           sudo apt-get install librrd-dev rrdtool libssl-dev gettext
           python -m pip install --upgrade pip setuptools wheel
           pip install -r requirements.txt
-          cd modoboa_contacts
+          cd modoboa_radicale
           django-admin compilemessages
           cd ..
           python setup.py sdist bdist_wheel
