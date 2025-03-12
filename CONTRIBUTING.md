@@ -1,17 +1,17 @@
 # Development
 
-To get started with working on the Brownie codebaser, use the following steps prepare your local environment:
+To get started with working on the py-solc-x codebase, use the following steps to prepare your local environment:
 
 ```bash
 # clone the github repo and navigate into the folder
-git clone https://github.com/eth-brownie/brownie.git
-cd brownie
+git clone https://github.com/ApeWorX/py-solc-x.git
+cd py-solc-x
 
 # create and load a virtual environment
 python3 -m venv venv
 source venv/bin/activate
 
-# install brownie into the virtual environment
+# install solcx into the virtual environment
 python setup.py install
 
 # install the developer dependencies
@@ -43,20 +43,4 @@ It's a good idea to make pull requests early on. A pull request represents the s
 
 If you are opening a work-in-progress pull request to verify that it passes CI tests, please consider [marking it as a draft](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-requests#draft-pull-requests).
 
-Join the Brownie [Gitter channel](https://gitter.im/eth-brownie/community) if you have any questions.
-
-## Productivity Tips
-
-### Running Tests
-
-Instead of running the entire test suite each time you make a change, run specific tests and fail fast (`-x`):
-
-```bash
-docker-compose exec sandbox bash -c 'python -m pytest tests/project/test_brownie_config.py::TestFooBar -x'
-```
-
-Drop to a pdb shell upon error with the `--pdb` flag:
-
-```sh
-docker-compose exec sandbox bash -c 'python -m pytest tests/project/test_brownie_config.py -x --pdb'
-```
+Join the ApeWorX [Discord](https://discord.gg/apeworx) if you have any questions.

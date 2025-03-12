@@ -1,20 +1,11 @@
 on: ["push", "pull_request"]
 
-name: brownie workflow
-
-env:
-  ETHERSCAN_TOKEN: 9MKURTHE8FNA9NRUUJBHMUEVY6IQ5K1EGY
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  WEB3_INFURA_PROJECT_ID: 44c6300c5e5b4b2da5fc42b06bf18a8e
+name: py-solc-x workflow
 
 jobs:
 
-  linting:
+  lint:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        job: [lint, doctest]
 
     steps:
     - uses: actions/checkout@v1
@@ -28,32 +19,16 @@ jobs:
       run: pip install tox
 
     - name: Run Tox
-      run: tox -e ${{ matrix.job }}
+      run: tox -e lint
 
 
-  functionality:
+  py36:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        job: [evmtest, plugintest, pmtest]
 
     steps:
     - uses: actions/checkout@v1
-
-    - name: Cache Solidity Installations
-      uses: actions/cache@v4
-      with:
-        path: ~/.solcx
-        key: ${{ runner.os }}-solcx-cache
-
-    - name: Setup Node.js
-      uses: actions/setup-node@v1
     
-    - name: Install Ganache
-      run: npm install -g ganache-cli@6.8.2
-
-    - name: Setup Python 3.8
+    - name: Setup Python 3.6
       uses: actions/setup-python@v1
       with:
         python-version: 3.9
@@ -62,7 +37,7 @@ jobs:
       run: pip install tox
 
     - name: Run Tox
-      run: tox -e ${{ matrix.job }}
+      run: tox -e py36
 
     - name: Upload coverage to Codecov  
       uses: codecov/codecov-action@v1
@@ -71,28 +46,39 @@ jobs:
         fail_ci_if_error: true
 
 
-  py38core:
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      matrix:
-        os: [windows-latest, ubuntu-latest]
+  py37:
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v1
-
-    - name: Cache Solidity Installations
-      uses: actions/cache@v4
-      with:
-        path: ~/.solcx
-        key: ${{ runner.os }}-solcx-cache
-
-    - name: Setup Node.js
-      uses: actions/setup-node@v1
     
-    - name: Install Ganache
-      run: npm install -g ganache-cli@6.8.2
+    - name: Setup Python 3.7
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.9
+    
+    - name: Install Tox
+      run: pip install tox
 
+    - name: Run Tox
+      run: tox -e py37
+
+    - name: Upload coverage to Codecov  
+      uses: codecov/codecov-action@v1
+      with:
+        file: ./coverage.xml
+        fail_ci_if_error: true
+
+
+  py38:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    steps:
+    - uses: actions/checkout@v1
+    
     - name: Setup Python 3.8
       uses: actions/setup-python@v1
       with:
@@ -103,76 +89,6 @@ jobs:
 
     - name: Run Tox
       run: tox -e py38
-
-    - name: Upload coverage to Codecov  
-      uses: codecov/codecov-action@v1
-      with:
-        file: ./coverage.xml
-        fail_ci_if_error: true
-
-  py37core:
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v1
-
-    - name: Cache Solidity Installations
-      uses: actions/cache@v4
-      with:
-        path: ~/.solcx
-        key: ${{ runner.os }}-solcx-cache
-
-    - name: Setup Node.js
-      uses: actions/setup-node@v1
-    
-    - name: Install Ganache
-      run: npm install -g ganache-cli@6.8.2
-
-    - name: Setup Python 3.7
-      uses: actions/setup-python@v1
-      with:
-        python-version: 3.9
-    
-    - name: Install Tox
-      run: pip install tox
-
-    - name: Run Tox
-      run: tox -e py36
-
-    - name: Upload coverage to Codecov  
-      uses: codecov/codecov-action@v1
-      with:
-        file: ./coverage.xml
-        fail_ci_if_error: true
-
-  py36core:
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v1
-
-    - name: Cache Solidity Installations
-      uses: actions/cache@v4
-      with:
-        path: ~/.solcx
-        key: ${{ runner.os }}-solcx-cache
-
-    - name: Setup Node.js
-      uses: actions/setup-node@v1
-    
-    - name: Install Ganache
-      run: npm install -g ganache-cli@6.8.2
-
-    - name: Setup Python 3.6
-      uses: actions/setup-python@v1
-      with:
-        python-version: 3.9
-    
-    - name: Install Tox
-      run: pip install tox
-
-    - name: Run Tox
-      run: tox -e py36
 
     - name: Upload coverage to Codecov  
       uses: codecov/codecov-action@v1
