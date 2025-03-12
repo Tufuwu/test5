@@ -1,0 +1,58 @@
+[tool.poetry]
+name = "django-cassandra-engine"
+version = "1.9.0"
+description = "Django Cassandra Engine"
+authors = ["Rafał Furmański <r.furmanski@gmail.com>"]
+license = "2-clause BSD"
+keywords= ["django", "cassandra", "engine", "backend", "driver", "wrapper", "database", "nonrel", "cqlengine"]
+readme = "README.md"
+homepage = "https://github.com/r4fek/django-cassandra-engine"
+repository = "https://github.com/r4fek/django-cassandra-engine"
+documentation = "https://r4fek.github.io/django-cassandra-engine/"
+classifiers = [
+    'Development Status :: 5 - Production/Stable',
+    'Environment :: Web Environment',
+    'Environment :: Plugins',
+    'Framework :: Django',
+    'Intended Audience :: Developers',
+    'License :: OSI Approved :: BSD License',
+    'Operating System :: OS Independent',
+    'Programming Language :: Python',
+    'Programming Language :: Python :: 3.8',
+    'Programming Language :: Python :: 3.9',
+    'Programming Language :: Python :: 3.10',
+    'Programming Language :: Python :: 3.11',
+    'Programming Language :: Python :: 3.12',
+    'Topic :: Database',
+    'Topic :: Internet',
+    'Topic :: Software Development :: Libraries :: Python Modules',
+]
+packages = [{ include = "django_cassandra_engine" }]
+
+[tool.poetry.urls]
+Changelog = "https://r4fek.github.io/django-cassandra-engine/changelog/"
+
+[tool.poetry.dependencies]
+python = "^3.8 || ^3.9 || ^3.10 || ^3.11 || ^3.12"
+django = "^3.2 || ^4.0 || ^4.1 || ^4.2 || ^5.0"
+scylla-driver = "^3.26.0"
+
+[tool.poetry.dev-dependencies]
+black = {version = "*", allow-prereleases = true}
+coverage = "*"
+djangorestframework = "*"
+flake8 = "*"
+flake8-bandit = "*"
+flake8-blind-except = "*"
+flake8-docstrings = "*"
+flake8-logging-format = "*"
+flake8-print = "*"
+freezegun = "0.3.6"
+isort = "*"
+mock = "*"
+pre-commit = "*"
+tox = "*"
+
+[build-system]
+requires = ["poetry>=1.1.12"]
+build-backend = "poetry.masonry.api"

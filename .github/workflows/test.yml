@@ -1,19 +1,63 @@
-name: Run tests
-on: [push]
+name: Django Cassandra Engine
+
+on:
+  push:
+    branches:
+      - master
+
+  pull_request:
+    types: [opened, synchronize, reopened]
+
 jobs:
-  tests:
-    runs-on: ${{ matrix.os }}
+  format:
+    name: Check formatting
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        python: ["3.9", "3.10"]
+        toxenv: [fmt,lint]
+    env:
+      TOXENV: ${{ matrix.toxenv }}
+
     steps:
-      - uses: actions/checkout@v2
-      - name: Setup Python
+      - name: Check out the repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python 3.9
         uses: actions/setup-python@v2
         with:
-          python-version: ${{ matrix.python }}
-      - name: Install tox and any other packages
-        run: pip install tox
-      - name: Run tox
-        run: tox -e py,flake8
+          python-version: 3.9
+
+      - name: Install and run tox
+        run: |
+          pip install tox
+          tox
+
+  test:
+    name: Run tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.10"]
+        django-version: ['30', '31', '32', '40', 'master']
+
+    env:
+      TOXENV: py${{ matrix.python-version }}-django${{ matrix.django-version }}
+
+    services:
+      cassandra:
+        image: cassandra:3.11.11
+        ports:
+          - 9042:9042
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install and run tox
+        run: |
+          pip install tox
+          tox
