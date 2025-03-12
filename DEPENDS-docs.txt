@@ -1,8 +1,0 @@
-####################################################################
-# Additional dependencies necessary to build package documentation #
-####################################################################
--r DEPENDS.txt
-numpydoc
-pillow
-scikit-image
-sphinx

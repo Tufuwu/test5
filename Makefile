@@ -1,26 +1,58 @@
-all: clean inplace test
-	find skfuzzy -name "*version.py" | xargs rm -f
-	find skfuzzy -name "*.pyc" | xargs rm -f
+MAKEFILE_PATH := $(abspath $(lastword $(MAKEFILE_LIST)))
+MAKEFILE_DIR := $(dir ${MAKEFILE_PATH})
 
-inplace:
-	build .
+# Test images as run on CI.
+image_vim_80_py35:
+	docker build -t ultisnips:$@ --build-arg PYTHON_IMAGE=3.5-stretch --build-arg VIM_VERSION=8.0 .
+image_vim_81_py35:
+	docker build -t ultisnips:$@ --build-arg PYTHON_IMAGE=3.5-stretch --build-arg VIM_VERSION=8.1 .
+image_vim_82_py35:
+	docker build -t ultisnips:$@ --build-arg PYTHON_IMAGE=3.5-stretch --build-arg VIM_VERSION=8.2 .
+image_vim_git_py35:
+	docker build -t ultisnips:$@ --build-arg PYTHON_IMAGE=3.5-stretch --build-arg VIM_VERSION=git .
+image_vim_80_py36:
+	docker build -t ultisnips:$@ --build-arg PYTHON_IMAGE=3.6-stretch --build-arg VIM_VERSION=8.0 .
+image_vim_81_py36:
+	docker build -t ultisnips:$@ --build-arg PYTHON_IMAGE=3.6-stretch --build-arg VIM_VERSION=8.1 .
+image_vim_82_py36:
+	docker build -t ultisnips:$@ --build-arg PYTHON_IMAGE=3.6-stretch --build-arg VIM_VERSION=8.2 .
+image_vim_git_py36:
+	docker build -t ultisnips:$@ --build-arg PYTHON_IMAGE=3.6-stretch --build-arg VIM_VERSION=git .
+image_vim_81_py37:
+	docker build -t ultisnips:$@ --build-arg PYTHON_IMAGE=3.7-stretch --build-arg VIM_VERSION=8.1 .
+image_vim_82_py37:
+	docker build -t ultisnips:$@ --build-arg PYTHON_IMAGE=3.7-stretch --build-arg VIM_VERSION=8.2 .
+image_vim_git_py37:
+	docker build -t ultisnips:$@ --build-arg PYTHON_IMAGE=3.7-stretch --build-arg VIM_VERSION=git .
+image_vim_81_py38:
+	docker build -t ultisnips:$@ --build-arg PYTHON_IMAGE=3.8-buster --build-arg VIM_VERSION=8.1 .
+image_vim_82_py38:
+	docker build -t ultisnips:$@ --build-arg PYTHON_IMAGE=3.8-buster --build-arg VIM_VERSION=8.2 .
+image_vim_git_py38:
+	docker build -t ultisnips:$@ --build-arg PYTHON_IMAGE=3.8-buster --build-arg VIM_VERSION=git .
+image_vim_81_py39:
+	docker build -t ultisnips:$@ --build-arg PYTHON_IMAGE=3.9-buster --build-arg VIM_VERSION=8.1 .
+image_vim_82_py39:
+	docker build -t ultisnips:$@ --build-arg PYTHON_IMAGE=3.9-buster --build-arg VIM_VERSION=8.2 .
+image_vim_git_py39:
+	docker build -t ultisnips:$@ --build-arg PYTHON_IMAGE=3.9-buster --build-arg VIM_VERSION=git .
+image_vim_git_py310:
+	docker build -t ultisnips:$@ --build-arg PYTHON_IMAGE=3.10-buster --build-arg VIM_VERSION=git .
 
-clean-pyc:
-	find skfuzzy -name "*.pyc" | xargs rm -f
+image_repro: image_vim_82_py39
+	docker build -t ultisnips:repro --build-arg BASE_IMAGE=$< -f Dockerfile.repro .
 
-clean-build:
-	rm -rf ./build
+# A reproduction image that drops you into a naked environment,
+# with a Vim having UltiSnips and vim-snippets configured. See
+# docker/docker_vimrc.vim for the full vimrc. Need to run `make
+# image_repro` before this will work.
+repro:
+	docker run -it -v ${MAKEFILE_DIR}:/src/UltiSnips ultisnips:repro /bin/bash
 
-clean-version:
-	find skfuzzy -name "*version.py" | xargs rm -f
+# This assumes, the repro image is already running and it opens an extra shell
+# inside the running container
+shell_in_repro:
+	docker exec -it $(shell docker ps -q) /bin/bash
 
-clean-cov:
-	rm -rf ./coverage ./.coverage ./htmlcov
-
-clean: clean-build clean-pyc clean-version clean-cov
-
-test:
-	python -m pytest
-
-coverage: clean-cov
-	python -m pytest --cov=skfuzzy --cov-report html
+format:
+	find . -name '*.py' -print0 | xargs -0 black

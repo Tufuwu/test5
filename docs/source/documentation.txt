@@ -1,4 +1,0 @@
-.. currentmodule:: sphinx
-
-.. autosummary::
-   :toctree:

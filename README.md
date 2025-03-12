@@ -1,78 +1,84 @@
-scikit-fuzzy
-============
+![Build Status](https://github.com/SirVer/ultisnips/actions/workflows/main.yml/badge.svg)
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/SirVer/ultisnips?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
-`scikit-fuzzy` is a fuzzy logic toolkit for SciPy.
+UltiSnips
+=========
 
-The goals of scikit-fuzzy are:
-* To provide the community with a robust toolkit of independently developed and
-  implemented fuzzy logic algorithms
-* To increase the attractiveness of scientific Python as a valid alternative to
-  closed-source options.
+UltiSnips is the ultimate solution for snippets in Vim. It has many features,
+speed being one of them.
 
-Please cite [![DOI](https://zenodo.org/badge/8872608.svg)](https://zenodo.org/badge/latestdoi/8872608)
-if you find scikit-fuzzy useful.  A formal paper describing this package is in
-preparation.
+![GIF Demo](https://raw.github.com/SirVer/ultisnips/master/doc/demo.gif)
 
-Source
-------
+In this demo I am editing a python file. I first expand the `#!` snippet, then
+the `class` snippet. The completion menu comes from
+[YouCompleteMe](https://github.com/Valloric/YouCompleteMe), UltiSnips also
+integrates with [deoplete](https://github.com/Shougo/deoplete.nvim),
+[vim-easycomplete](https://github.com/jayli/vim-easycomplete) and more. I can
+jump through placeholders and add text while the snippet inserts text in other
+places automatically: when I add `Animal` as a base class, `__init__` gets
+updated to call the base class constructor. When I add arguments to the
+constructor, they automatically get assigned to instance variables. I then
+insert my personal snippet for `print` debugging. Note that I left insert mode,
+inserted another snippet and went back to add an additional argument to
+`__init__` and the class snippet was still active and added another instance
+variable.
 
-https://github.com/scikit-fuzzy/scikit-fuzzy
+The official home of UltiSnips is at <https://github.com/sirver/ultisnips>.
+Please add pull requests and issues there.
 
-Documentation
--------------
-
-The documentation of the library can be found here: https://scikit-fuzzy.github.io/scikit-fuzzy/
-
-Online Discussion & Mailing List
---------------------------------
-
-Please join the discussion in our public chat room on Gitter.im
-[![Gitter](https://badges.gitter.im/JoinChat.svg)](https://gitter.im/scikit-fuzzy/scikit-fuzzy?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
-or view/post on the Google Groups mailing list
-http://groups.google.com/group/scikit-fuzzy
-
-Installation
-------------
-
-Scikit-Fuzzy depends on
-  
-  * Matplotlib >= 3.1
-  * NumPy >= 1.6
-  * SciPy >= 0.9
-  * NetworkX >= 1.9
-
-and is available on PyPi! The latest stable release can always be obtained
-and installed simply by running
-
-    $ pip install -U scikit-fuzzy
-
-which will also work to upgrade existing installations to the latest release.
+UltiSnips was started in Jun 2009 by @SirVer. In Dec 2015, maintenance was
+handed over to [@seletskiy](https://github.com/seletskiy) who ran out of time
+in early 2017. Since Jun 2019, @SirVer is maintaining UltiSnips again on a
+very constraint time budget. If you can help triaging issues it would be
+greatly appreciated.
 
 
-If you prefer to install from source or develop this package, you can fork and
-clone this repository then install SciKit-Fuzzy by running
+Quick Start
+-----------
 
-	$ pip install -e .
+This assumes you are using [Vundle](https://github.com/gmarik/Vundle.vim). Adapt
+for your plugin manager of choice. Put this into your `.vimrc`.
 
-or develop locally by running
+    " Track the engine.
+    Plugin 'SirVer/ultisnips'
 
-	$ pip install -e ".[develop]"
+    " Snippets are separated from the engine. Add this if you want them:
+    Plugin 'honza/vim-snippets'
 
-If you prefer, you can use SciKit-Fuzzy without installing by simply exporting
-this path to your PYTHONPATH variable.
+    " Trigger configuration. You need to change this to something other than <tab> if you use one of the following:
+    " - https://github.com/Valloric/YouCompleteMe
+    " - https://github.com/nvim-lua/completion-nvim
+    let g:UltiSnipsExpandTrigger="<tab>"
+    let g:UltiSnipsJumpForwardTrigger="<c-b>"
+    let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 
-License
--------
+    " If you want :UltiSnipsEdit to split your window.
+    let g:UltiSnipsEditSplit="vertical"
 
-Please read LICENSE.txt in this directory.
+UltiSnips comes with comprehensive
+[documentation](https://github.com/SirVer/ultisnips/blob/master/doc/UltiSnips.txt).
+As there are more options and tons of features I suggest you at least skim it.
 
-IEEE Rounding for Matlab users
-------------------------------
+There are example uses for some power user features here:
 
-It should be noted that Matlab rounds incorrectly. The IEEE standard (which is
-how this package behaves) requires rounding to the nearest EVEN number if
-exactly between, e.g. 1.5 --> 2; 2.5 --> 2; 3.5 --> 4; 4.5 --> 4, etc. This
-minimizes systematic rounding error. Thus, if re-implementing algorithms from
-Matlab code, slight inconsistencies in rounded results are expected. These are
-not bugs, and will not be fixed.
+  * [Snippets Aliases](doc/examples/snippets-aliasing/README.md)
+  * [Dynamic Tabstops/Tabstop Generation](doc/examples/tabstop-generation/README.md)
+
+Screencasts
+-----------
+
+From a gentle introduction to really advanced in a few minutes: The blog posts
+of the screencasts contain more advanced examples of the things discussed in the
+videos.
+
+- [Episode 1: What are snippets and do I need them?](http://www.sirver.net/blog/2011/12/30/first-episode-of-ultisnips-screencast/)
+- [Episode 2: Creating Basic Snippets](http://www.sirver.net/blog/2012/01/08/second-episode-of-ultisnips-screencast/)
+- [Episode 3: What's new in version 2.0](http://www.sirver.net/blog/2012/02/05/third-episode-of-ultisnips-screencast/)
+- [Episode 4: Python Interpolation](http://www.sirver.net/blog/2012/03/31/fourth-episode-of-ultisnips-screencast/)
+
+Also the excellent [Vimcasts](http://vimcasts.org) dedicated three episodes to
+UltiSnips:
+
+- [Meet UltiSnips](http://vimcasts.org/episodes/meet-ultisnips/)
+- [Using Python interpolation in UltiSnips snippets](http://vimcasts.org/episodes/ultisnips-python-interpolation/)
+- [Using selected text in UltiSnips snippets](http://vimcasts.org/episodes/ultisnips-visual-placeholder/)

@@ -1,64 +1,29 @@
-name: Build, test and deploy
-
-on: [push, pull_request, workflow_dispatch]
-
-env:
-  PYTHONWARNINGS: all
+on: [push]
 
 jobs:
-  main:
-    runs-on: ${{ matrix.os }}
+  test:
+    runs-on: ubuntu-latest
     strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest]
-        python: ["3.9", "3.10"]
+     matrix:
+      include:
+        - { vim_version: "7.4", python_image: "3.5-stretch", tag: "vim_74_py35" }
+        - { vim_version: "8.0", python_image: "3.5-stretch", tag: "vim_80_py35" }
+        - { vim_version: "8.1", python_image: "3.5-stretch", tag: "vim_81_py35" }
+        - { vim_version: "git", python_image: "3.5-stretch", tag: "vim_git_py35" }
+        - { vim_version: "7.4", python_image: "3.6-stretch", tag: "vim_74_py36" }
+        - { vim_version: "8.0", python_image: "3.6-stretch", tag: "vim_80_py36" }
+        - { vim_version: "8.1", python_image: "3.6-stretch", tag: "vim_81_py36" }
+        - { vim_version: "git", python_image: "3.6-stretch", tag: "vim_git_py36" }
+        - { vim_version: "8.1", python_image: "3.7-stretch", tag: "vim_81_py37" }
+        - { vim_version: "git", python_image: "3.7-stretch", tag: "vim_git_py37" }
+        - { vim_version: "8.1", python_image: "3.8-buster", tag: "vim_81_py38" }
+        - { vim_version: "git", python_image: "3.8-buster", tag: "vim_git_py38" }
 
+    name: Build & Test using Docker
     steps:
       - uses: actions/checkout@v2
-
-      - uses: actions/setup-python@v2.2.1
-        with:
-          python-version: ${{ matrix.python }}
-
-      - uses: actions/cache@v4
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('DEPENDS.txt') }}-${{ hashFiles('DEPENDS-tests.txt') }}-${{ hashFiles('DEPENDS-docs.txt') }}
-          restore-keys: ${{ runner.os }}-pip-${{ hashFiles('DEPENDS.txt') }}-
-
-      - name: Install dependencies
-        run: |
-          pip install -r DEPENDS.txt -r DEPENDS-tests.txt -r DEPENDS-docs.txt
-
-      - name: Build package
-        run: |
-          tools/header.py "Dependency versions"
-          tools/build_versions.py
-          python setup.py build_ext --inplace
-          pip install -e .
-
-      - name: Run tests
-        run: |
-          nosetests -v --exe --with-coverage --cover-package=skfuzzy skfuzzy
-          flake8 --exclude=test_* skfuzzy docs/examples
-      - name: Build docs
-        if: matrix.os == 'ubuntu-latest'
-        run: |
-          pip install "decorator>=4.3,<5"
-          make -C docs/ html
-
-      - name: Deploy docs
-        uses: peaceiris/actions-gh-pages@v3
-        if: |
-          github.repository == 'scikit-fuzzy/scikit-fuzzy' &&
-          github.ref == 'ref/head/master' &&
-          matrix.os == 'ubuntu-latest' &&
-          matrix.python == 3.9
-        with:
-          personal_token: ${{ secrets.API_TOKEN_GITHUB }}
-          external_repository: 'scikit-fuzzy/scikit-fuzzy.github.io'
-          publish_branch: 'main'
-          publish_dir: 'docs/build/html'
-          enable_jekyll: false
-          user_name: 'github-actions[bot]'
-          user_email: 'github-actions[bot]@users.noreply.github.com'
+      - uses: satackey/action-docker-layer-caching@v0.0.11
+      - name: Build the image
+        run: docker build -t ultisnips:${{ matrix.tag }} --build-arg PYTHON_IMAGE=${{ matrix.python_image }} --build-arg VIM_VERSION=${{ matrix.vim_version }} .
+      - name: Run the tests
+        run: docker run --rm -t ultisnips:${{ matrix.tag }} docker/run_tests.sh
