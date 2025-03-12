@@ -1,8 +1,14 @@
 [run]
-source = flask_appbuilder
+source =
+    pyramid_debugtoolbar
+    tests
 
-omit =
-  *messages.py*
-  *baseapp.py*
-  *tests/*
-  *console.py*
+[paths]
+source =
+    src/pyramid_debugtoolbar
+    */src/pyramid_debugtoolbar
+    */site-packages/pyramid_debugtoolbar
+
+[report]
+show_missing = true
+precision = 2

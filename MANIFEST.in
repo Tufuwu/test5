@@ -1,7 +1,27 @@
-include LICENSE
+graft src
+graft tests
+graft docs
+graft demo
+prune docs/_build
+prune demo/mako_modules
+
 include README.rst
-recursive-include ./bin *
-prune *.pyc
-recursive-include flask_appbuilder/static *
-recursive-include flask_appbuilder/templates *
-recursive-include flask_appbuilder/translations *
+include CHANGES.txt
+include LICENSE.txt
+include CONTRIBUTORS.txt
+include contributing.md
+include RELEASING.txt
+include TODO.txt
+
+include setup.cfg
+include pyproject.toml
+
+include .coveragerc
+include .flake8
+include pytest.ini
+include tox.ini
+include .readthedocs.yaml
+
+graft .github
+
+recursive-exclude * __pycache__ *.py[cod]
