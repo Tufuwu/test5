@@ -1,0 +1,11 @@
+{% load sekizai_tags %}
+
+header
+
+{% addtoblock "js" %}
+javascript
+{% endaddtoblock %}
+
+footer
+
+{% render_block "js" postprocessor "tests.test_core.namespace_processor" %}
