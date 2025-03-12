@@ -1,0 +1,16 @@
+name: generate-overcast-sky
+type: Function
+inputs:
+    - name: desired-irradiance
+      type: FunctionIntegerInput
+      description: desired sky horizontal irradiance
+      required: true
+    - name: sky-file
+      type: FunctionFileInput
+      path: file.sky
+      required: true
+command: gensky -c -B "{{ inputs.desired-irradiance }}" > file.sky
+outputs:
+    - name: sky
+      type: FunctionFileOutput
+      path: file.sky
