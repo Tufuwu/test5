@@ -1,1 +1,9 @@
-include CHANGES.txt README.md COPYING
+include *.py
+include *.rst
+include bin/payu
+include bin/payu-*
+include AUTHORS
+include CHANGELOG
+include LICENSE
+include NOTICE
+include MANIFEST.in
