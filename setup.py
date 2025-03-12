@@ -1,61 +1,105 @@
-from pathlib import Path
+"""Static memory-efficient and fast Trie-like structures for Python."""
 
-from setuptools import find_packages, setup
+import glob
+import itertools
+import os.path
 
-with open(
-    Path(__file__).parent.resolve() / "director" / "VERSION", encoding="utf-8"
-) as ver:
-    version = ver.readline().rstrip()
+from setuptools import setup, Extension
 
-with open("requirements.txt", encoding="utf-8") as req:
-    requirements = [r.rstrip() for r in req.readlines()]
 
-long_description = ""
-try:
-    with open("README.md", encoding="utf-8") as readme:
-        long_description = readme.read()
-except FileNotFoundError:
-    pass
-
-dev_requirements = [
-    "tox==3.5.3",
-    "black==22.3.0",
+# Note: keep requirements here to ease distributions packaging
+tests_require = [
+    "hypothesis",
+    "pytest",
+    "readme_renderer",
+]
+install_requires = [
+    "setuptools",
 ]
 
-doc_requirements = ["mkdocs==1.3.0", "mkdocs-material==8.2.9"]
+MARISA_ROOT_DIR = "marisa-trie"
+MARISA_SOURCE_DIR = os.path.join(MARISA_ROOT_DIR, "lib")
+MARISA_INCLUDE_DIR = os.path.join(MARISA_ROOT_DIR, "include")
+MARISA_FILES = [
+    "marisa/*.cc",
+    "marisa/grimoire.cc",
+    "marisa/grimoire/io/*.cc",
+    "marisa/grimoire/trie/*.cc",
+    "marisa/grimoire/vector/*.cc",
+]
 
+MARISA_FILES[:] = itertools.chain(
+    *(glob.glob(os.path.join(MARISA_SOURCE_DIR, path)) for path in MARISA_FILES)
+)
+
+DESCRIPTION = __doc__
+with open("README.rst", encoding="utf-8") as f1, open(
+    "CHANGES.rst", encoding="utf-8"
+) as f2:
+    LONG_DESCRIPTION = f1.read() + f2.read()
+LICENSE = "MIT"
+
+CLASSIFIERS = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Cython",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+    "Topic :: Text Processing :: Linguistic",
+]
 
 setup(
-    name="celery-director",
-    version=version,
-    description="Celery Director",
-    long_description=long_description,
-    long_description_content_type="text/markdown",
-    license="BSD",
-    author="OVHcloud",
-    author_email="opensource@ovhcloud.com",
-    url="https://github.com/ovh/celery-director",
-    packages=find_packages(),
-    install_requires=requirements,
-    extras_require={
-        "dev": dev_requirements,
-        "ci": ["pytest", "pytest-cov"],
-        "doc": doc_requirements,
-    },
-    include_package_data=True,
-    entry_points={"console_scripts": ["director=director.cli:cli"],},
-    classifiers=[
-        "Development Status :: 4 - Beta",
-        "Environment :: Console",
-        "Environment :: Web Environment",
-        "Intended Audience :: Developers",
-        "License :: OSI Approved :: BSD License",
-        "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",
-        "Programming Language :: Python :: 3.10",
-        "Programming Language :: Python :: 3.11",
-        "Topic :: System :: Monitoring",
+    name="marisa-trie",
+    version="1.2.1",
+    description=DESCRIPTION,
+    long_description=LONG_DESCRIPTION,
+    long_description_content_type="text/x-rst",
+    author="Mikhail Korobov",
+    author_email="kmike84@gmail.com",
+    license=LICENSE,
+    url="https://github.com/pytries/marisa-trie",
+    classifiers=CLASSIFIERS,
+    libraries=[
+        (
+            "libmarisa-trie",
+            {
+                "sources": MARISA_FILES,
+                "include_dirs": [MARISA_SOURCE_DIR, MARISA_INCLUDE_DIR],
+            },
+        )
     ],
-    python_requires="~=3.8",
+    ext_modules=[
+        Extension(
+            "marisa_trie",
+            [
+                "src/agent.cpp",
+                "src/base.cpp",
+                "src/iostream.cpp",
+                "src/key.cpp",
+                "src/keyset.cpp",
+                "src/marisa_trie.cpp",
+                "src/query.cpp",
+                "src/std_iostream.cpp",
+                "src/trie.cpp",
+            ],
+            include_dirs=[MARISA_INCLUDE_DIR],
+        )
+    ],
+    python_requires=">=3.8",
+    install_requires=install_requires,
+    extras_require={
+        "test": tests_require,
+    },
 )

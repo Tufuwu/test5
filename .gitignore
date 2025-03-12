@@ -1,29 +1,38 @@
-# Python
-__pycache__/
-venv/
-*.pyc
+MANIFEST
+src/*.html
+docs/_build
+venv*
+*.py[cod]
 
-# Build
-build/
-dist/
-*.egg-info/
+# C extensions
+*.so
 
-# Celery
-celerybeat-schedule.bak
-celerybeat-schedule.dat
-celerybeat-schedule.dir
-celerybeat-schedule.db
-*.pid
+# Packages
+*.egg
+*.egg-info
+dist
+build
+eggs
+.eggs
+parts
+bin
+var
+sdist
+develop-eggs
+.installed.cfg
+lib64
+__pycache__
+
+# Installer logs
+pip-log.txt
+
+# Unit test / coverage reports
+.coverage
+.hypothesis
+.cache
+.tox
+nosetests.xml
 
 # IDE
-.vscode/
-.idea/
-
-# Misc
-.DS_Store
-
-# Tests
-.coverage
-
-# Docs
-docs/site/
+.idea
+.vscode

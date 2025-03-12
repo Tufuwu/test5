@@ -1,10 +1,10 @@
-include requirements.txt
-include AUTHORS
-include LICENCE
-include README.md
-include director.png
-include CONTRIBUTING.md
-include CONTRIBUTORS
-graft director
-graft migrations
-global-exclude *.pyc
+include README.rst
+include CHANGES.rst
+include LICENSE
+include update_cpp.sh
+
+recursive-include src *.cpp *.pxd *.pyx
+recursive-include marisa-trie/lib/marisa *.h *.cc
+recursive-include marisa-trie/include/marisa *.h
+recursive-include tests *.py
+recursive-include bench *.py
