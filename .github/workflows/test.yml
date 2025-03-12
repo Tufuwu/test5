@@ -1,25 +1,29 @@
-name: Test
-on:
-  - push
-  - pull_request_target
+name: ci
+on: [push, workflow_dispatch]
+
 jobs:
-  lint:
+  job:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-python@v2
-      - uses: actions/checkout@v2
-      - run: pip install flake8
-      - run: flake8
-  unit-test:
-    needs: lint
-    strategy:
-      matrix:
-        python: ["3.9", "3.10"]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/setup-python@v2
+      - name: Check out repository code
+        uses: actions/checkout@v2
+
+      - name: Install Python
+        uses: actions/setup-python@v2
         with:
-          python-version: ${{ matrix.python }}
-      - uses: actions/checkout@v2
-      - run: pip install -e .[test]
-      - run: ./test/run_test.sh
+          python-version: 3.9
+
+      - name: Test
+        run: tests/run_tests.sh
+        shell: bash
+        env:
+          LI_AT_COOKIE: ${{ secrets.LI_AT_COOKIE }}
+
+      - name: Build distribution
+        run: python setup.py install_egg_info sdist bdist_wheel
+
+      - name: Deploy to PyPi
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_DEPLOY_TOKEN }}
