@@ -1,0 +1,5 @@
+include LICENSE
+recursive-include rdap *.py
+include Ctl/VERSION
+include Ctl/requirements.txt
+include Ctl/requirements-test.txt
