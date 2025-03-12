@@ -7,9 +7,9 @@ REM Command file for Sphinx documentation
 if "%SPHINXBUILD%" == "" (
 	set SPHINXBUILD=sphinx-build
 )
-set SOURCEDIR=source
-set BUILDDIR=build
-set SPHINXPROJ=fgivenx
+set SOURCEDIR=.
+set BUILDDIR=_build
+set SPHINXPROJ=django-star-ratings
 
 if "%1" == "" goto help
 
