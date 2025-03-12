@@ -1,1 +1,3 @@
-virtualenv==1.9.1
+# pip dev/test dependencies
+flake8
+pytest

@@ -1,0 +1,62 @@
+[
+	{
+		"caption": "Trimmer: Trim trailing whitespace.",
+		"command": "trimmer"
+	},
+	{
+		"caption": "Trimmer: Trim leading whitespace.",
+		"command": "trim_leading_whitespace"
+	},
+	{
+		"caption": "Trimmer: Trim leading AND trailing whitespace.",
+		"command": "trim_leading_trailing_whitespace"
+	},
+	{
+		"caption": "Trimmer: Trim selections.",
+		"command": "trim_selections"
+	},
+	{
+		"caption": "Trimmer: Delete empty lines.",
+		"command": "delete_empty_lines"
+	},
+	{
+		"caption": "Trimmer: Collapse lines.",
+		"command": "collapse_lines"
+	},
+	{
+		"caption": "Trimmer: Collapse spaces.",
+		"command": "collapse_spaces"
+	},
+	{
+		"caption": "Trimmer: Trim file edges.",
+		"command": "trim_edges"
+	},
+	{
+		"caption": "Trimmer: Remove blank spaces.",
+		"command": "remove_blank_spaces"
+	},
+	{
+		"caption": "Trimmer: Normalize spaces.",
+		"command": "normalize_spaces"
+	},
+	{
+		"caption": "Trimmer: Replace smart characters.",
+		"command": "replace_smart_characters"
+	},
+	{
+		"caption": "Trimmer: Tokenize string.",
+		"command": "tokenize_string"
+	},
+	{
+		"caption": "Trimmer: Delete empty tags.",
+		"command": "delete_empty_tags"
+	},
+	{
+		"caption": "Trimmer: Remove comments.",
+		"command": "remove_comments"
+	},
+	{
+		"caption": "Trimmer: Delete adjacent duplicate lines.",
+		"command": "delete_adjacent_duplicate_lines"
+	}
+]
