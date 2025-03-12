@@ -1,5 +1,0 @@
-[run]
-relative_files = True
-
-[report]
-fail_under = 100
