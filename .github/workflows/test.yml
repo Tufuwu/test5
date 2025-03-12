@@ -1,100 +1,58 @@
-name: Continuous Integration
-
-on: [push, pull_request]
-
-env:
-  PACKAGE: PHPUnitKit
+name: CI
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
-  linux:
-    name: Linux ST${{ matrix.version }}
+  tests:
+    name: Python ${{ matrix.python-version }}
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: true
-      matrix:
-        version: [3, 4]
-    container:
-      image: sublimetext/unittesting
-      options: --cap-add=NET_ADMIN
-    env:
-      SUBLIME_TEXT_VERSION: ${{ matrix.version }}
-      NO_AT_BRIDGE: 1
-    steps:
-      - uses: actions/checkout@v1
-      - run: export DISPLAY=":99.0"
-      - run: sh -e /etc/init.d/xvfb start
-      - run: curl -OL https://raw.githubusercontent.com/SublimeText/UnitTesting/master/sbin/github.sh
+      fail-fast: false
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
       - name: Install dependencies
-        if: ${{ matrix.version == 3 }}
-        run: |
-          apt-get update
-          apt-get install python3-pip -y
-          pip3 install flake8
-          pip3 install flake8-docstrings
-          pip3 install pydocstyle
-          pip3 install coverage==4.5.4
-          pip3 install codecov
-          pip3 install python-coveralls
-      - name: Coding guidelines check
-        if: ${{ matrix.version == 3 }}
-        run: |
-          flake8 -v
-      - name: Test
-        run: |
-          PATH="$HOME/.local/bin:$PATH"
-          sh github.sh bootstrap
-          if ${{ matrix.version == 3 }}; then
-            sh github.sh run_tests --coverage
-          else
-            sh github.sh run_tests
-          fi
-          sh github.sh run_syntax_compatibility
-          sh github.sh run_syntax_tests
-      - name: Code coverage report - coveralls`
-        if: ${{ matrix.version == 3 }}
-        env:
-          COVERALLS_REPO_TOKEN: ${{secrets.COVERALLS_REPO_TOKEN}}
-        run: |
-          coveralls
-      - name: Code coverage report - codecov
-        if: ${{ matrix.version == 3 }}
-        run: |
-          codecov
+        run: pip install -U setuptools tox tox-gh-actions pip virtualenv
+      - name: Run tox targets for ${{ matrix.python-version }}
+        run: "python -m tox"
+      - name: Upload coverage data
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-data
+          path: ".coverage.*"
+          if-no-files-found: ignore
 
-  macos:
-    name: MacOS ST${{ matrix.version }}
-    runs-on: macos-latest
-    strategy:
-      fail-fast: true
-      matrix:
-        version: [3]
-    env:
-      SUBLIME_TEXT_VERSION: ${{ matrix.version }}
+  coverage:
+    name: Combine & check coverage.
+    runs-on: ubuntu-latest
+    needs: tests
     steps:
-      - uses: actions/checkout@v1
-      - run: curl -OL https://raw.githubusercontent.com/SublimeText/UnitTesting/master/sbin/github.sh
-      - name: Test
-        run: |
-          export PATH="$HOME/.local/bin:$PATH"
-          sh github.sh bootstrap
-          sh github.sh run_tests
-          sh github.sh run_syntax_compatibility
-          sh github.sh run_syntax_tests
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          # Use latest, so it understands all syntax.
+          python-version: "3.9"
 
-  # windows:
-  #   runs-on: windows-latest
-  #   strategy:
-  #     fail-fast: true
-  #     matrix:
-  #       version: [3]
-  #   env:
-  #     SUBLIME_TEXT_VERSION: ${{ matrix.version }}
-  #   steps:
-  #     - uses: actions/checkout@v1
-  #     - run: (new-object net.webclient).DownloadFile("https://raw.githubusercontent.com/SublimeText/UnitTesting/master/sbin/github.ps1","github.ps1")
-  #     - name: Test
-  #       run: |
-  #         ./github.ps1 "bootstrap" -verbose
-  #         ./github.ps1 "run_tests" -verbose
-  #         ./github.ps1 "run_syntax_compatibility"
-  #         ./github.ps1 "run_syntax_tests"
+      - run: python -m pip install --upgrade coverage[toml]
+
+      - name: Download coverage data.
+        uses: actions/download-artifact@v2
+        with:
+          name: coverage-data
+
+      - name: Combine coverage & fail if it's <100%.
+        run: |
+          python -m coverage combine
+          python -m coverage html --skip-covered --skip-empty
+          python -m coverage report --fail-under=97
+
+      - name: Upload HTML report if check failed.
+        uses: actions/upload-artifact@v4
+        with:
+          name: html-report
+          path: htmlcov
+        if: ${{ failure() }}
