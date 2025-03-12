@@ -1,57 +1,120 @@
-[project]
-name = "capytaine"
-description = "Python BEM solver for linear potential flow, based on Nemoh"
-authors = [{name = "Matthieu Ancellin", email = "matthieu.ancellin@mews-labs.com"}]
-requires-python = ">=3.8"
-dependencies = [
-   "numpy>=1.20; python_version>='3.9'",
-   "numpy>=1.24; python_version=='3.8'",  # https://github.com/capytaine/capytaine/issues/562
-   "scipy",
-   "pandas>=1.3",
-   "xarray",
-   "rich"
-]
-urls = {homepage = "https://capytaine.org", repository = "https://github.com/capytaine/capytaine"}
+[tool.poetry]
+name = "ntc_templates"
+version = "7.7.0"
+description = "TextFSM Templates for Network Devices, and Python wrapper for TextFSM's CliTable."
+authors = ["Network to Code <info@networktocode.com>"]
+license = "Apache-2.0"
+homepage = "https://ntc-templates.readthedocs.io"
+repository = "https://github.com/networktocode/ntc-templates"
+documentation = "https://ntc-templates.readthedocs.io"
 readme = "README.md"
-license = {file = "LICENSE"}
+keywords = ["textfsm", "network parsers"]
 classifiers = [
-  "Programming Language :: Python",
-  "Programming Language :: Fortran",
-  "Intended Audience :: Science/Research",
-  "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
-  "Topic :: Scientific/Engineering",
+    "Intended Audience :: Developers",
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
 ]
-scripts = {capytaine = "capytaine.ui.cli:main"}
-
-dynamic = ['version']
-
-[project.optional-dependencies]
-optional = [
-  "matplotlib", "joblib>=1.3", "meshio", "netcdf4", "vtk"
-  # "bemio @ https://github.com/mancellin/bemio/archive/fa3a6d3d4b0862491c3723919ec8ee45cc7d055a.zip"
+include = [
+    "LICENSE",
+    "README.md",
+    "ntc_templates/templates/*.textfsm",
+    "ntc_templates/templates/index",
 ]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+textfsm = "^1.1.0"
+
+[tool.poetry.dev-dependencies]
+bandit = "*"
+black = "*"
+coverage = "*"
+invoke = "*"
+flake8 = "*"
+importlib-metadata = "<5.0"
+pylint = "*"
+pytest = "*"
+pyyaml = "*"
+pydocstyle = "*"
+sphinx-rtd-theme = "*"
+toml = "*"
+yamllint = "*"
+"ruamel.yaml" = "*"
+mkdocs = "1.5.2"
+mkdocs-material = "9.1.15"
+mkdocstrings = "0.22.0"
+mkdocstrings-python = "1.5.2"
+mkdocs-version-annotations = "1.0.0"
+
+[tool.poetry.extras]
 test = ["pytest"]
-docs = ["sphinx", "sphinx-toolbox", "sphinxcontrib-proof", "sphinxcontrib-mermaid"]
 
-[dependency-groups]
-# dev = [...]   see editable_install_requirements.txt for blocking issues to use this.
+[tool.black]
+line-length = 120
+target-version = ['py38']
+include = '\.pyi?$'
+exclude = '''
+(
+  /(
+      \.eggs         # exclude a few common directories in the
+    | \.git          # root of the project
+    | \.hg
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+    | _build
+    | buck-out
+    | build
+    | dist
+  )/
+  | settings.py     # This is where you define files that should not be stylized by black
+                     # the root of the project
+)
+'''
+
+[tool.pylint.master]
+ignore = ".venv"
+
+[tool.pylint.basic]
+# No docstrings required for private methods (Pylint default), or for test_ functions, or for inner Meta classes.
+no-docstring-rgx = "^(_|test_|Meta$)"
+
+[tool.pylint.messages_control]
+# Line length is enforced by Black, so pylint doesn't need to check it.
+# Pylint and Black disagree about how to format multi-line arrays; Black wins.
+disable = """,
+    line-too-long,
+    redefined-outer-name
+    """
+
+[tool.pylint.miscellaneous]
+# Don't flag TODO as a failure, let us commit with things that still need to be done in the code
+notes = """,
+    FIXME,
+    XXX,
+    """
+
+[tool.pydocstyle]
+convention = "google"
+inherit = false
+match = "(?!__init__).*\\.py"
+match-dir = "(?!tests|migrations|development)[^\\.].*"
+# D212 is enabled by default in google convention, and complains if we have a docstring like:
+# """
+# My docstring is on the line after the opening quotes instead of on the same line as them.
+# """
+# We've discussed and concluded that we consider this to be a valid style choice.
+add_ignore = "D212"
 
 [build-system]
-build-backend = 'mesonpy'
-requires = [
-    "meson-python",
-    "charset-normalizer",
-    "numpy>=2.0.0; python_version>='3.9'",
-    "numpy==1.24.4; python_version=='3.8'",
-]
+requires = ["poetry_core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
 
-[tool.cibuildwheel]
-test-requires = ["pytest"]
-test-command = "pytest {project}/pytest/"
-
-[tool.ruff.lint]
-select = ["E", "F", "W", "NPY"]
-ignore = ["E501"]
-
-[tool.ruff.lint.per-file-ignores]
-"__init__.py" = ["E402", "F401"]
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-vv --doctest-modules"

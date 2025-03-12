@@ -1,48 +1,41 @@
-# Capytaine: a linear potential flow BEM solver with Python.
+# NTC Templates
 
-![CI status](https://github.com/capytaine/capytaine/actions/workflows/test_new_commits.yaml/badge.svg?event=push)
-![CI status](https://github.com/capytaine/capytaine/actions/workflows/test_with_latest_dependencies.yaml/badge.svg)
+<p align="center">
+  <img src="https://raw.githubusercontent.com/networktocode/ntc-templates/master/docs/images/icon-ntc-templates.png" class="logo" height="200px">
+  <br>
+  <a href="https://github.com/networktocode/ntc-templates/actions"><img src="https://github.com/networktocode/ntc-templates/actions/workflows/ci.yml/badge.svg?branch=main"></a>
+  <a href="https://ntc-templates.readthedocs.io/en/latest"><img src="https://readthedocs.org/projects/ntc-templates/badge/"></a>
+  <a href="https://pypi.org/project/ntc-templates/"><img src="https://img.shields.io/pypi/v/ntc-templates"></a>
+  <a href="https://pypi.org/project/ntc-templates/"><img src="https://img.shields.io/pypi/dm/ntc-templates"></a>
+  <br>
+</p>
 
+## Overview
 
-Capytaine is Python package for the simulation of the interaction between water waves and floating bodies in frequency domain.
-It is built around a full rewrite of the open source Boundary Element Method (BEM) solver Nemoh for the linear potential flow wave theory.
-
-## Installation
-
-[![PyPI](https://img.shields.io/pypi/v/capytaine)](https://pypi.org/project/capytaine)
-[![Conda-forge](https://img.shields.io/conda/vn/conda-forge/capytaine)](https://github.com/conda-forge/capytaine-feedstock)
-
-Packages for Windows, macOS and Linux are available on PyPI:
-
-```bash
-pip install capytaine
-```
-and Conda-forge
-
-```bash
-conda install -c conda-forge capytaine
-```
-
-or as a standalone executable (with some drawbacks) at https://github.com/capytaine/capytaine-standalone.
+Repository of TextFSM Templates for Network Devices, and Python wrapper for TextFSM's CliTable. TextFSM is a tool to help make parsing cli commands more manageable.
 
 ## Documentation
 
-[https://capytaine.github.io/](https://capytaine.github.io/)
+Full web-based HTML documentation for this library can be found over on the [NTC Templates Docs](https://ntc-templates.readthedocs.io) website:
 
-[![DOI](http://joss.theoj.org/papers/10.21105/joss.01341/status.svg)](https://doi.org/10.21105/joss.01341)
+- [User Guide](https://ntc-templates.readthedocs.io/en/latest/user/lib_overview/) - Overview, Using the library, Getting Started.
+- [Administrator Guide](https://ntc-templates.readthedocs.io/en/latest/admin/install/) - How to Install, Configure, Upgrade, or Uninstall the library.
+- [Developer Guide](https://ntc-templates.readthedocs.io/en/latest/dev/contributing/) - Extending the library, Code Reference, Contribution Guide.
+- [Release Notes / Changelog](https://ntc-templates.readthedocs.io/en/latest/admin/release_notes/).
+- [Frequently Asked Questions](https://ntc-templates.readthedocs.io/en/latest/user/faq/).
 
-## License
+### Contributing to the Docs
 
-Copyright (C) 2017-2024, Matthieu Ancellin
+All the Markdown source for the library documentation can be found under the [docs](https://github.com/networktocode/ntc-templates/tree/develop/docs) folder in this repository. For simple edits, a Markdown capable editor is sufficient - clone the repository and edit away.
 
-Since April 2022, the development of Capytaine is funded by the Alliance for Sustainable Energy, LLC, Managing and Operating Contractor for the National Renewable Energy Laboratory (NREL) for the U.S. Department of Energy.
+If you need to view the fully generated documentation site, you can build it with [mkdocs](https://www.mkdocs.org/). A container hosting the docs will be started using the invoke commands (details in the [Development Environment Guide](https://ntc-templates.readthedocs.io/en/latest/dev/dev_environment/#docker-development-environment)) on [http://localhost:8001](http://localhost:8001). As your changes are saved, the live docs will be automatically reloaded.
 
-This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+Any PRs with fixes or improvements are very welcome!
 
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+## Questions
 
-It is based on version 2 of [Nemoh](https://lheea.ec-nantes.fr/logiciels-et-brevets/nemoh-presentation-192863.kjsp), which has been developed by Gérard Delhommeau, Aurélien Babarit et al., (École Centrale de Nantes) and was distributed under the Apache License 2.0.
+For any questions or comments, please check the [FAQ](https://ntc-templates.readthedocs.io/en/latest/user/faq/) first. Feel free to also swing by the [Network to Code Slack](https://networktocode.slack.com/) (channel `#networktocode`), sign up [here](http://slack.networktocode.com/) if you don't have an account.
 
-Some core Fortran routines of Capytaine coming from Nemoh version 2 are also available under the Apache License 2.0. They can be found in the [`capytaine/green_functions/libDelhommeau`](https://github.com/capytaine/capytaine/tree/master/capytaine/green_functions/libDelhommeau) directory of Capytaine's repository.
+## Additional Automation Resources
 
-Capytaine includes code from [meshmagick](https://github.com/LHEEA/meshmagick/) by François Rongère (École Centrale de Nantes), licensed under the GNU General Public License (GPL).
+There are situations where one solution or tool might not fulfill needs or as well as another. Fortunately there are often alternatives and the [Awesome Network Automation](https://github.com/networktocode/awesome-network-automation) list can help introduce you to additional resources and solutions!
