@@ -1,26 +1,39 @@
-name: Run Unit Tests
+name: Python package
 
-on: [push]
+on:
+  pull_request:
+    branches:
+    - 'master'
+    paths-ignore:
+    - 'docs/*'
+    - 'example/*'
+    - 'README.rst'
+    - 'CONTRIBUTING.rst'
+    - 'HISTORY.rst'
+    - '.coverage'
+    - '.editorconfig'
+    - '.gitignore'
+    - '.pre-commit-config.yaml'
+    - 'LICENSE'
+    - 'Makefile'
+    - 'MANIFEST.in'
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.10"]
+
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Set up Python 3.10
+    - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
       with:
-        python-version: '3.9'
-    
+        python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
-        python3 -m pip install --upgrade pip
-        pip install -r requirements/dev .
-    
-    - name: Launch tests
-      run: |
-        pytest --cov=checkQC --cov-report=xml tests/
-    
-    - name: Update data on codecov
-      uses: codecov/codecov-action@v3
+        python -m pip install --upgrade pip
+        python -m pip install tox tox-gh-actions
+    - name: Test with tox
+      run: tox
