@@ -1,79 +1,40 @@
-Workload Automation
-+++++++++++++++++++
+Welcome to Sciris
+=================
 
-Workload Automation (WA) is a framework for executing workloads and collecting
-measurements on Android and Linux devices. WA includes automation for nearly 40
-workloads and supports some common instrumentation (ftrace, hwmon) along with a
-number of output formats.
+.. image:: https://badgen.net/pypi/v/sciris/?color=blue
+ :target: https://pypi.org/project/sciris
 
-WA is designed primarily as a developer tool/framework to facilitate data driven
-development by providing a method of collecting measurements from a device in a
-repeatable way.
+.. image:: https://static.pepy.tech/personalized-badge/sciris?period=total&units=international_system&left_color=grey&right_color=yellow&left_text=Downloads
+ :target: https://pepy.tech/project/sciris
 
-WA is highly extensible. Most of the concrete functionality is implemented via
-plug-ins, and it is easy to write new plug-ins to support new device types,
-workloads, instruments or output processing.
+.. image:: https://img.shields.io/pypi/l/sciris.svg
+ :target: https://github.com/sciris/sciris/blob/main/LICENSE
+
+.. image:: https://github.com/sciris/sciris/actions/workflows/tests.yaml/badge.svg
+ :target: https://github.com/sciris/sciris/actions/workflows/tests.yaml?query=workflow
 
 
-Requirements
-============
+What is Sciris?
+---------------
 
-- Python 3.5+
-- Linux (should work on other Unixes, but untested)
-- Latest Android SDK (ANDROID_HOME must be set) for Android devices, or
-- SSH for Linux devices
+Sciris is a library of tools that can help make writing scientific Python code easier and more pleasant. Built on top of `NumPy <https://numpy.org/>`_ and `Matplotlib <https://matplotlib.org/>`_, Sciris provides functions covering a wide range of common math, file I/O, and plotting operations. This means you can get more done with less code, and spend less time looking things up on Stack Overflow. It was originally written to help epidemiologists and neuroscientists focus on doing science, rather than on writing code, but Sciris is applicable across scientific domains (and some nonscientific ones too).
+
+For more information, see the full `documentation <http://docs.sciris.org/overview.html>`_, the `paper <http://paper.sciris.org>`_, or `GitHub <https://github.com/sciris/sciris>`_.
+
+If you have questions, feature suggestions, or would like some help getting started, please reach out to us at info@sciris.org or `open an issue <https://github.com/sciris/sciris/issues/new/choose>`_.
 
 
 Installation
-============
+------------
 
-To install::
+Using pip: ``pip install sciris``
 
-        git clone git@github.com:ARM-software/workload-automation.git workload-automation
-        sudo -H python setup [install|develop]
+Using conda: ``conda install -c conda-forge sciris``
 
-Note: A `requirements.txt` is included however this is designed to be used as a
-reference for known working versions rather than as part of a standard
-installation.
-
-Please refer to the `installation section <http://workload-automation.readthedocs.io/en/latest/user_information.html#install>`_
-in the documentation for more details.
+*Requires Python >= 3.7*.
 
 
-Basic Usage
-===========
+Tests
+-----
 
-Please see the `Quickstart <http://workload-automation.readthedocs.io/en/latest/user_information.html#user-guide>`_
-section of the documentation.
-
-
-Documentation
-=============
-
-You can view pre-built HTML documentation `here <http://workload-automation.readthedocs.io/en/latest/>`_.
-
-Documentation in reStructuredText format may be found under ``doc/source``. To
-compile it into cross-linked HTML, make sure you have `Sphinx
-<http://sphinx-doc.org/install.html>`_ installed, and then ::
-
-        cd doc
-        make html
-
-
-License
-=======
-
-Workload Automation is distributed under `Apache v2.0 License
-<http://www.apache.org/licenses/LICENSE-2.0>`_. Workload automation includes
-binaries distributed under different licenses (see LICENSE files in specific
-directories).
-
-
-Feedback, Contributions and Support
-===================================
-
-- Please use the GitHub Issue Tracker associated with this repository for
-  feedback.
-- ARM licensees may contact ARM directly via their partner managers.
-- We welcome code contributions via GitHub Pull requests. Please see
-  "Contributing Code" section of the documentation for details.
+Sciris comes with an automated test suite covering all functions. You almost certainly don't need to run these, but if you want to, go to the ``tests`` folder and run ``pytest``. See the readme in that folder for more information.
