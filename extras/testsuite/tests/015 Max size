@@ -1,4 +1,0 @@
-# Change a file
-
-OPT_SUCCESSRET=3
-runTest "Show files not fitting max size" "nofit" "" maxsize

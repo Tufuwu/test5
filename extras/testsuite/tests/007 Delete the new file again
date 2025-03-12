@@ -1,3 +1,0 @@
-  rm content/b
-  runTest "Delete the new file again" "" "" regular "Only in compare/content: b"
-

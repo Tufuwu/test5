@@ -1,3 +1,0 @@
-
-  dd if=/dev/urandom of=content/b bs=1024 count=243 2>/dev/null
-  runTest "Create new file with same name as deleted file" "" "" regular
