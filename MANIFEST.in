@@ -1,6 +1,1 @@
 include LICENSE
-include README.rst
-recursive-exclude * *.py[co]
-recursive-include tests *.html
-recursive-include tests *.py
-recursive-include tests *.txt
