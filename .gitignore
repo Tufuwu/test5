@@ -1,19 +1,49 @@
-build
-dist
-connexion.egg-info
-__pycache__
-.coverage
+# From https://github.com/github/gitignore/blob/master/Python.gitignore
+
+# Pyc/pyo files.
+*.py[co]
+
+# Packages
 *.egg
-htmlcov/
-*.pyc
-.eggs
-.cache/
-*.swp
-.tox/
+*.egg-info
+dist
+build
+eggs
+parts
+bin
+var
+sdist
+develop-eggs
+.installed.cfg
+.venv
+
+# Installer logs
+pip-log.txt
+
+# Unit test / coverage reports
+nosetests.xml
+coverage.xml
+.coverage
+htmlcov
+
+#Translations
+# *.mo
+# ^^^ No, django needs the .mo files as it doesn't compile them on the fly.
+
+#Mr Developer
+.mr.developer.cfg
+src
+
+# Ignore generated config files
+etc/*.nginx.conf
+etc/*.logrotate
+
+# Ignore ide's
 .idea/
-.vscode/
-venv/
-.venv/
-src/
-*.un~
-poetry.lock
+.vscode
+
+# ignore docs
+docs/_*
+
+notebooks
+*.ipynb

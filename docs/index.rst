@@ -1,125 +1,52 @@
-.. Connexion documentation master file, created by
-   sphinx-quickstart on Wed Jun 17 12:09:55 2015.
+.. dask-geomodeling documentation master file, created by
+   sphinx-quickstart on Thu Sep  5 10:36:42 2019.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-.. important::
+Welcome to dask-geomodeling's documentation!
+============================================
 
-    📢 **Connexion 3 was recently released!**
+Dask-geomodeling is a collection of classes that are to be stacked together to
+create configurations for on-the-fly operations on geographical maps. By
+generating `Dask <https://dask.pydata.org/>`_ compute graphs, these operation
+may be parallelized and (intermediate) results may be cached.
 
-    If you are upgrading from Connexion 2, refer to the :doc:`v3` section.
+Multiple Block instances together make a view. Each Block has the ``get_data``
+method that fetches the data in one go, as well as a ``get_compute_graph``
+method that creates a graph to compute the data later.
 
-Welcome to Connexion's documentation!
-=====================================
+Blocks are used for the on-the-fly modification of raster and vector data,
+respectively through the baseclasses :meth:`~dask_geomodeling.raster.base.RasterBlock` and
+:meth:`~dask_geomodeling.geometry.base.GeometryBlock`. Derived classes support
+operations such as grouping, 
+basic math, shifting time, smoothing, reclassification, geometry operations,
+zonal statistics, and property field operations.
 
-Connexion is a modern Python web framework that makes spec-first and api-first development easy. You
-describe your API in an `OpenAPI`_ (or swagger) specification with as much detail as you want and
-Connexion will guarantee that it works as you specified.
+About
+-----
 
-Connexion Features
-------------------
+This package was developed by Nelen & Schuurmans and is used commercially
+under the name Geoblocks. Please consult the `Lizard <https://www.lizard.net/>`_
+website for more information about this product.
 
-Based on your specification, Connexion provides the following functionality:
-
-* Automatic routing to your Python functions
-* Authentication
-* Request validation
-* Parameter parsing and injection
-* Response serialization
-* Response validation
-* A Swagger UI console with live documentation and 'try it out' feature
-
-Connexion also helps you write your OpenAPI specification and develop against it by providing a
-command line interface which lets you test and mock your specification.
-
-.. code-block:: bash
-
-    connexion run openapi.yaml
-
-Sponsors
+Contents
 --------
-
-.. image:: https://raw.githubusercontent.com/spec-first/connexion/main/docs/images/sponsors/ML6.png
-   :alt: ML6
-   :height: 100px
-   :target: https://www.ml6.eu
-
-.. image:: https://raw.githubusercontent.com/spec-first/connexion/main/docs/images/sponsors/Fern.png
-   :alt: Fern
-   :height: 100px
-   :target: https://www.devmark.ai/fern/?utm_source=connexion&utm_loc=website&utm_type=logo
-
-Sponsors help us dedicate time to maintain Connexion. Want to help?
-
-.. raw:: html
-
-   <a href="https://github.com/sponsors/spec-first"><strong>Explore the options »</strong></a>
-
-|
-
-Why Connexion?
---------------
-
-Being spec-first is what makes Connexion unique in the Python ecosystem. With Connexion, you write
-your API specification first, and automatically get a lot of functionality. With all other popular
-Python web frameworks, you write your functionality first, and automatically get your specification.
-
-We choose the spec-first approach because it:
-
-* Stimulates thinking about the design of your API and enables quick feedback loops
-* Creates a common understanding of how the API should work
-* Allows server and client development in parallel
-* Enables contract testing
-* Allows for orchestrating multiple layers of your API stack from one contract (eg. API Gateway)
-
-For a more detailed explanation about the benefits of working spec-first, or an overview of helpful
-tooling, have a look at our `recommended resources`_.
-
-Documentation
--------------
 
 .. toctree::
    :maxdepth: 2
+   :caption: Contents:
 
+   installation
    quickstart
-   routing
-   swagger_ui
-   request
-   response
-   validation
-   security
-   context
-   lifespan
-   exceptions
-   middleware
-   testing
-   cli
-   cookbook
-   v3
+   views
+   blocks
+   raster
+   geometry
 
-Recommended resources
----------------------
 
-About the advantages of working spec-first:
+Indices and tables
+==================
 
-* `Blog Atlassian`_
-* `API guidelines Zalando`_
-* `Blog ML6`_
-* `Blog Zalando`_
-
-Tools to help you work spec-first:
-
-* `Online swagger editor`_
-* `VS Code plugin`_
-* `Pycharm plugin`_
-
-.. _stable version: https://connexion.readthedocs.io/en/stable/
-.. _v3: https://connexion.readthedocs.io/en/latest/v3.html
-.. _OpenAPI: https://openapis.org/
-.. _Blog atlassian: https://www.atlassian.com/blog/technology/spec-first-api-development
-.. _Blog ML6: https://blog.ml6.eu/why-we-decided-to-help-maintain-connexion-c9f449877083
-.. _Blog Zalando: https://engineering.zalando.com/posts/2016/12/crafting-effective-microservices-in-python.html
-.. _API guidelines Zalando: https://opensource.zalando.com/restful-api-guidelines/#api-first
-.. _Online swagger editor: https://editor.swagger.io/
-.. _VS Code plugin: https://marketplace.visualstudio.com/items?itemName=42Crunch.vscode-openapi
-.. _Pycharm plugin: https://plugins.jetbrains.com/plugin/14837-openapi-swagger-editor
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
