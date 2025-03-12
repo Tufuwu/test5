@@ -1,46 +1,57 @@
-#!/usr/bin/env python
-# encoding: utf-8
-
-"""Packaging script."""
-
-import os
-
+import sys
 from setuptools import setup
 
-__version__ = "0.15.0"
-here = os.path.abspath(os.path.dirname(__file__))
-readme = open(os.path.join(here, "README.rst")).read()
+import openid
+
+version = openid.__version__
+
 
 setup(
-    name="circlify",
-    description="Circle packing algorithm for Python",
-    long_description=readme,
-    long_description_content_type="text/x-rst",
-    version=__version__,
-    author="Elmotec",
-    author_email="elmotec@gmx.com",
-    license="MIT",
-    keywords="circle packing enclosure hierarchy graph display visualization",
-    url="http://github.com/elmotec/circlify",
-    py_modules=["circlify"],
-    test_suite="tests",
-    setup_requires=[],
-    tests_require=[],
-    python_requires=">=3.5",
+    name="python3-openid",
+    version=version,
+    description="OpenID support for modern servers and consumers.",
+    long_description="""This is a set of Python packages to support use of
+the OpenID decentralized identity system in your application, update to Python
+3.  Want to enable single sign-on for your web site?  Use the openid.consumer
+package.  Want to run your own OpenID server? Check out openid.server.
+Includes example code and support for a variety of storage back-ends.""",
+    url="http://github.com/necaris/python3-openid",
+    packages=[
+        "openid",
+        "openid.consumer",
+        "openid.server",
+        "openid.store",
+        "openid.yadis",
+        "openid.extensions",
+        "openid.extensions.draft",
+    ],
+    # license specified by classifier
+    author="Rami Chowdhury",
+    author_email="rami.chowdhury@gmail.com",
+    maintainer="Rami Chowdhury",
+    maintainer_email="rami.chowdhury@gmail.com",
+    download_url=(
+        "http://github.com/necaris/python3-openid/tarball" "/v{}".format(version)
+    ),
+    install_requires=[
+        'defusedxml<=0.4.1; python_version < "3.4"',
+        'defusedxml; python_version >= "3.4"',
+    ],
+    extras_require={
+        "mysql": ["mysql-connector-python"],
+        "postgresql": ["psycopg2"],
+    },
     classifiers=[
-        "Development Status :: 4 - Beta",
-        "Operating System :: OS Independent",
-        "License :: OSI Approved :: MIT License",
-        "Natural Language :: English",
-        "Programming Language :: Python :: 3.5",
-        "Programming Language :: Python :: 3.6",
-        "Programming Language :: Python :: 3.7",
-        "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",
-        "Programming Language :: Python :: 3.10",
-        "Topic :: Software Development",
-        "Topic :: Utilities",
-        "Topic :: Scientific/Engineering :: Visualization",
+        "Development Status :: 5 - Production/Stable",
+        "Environment :: Web Environment",
         "Intended Audience :: Developers",
+        "License :: OSI Approved :: Apache Software License",
+        "Operating System :: POSIX",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 3",
+        "Topic :: Internet :: WWW/HTTP",
+        ("Topic :: Internet :: WWW/HTTP :: Dynamic Content :: " "CGI Tools/Libraries"),
+        "Topic :: Software Development :: Libraries :: Python Modules",
+        ("Topic :: System :: Systems Administration :: " "Authentication/Directory"),
     ],
 )

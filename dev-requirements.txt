@@ -1,8 +1,14 @@
--r test-requirements.txt
-black[d]>=22.6.0
-commitizen>=2.28.0
-# Optional packages
-matplotlib>=3.5.2
-pre-commit>=2.19.0
-pyreadline>=2.1
-wheel>=0.37.1
+# Test dependencies
+coveralls
+coverage
+
+# Package dependencies -- keep these reasonably up to date, if not bleeding-
+# edge -- also try to maintain compatibility with all the Python versions we
+# support
+Django
+httplib2
+mysqlclient
+psycopg2     ; implementation_name == "cpython"
+psycopg2cffi ; implementation_name == "pypy"
+pycrypto     ; python_version < "3.7" and implementation_name == "cpython"
+pycurl       ; python_version < "3.6" and implementation_name == "cpython"
