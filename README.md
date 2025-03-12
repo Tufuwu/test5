@@ -1,52 +1,76 @@
-# IDR studies
+# <img alt="Pymoca" src="https://raw.githubusercontent.com/pymoca/pymoca/refs/heads/master/branding/icons/pymocalogo.svg" height="60">
+A Modelica to computer algebra system (CAS) translator written in Python.
 
-[![Published screens](https://img.shields.io/badge/dynamic/json.svg?label=Published%20&url=http%3A%2F%2Fidr.openmicroscopy.org%2Fapi%2Fv0%2Fm%2Fscreens%2F%3Flimit%3D0&query=meta.totalCount&colorB=blue&suffix=%20high%20content%20screens)](https://idr.openmicroscopy.org) [![Published experiments](https://img.shields.io/badge/dynamic/json.svg?label=Published%20&url=http%3A%2F%2Fidr.openmicroscopy.org%2Fapi%2Fv0%2Fm%2Fprojects%2F%3Flimit%3D0&query=meta.totalCount&colorB=blue&suffix=%20experiments)](https://idr.openmicroscopy.org)
+[![CI](https://github.com/pymoca/pymoca/workflows/CI/badge.svg)](https://github.com/pymoca/pymoca/actions?query=workflow%3ACI)
+[![Coverage](https://codecov.io/gh/pymoca/pymoca/branch/master/graph/badge.svg)](https://codecov.io/gh/pymoca/pymoca)
+[![DOI](https://zenodo.org/badge/20664755.svg)](https://zenodo.org/badge/latestdoi/20664755)
 
-All metadata associated with published studies in IDR is managed in this
-repository.
+## Overview
+Pymoca can be used in applications that need to translate [Modelica](https://modelica.org) mathematical models into other forms. Pymoca can "flatten" a model containing a connected set of components defined by object-oriented Modelica classes into a set of variables and simultaneous equations that are easier to further process for analysis or simulation. It is particularly suited to provide Modelica models in symbolic form to [computer algebra systems](https://en.wikipedia.org/wiki/Computer_algebra_system). A common use in this context is to provide differential and algebraic equations for use in [optimal control problems](https://en.wikipedia.org/wiki/Optimal_control). Pymoca can translate Modelica to [CasADi](https://web.casadi.org), [SymPy](https://www.sympy.org), and [ModelicaXML](https://github.com/modelica-association/ModelicaXML), but most development and usage has been with CasADi.
 
-## Study name 
+## Install
 
-After acceptance, IDR studies must be named as `idr<NNNN>-<name>-<description>`
-where `idr<NNNN>` is the accession number of the study using an incremental
-four digits integer, `<name>` is the name of one of the authors associated
-with the publication, usually the first author, and `<description>` is a short
-description of the study or the name of the project/consortium. The study name
-should be lowercase.
+For parser support without backend dependencies:
+```bash
+pip install pymoca
+```
 
-## Study repository 
+Other options are:
+```bash
+pip install "pymoca[casadi]"    # CasADi backend dependencies
+pip install "pymoca[sympy]"     # SymPy backend dependencies
+pip install "pymoca[lxml]"      # ModelicaXML backend dependencies
 
-For each new study, a repository must be created on GitHub under the
-[IDR](http://github.com/IDR/) organization using the study name as defined
-above. When ready for publication in the IDR, the study repository must be
-registered in the top-level idr-metadata repository as a submodule.
+pip install "pymoca[examples]"  # To run Jupyter notebook examples in the repo
 
-A study repository contains all original and curated metadata files associated
-with a study. The
-[idr0000-lastname-example](https://github.com/IDR/idr0000-lastname-example)
-repository contains the templates that should be used by submitters
-when sending original metadata files for screen or experiment studies. The
-structure of each study repository should use the following layout:
+pip install "pymoca[all]"       # All of the above
+```
 
-    .travis.yml                                  # Travis CI configuration file, used for validation (mandatory)
-    bulk.yml                                     # Import configuration file for multi-experiment or multi-screen studies (optional)
-    experimentA/                                 # Curated metadata for experimentA (if applicable)
-        idrNNNN-experimentA-annotation.csv       # Curated annotation file (mandatory)
-        idrNNNN-experimentA-assays.txt           # Original annotation file (recommended)
-        idrNNNN-experimentA-bulk.yml             # Configuration file for import (mandatory)
-        idrNNNN-experimentA-bulkmap-config.yml   # Configuration file for annotation (mandatory)
-        idrNNNN-experimentA-filePaths.tsv        # Files/folder to be imported (mandatory)
-    experimentB/                                 # Curated metadata for experimentB (if applicable)
-       ...
-    idrNNNN-study.txt                            # Top-level metadata file describing the study (mandatory)
-    screenA/                                     # Curated metadata for screenA if applicable
-        idrNNNN-screenA-annotation.csv           # Curated annotation file (mandatory)
-        idrNNNN-screenA-bulk.yml                 # Configuration file for import (mandatory)
-        idrNNNN-screenA-bulkmap-config.yml       # Configuration file for annotation (mandatory)
-        idrNNNN-screenA-library.txt              # Original annotation file (recommended)
-        idrNNNN-screenA-plates.tsv               # Plates to be imported (mandatory)
-    screenB/                                     # Curated metadata for screenB if applicable
-       ...
-    scripts/                                     # Folder containing custom scripts associated with the study (optional)
-    README.md                                    # Optional top-level readme (optional)
-    requirements.txt                             # Python dependencies used for Travis or scripts (recommended)
+## Usage
+
+Pymoca reads and understands Modelica code (`pymoca.parser`) and provides access to an internal representation of the code called an Abstract Syntax Tree or AST (`pymoca.ast`). The AST is further processed to generate output in various formats (`pymoca.backends`). The `pymoca.tree` module provides functionality to transform the AST into a form that can be more easily used by the backends to generate the target output. In particular, `pymoca.tree` provides classes and functions to convert a hierarchical, object-oriented Modelica model of connected components into a "flat" system of equations and associated variables, parameters, and constants. Pymoca error checking is not always complete or easy to understand, so it is better to develop the Modelica code with other tools and then use Pymoca for translation.
+
+The [test suite](https://github.com/pymoca/pymoca/tree/master/test) contains examples showing how to use Pymoca and the subset of Modelica that it currently supports.
+
+Here is an example using a simple spring and damper model from the test suite:
+
+```Python
+from pprint import pprint
+
+import pymoca.parser
+import pymoca.backends.casadi.generator as casadi_backend
+
+
+MODELICA_MODEL = """
+model Spring
+    Real x, v_x;
+    parameter Real c = 0.1;
+    parameter Real k = 2;
+equation
+    der(x) = v_x;
+    der(v_x) = -k*x - c*v_x;
+end Spring;
+"""
+
+print("Modelica Model:\n", MODELICA_MODEL)
+
+print("\nEquations from the parsed AST in a JSON representation:")
+ast = pymoca.parser.parse(MODELICA_MODEL)
+pprint(ast.to_json(ast.classes["Spring"].equations))
+
+print("\nGenerated CasADi model:")
+casadi_model = casadi_backend.generate(ast, "Spring")
+print(casadi_model)
+```
+
+Some more interesting examples are in Jupyter notebooks:
+
+* [Casadi Example](https://github.com/pymoca/pymoca/blob/master/test/notebooks/Casadi.ipynb)
+* [Sympy Example](https://github.com/pymoca/pymoca/blob/master/test/notebooks/Spring.ipynb)
+
+## Roadmap
+
+See the [GitHub Projects](https://github.com/orgs/pymoca/projects) for plans. In particular, see the [Info Panel in the Modelica Flattening project](https://github.com/orgs/pymoca/projects/1/views/1?pane=info) for an overview of a project getting some current focus. Breaking API changes are expected.
+
+<!--- vim:ts=4:sw=4:expandtab:
+!-->
