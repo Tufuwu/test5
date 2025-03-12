@@ -1,44 +1,41 @@
 name: Test
 
-on: [push, pull_request]
+on: [push, pull_request, workflow_dispatch]
+
+env:
+  FORCE_COLOR: 1
 
 jobs:
-  build-and-test:
-    name: Run the tests
-    # We want to run on external PRs, but not on our own internal PRs as they'll be run
-    # by the push to the branch. Without this if check, checks are duplicated since
-    # internal PRs match both the push and pull_request events.
-    if:
-      github.event_name == 'push' || github.event.pull_request.head.repo.full_name !=
-      github.repository
-
+  test:
     runs-on: ${{ matrix.os }}
-
-    defaults:
-      run:
-        shell: bash -l {0}
-
     strategy:
+      fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
         python-version: ["3.9", "3.10"]
+        os: [windows-latest, macos-latest, ubuntu-latest]
 
     steps:
       - uses: actions/checkout@v4
 
-      - uses: conda-incubator/setup-miniconda@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-          miniforge-variant: Miniforge3
-          miniforge-version: latest
-          auto-update-conda: true
+          allow-prereleases: true
+          cache: pip
+          cache-dependency-path: setup.cfg
 
-      - name: Show conda installation info
+      - name: Install dependencies
         run: |
-          conda info
-          conda list
+          python -m pip install -U pip
+          python -m pip install -U tox
 
-      - name: Test
+      - name: Tox tests
         run: |
-          pip install nox
-          nox -s test --force-pythons="${{ matrix.python-version }}"
+          tox -e py
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v3
+        with:
+          flags: ${{ matrix.os }}
+          name: ${{ matrix.os }} Python ${{ matrix.python-version }}

@@ -1,19 +1,10 @@
-include AUTHORS.md
-include CHANGES.md
-include LICENSE.md
+include CONTRIBUTORS.txt
+include install.bat
+include LICENSE.txt
 include README.md
-include CITATION.cff
-include requirements*
-include noxfile.py
+include setup.py
 
-recursive-include gflex
-recursive-include tests *py
+graft doc
+prune doc/_build
 
-exclude .pre-commit-config.yaml
-exclude gflex_bmi.py
-exclude topypi-test.sh
-exclude topypi.sh
-
-recursive-exclude conda *
-recursive-exclude input *
-recursive-exclude utilities *
+graft tests

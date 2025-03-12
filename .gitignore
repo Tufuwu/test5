@@ -1,6 +1,8 @@
+### Python template
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+*$py.class
 
 # C extensions
 *.so
@@ -13,6 +15,7 @@ develop-eggs/
 dist/
 downloads/
 eggs/
+.eggs/
 lib/
 lib64/
 parts/
@@ -21,7 +24,6 @@ var/
 *.egg-info/
 .installed.cfg
 *.egg
-*.zip
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -35,12 +37,14 @@ pip-delete-this-directory.txt
 
 # Unit test / coverage reports
 htmlcov/
-.nox/
 .tox/
 .coverage
+.coverage.*
 .cache
 nosetests.xml
 coverage.xml
+*,cover
+.hypothesis/
 
 # Translations
 *.mo
@@ -48,6 +52,13 @@ coverage.xml
 
 # Django stuff:
 *.log
+local_settings.py
+
+# Flask instance folder
+instance/
+
+# Scrapy stuff:
+.scrapy
 
 # Sphinx documentation
 docs/_build/
@@ -55,6 +66,41 @@ docs/_build/
 # PyBuilder
 target/
 
-# Linux temp files
-*~
-*.swp
+# IPython Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# celery beat schedule file
+celerybeat-schedule
+
+# dotenv
+.env
+
+# virtualenv
+venv/
+ENV/
+
+# Spyder project settings
+.spyderproject
+
+# Rope project settings
+.ropeproject
+### Mercurial template
+.hg/
+.hgignore
+.hgsigs
+.hgsub
+.hgsubstate
+.hgtags
+### Example user template template
+### Example user template
+
+# IntelliJ project files
+.idea
+*.iml
+out
+gen
+# Created by .ignore support plugin (hsz.mobi)
+/temp_tests/
