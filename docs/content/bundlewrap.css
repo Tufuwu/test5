@@ -1,0 +1,62 @@
+@import url('https://fonts.googleapis.com/css?family=Maven+Pro');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700');
+@import url('https://fonts.googleapis.com/css?family=Source+Code+Pro:400,700');
+body, h1, h2, h3, h4, h5, h6 {
+	background: white;
+	font-family: "Open Sans", Helvetica, sans-serif;
+}
+body::before {
+    background-color: white;
+    background-image: none;
+}
+h1, h2, h3, h4, h5, h6 {
+	margin-top: 0;
+	margin-bottom: 20px;
+}
+hr { border-top: 1px solid #f0f0f0; }
+.navbar {
+	background: black !important;
+}
+.navbar, .navbar-fixed-top {
+	border: 0;
+}
+.navbar-brand {
+	font-family: "Maven Pro", Helvetica, sans-serif;
+}
+.bs-sidebar .nav > li > a {
+	color: black;
+}
+.terminal {
+	background-color: black;
+	border-radius: 5px;
+	color: #d7d7d7;
+	font-family: source-code-pro, monospace;
+	font-size: 12px;
+	line-height: 140%;
+	margin-bottom: 32px;
+	margin-top: 32px;
+	overflow: scroll;
+	padding: 10px;
+	padding-left: 15px;
+	white-space: pre;
+}
+.btn-blue {
+    background-color: #1a8acc;
+    border: 1px solid white;
+    color: #f0f0f0;
+}
+.btn-blue:hover {
+	color: white;
+}
+.btn-blueoutline {
+    background-color: white;
+    border: 1px solid #1a8acc;
+    color: #1a8acc;
+}
+.btn-blueoutline:hover {
+	color: black;
+}
+/* Hide useless Prev/Next and broken 'Edit on GitHub' */
+#navbar-collapse > ul.nav.navbar-nav.ml-auto > li:nth-child(2) { display: none; }
+#navbar-collapse > ul.nav.navbar-nav.ml-auto > li:nth-child(3) { display: none; }
+#navbar-collapse > ul.nav.navbar-nav.ml-auto > li:nth-child(4) { display: none; }

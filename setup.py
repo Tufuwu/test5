@@ -1,70 +1,52 @@
-import io
-import os
-
-from setuptools import setup, find_packages
-
-
-PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
-
-
-def read(fname):
-    with io.open(fname) as fp:
-        return fp.read()
-
-
-long_description = read("README.md")
-
-
-REQUIREMENTS_FILE = "requirements.txt"
-REQUIREMENTS = open(os.path.join(PROJECT_DIR, REQUIREMENTS_FILE)).readlines()
-
-REQUIREMENTS_TESTS_FILE = "requirements-test.txt"
-REQUIREMENTS_TESTS = open(
-    os.path.join(PROJECT_DIR, REQUIREMENTS_TESTS_FILE)
-).readlines()
-
-REQUIREMENTS_TOX_FILE = "requirements-tox.txt"
-REQUIREMENTS_TOX = open(os.path.join(PROJECT_DIR, REQUIREMENTS_TOX_FILE)).readlines()
-
-EXTRAS_REQUIRE = {
-    "enum": ["marshmallow-enum"],
-    "union": ["marshmallow-union"],
-}
+from setuptools import find_packages, setup
 
 
 setup(
-    name="marshmallow-jsonschema",
-    version="0.13.0",
-    description="JSON Schema Draft v7 (http://json-schema.org/)"
-    " formatting with marshmallow",
-    long_description=long_description,
-    long_description_content_type="text/markdown",
-    author="Stephen Fuhry",
-    author_email="fuhrysteve@gmail.com",
-    url="https://github.com/fuhrysteve/marshmallow-jsonschema",
-    packages=find_packages(exclude=("test*",)),
-    package_dir={"marshmallow-jsonschema": "marshmallow-jsonschema"},
-    include_package_data=True,
-    install_requires=REQUIREMENTS,
-    tests_require=REQUIREMENTS_TESTS + REQUIREMENTS_TOX,
-    extras_require=EXTRAS_REQUIRE,
-    license="MIT License",
-    zip_safe=False,
-    keywords=(
-        "marshmallow-jsonschema marshmallow schema serialization "
-        "jsonschema validation"
+    name="bundlewrap",
+    version="4.21.0",
+    description="Config management with Python",
+    long_description=(
+        "By allowing for easy and low-overhead config management, BundleWrap fills the gap between complex deployments using Chef or Puppet and old school system administration over SSH.\n"
+        "While most other config management systems rely on a client-server architecture, BundleWrap works off a repository cloned to your local machine. It then automates the process of SSHing into your servers and making sure everything is configured the way it's supposed to be. You won't have to install anything on managed servers."
     ),
-    python_requires=">=3.6",
+    author="Torsten Rehn",
+    author_email="torsten@rehn.email",
+    license="GPLv3",
+    url="http://bundlewrap.org",
+    packages=find_packages(),
+    entry_points={
+        'console_scripts': [
+            "bw=bundlewrap.cmdline:main",
+        ],
+    },
+    keywords=["configuration", "config", "management"],
     classifiers=[
-        "Intended Audience :: Developers",
-        "License :: OSI Approved :: MIT License",
+        "Development Status :: 5 - Production/Stable",
+        "Environment :: Console",
+        "Intended Audience :: System Administrators",
+        "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
         "Natural Language :: English",
-        "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.6",
-        "Programming Language :: Python :: 3.7",
-        "Programming Language :: Python :: 3.8",
+        "Operating System :: POSIX :: Linux",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 3.8",  # remove hack in files.py import when EOL
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+        "Topic :: System :: Installation/Setup",
+        "Topic :: System :: Systems Administration",
     ],
-    test_suite="tests",
+    install_requires=[
+        "cryptography",
+        "Jinja2",
+        "librouteros >= 3.0.0",
+        "Mako",
+        "passlib",
+        "pyyaml",
+        "requests >= 1.0.0",
+        "rtoml ; python_version<'3.11'",
+        "setuptools",
+        "tomlkit",
+    ],
+    zip_safe=False,
 )
