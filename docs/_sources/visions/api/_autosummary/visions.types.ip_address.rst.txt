@@ -1,5 +1,0 @@
-﻿visions.types.ip_address
-========================
-
-.. automodule:: visions.types.ip_address
-    :members:

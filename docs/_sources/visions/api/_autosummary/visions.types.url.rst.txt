@@ -1,5 +1,0 @@
-﻿visions.types.url
-=================
-
-.. automodule:: visions.types.url
-    :members:

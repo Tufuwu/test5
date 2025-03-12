@@ -1,5 +1,0 @@
-﻿visions.types.string
-====================
-
-.. automodule:: visions.types.string
-    :members:

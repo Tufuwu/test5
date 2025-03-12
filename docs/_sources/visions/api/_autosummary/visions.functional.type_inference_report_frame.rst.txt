@@ -1,6 +1,0 @@
-﻿visions.functional.type\_inference\_report\_frame
-=================================================
-
-.. currentmodule:: visions.functional
-
-.. autofunction:: type_inference_report_frame

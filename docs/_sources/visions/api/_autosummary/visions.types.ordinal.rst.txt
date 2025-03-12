@@ -1,5 +1,0 @@
-﻿visions.types.ordinal
-=====================
-
-.. automodule:: visions.types.ordinal
-    :members:

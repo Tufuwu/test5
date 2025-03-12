@@ -1,5 +1,0 @@
-﻿visions.types.generic
-=====================
-
-.. automodule:: visions.types.generic
-    :members:

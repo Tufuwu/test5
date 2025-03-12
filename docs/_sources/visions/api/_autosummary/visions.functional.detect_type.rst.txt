@@ -1,6 +1,0 @@
-﻿visions.functional.detect\_type
-===============================
-
-.. currentmodule:: visions.functional
-
-.. autofunction:: detect_type

@@ -1,6 +1,0 @@
-﻿visions.functional.cast\_to\_detected
-=====================================
-
-.. currentmodule:: visions.functional
-
-.. autofunction:: cast_to_detected
