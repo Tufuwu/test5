@@ -1,158 +1,129 @@
-PyPAPI
-======
+================
+Django AdminPlus
+================
 
-|GitHub| |PyPI| |License| |Discord| |Github Actions| |Black|
+**AdminPlus** aims to be the smallest possible extension to the excellent
+Django admin component that lets you add admin views that are not tied to
+models.
 
-PyPAPI is a Python binding for the `PAPI (Performance Application Programming
-Interface) <http://icl.cs.utk.edu/papi/index.html>`__ library. PyPAPI
-implements the whole PAPI High Level API and partially the Low Level API.
+There are packages out there, like `Nexus <https://github.com/disqus/nexus>`_
+and `django-admin-tools <http://pypi.python.org/pypi/django-admin-tools>`_ that
+replace the entire admin. Nexus supports adding completely new "modules" (the
+Django model admin is a default module) but there seems to be a lot of boiler
+plate code to do it. django-admin-tools does not, as far as I can tell, support
+adding custom pages.
 
-.. NOTE::
+All AdminPlus does is allow you to add simple custom views (well, they can be
+as complex as you like!) without mucking about with hijacking URLs, and
+providing links to them right in the admin index.
 
-    Starting with **v5.5.1.4**, PyPAPI is only compatible with GCC 7.0 or
-    higher. Please use previous releases for older GCC version.
 
+.. image:: https://github.com/jsocol/django-adminplus/actions/workflows/ci.yml/badge.svg?branch=main
+   :target: https://github.com/jsocol/django-adminplus
 
-Documentation:
---------------
 
-* https://flozz.github.io/pypapi/
+Installing AdminPlus
+====================
 
+Install from `PyPI <https://pypi.python.org/pypi/django-adminplus>`_ with pip:
 
-Installing PyPAPI
------------------
+.. code-block:: bash
 
-See this page of the documentation:
+    pip install django-adminplus
 
-* https://flozz.github.io/pypapi/install.html
+Or get AdminPlus from `GitHub <https://github.com/jsocol/django-adminplus>`_
+with pip:
 
+.. code-block:: bash
 
-Hacking
--------
+    pip install -e git://github.com/jsocol/django-adminplus#egg=django-adminplus
 
-Building PyPAPI For Local Development
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+And add ``adminplus`` to your installed apps, and replace ``django.contrib.admin`` with ``django.contrib.admin.apps.SimpleAdminConfig``:
 
-To work on PyPAPI, you first have to clone this repositiory and
-initialize and update submodules::
+.. code-block:: python
 
-    git clone https://github.com/flozz/pypapi.git
-    cd pypapi
+    INSTALLED_APPS = (
+        'django.contrib.admin.apps.SimpleAdminConfig',
+        # ...
+        'adminplus',
+        # ...
+    )
 
-    git submodule init
-    git submodule update
+To use AdminPlus in your Django project, you'll need to replace ``django.contrib.admin.site``, which is an instance of ``django.contrib.admin.sites.AdminSite``. I recommend doing this in ``urls.py`` right before calling ``admin.autodiscover()``:
 
-Then you have to build both PAPI and the C library inside the ``pypapi``
-module. This can be done with the following commands::
+.. code-block:: python
 
-    python setup.py build
-    python pypapi/papi_build.py
+    # urls.py
+    from django.contrib import admin
+    from adminplus.sites import AdminSitePlus
 
+    admin.site = AdminSitePlus()
+    admin.autodiscover()
 
-Linting and Code formatting
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    urlpatterns = [
+        # ...
+        # Include the admin URL conf as normal.
+        (r'^admin', include(admin.site.urls)),
+        # ...
+    ]
 
-To build lint the code, you first need to install Nox::
+Congratulations! You're now using AdminPlus.
 
-    pip install nox
 
-Then, run the following command::
+Using AdminPlus
+===============
 
-    nox -s lint
+So now that you've installed AdminPlus, you'll want to use it. AdminPlus is
+100% compatible with the built in admin module, so if you've been using that,
+you shouldn't have to change anything.
 
-To automatically coding style issues, run::
+AdminPlus offers a new function, ``admin.site.register_view``, to attach arbitrary views to the admin:
 
-    nox -s black_fix
+.. code-block:: python
 
+    # someapp/admin.py
+    # Assuming you've replaced django.contrib.admin.site as above.
+    from django.contrib import admin
 
-Generating Documentation
-~~~~~~~~~~~~~~~~~~~~~~~~
+    def my_view(request, *args, **kwargs):
+        pass
+    admin.site.register_view('somepath', view=my_view)
 
-To build the Sphinx documentation, you first need to install Nox::
+    # And of course, this still works:
+    from someapp.models import MyModel
+    admin.site.register(MyModel)
 
-    pip install nox
+Now ``my_view`` will be accessible at ``admin/somepath`` and there will be a
+link to it in the *Custom Views* section of the admin index.
 
-Then, run the following command::
+You can also use ``register_view`` as a decorator:
 
-    nox -s gendoc
+.. code-block:: python
 
+    @admin.site.register_view('somepath')
+    def my_view(request):
+        pass
 
-Support this project
---------------------
+``register_view`` takes some optional arguments: 
 
-Want to support this project?
+* ``name``: a friendly name for display in the list of custom views. For example:
 
-* `☕️ Buy me a coffee <https://www.buymeacoffee.com/flozz>`__
-* `💵️ Give me a tip on PayPal <https://www.paypal.me/0xflozz>`__
-* `❤️ Sponsor me on GitHub <https://github.com/sponsors/flozz>`__
+  .. code-block:: python
 
+    def my_view(request):
+        """Does something fancy!"""
+    admin.site.register_view('somepath', 'My Fancy Admin View!', view=my_view)
 
-Changelog
----------
+* ``urlname``: give a name to the urlpattern so it can be called by 
+  ``redirect()``, ``reverse()``, etc. The view will be added 
+  to the ``admin`` namespace, so a urlname of ``foo`` would be reversed
+  with ``reverse("admin:foo")``.
+* `visible`: a boolean or a callable returning one, that defines if
+  the custom view is visible in the admin dashboard.
 
+All registered views are wrapped in ``admin.site.admin_view``.
 
-* **[NEXT]** (changes on ``master``, but not released yet):
-
-  * Nothing yet ;)
-
-* **v6.0.0.2:**
-
-  * misc: Added Python 3.13 support (@flozz)
-  * misc!: Removed Python 3.8 support (@flozz)
-
-* **v6.0.0.1:**
-
-  * feat!: Updated the PAPI library to v6.0.0.1 (@SerodioJ, #37)
-
-* **v5.5.1.6:**
-
-  * chore: Added code linting with Flake8 (@flozz)
-  * chore: Added code formatter and reformatted all files with Black (@flozz)
-  * chore: Added Nox to run code linting, code formatting, doc building tasks (@flozz)
-  * chore: Updated dev dependnecies (@flozz)
-  * chore: Automatically build and publish sdist package and wheels for Linux (@flozz, #39)
-  * docs: Updated documentation (@flozz)
-
-* **v5.5.1.5:**
-
-  * fix: Fixed issue with module named ``types.py`` (@mcopik, #19)
-
-* **v5.5.1.4:**
-
-  * chore: Fixed compilation with GCC 8 and newer (@maresmar, #18)
-  * chore!: PyPAPI is no more compatible with GCC < 7.0
-
-* **v5.5.1.3:**
-
-  * chore: Removed ``.o``, ``.lo`` and other generated objects from the package
-
-* **v5.5.1.2:**
-
-  * feat: Partial bindings for the low level API
-
-* **v5.5.1.1:**
-
-  * chore: Added missing files to build PAPI
-
-* **v5.5.1.0:**
-
-  * feat: Initial release (binding for papy 5.5.1)
-
-
-.. |GitHub| image:: https://img.shields.io/github/stars/flozz/pypapi?label=GitHub&logo=github
-   :target: https://github.com/flozz/pypapi
-
-.. |PyPI| image:: https://img.shields.io/pypi/v/python_papi.svg
-   :target: https://pypi.python.org/pypi/python_papi
-
-.. |License| image:: https://img.shields.io/github/license/flozz/pypapi
-   :target: https://flozz.github.io/pypapi/licenses.html
-
-.. |Discord| image:: https://img.shields.io/badge/chat-Discord-8c9eff?logo=discord&logoColor=ffffff
-   :target: https://discord.gg/P77sWhuSs4
-
-.. |Github Actions| image:: https://github.com/flozz/pypapi/actions/workflows/python-ci.yml/badge.svg
-   :target: https://github.com/flozz/pypapi/actions
-
-.. |Black| image:: https://img.shields.io/badge/code%20style-black-000000.svg
-   :target: https://black.readthedocs.io/en/stable
+.. note::
+   
+   Views with URLs that match auto-discovered URLs (e.g. those created via
+   ModelAdmins) will override the auto-discovered URL.
