@@ -1,21 +1,9 @@
-# .readthedocs.yml
+# .readthedocs.yaml
 # Read the Docs configuration file
 # See https://docs.readthedocs.io/en/stable/config-file/v2.html for details
 
-# Some things can only be configured on the RTD dashboard.
-# Those that we may have changed from the default include:
-
-# Analytics code:
-# Show Version Warning: False
-# Single Version: True
-
 # Required
 version: 2
-
-# Build documentation in the docs/ directory with Sphinx
-sphinx:
-  builder: html
-  configuration: docs/conf.py
 
 # Set the version of Python and other tools you might need
 build:
@@ -27,11 +15,18 @@ build:
     # rust: "1.64"
     # golang: "1.19"
 
-# Set the version of Python and requirements required to build your
-# docs
+# Build documentation in the docs/ directory with Sphinx
+sphinx:
+   configuration: doc/conf.py
+
+# If using Sphinx, optionally build your docs in additional formats such as PDF
+# formats:
+#    - pdf
+
+# Optionally declare the Python requirements required to build your docs
 python:
-  install:
-    - method: pip
-      path: .
-      extra_requirements:
-        - docs
+   install:
+   - method: pip
+     path: .
+     extra_requirements:
+       - docs
