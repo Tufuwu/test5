@@ -1,9 +1,3 @@
-include doc/*.txt
-include doc/asciidoc.conf
-include doc/Makefile
-graft completions
-recursive-include lang *.pot *.po
-recursive-include udiskie *.ui
-recursive-include udiskie/icons *.svg
-include CONTRIBUTORS COPYING LICENSE
-include README.rst CHANGES.rst
+recursive-include discogs_client/tests *.py
+recursive-include discogs_client/tests/res *.json 
+recursive-exclude discogs_client/tests make_symlinks.py
