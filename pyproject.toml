@@ -1,52 +1,110 @@
 [build-system]
-requires = [
-  "setuptools>=61.0",
-  "versioneer[toml]",
-  'tomli; python_version < "3.11"',
- ]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
 
 [project]
-name = "CreateCloudMap"
+name = "django-datatable-view"
 dynamic = ["version"]
+description = "This package is used in conjunction with the jQuery plugin (http://http://datatables.net/), and supports state-saving detection with (http://datatables.net/plug-ins/api).  The package consists of a class-based view, and a small collection of utilities for rendering table data from models."
+readme = "README.md"
+requires-python = ">=3.11"
 authors = [
-  { name="Joachim Herb", email="Joachim.Herb@gmx.de" },
+    { name = "Pivotal Energy Solutions", email = "steve@pivotal.energy" },
 ]
-description = "Downloads a cloud map for xplanet from https://clouds.matteason.co.uk/"
-readme = "README.rst"
-license = {file = "LICENSE"}
-requires-python = ">=3.8"
-dependencies = [
-  'requests',
-  'python-dateutil'
+keywords = [
+    "django",
 ]
 classifiers = [
-        "Programming Language :: Python",
-        "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
-        "Operating System :: OS Independent",
-        "Development Status :: 4 - Beta",
-        "Environment :: Console",
-        "Intended Audience :: End Users/Desktop",
-        "Topic :: Desktop Environment",
-        "Topic :: Multimedia :: Graphics",
-        "Topic :: Scientific/Engineering :: Atmospheric Science",
-        "Topic :: Scientific/Engineering :: GIS",
-        "Topic :: Scientific/Engineering :: Visualization",
-        "Topic :: Utilities",
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Web Environment",
+    "Framework :: Django",
+    "Framework :: Django :: 5.0",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Utilities",
+]
+dependencies = [
+    "django>=5.0",
+    "python-dateutil",
 ]
 
-[project.scripts]
-create_map = "cloudmap.create_map:main"
+[project.optional-dependencies]
+test = [
+    "django-environ",
+    "mysqlclient",
+    "coverage",
+    "pre-commit",
+    "black",
+    "bandit",
+    "ruff"
+]
+docs = [
+    "Sphinx",
+    "sphinx-rtd-theme"
+]
 
 [project.urls]
-Homepage = "https://github.com/jmozmoz/cloudmap"
-Issues = "https://github.com/jmozmoz/cloudmap/issues"
+Homepage = "https://github.com/pivotal-energy-solutions/django-datatable-view"
+Download = "https://github.com/pivotal-energy-solutions/django-datatable-view"
+Thanks = "https://saythanks.io/to/rh0dium"
+Source = "https://github.com/pivotal-energy-solutions/django-datatable-view/"
 
-[tool.versioneer]
-VCS = "git"
-style = "pep440"
-versionfile_source = "cloudmap/_version.py"
-versionfile_build = "cloudmap/_version.py"
-tag_prefix = ""
-parentdir_prefix = "CreateCloudMap-"
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/datatableview",
+    "/datatableview/static/**/*",
+    "/datatableview/templates/**/*",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ['datatableview']
+include = [
+    "/datatableview/static/**/*",
+    "/datatableview/templates/**/*",
+]
+
+[tool.black]
+line-length = 100
+target-version = ['py311']
+include = '\.pyi?$'
+exclude = '(\.git|.venv|_build|build|dist|.*\/__pycache__\/)'
+
+[tool.ruff]
+line-length = 100
+lint.ignore = ["F401"]
+
+[tool.bandit]
+targets = ['datatableview', "demo_app"]
+exclude_dirs = ["datatableview/tests"]
+skips = ["B303", "B308", "B323", "B324", "B703"]
+
+[tool.coverage.run]
+branch = true
+command_line = "demo_app/manage.py test --noinput --settings=demo_app.settings_test datatableview"
+omit = [
+    "*/demo_app/**",
+    "*/migrations/*",
+    "*/tests/**",
+]
+
+[tool.coverage.report]
+fail_under = 69
+precision = 1
+skip_covered = true
+skip_empty = true
+ignore_errors = true
+sort = "cover"
+
+[tool.bumper]
+exclude = [".idea", ".github", "demo_app"]
+version_files = ["datatableview/__init__.py"]
+repo = "pivotal-energy-solutions/django-datatable-view"
+report = "out.json"
