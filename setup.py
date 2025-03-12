@@ -1,34 +1,44 @@
-from setuptools import setup
-import io
-import os
+from setuptools import setup, find_packages
 
-from version import get_version
+version = '0.13.0'
+name = 'websockify'
+long_description = open("README.md").read() + "\n" + \
+    open("CHANGES.txt").read() + "\n"
 
-here = os.path.abspath(os.path.dirname(__file__))
+setup(name=name,
+      version=version,
+      description="Websockify.",
+      long_description=long_description,
+      long_description_content_type="text/markdown",
+      classifiers=[
+          "Programming Language :: Python",
+          "Programming Language :: Python :: 3",
+          "Programming Language :: Python :: 3 :: Only",
+          "Programming Language :: Python :: 3.6",
+          "Programming Language :: Python :: 3.7",
+          "Programming Language :: Python :: 3.8",
+          "Programming Language :: Python :: 3.9",
+          "Programming Language :: Python :: 3.10",
+          "Programming Language :: Python :: 3.11",
+          "Programming Language :: Python :: 3.12",
+        ],
+      keywords='noVNC websockify',
+      license='LGPLv3',
+      url="https://github.com/novnc/websockify",
+      author="Joel Martin",
+      author_email="github@martintribe.org",
 
-short_description = 'Various BM25 algorithms for document ranking'
-
-try:
-    with io.open(os.path.join(here, 'README.md'), encoding='utf-8') as f:
-        long_description = '\n' + f.read()
-except FileNotFoundError:
-    long_description = short_description
-
-setup(
-    name='rank_bm25',
-    version=get_version(),
-    description=short_description,
-    long_description=long_description,
-    long_description_content_type='text/markdown',
-    author='D. Brown',
-    author_email='dorianstuartbrown@gmail.com',
-    url="https://github.com/dorianbrown/rank_bm25",
-    license='Apache2.0',
-    py_modules=['rank_bm25'],
-    install_requires=['numpy'],
-    extras_require={
-        'dev': [
-            'pytest'
+      packages=['websockify'],
+      include_package_data=True,
+      install_requires=[
+        'numpy', 'requests',
+        'jwcrypto',
+        'redis',
+        ],
+      zip_safe=False,
+      entry_points={
+        'console_scripts': [
+            'websockify = websockify.websocketproxy:websockify_init',
         ]
-    }
-)
+      },
+    )
