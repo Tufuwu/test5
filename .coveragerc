@@ -1,0 +1,7 @@
+[run]
+source = pydispatch
+
+
+[report]
+exclude_lines =
+    pragma: no cover

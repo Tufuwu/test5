@@ -1,138 +1,126 @@
-![Build Status](https://github.com/lebrice/SimpleParsing/actions/workflows/build.yml/badge.svg) [![PyPI version](https://badge.fury.io/py/simple-parsing.svg)](https://badge.fury.io/py/simple-parsing)
+# python-dispatch
+Lightweight event handling for Python
 
-# Simple, Elegant, Typed Argument Parsing <!-- omit in toc -->
+[![Build Status](https://travis-ci.org/nocarryr/python-dispatch.svg?branch=master)](https://travis-ci.org/nocarryr/python-dispatch)[![Coverage Status](https://coveralls.io/repos/github/nocarryr/python-dispatch/badge.svg?branch=master)](https://coveralls.io/github/nocarryr/python-dispatch?branch=master)[![PyPI version](https://badge.fury.io/py/python-dispatch.svg)](https://badge.fury.io/py/python-dispatch)[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/nocarryr/python-dispatch/master/LICENSE.txt)
 
-`simple-parsing` allows you to transform your ugly `argparse` scripts into beautifully structured, strongly typed little works of art. This isn't a fancy, complicated new command-line tool either, ***this simply adds new features to plain-old argparse!***
-Using [dataclasses](https://docs.python.org/3.7/library/dataclasses.html), `simple-parsing` makes it easier to share and reuse command-line arguments - ***no more copy pasting!***
+## Description
+This is an implementation of the "Observer Pattern" with inspiration from the
+[Kivy](kivy.org) framework. Many of the features though are intentionally
+stripped down and more generalized. The goal is to have a simple drop-in
+library with no dependencies that stays out of the programmer's way.
 
-Supports inheritance, **nesting**, easy serialization to json/yaml, automatic help strings from comments, and much more!
+## Installation
+"python-dispatch" is available on [PyPI](https://pypi.org/project/python-dispatch/)
+and can be installed using pip:
+
+```bash
+pip install python-dispatch
+```
+
+### Python Requirements
+After version `0.1` of this project, only Python 3.6 and above will be supported.
+If using an older Python version, the older releases should still be available
+on PyPI and the correct package should be chosen automatically by `pip`.
+If not, either upgrade `pip` and `setuptools`:
+
+```bash
+pip install -U pip setuptools
+```
+
+Or specify the version manually:
+
+```bash
+pip install python-dispatch<0.2
+```
+
+## Links
+
+|               |                                              |
+| -------------:|:-------------------------------------------- |
+| Project Home  | https://github.com/nocarryr/python-dispatch  |
+| PyPI          | https://pypi.python.org/pypi/python-dispatch |
+| Documentation | https://python-dispatch.readthedocs.io       |
+
+
+## Usage
+
+### Events
 
 ```python
-# examples/demo.py
-from dataclasses import dataclass
-from simple_parsing import ArgumentParser
+>>> from pydispatch import Dispatcher
 
-parser = ArgumentParser()
-parser.add_argument("--foo", type=int, default=123, help="foo help")
+>>> class MyEmitter(Dispatcher):
+...     # Events are defined in classes and subclasses with the '_events_' attribute
+...     _events_ = ['on_state', 'new_data']
+...     def do_some_stuff(self):
+...         # do stuff that makes new data
+...         data = {'foo':'bar'}
+...         # Then emit the change with optional positional and keyword arguments
+...         self.emit('new_data', data=data)
 
-@dataclass
-class Options:
-    """ Help string for this group of command-line arguments """
-    log_dir: str                # Help string for a required str argument
-    learning_rate: float = 1e-4 # Help string for a float argument
+>>> # An observer - could inherit from Dispatcher or any other class
+>>> class MyListener(object):
+...     def on_new_data(self, *args, **kwargs):
+...         data = kwargs.get('data')
+...         print('I got data: {}'.format(data))
+...     def on_emitter_state(self, *args, **kwargs):
+...         print('emitter state changed')
 
-parser.add_arguments(Options, dest="options")
+>>> emitter = MyEmitter()
+>>> listener = MyListener()
 
-args = parser.parse_args()
-print("foo:", args.foo)
-print("options:", args.options)
+>>> # Bind to the "on_state" and "new_data" events of emitter
+>>> emitter.bind(on_state=listener.on_emitter_state)
+>>> emitter.bind(new_data=listener.on_new_data)
+
+>>> emitter.do_some_stuff()
+I got data: {'foo': 'bar'}
+>>> emitter.emit('on_state')
+emitter state changed
+
 ```
 
-```console
-$ python examples/demo.py --log_dir logs --foo 123
-foo: 123
-options: Options(log_dir='logs', learning_rate=0.0001)
-```
-
-```console
-$ python examples/demo.py --help
-usage: demo.py [-h] [--foo int] --log_dir str [--learning_rate float]
-
-optional arguments:
-  -h, --help            show this help message and exit
-  --foo int             foo help (default: 123)
-
-Options ['options']:
-   Help string for this group of command-line arguments
-
-  --log_dir str         Help string for a required str argument (default:
-                        None)
-  --learning_rate float
-                        Help string for a float argument (default: 0.0001)
-```
-
-### (*new*) Simplified API:
-
-For a simple use-case, where you only want to parse a single dataclass, you can use the `simple_parsing.parse` or `simple_parsing.parse_known_args` functions:
+### Properties
 
 ```python
-options: Options = simple_parsing.parse(Options)
-# or:
-options, leftover_args = simple_parsing.parse_known_args(Options)
+>>> from pydispatch import Dispatcher, Property
+
+>>> class MyEmitter(Dispatcher):
+...     # Property objects are defined and named at the class level.
+...     # They will become instance attributes that will emit events when their values change
+...     name = Property()
+...     value = Property()
+
+>>> class MyListener(object):
+...     def on_name(self, instance, value, **kwargs):
+...         print('emitter name is {}'.format(value))
+...     def on_value(self, instance, value, **kwargs):
+...         print('emitter value is {}'.format(value))
+
+>>> emitter = MyEmitter()
+>>> listener = MyListener()
+
+>>> # Bind to the "name" and "value" properties of emitter
+>>> emitter.bind(name=listener.on_name, value=listener.on_value)
+
+>>> # Set emitter.name property (triggering the on_name callback)
+>>> emitter.name = 'foo'
+emitter name is foo
+
+>>> # Set emitter.value (triggering the on_value callback)
+>>> emitter.value = 42
+emitter value is 42
+
 ```
 
-## installation
+## Contributing
 
-`pip install simple-parsing`
+Contributions are welcome!
 
-## [Examples](https://github.com/lebrice/SimpleParsing/tree/master/examples/README.md)
+If you want to contribute through code or documentation, please see the
+[Contributing Guide](CONTRIBUTING.md) for information.
 
-## [API Documentation](https://github.com/lebrice/SimpleParsing/tree/master/docs/README.md) (Under construction)
+## License
 
-## Features
-
-- ### [Automatic "--help" strings](https://github.com/lebrice/SimpleParsing/tree/master/examples/docstrings/README.md)
-
-  As developers, we want to make it easy for people coming into our projects to understand how to run them. However, a user-friendly `--help` message is often hard to write and to maintain, especially as the number of arguments increases.
-
-  With `simple-parsing`, your arguments and their descriptions are defined in the same place, making your code easier to read, write, and maintain.
-
-- ### Modular, Reusable, Cleanly Grouped Arguments
-
-  *(no more copy-pasting)*
-
-  When you need to add a new group of command-line arguments similar to an existing one, instead of copy-pasting a block of `argparse` code and renaming variables, you can reuse your argument class, and let the `ArgumentParser` take care of adding relevant prefixes to the arguments for you:
-
-  ```python
-  parser.add_arguments(Options, dest="train")
-  parser.add_arguments(Options, dest="valid")
-  args = parser.parse_args()
-  train_options: Options = args.train
-  valid_options: Options = args.valid
-  print(train_options)
-  print(valid_options)
-  ```
-
-  ```console
-  $ python examples/demo.py \
-      --train.log_dir "training" \
-      --valid.log_dir "validation"
-  Options(log_dir='training', learning_rate=0.0001)
-  Options(log_dir='validation', learning_rate=0.0001)
-  ```
-
-  These prefixes can also be set explicitly, or not be used at all. For more info, take a look at the [Prefixing Guide](https://github.com/lebrice/SimpleParsing/tree/master/examples/prefixing/README.md)
-
-- ### [Argument subgroups](https://github.com/lebrice/SimpleParsing/tree/master/examples/subgroups/README.md)
-
-  It's easy to choose between different argument groups of arguments, with the `subgroups`
-  function!
-
-- ### [Setting defaults from Configuration files](https://github.com/lebrice/SimpleParsing/tree/master/examples/config_files/README.md)
-
-  Default values for command-line arguments can easily be read from many different formats, including json/yaml!
-
-- ### [**Easy serialization**](https://github.com/lebrice/SimpleParsing/tree/master/examples/serialization/README.md):
-
-  Easily save/load configs to `json` or `yaml`!.
-
-- ### [**Inheritance**!](https://github.com/lebrice/SimpleParsing/tree/master/examples/inheritance/README.md)
-
-  You can easily customize an existing argument class by extending it and adding your own attributes, which helps promote code reuse across projects. For more info, take a look at the [inheritance example](https://github.com/lebrice/SimpleParsing/tree/master/examples/inheritance/inheritance_example.py)
-
-- ### [**Nesting**!](https://github.com/lebrice/SimpleParsing/tree/master/examples/nesting/README.md):
-
-  Dataclasses can be nested within dataclasses, as deep as you need!
-
-- ### [Easier parsing of lists and tuples](https://github.com/lebrice/SimpleParsing/tree/master/examples/container_types/README.md) :
-
-  This is sometimes tricky to do with regular `argparse`, but `simple-parsing` makes it a lot easier by using the python's builtin type annotations to automatically convert the values to the right type for you.
-  As an added feature, by using these type annotations, `simple-parsing` allows you to parse nested lists or tuples, as can be seen in [this example](https://github.com/lebrice/SimpleParsing/tree/master/examples/merging/README.md)
-
-- ### [Enums support](https://github.com/lebrice/SimpleParsing/tree/master/examples/enums/README.md)
-
-- (More to come!)
-
-## Examples:
-
-Additional examples for all the features mentioned above can be found in the [examples folder](https://github.com/lebrice/SimpleParsing/tree/master/examples/README.md)
+This project is released under the MIT License. See the [LICENSE](LICENSE.txt) file
+for more information.
