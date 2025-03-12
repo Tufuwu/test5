@@ -1,142 +1,96 @@
-#!/usr/bin/env python
-# -*- encoding: utf-8 -*-
-from __future__ import absolute_import
-from __future__ import print_function
-
-import io
+import re
 import os
-import shutil
-import subprocess
-import tarfile
-from glob import glob
-from os.path import basename
-from os.path import dirname
-from os.path import join
-from os.path import splitext
+from setuptools import setup, find_packages
 
-import requests
-from setuptools import find_packages
-from setuptools import setup
-from setuptools.command.install import install as DistutilsInstall
-
-
-class MyInstall(DistutilsInstall):
-    def run(self):
-        self._install_mccortex()
-
-    def _get_mykrobe_data(self):
-        data_tarball_url = "https://ndownloader.figshare.com/files/20996829"
-        dir_of_this_file = os.path.dirname(os.path.realpath(__file__))
-        mykrobe_dir = os.path.join(dir_of_this_file, "src", "mykrobe")
-        assert os.path.exists(mykrobe_dir)
-        data_dir = os.path.join(mykrobe_dir, "data")
-        if os.path.exists(data_dir):
-            shutil.rmtree(data_dir)
-        extracted_name = "mykrobe-data"
-        tarball_filename = "mykrobe_data.tar.gz"
-        request = requests.get(data_tarball_url, allow_redirects=True)
-        with open(tarball_filename, "wb") as t:
-            t.write(request.content)
-        if os.path.exists(extracted_name):
-            shutil.rmtree(extracted_name)
-        with tarfile.open(tarball_filename, mode="r") as t:
-            t.extractall()
-        assert os.path.exists(extracted_name)
-        os.rename(extracted_name, data_dir)
-        os.unlink(tarball_filename)
-
-    def _install_mccortex(self):
-        dir_of_this_file = os.path.dirname(os.path.realpath(__file__))
-
-        # This is for the appveyor testing with tox. Building mccortex required
-        # some hacking, so we can't use the simple call to `make` here.
-        # Tox runs somewhere else, in an isolated dir, which means it doesn't
-        # see the build mccortex31 binary. Use an environment variable to
-        # find the built checkout of mccortex, so it doesn't try to build again,
-        # which will just fail
-        if "TOX_INI_DIR" in os.environ:
-            mccortex_git_dir = os.path.join(os.environ["TOX_INI_DIR"], "mccortex")
-        else:
-            mccortex_git_dir = os.path.join(dir_of_this_file, "mccortex")
-
-        if not os.path.exists(mccortex_git_dir):
-            subprocess.call(
-                [
-                    "git",
-                    "clone",
-                    "--recursive",
-                    "-b",
-                    "geno_kmer_count",
-                    "https://github.com/Mykrobe-tools/mccortex",
-                    mccortex_git_dir,
-                ],
-                cwd=dir_of_this_file,
-            )
-
-        mccortex31_binary_name = "mccortex31.exe" if os.name=="nt" else "mccortex31"
-        mccortex_build_binary = os.path.join(mccortex_git_dir, "bin", mccortex31_binary_name)
-        if not os.path.exists(mccortex_build_binary):
-            subprocess.call(["make", "clean"], cwd=mccortex_git_dir)
-            subprocess.call(["make"], cwd=mccortex_git_dir)
-
-        mccortex_install_dir = os.path.join(
-            dir_of_this_file, "src", "mykrobe", "cortex"
-        )
-        mccortex_install_binary = os.path.join(mccortex_install_dir, mccortex31_binary_name)
-        assert os.path.exists(mccortex_install_dir)
-        shutil.copy(mccortex_build_binary, mccortex_install_binary)
-
-        DistutilsInstall.run(self)
+exec(open("src/purerpc/_version.py", encoding="utf-8").read())
 
 
 def read(*names, **kwargs):
-    return io.open(
-        join(dirname(__file__), *names), encoding=kwargs.get("encoding", "utf8")
-    ).read()
+    with open(os.path.join(os.path.dirname(__file__), *names), "r") as fin:
+        return fin.read()
 
 
-setup(
-    name="mykrobe",
-    version="0.13.0",
-    license="MIT",
-    description="Antibiotic resistance prediction in minutes",
-    author="Phelim Bradley",
-    author_email="wave@phel.im",
-    url="https://github.com/Mykrobe-tools/mykrobe",
-    packages=find_packages("src"),
-    package_dir={"": "src"},
-    py_modules=[splitext(basename(path))[0] for path in glob("src/*.py")]
-    + [splitext(basename(path))[0] for path in glob("src/*/*.py")]
-    + [splitext(basename(path))[0] for path in glob("src/*/*/*.py")],
-    include_package_data=True,
-    package_data={"mykrobe": ["cortex/mccortex31"]},
-    zip_safe=False,
-    classifiers=[
-        "Intended Audience :: Developers",
-        "Operating System :: Unix",
-        "Operating System :: POSIX",
-        "Programming Language :: Python",
-        "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.3",
-        "Programming Language :: Python :: 3.4",
-        "Programming Language :: Python :: 3.5",
-        "Programming Language :: Python :: 3.6",
-        "Programming Language :: Python :: Implementation :: CPython",
-        "Programming Language :: Python :: Implementation :: PyPy",
-        "Topic :: Utilities",
-    ],
-    install_requires=[
-        "anytree",
-        "Biopython",
-        "PyVCF3",
-        "mongoengine",
-        "requests",
-        "numpy",
-    ],
-    entry_points={
-        "console_scripts": [
-            "mykrobe = mykrobe.cli:main",
-        ]
-    },
-    cmdclass={"install": MyInstall},
-)
+def main():
+    console_scripts = ['protoc-gen-purerpc=purerpc.protoc_plugin.plugin:main']
+    setup(
+        name="purerpc",
+        version=__version__,
+        license="Apache License Version 2.0",
+        description=("Native, async Python gRPC client and server implementation "
+                     "supporting asyncio, uvloop, trio"),
+        long_description=(
+            re.compile(r'\bstart-badges\b.*\bend-badges\b', re.M | re.S).sub('', read('README.md'))
+        ),
+        long_description_content_type='text/markdown',
+        author="Andrew Stepanov",
+        url="https://github.com/python-trio/purerpc",
+        classifiers=[
+            "Development Status :: 4 - Beta",
+            "Intended Audience :: Developers",
+            "Intended Audience :: Telecommunications Industry",
+            "License :: OSI Approved :: Apache Software License",
+            "Operating System :: MacOS",
+            "Operating System :: MacOS :: MacOS X",
+            "Operating System :: POSIX :: BSD",
+            "Operating System :: POSIX :: Linux",
+            "Programming Language :: Python",
+            "Programming Language :: Python :: 3 :: Only",
+            "Programming Language :: Python :: 3.8",
+            "Programming Language :: Python :: 3.9",
+            "Programming Language :: Python :: 3.10",
+            "Programming Language :: Python :: 3.11",
+            "Programming Language :: Python :: 3.12",
+            "Programming Language :: Python :: Implementation :: CPython",
+            "Programming Language :: Python :: Implementation :: PyPy",
+            "Framework :: AsyncIO",
+            "Framework :: Trio",
+            "Topic :: Internet",
+            "Topic :: Internet :: WWW/HTTP",
+            "Topic :: Internet :: WWW/HTTP :: HTTP Servers",
+            "Topic :: Software Development :: Libraries",
+            "Topic :: Software Development :: Code Generators",
+            "Topic :: Software Development :: Libraries :: Python Modules",
+            "Topic :: System :: Networking",
+        ],
+        keywords=[
+            "async", "await", "grpc", "pure-python", "pypy", "network",
+            "rpc", "http2",
+        ],
+        packages=find_packages('src'),
+        package_dir={'': 'src'},
+        test_suite="tests",
+        python_requires=">=3.7",
+        install_requires=[
+            "h2>=3.1.1,<4",
+            "anyio>=3.0.0",
+            "async_generator>=1.10",  # for aclosing() only (Python < 3.10)
+        ],
+        entry_points={
+            "console_scripts": console_scripts,
+        },
+        extras_require={
+            'grpc': [
+                "grpcio-tools",
+            ],
+            'grpc-pypy': [
+                "grpcio<=1.26",
+                "grpcio-tools<=1.26",
+            ],
+            'dev': [
+                "exceptiongroup; python_version<'3.11'",
+                "pytest",
+                "grpcio",
+                "grpcio-tools",
+                "uvloop; platform_system!='Windows'",
+                "tblib>=1.3.2",
+                "trio>=0.11",
+                "pip-tools>=6.3.1",
+                "python-forge>=18.6",
+                "trustme",
+            ],
+        },
+    )
+
+
+if __name__ == "__main__":
+    main()

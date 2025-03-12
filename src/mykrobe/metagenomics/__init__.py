@@ -1,4 +1,0 @@
-from mykrobe.metagenomics.phylo import SpeciesPredictor
-from mykrobe.metagenomics.phylo import AMRSpeciesPredictor
-from mykrobe.metagenomics.models import MykrobePredictorPhylogeneticsResult
-from mykrobe.metagenomics.lineages import LineagePredictor
