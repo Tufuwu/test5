@@ -1,5 +1,0 @@
-include Cargo.toml Cargo.lock
-recursive-include src *
-graft LICENSES
-global-exclude .git*
-global-exclude .git/**

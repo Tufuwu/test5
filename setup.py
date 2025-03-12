@@ -1,61 +1,31 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
-import sys
-import os
+from setuptools import setup
+from textwrap import dedent
 
-from setuptools import find_packages, setup
-from setuptools_rust import RustExtension
-
-PACKAGE_NAME = "cryptg"
-PACKAGE_VERSION = "0.5.0.post0"
-ENVVAR_VERSION_SUFFIX = "PYPI_SETUP_VERSION_SUFFIX"
-
-
-def main(args):
-    with open("README.rst", encoding='utf-8') as f:
-        long_description = f.read()
-
-    url = "https://github.com/cher-nov/" + PACKAGE_NAME
-
-    setup(
-        name=PACKAGE_NAME,
-        version=PACKAGE_VERSION+os.environ.get(ENVVAR_VERSION_SUFFIX, ""),
-        description="Cryptographic utilities for Telegram.",
-        long_description=long_description,
-        long_description_content_type="text/x-rst",
-
-        url=url,
-        download_url=url+"/releases",
-
-        author="Dmitry D. Chernov; Lonami E",
-        author_email="blackdoomer@yandex.ru",
-
-        license="CC0",
-
-        # https://pypi.python.org/pypi?:action=list_classifiers
-        classifiers=[
-            "Development Status :: 4 - Beta",
-
-            "Intended Audience :: Developers",
-            "Topic :: Security :: Cryptography",
-
-            "License :: CC0 1.0 Universal (CC0 1.0) Public Domain Dedication",
-
-            "Programming Language :: Python :: 3",
-            "Programming Language :: Python :: 3.7",
-            "Programming Language :: Python :: 3.8",
-            "Programming Language :: Python :: 3.9",
-            "Programming Language :: Python :: 3.10",
-            "Programming Language :: Python :: 3.11",
-        ],
-        keywords="telegram crypto cryptography mtproto aes",
-
-        packages=find_packages(),
-        python_requires=">=3.7",
-        rust_extensions=[RustExtension("cryptg.cryptg")],
-        zip_safe=False,
-    )
-
-
-if __name__ == '__main__':
-    main(sys.argv)
+setup(
+    version = '2.1.3',
+    name = 'telingo',
+    description = 'System to solve dynamic temporal logic programs.',
+    long_description = dedent('''\
+        Telingo is a solver for temporal programs. It leaverages clingo's input
+        language and scripting cababilities to parse and solve programs with
+        temporal formulas. As such the input of telingo is valid clingo input
+        supporting all clingo language features like for example aggregates;
+        only the way programs are grounded and solved is adjusted.
+        '''),
+    long_description_content_type='text/markdown',
+    author = 'Roland Kaminski & Francois Laferriere',
+    author_email='kaminski@cs.uni-potsdam.de',
+    url='https://github.com/potassco/telingo',
+    license = 'MIT',
+    install_requires=['clingo>=5.6'],
+    packages = ['telingo', 'telingo.theory', 'telingo.transformers'],
+    test_suite = 'telingo.tests',
+    zip_safe = False,
+    entry_points = {
+        'console_scripts': [
+            'telingo = telingo:main',
+        ]
+    }
+)
