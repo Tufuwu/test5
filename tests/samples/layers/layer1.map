@@ -1,5 +1,0 @@
-LAYER
-    NAME 'layer1'
-    # following include should be relative to the parent MAP file, not layer file
-    INCLUDE 'connection.map'
-END

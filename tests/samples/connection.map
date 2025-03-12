@@ -1,3 +1,0 @@
-# sample reusable global connection settings
-CONNECTIONTYPE PLUGIN 
-PROCESSING "CLOSE_CONNECTION=DEFER"

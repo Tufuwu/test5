@@ -1,42 +1,46 @@
-# black only uses the pyproject.toml so add settings here
-[tool.black]
-exclude = 'tests/mapfiles'
+[build-system]
+requires = ["setuptools", "setuptools-scm", "cython >= 3.0.0"]
+build-backend = "setuptools.build_meta"
 
-[tool.mypy]
-exclude = [
-    'tests/mapfiles'
+[project]
+name = "amitools"
+authors = [
+    {name = "Christian Vogelgsang", email = "chris@vogelgsang.org"},
 ]
-
-[[tool.mypy.overrides]]
-module = [
-    'jsonref',
-    'glob2',
-    'lark_cython',
-    'PIL',
-    'shapely.geometry'
+description = "A package to support development with classic Amiga m68k systems"
+requires-python = ">=3.8"
+keywords = ["AmigaOS", "vamos"]
+license = {text = "GPL-v2"}
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python",
+    "Topic :: System :: Emulators",
 ]
-ignore_missing_imports = true
+dynamic = ["version", "readme"]
 
-# Flake8 does not currently support pyproject.toml
-# without an additional dependency
-# see https://pypi.org/project/Flake8-pyproject/
+[project.optional-dependencies]
+vamos = ["machine68k"]
 
-# [tool.flake8]
-# max-line-length = 160
-# extend-ignore = ['E203','W503']
-# exclude = [
-#     'build',
-#     'dist',
-#     'misc',
-#     'tests/mapfiles',
-#     'docs/_build']
+[tool.setuptools]
+zip-safe = false
+include-package-data = true
+packages = ["amitools"]
 
-[tool.pytest.ini_options]
-testpaths = [
-    'tests',
-    'docs/examples',
-]
-# there is no ignore ini setting in pytest, but we can add command line options with addopts
-addopts  = ['--ignore=tests/mapfiles']
-# can remove the following as https://github.com/lark-parser/lark/pull/1285 has been merged
-filterwarnings = 'ignore::DeprecationWarning:lark.*'
+[tool.setuptools.dynamic]
+readme = { file="README.md", content-type="text/markdown" }
+
+[tool.setuptools_scm]
+
+[project.scripts]
+fdtool = "amitools.tools.fdtool:main"
+geotool = "amitools.tools.geotool:main"
+hunktool = "amitools.tools.hunktool:main"
+rdbtool = "amitools.tools.rdbtool:main"
+romtool = "amitools.tools.romtool:main"
+typetool = "amitools.tools.typetool:main"
+vamos = "amitools.tools.vamos:main"
+vamospath = "amitools.tools.vamospath:main"
+vamostool = "amitools.tools.vamostool:main"
+xdfscan = "amitools.tools.xdfscan:main"
+xdftool = "amitools.tools.xdftool:main"
