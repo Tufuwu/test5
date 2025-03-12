@@ -1,68 +1,122 @@
-from os import path
-from setuptools import setup, find_packages
+from __future__ import absolute_import
 
-this_directory = path.abspath(path.dirname(__file__))
+import sys
+import os
+import glob
 
-with open(path.join(this_directory, 'README.md')) as f:
-    long_description = f.read()
+from ez_setup import use_setuptools
+use_setuptools("10.0")
+import setuptools
 
+from umi_tools import __version__
+from setuptools import setup, find_packages, Extension
 
-DISTNAME = 'lexpy'
-AUTHOR = 'Abhishek Singh'
-MAINTAINER = 'Abhishek Singh'
-MAINTAINER_EMAIL = 'abhishek.singh20141@gmail.com'
-DESCRIPTION = 'Python package for lexicon'
-LICENSE = 'GNU GPLv3'
-URL = 'https://github.com/aosingh/lexpy'
-VERSION = '1.1.0'
+from distutils.version import LooseVersion
+if LooseVersion(setuptools.__version__) < LooseVersion('1.1'):
+    print ("Version detected:", LooseVersion(setuptools.__version__))
+    raise ImportError(
+        "umi_tools requires setuptools 1.1 higher")
 
-PACKAGES = ['lexpy']
+###############################################################
+###############################################################
+# Define dependencies 
+# Perform a umi_tools Installation
 
+major, minor1, minor2, s, tmp = sys.version_info
 
-classifiers = [
-    'Development Status :: 5 - Production/Stable',
-    'Intended Audience :: Education',
-    'Intended Audience :: Developers',
-    'Intended Audience :: Science/Research',
-    'Topic :: Text Processing :: Linguistic',
-    'Topic :: Text Processing :: Indexing',
-    'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
-    'Programming Language :: Python :: 3.7',
-    'Programming Language :: Python :: 3.8',
-    'Programming Language :: Python :: 3.9',
-    'Programming Language :: Python :: 3.10',
-    'Programming Language :: Python :: 3.11',
-    'Programming Language :: Python :: 3.12',
-    'Operating System :: POSIX :: Linux',
-    'Operating System :: Unix',
-    'Operating System :: Microsoft :: Windows',
-    'Operating System :: MacOS'
-]
-keywords = 'trie suffix-trees lexicon directed-acyclic-word-graph dawg'
+if major < 3:
+    raise SystemExit("""umi_tools requires Python 3 or later.""")
 
-project_urls = {"Documentation": "https://github.com/aosingh/lexpy",
-                "Source":  "https://github.com/aosingh/lexpy",
-                "Bug Tracker": "https://github.com/aosingh/lexpy/issues",
-                "CI": "https://github.com/aosingh/lexpy/actions",
-                "Release Notes": "https://github.com/aosingh/lexpy/releases",
-                "License": "https://github.com/aosingh/lexpy/blob/main/LICENSE"}
+umi_tools_packages = ["umi_tools"]
+umi_tools_package_dirs = {'umi_tools': 'umi_tools'}
+
+# debugging pip installation
+#install_requires = []
+#for requirement in (
+#        l.strip() for l in open('requirements.txt') if not l.startswith("#")):
+#    install_requires.append(requirement)
+
+install_requires = [
+    "setuptools>=1.1",
+    "numpy>=1.7",
+    "pandas>=0.12.0",
+    "future",
+    "regex",
+    "scipy",
+    "matplotlib",
+    "pybktree"]
+
+# This is a hack. When Pysam is installed from source, the recorded
+# version is 0.2.3, even though a more recent version is actaully
+# installed. In the following, if pysam is not detected, pysam will be
+# install, presumably this will be the lastest version. If pysam is
+# present detect its version with pysam.__version__.  The only problem
+# with this is that if pysam is present, but out of date, the system
+# will not recognise the update
+
+try:
+    import pysam
+    if LooseVersion(pysam.__version__) < LooseVersion('0.16.0.1'):
+        print("""
+        
+    ######################################################################
+    #
+    # WARNING:
+    # Pysam is installed, but not recent enough. We will update pysam, but
+    # the system may fail to detect that pysam has been updated. If this
+    # happens please run setup again"
+    #
+    ######################################################################
+
+        """)
+
+        install_requires.append("pysam>=0.16.0.1")
+
+except ImportError:
+    install_requires.append("pysam")
+
+##########################################################
+##########################################################
+# Classifiers
+classifiers = """
+Development Status :: 3 - Alpha
+Intended Audience :: Science/Research
+Intended Audience :: Developers
+License :: OSI Approved
+Programming Language :: Python
+Topic :: Software Development
+Topic :: Scientific/Engineering
+Operating System :: POSIX
+Operating System :: Unix
+Operating System :: MacOS
+"""
 
 setup(
-    name=DISTNAME,
-    long_description=long_description,
-    long_description_content_type='text/markdown',
-    author=AUTHOR,
-    author_email=MAINTAINER_EMAIL,
-    maintainer=MAINTAINER,
-    maintainer_email=MAINTAINER_EMAIL,
-    description=DESCRIPTION,
-    license=LICENSE,
-    url=URL,
-    project_urls=project_urls,
-    version=VERSION,
-    packages=find_packages(exclude=("tests",)),
-    package_dir={'lexpy': 'lexpy'},
+    # package information
+    name='umi_tools',
+    version=__version__,
+    description='umi_tools: Tools for UMI analyses',
+    author='Ian Sudbery',
+    author_email='i.sudbery@sheffield.ac.uk',
+    license="MIT",
+    platforms=["any"],
+    keywords="computational genomics",
+    long_description='umi_tools: Tools for UMI analyses',
+    classifiers=list(filter(None, classifiers.split("\n"))),
+    url="https://github.com/CGATOxford/UMI-tools",
+    download_url="https://github.com/CGATOxford/UMI-tools/tarball/%s" % __version__,
+    # package contents
+    packages=umi_tools_packages,
+    package_dir=umi_tools_package_dirs,
     include_package_data=True,
-    classifiers=classifiers,
-    keywords=keywords.split(),
+    # dependencies
+    #setup_requires=['cython'],
+    install_requires=install_requires,
+    # extension modules
+    ext_modules=[Extension("umi_tools._dedup_umi", ["umi_tools/_dedup_umi.c"])],
+    entry_points={
+        'console_scripts': ['umi_tools = umi_tools.umi_tools:main']
+    },
+    # other options
+    zip_safe=False,
 )

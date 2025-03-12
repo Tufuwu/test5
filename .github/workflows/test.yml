@@ -1,33 +1,37 @@
-name: lexpy
-on: push
+name: Python package
+
+on: [push]
 
 jobs:
-  unittests:
-    name: lexpy unitests
+  build:
+
     runs-on: ${{ matrix.os }}
     strategy:
-      fail-fast: false
       matrix:
-        os: [macos-latest, windows-latest, ubuntu-latest, ubuntu-latest]
         python-version: ["3.9", "3.10"]
+        os: [ubuntu-latest, macOS-latest]
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-
-    - name: Setup Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ matrix.python-version }}
-
-    - name: Install Dependencies
-      run: |
-        python3 -m pip install --upgrade pip setuptools
-        pip install -e .
-        pip install coverage
-
-    - name: Run Unittests
-      run: |
-        coverage run -m unittest discover -s lexpy/tests
-        coverage combine
-        coverage report -m
+      - uses: actions/checkout@v3
+      - name: Set up Python ${{ matrix.python-version }} on ${{ matrix.os }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8 nose pep8 pyyaml
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      - name: Lint with flake8
+        run: |
+          # stop the build if there are Python syntax errors or undefined names
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+      - name: Install
+        run: |
+          python setup.py install
+      - name: Test with nosetests
+        run: |
+          export PYTHONHASHSEED=0
+          nosetests -v tests/test_umi_tools.py
