@@ -1,0 +1,93 @@
+List of contributors:
+
+- Tarek Ziadé - tarek@mozilla.com
+- Benoit Chesneau - benoit@e-engura.com
+
+- Pratyk S. Paudel (logo)
+- Neil Chintomby - nchintomby@gmail.com
+- Ori Livneh - ori.livneh@gmail.com
+- Pete Fritchman - petef@mozilla.com
+- Johan Charpentier - contact@cyberj.me
+- John Morrison - jmorrison@mozilla.com
+- Chris McDonald - xwraithanx@gmail.com
+- Stefane Fermigier - sf@fermigier.com
+- Adnane Belmadiaf - daker@ubuntu.com
+- Alexis Métaireau - alexis@mozilla.com
+- Christian S. Perone - christian.perone@gmail.com
+- Stephane Wirtel - stephane@wirtel.be
+- Paul Meserve - paul@pogodan.com
+- Jamie Matthews - jamie.matthews@gmail.com
+- Nicholas Pellegrino - npellegrino@mozilla.com
+- Marc Sibson - @sibson
+- Benjamin Kampmann - ben.kampmann@gmail.com
+- Ben Bangert - ben@groovie.org
+- David Miller - david@deadpansincerity.com
+- Jean-Michel ARMAND - j-mad@j-mad.com
+- Kamil Kisiel - kamil@kamilkisiel.net
+- Kris Beevers - kbeevers@voxel.net
+- Marc Abramowitz - marc@marc-abramowitz.com
+- Paul - paul@pogodan.com
+- Rémy HUBSCHER - hubscher.remy@gmail.com
+- Richard Newman - rnewman@twinql.com
+- Roman Imankulov - roman@netangels.ru
+- Wieland Hoffmann - themineo@gmail.com
+- Mathieu Agopian - mathieu.agopian@gmail.com
+- Alvaro Saurin - saurin@tid.es
+- Austin Morton - amorton@juvsoft.com
+- Philip Thrasher - philipthrasher@gmail.com
+- Zohar Zilberman - popen2@gmail.com
+- Jeroen Dekkers - jeroen@dekkers.ch
+- Andrews Medina - andrewsmedina@gmail.com
+- Roberto De Ioris - roberto@unbit.it
+- Mark Steve Samson - hello@marksteve.com
+- Boris Feld - lothiraldan@gmail.com
+- Arek Czechowsk - agend07@gmail.com
+- Peter Parkanyi - me@rhapsodhy.hu
+- Sebastian Pawluś - sebastian.pawlus@gmail.com
+- Xabier Larrakoetxea - slok69@gmail.com
+- Marc Rijken - marc@rijken.org
+- Marcus Brinkmann - m.brinkmann@semantics.de
+- Victor Godoy Poluceno - victorpoluceno@gmail.com
+- Thomas Chiroux - thomas@chiroux.com
+- Steven Armstrong - steven-circus@armstrong.cc
+- Alessandro Molina <alessandro.molina@axant.it>
+- Alon Horev <alonho@gmail.com>
+- Ben Bangert <ben@groovie.org>
+- Cezar Sa Espinola <cezar.sa@corp.globo.com>
+- Christopher Grebs <cg@webshox.org>
+- Dane Knecht <dok2001@columbia.edu>
+- Devon Meunier <devon@ajah.ca>
+- Eric BREHAULT <ebrehault@gmail.com>
+- Eric Larson <eric@ionrock.org>
+- Francisco Souza <f@souza.cc>
+- Horst Gutmann <zerok@zerokspot.com>
+- Jeff Schroeder <jeffschroeder@computer.org>
+- John MacKenzie <john@nineteeneightd.com>
+- Julien Tayon <julien@tayon.net>
+- Kevin Le <solnovus@gmail.com>
+- Laurent Coustet <laurent.coustet@clarisys.fr>
+- Lee Begg <lee@beggdigital.com>
+- Leonardo Santagada <santagada@gmail.com>
+- Mark Steve Samson <blazinggale@gmail.com>
+- Matt Long <matt@crocodoc.com>
+- Michele Lacchia <michelelacchia@gmail.com>
+- Nick Pellegrino <nick.pellegrino2@gmail.com>
+- Przemysław Suliga <suligap@gmail.com>
+- Rachid Belaid <rachid.belaid@gmail.com>
+- Rohit Sankaran <rohit.sankaran@gmail.com>
+- Shezad Khan <shezadkhan137@gmail.com>
+- Simon Wachter <simon@wachter.me>
+- Sven Wilhelm <refnode@refnode.com>
+- Wieland Hoffmann <themineo+github@gmail.com>
+- Wraithan <xwraithanx@gmail.com>
+- Alex Marandon <contact@alexmarandon.com>
+- Fabien Marty <fabien.marty@gmail.com>
+- Scott Maxwell <scott@codecobblers.com>
+- Dong Weiming <ciici123@gmail.com>
+- Wynn Wilkes <wynnwilkes@gmail.com>
+- Sylvain Viollon <sviollon@minddistrict.com>
+- James Ascroft-Leigh <jwal@jwal.me.uk>
+- Mike Dunn <mike@eikonomega.com>
+- Yannick PEROUX <yannick.peroux@gmail.com>
+- David Douard <david.douard@logilab.fr>
+- Sergii Mikhtoniuk <mikhtoniuk@gmail.com>

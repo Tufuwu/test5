@@ -1,84 +1,39 @@
-.PHONY: clean clean-test clean-pyc clean-build docs help
-.DEFAULT_GOAL := help
+.PHONY: docs build test coverage build_rpm clean
 
-define BROWSER_PYSCRIPT
-import os, webbrowser, sys
+ifndef VTENV_OPTS
+VTENV_OPTS = -p python2.7 --no-site-packages
+endif
 
-try:
-	from urllib import pathname2url
-except:
-	from urllib.request import pathname2url
+VENV?=virtualenv
 
-webbrowser.open("file://" + pathname2url(os.path.abspath(sys.argv[1])))
-endef
-export BROWSER_PYSCRIPT
+bin/python:
+	$(VENV) $(VTENV_OPTS) .
+	bin/python setup.py develop
 
-define PRINT_HELP_PYSCRIPT
-import re, sys
+test: bin/python
+	bin/pip install tox
+	bin/tox
 
-for line in sys.stdin:
-	match = re.match(r'^([a-zA-Z_-]+):.*?## (.*)$$', line)
-	if match:
-		target, help = match.groups()
-		print("%-20s %s" % (target, help))
-endef
-export PRINT_HELP_PYSCRIPT
+docs:
+	bin/pip install -r doc-requirements.txt --use-mirrors
+	SPHINXBUILD=../bin/sphinx-build $(MAKE) -C docs html $^
 
-BROWSER := python -c "$$BROWSER_PYSCRIPT"
+coverage: bin/coverage
+	rm -f `pwd`/.coverage
+	rm -rf `pwd`/html
+	- COVERAGE_PROCESS_START=`pwd`/.coveragerc COVERAGE_FILE=`pwd`/.coverage PYTHONPATH=`pwd` bin/pytest -s tests
+	bin/coverage combine
+	bin/coverage html
 
-help:
-	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
+bin/coverage: bin/python
+	bin/pip install -r test-requirements.txt --use-mirrors
+	bin/pip install pytest pytest-cov
 
-clean: clean-build clean-pyc clean-test ## remove all build, test, coverage and Python artifacts
+build_rpm:
+	bin/python setup.py bdist_rpm --requires "python26 python-setuptools pyzmq python26-psutil"
 
-clean-build: ## remove build artifacts
-	rm -fr build/
-	rm -fr dist/
-	rm -fr .eggs/
-	find . -name '*.egg-info' -exec rm -fr {} +
-	find . -name '*.egg' -exec rm -fr {} +
-
-clean-pyc: ## remove Python file artifacts
-	find . -name '*.pyc' -exec rm -f {} +
-	find . -name '*.pyo' -exec rm -f {} +
-	find . -name '*~' -exec rm -f {} +
-	find . -name '__pycache__' -exec rm -fr {} +
-
-clean-test: ## remove test and coverage artifacts
-	rm -f .coverage
-	rm -fr htmlcov/
-
-lint: ## check style with ruff
-	ruff check --fix xbox
-	ruff check --fix tests
-
-test: ## run tests quickly with the default Python
-	py.test
-
-coverage: ## check code coverage quickly with the default Python
-	coverage run --source xbox -m pytest
-	coverage report -m
-	coverage html
-	$(BROWSER) htmlcov/index.html
-
-docs: ## generate Sphinx HTML documentation, including API docs
-	rm -f docs/xbox.rst
-	rm -f docs/modules.rst
-	sphinx-apidoc --implicit-namespaces -a -e -o docs/source xbox
-	$(MAKE) -C docs clean
-	$(MAKE) -C docs html
-	$(BROWSER) docs/_build/html/index.html
-
-servedocs: docs ## compile the docs watching for changes
-	watchmedo shell-command -p '*.rst' -c '$(MAKE) -C docs html' -R -D .
-
-release: clean ## package and upload a release
-	twine upload dist/*
-
-dist: clean ## builds source and wheel package
-	python -m build
-	ls -l dist
-
-install: clean ## install the package to the active Python's site-packages
-	pre-commit install
-	pip install -e .
+clean:
+	rm -rf bin .tox include/ lib/ man/ circus.egg-info/ build/
+	find . -name "*.pyc" | xargs rm -f
+	find . -name "*.un~" | xargs rm -f
+	find . -name "__pycache__" | xargs rm -rf
