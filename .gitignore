@@ -1,42 +1,58 @@
-.gitignore
-*.pyc
-esp/esp/database_settings.py
-esp/esp/local_settings.py
-*~
-*#
-esp/public/media/subsection_images/*
-esp/public/media/latex/*
-esp/public/media/latex_media/letterhead.*
-esp/public/media/email_images/*
-esp/public/media/uploaded/*
-esp/public/media/styles
-esp/public/media/images
-esp/public/media/default_images/backups
-esp/public/media/default_images/histograms
-esp/public/media/default_images/theme
-esp/public/media/default_images/favicon.ico
-esp/public/media/theme_editor/themes
-esp/public/media/scripts/theme
-esp/public/static
-esp/file_db/*
-esp/esp/database_settings.py.chicago
-esp/esp/database_settings.py.mit
-env
-useful_logs
-theme_compiled.css
-/.vagrant/*
-*_admin_thumbnail.gif
-*_admin_thumbnail.jpg
-*_admin_thumbnail.png
-local_fabfile.py
-*.sql
-*.tar
-*.gz
-*.bak
-*.orig
-*.swp
-.espsettings
+*.py[cod]
 
+# C extensions
+*.so
 
-# Mac
-.DS_Store
+# Packages
+*.egg
+*.egg-info
+dist
+build
+eggs
+parts
+bin
+var
+sdist
+develop-eggs
+.installed.cfg
+lib
+lib64
+__pycache__
+/.eggs/
+
+# Installer logs
+pip-log.txt
+
+# Unit test / coverage reports
+.cache
+.coverage
+/.pytest_cache/
+.tox
+/htmlcov/
+
+# Translations
+*.mo
+
+# Mr Developer
+.mr.developer.cfg
+.project
+.pydevproject
+
+# virtualenv
+venv*
+
+# vim
+*.sw?
+
+# notes
+.notes
+test.sh
+test_vars_out
+pytest
+app_spec
+app_spec.pkl
+ably/types/options.py.orig
+test/ably/restsetup.py.orig
+
+.idea/**/*
+**/ably/sync/***
