@@ -1,22 +1,28 @@
----
-name: nix
-on: [push, pull_request]
+name: Python
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
 jobs:
-  test:
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest]
-    runs-on: ${{ matrix.os }}
-    defaults:
-      run:
-        working-directory: ./
+  build:
+
+    runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v2.3.4
-      - uses: cachix/install-nix-action@v14.1
-        with:
-          nix_path: nixpkgs=channel:nixos-unstable
-          name: fipy
-          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-          extraPullNames: nix-community
-      - run: nix-shell --pure --command "python setup.py test"
-      - run: nix-shell --pure --command "py.test --nbval --sanitize-with examples/sanitize.cfg examples/index.ipynb"
+    - uses: actions/checkout@v3
+    - name: Install radare2 5.8.0
+      run: |
+        wget https://github.com/radareorg/radare2/releases/download/5.8.0/radare2_5.8.0_amd64.deb
+        sudo dpkg -i radare2_5.8.0_amd64.deb
+        r2 -v
+    - name: Install python dependencies
+      run: pip3 install -r python/requirements_ci.txt
+    - name: Build python module
+      run: make -C python build
+    - name: Install r2papi.py
+      run: sudo make -C python install || true
+    - name: Test the r2api
+      run: rarun2 timeout=10 system="make -C python test"
