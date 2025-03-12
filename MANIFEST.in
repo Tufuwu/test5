@@ -1,4 +1,3 @@
-include README.rst
-include LICENSE
-graft pycec
-recursive-exclude * *.py[co]
+include argcomplete/bash_completion.d/*
+include *.rst
+recursive-include test *

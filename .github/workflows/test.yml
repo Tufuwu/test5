@@ -1,46 +1,26 @@
-name: Tests
+name: Python package
 
-on: [push, pull_request]
+on: [push]
 
 jobs:
-  pytest:
-    runs-on: ubuntu-latest
+  build:
+    runs-on: ${{matrix.os}}
     strategy:
       matrix:
+        os: [ubuntu-latest, macos-10.15]
         python-version: ["3.9", "3.10"]
-    steps:
-      - uses: actions/checkout@v2
-      - name: Setup Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r test_requirements.txt
-          pip install coveralls==2.1.2
-      - name: Run Tests
-        run: |
-          pytest -vvv --cov=pycec tests/
-          coverage run --source=pycec setup.py test
-      - name: Upload Coverage
-        run: coveralls
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          COVERALLS_FLAG_NAME: ${{ matrix.test-name }}-${{ matrix.python-version }}
-          COVERALLS_PARALLEL: true
 
-  style:
-    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Setup Python 3.8
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r lint_requirements.txt
-      - name: Run Flake8
-        run: flake8 .
+    - uses: actions/checkout@v1
+    - name: Set up Python ${{matrix.python-version}}
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{matrix.python-version}}
+    - name: Install
+      run: |
+        [[ $(uname) == Linux ]] && sudo apt-get install --yes rpm tcsh fish
+        [[ $(uname) == Darwin ]] && brew install bash rpm tcsh fish
+        python -m pip install --quiet --upgrade codecov
+    - name: Test
+      run: |
+        make test
