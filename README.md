@@ -1,122 +1,173 @@
-[English](README.en.md) | [日本語](README.md)
+# docker-image-size-limit
 
-# crane_x7_ros
+[![wemake.services](https://img.shields.io/badge/%20-wemake.services-green.svg?label=%20&logo=data%3Aimage%2Fpng%3Bbase64%2CiVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAABGdBTUEAALGPC%2FxhBQAAAAFzUkdCAK7OHOkAAAAbUExURQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP%2F%2F%2F5TvxDIAAAAIdFJOUwAjRA8xXANAL%2Bv0SAAAADNJREFUGNNjYCAIOJjRBdBFWMkVQeGzcHAwksJnAPPZGOGAASzPzAEHEGVsLExQwE7YswCb7AFZSF3bbAAAAABJRU5ErkJggg%3D%3D)](https://wemake.services)
+[![Build status](https://github.com/wemake-services/docker-image-size-limit/workflows/test/badge.svg?branch=master&event=push)](https://github.com/wemake-services/docker-image-size-limit/actions?query=workflow%3Atest)
+[![codecov](https://codecov.io/gh/wemake-services/docker-image-size-limit/branch/master/graph/badge.svg)](https://codecov.io/gh/wemake-services/docker-image-size-limit)
+[![Python Version](https://img.shields.io/pypi/pyversions/docker-image-size-limit.svg)](https://pypi.org/project/docker-image-size-limit/)
+[![wemake-python-styleguide](https://img.shields.io/badge/style-wemake-000000.svg)](https://github.com/wemake-services/wemake-python-styleguide)
 
-[![industrial_ci](https://github.com/rt-net/crane_x7_ros/actions/workflows/industrial_ci.yml/badge.svg?branch=ros2)](https://github.com/rt-net/crane_x7_ros/actions/workflows/industrial_ci.yml)
+Limit your `docker` image size with a simple CLI command.
+Perfect to be used inside your CI process.
 
-ROS 2 package suite of CRANE-X7.
+Read the [announcing post](https://sobolevn.me/2019/03/announcing-docker-image-size-limit).
 
-<img src=https://rt-net.github.io/images/crane-x7/CRANE-X7-500x500.png width=400px/><img src=https://rt-net.github.io/images/crane-x7/crane_x7_gazebo_ros2.png width=400px />
-
-## Table of Contents
-
-- [crane\_x7\_ros](#crane_x7_ros)
-  - [Table of Contents](#table-of-contents)
-  - [Supported ROS 2 distributions](#supported-ros-2-distributions)
-    - [ROS 1](#ros-1)
-  - [Requirements](#requirements)
-  - [Installation](#installation)
-    - [Build from source](#build-from-source)
-  - [Quick Start](#quick-start)
-  - [Packages](#packages)
-  - [ライセンス](#ライセンス)
-  - [開発について](#開発について)
-
-## Supported ROS 2 distributions
-
-- [Foxy](https://github.com/rt-net/crane_x7_ros/tree/foxy-devel)
-- [Humble](https://github.com/rt-net/crane_x7_ros/tree/humble)
-- [Jazzy](https://github.com/rt-net/crane_x7_ros/tree/jazzy)
-
-### ROS 1
-
-- [Melodic](https://github.com/rt-net/crane_x7_ros/tree/master)
-- [Noetic](https://github.com/rt-net/crane_x7_ros/tree/master)
-
-## Requirements
-
-- CRANE-X7
-  - [製品ページ](https://rt-net.jp/products/crane-x7/)
-  - [ウェブショップ](https://www.rt-shop.jp/index.php?main_page=product_info&products_id=3660)
-- Linux OS
-  - Ubuntu 24.04
-- ROS
-  - [Jazzy](https://docs.ros.org/en/jazzy/Installation.html)
 
 ## Installation
 
-### Build from source
-
-```sh
-# Download crane_x7 repositories
-$ mkdir -p ~/ros2_ws/src
-$ cd ~/ros2_ws/src
-$ git clone -b $ROS_DISTRO https://github.com/rt-net/crane_x7_ros.git
-$ git clone -b $ROS_DISTRO https://github.com/rt-net/crane_x7_description.git
-
-# Install dependencies
-$ rosdep install -r -y -i --from-paths .
-
-# Build & Install
-$ cd ~/ros2_ws
-$ colcon build --symlink-install
-$ source ~/ros2_ws/install/setup.bash
+```bash
+pip install docker-image-size-limit
 ```
 
-## Quick Start
+Or use our [Github Action](https://github.com/wemake-services/docker-image-size-limit#github-action) or [pre-built docker image](https://github.com/wemake-services/docker-image-size-limit#docker-image).
 
-```sh
-# Connect CRANE-X7 to PC, then
-$ source ~/ros2_ws/install/setup.bash
-$ ros2 launch crane_x7_examples demo.launch.py port_name:=/dev/ttyUSB0
 
-# Terminal 2
-$ source ~/ros2_ws/install/setup.bash
-$ ros2 launch crane_x7_examples example.launch.py example:='gripper_control'
+## Usage
 
-# Press [Ctrl-c] to terminate.
+We support just a single command:
+
+```bash
+$ disl your-image-name:label 300MiB
+your-image-name:label exceeds 300MiB limit by 114.4 MiB
 ```
 
-詳細は[crane_x7_examples](./crane_x7_examples/README.md)を参照してください。
+Add `--max-layers` flag to also lint the maximum amount of layers possible
+in your image:
 
-## Packages
+```bash
+# If your image has 7 layers:
+$ disl your-image-name:label 300MiB --max-layers=5
+your-image-name:label exceeds 5 maximum layers by 2
 
-- crane_x7_control
-  - [README](./crane_x7_control/README.md)
-  - CRANE-X7を制御するパッケージです
-  - USB通信ポートの設定方法をREAMDEに記載してます
-- crane_x7_examples
-  - [README](./crane_x7_examples/README.md)
-  - CRANE-X7のC++サンプルコード集です
-- crane_x7_examples_py
-  - [README](./crane_x7_examples_py/README.md)
-  - CRANE-X7のPythonサンプルコード集です  
-- crane_x7_gazebo
-  - [README](./crane_x7_gazebo/README.md)
-  - CRANE-X7のGazeboシミュレーションパッケージです
-- crane_x7_moveit_config
-  - [README](./crane_x7_moveit_config/README.md)
-  - CRANE-X7の`moveit2`設定ファイルです
-- crane_x7_description (外部パッケージ)
-  - [README](https://github.com/rt-net/crane_x7_description/blob/ros2/README.md)
-  - CRANE-X7のモデルデータ（xacro）を定義するパッケージです
+# If your image has 5 layers:
+$ disl your-image-name:label 300MiB --max-layers=5
+# ok!
+```
 
-## ライセンス
+Add `--current-size` flag to show the current size your image:
 
-(C) 2018 RT Corporation \<support@rt-net.jp\>
+```bash
+$ disl your-image-name:label 300MiB --current-size
+your-image-name:label size is 414.4 MiB
+your-image-name:label exceeds 300MiB limit by 114.4 MiB
+```
 
-各ファイルはライセンスがファイル中に明記されている場合、そのライセンスに従います。
-特に明記されていない場合は、Apache License, Version 2.0に基づき公開されています。  
-ライセンスの全文は[LICENSE](./LICENSE)または[https://www.apache.org/licenses/LICENSE-2.0](https://www.apache.org/licenses/LICENSE-2.0)から確認できます。
 
-本パッケージが依存する[crane_x7_description](https://github.com/rt-net/crane_x7_description/tree/ros2)には株式会社アールティの非商用ライセンスが適用されています。
-詳細は[crane_x7_description/LICENSE](https://github.com/rt-net/crane_x7_description/blob/ros2/LICENSE)を参照してください。
+Add `--exit-zero` flag to force the exit code to be 0 even if there are errors:
 
-## 開発について
+```bash
+$ disl your-image-name:label 300MiB --exit-zero
+your-image-name:label exceeds 300MiB limit by 114.4 MiB
 
-- 本ソフトウェアはオープンソースですが、開発はオープンではありません。
-- 本ソフトウェアは基本的にオープンソースソフトウェアとして「AS IS」（現状有姿のまま）で提供しています。
-- 本ソフトウェアに関する無償サポートはありません。
-- バグの修正や誤字脱字の修正に関するリクエストは常に受け付けていますが、
-それ以外の機能追加等のリクエストについては社内のガイドラインを優先します。
-詳しくは[コントリビューションガイドライン](./CONTRIBUTING.md)に従ってください。
+$ echo $?
+0
+```
+
+You can combine all flags together:
+
+```bash
+$ disl your-image-name:label 300MiB --max-layers=5 --current-size --exit-zero
+your-image-name:label size is 414.4 MiB
+your-image-name:label exceeds 300MiB limit by 114.4 MiB
+your-image-name:label exceeds 5 maximum layers by 2
+```
+
+Run `disl` as a module:
+
+```bash
+$ python -m docker_image_size_limit your-image-name:label 300MiB
+your-image-name:label exceeds 300MiB limit by 114.4 MiB
+```
+
+
+
+## Options
+
+You can specify your image as:
+
+- Image name: `python`
+- Image name with tag: `python:3.6.6-alpine`
+
+You can specify your size as:
+
+- Raw number of bytes: `1024`
+- Human-readable megabytes: `30 MB` or `30 MiB`
+- Human-readable gigabytes: `1 GB` or `1 GiB`
+- Any other size supported by [`humanfriendly`](https://humanfriendly.readthedocs.io/en/latest/api.html#humanfriendly.parse_size)
+
+
+## Programmatic usage
+
+You can also import and use this library as `python` code:
+
+```python
+from docker import from_env
+from docker_image_size_limit import check_image_size
+
+oversize = check_image_size(from_env(), 'image-name:latest', '1 GiB')
+assert oversize < 0, 'Too big image!'  # negative oversize - is a good thing!
+```
+
+We also ship [PEP-561](https://www.python.org/dev/peps/pep-0561/)
+compatible type annotations with this library.
+
+
+## GitHub Action
+
+You can also use this check as a [GitHub Action](https://github.com/marketplace/actions/docker-image-size-limit):
+
+```yaml
+- uses: wemake-services/docker-image-size-limit@master
+  with:
+    image: "$YOUR_IMAGE_NAME"
+    size: "$YOUR_SIZE_LIMIT"
+    # optional fields:
+    max_layers: 5
+    show_current_size: false
+    exit_zero: false
+```
+
+Here's [an example](https://github.com/wemake-services/docker-image-size-limit/actions?query=workflow%3Adisl).
+
+
+## Docker Image
+
+We have a [pre-built image](https://hub.docker.com/r/wemakeservices/docker-image-size-limit) available.
+
+First, pull our pre-built docker image:
+
+```bash
+docker pull wemakeservices/docker-image-size-limit
+```
+
+Then you can use it like so:
+
+```bash
+docker run -v /var/run/docker.sock:/var/run/docker.sock --rm \
+  -e INPUT_IMAGE="$YOUR_IMAGE_NAME" \
+  -e INPUT_SIZE="$YOUR_SIZE_LIMIT" \
+  -e INPUT_MAX_LAYERS="$YOUR_MAX_LAYERS" \
+  -e INPUT_SHOW_CURRENT_SIZE="true" \
+  -e INPUT_EXIT_ZERO="true" \
+  wemakeservices/docker-image-size-limit
+```
+
+
+## Should I use it?
+
+You can use this script instead:
+
+```bash
+LIMIT=1024  # adjust at your will
+IMAGE='your-image-name:latest'
+
+SIZE="$(docker image inspect "$IMAGE" --format='{{.Size}}')"
+test "$SIZE" -gt "$LIMIT" && echo 'Limit exceeded'; exit 1 || echo 'Ok!'
+```
+
+But I prefer to reuse tools over
+custom `bash` scripts here and there.
+
+
+## License
+
+MIT.

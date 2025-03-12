@@ -1,0 +1,65 @@
+[tool.poetry]
+name = "docker-image-size-limit"
+version = "2.1.0"
+description = ""
+license = "MIT"
+authors = [
+  "Nikita Sobolev <mail@sobolevn.me>"
+]
+
+readme = "README.md"
+
+repository = "https://github.com/wemake-services/docker-image-size-limit"
+
+keywords = [
+  "docker",
+  "docker image",
+  "size limit",
+  "wemake.services",
+  "code quality"
+]
+
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Environment :: Console",
+  "Intended Audience :: Developers",
+  "Operating System :: OS Independent",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+  "Topic :: Software Development :: Quality Assurance",
+  "Typing :: Typed",
+]
+
+[tool.poetry.urls]
+"Funding" = "https://github.com/sponsors/wemake-services"
+
+[tool.poetry.scripts]
+disl = "docker_image_size_limit:main"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+
+docker = ">=3.7"
+humanfriendly = ">=4.18,<11.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest-cov = "^6.0"
+pytest-randomly = "^3.16"
+pytest-timeout = "^2.3"
+pytest = "^8.3"
+
+mypy = "^1.15"
+types-humanfriendly = "^10.0"
+types-docker = "^7.1"
+
+wemake-python-styleguide = "^0.19"
+flake8-pytest-style = "^2.1"
+nitpick = "^0.35"
+
+
+[build-system]
+requires = ["poetry-core>=1.9.0"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.nitpick]
+style = "https://raw.githubusercontent.com/wemake-services/wemake-python-styleguide/0.19.2/styles/nitpick-style-wemake.toml"

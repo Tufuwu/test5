@@ -1,26 +1,89 @@
-# Contribution Guide
+# How to contribute
 
-本リポジトリへのコントリビュート方法について記載しています。
 
-## Issues
+## Dependencies
 
-リポジトリの品質向上にご協力頂きありがとうございます。
+We use [poetry](https://github.com/sdispater/poetry) to manage the dependencies.
 
-Issueの作成を簡単にするテンプレートを用意しているので活用してください。
+To install them you would need to run `install` command:
 
-## Pull Requests
+```bash
+poetry install
+```
 
-Pull Requestの作成ありがとうございます。
-提出したPull Request（PR）には次のルールが適用されます。
+To activate your `virtualenv` run `poetry shell`.
 
-- PRの内容には本リポジトリのライセンス（[LICENSE](./LICENSE)と[README.md](./README.md)に記載されています）が適用されます
-- PRは`rt-net`のメンバーによるレビューを経てからマージされます
-    - すべてのPRがマージされるわけではなく、希望に添えない場合もありますのでご容赦ください
-- リポジトリにテストが設定されている場合はできるだけテストを通してください
-  - 何かしらの理由（テストに間違いがある場合など）でテストを通さずPRを出す場合はその旨をPRに記載してください
-- マージする際にはPR内の全コミットが1つのコミットに`squash`されます
-  - [プルリクエストのコミットのsquashとマージ | GitHubヘルプ](https://help.github.com/ja/github/collaborating-with-issues-and-pull-requests/about-pull-request-merges#squash-and-merge-your-pull-request-commits)
-- 1つのPRでリクエストする変更はできるだけシンプルにしてください
-  - 異なる内容の変更を含む場合はPRを分割してください
-      - 例えば、複数の機能追加したり、機能追加とリファクタリングを同時にする場合はそれぞれ別々のPRとしてください
-  - squashマージしても履歴を辿りやすくするためです
+
+## Tests
+
+We use `pytest` and `flake8` for quality control.
+We also use `wemake_python_styleguide` itself
+to develop `wemake_python_styleguide`.
+
+To run all tests:
+
+```bash
+pytest
+```
+
+To run linting:
+
+```bash
+flake8 .
+```
+
+These steps are mandatory during the CI.
+
+
+## Type checks
+
+We use `mypy` to run type checks on our code.
+To use it:
+
+```bash
+mypy docker_image_size_limit
+```
+
+This step is mandatory during the CI.
+
+
+## Submitting your code
+
+We use [trunk based](https://trunkbaseddevelopment.com/)
+development (we also sometimes call it `wemake-git-flow`).
+
+What the point of this method?
+
+1. We use protected `master` branch,
+   so the only way to push your code is via pull request
+2. We use issue branches: to implement a new feature or to fix a bug
+   create a new branch named `issue-$TASKNUMBER`
+3. Then create a pull request to `master` branch
+4. We use `git tag`s to make releases, so we can track what has changed
+   since the latest release
+
+So, this way we achieve an easy and scalable development process
+which frees us from merging hell and long-living branches.
+
+In this method, the latest version of the app is always in the `master` branch.
+
+### Before submitting
+
+Before submitting your code please do the following steps:
+
+1. Run `pytest` to make sure everything was working before
+2. Add any changes you want
+3. Add tests for the new changes
+4. Edit documentation if you have changed something significant
+5. Update `CHANGELOG.md` with a quick summary of your changes
+6. Run `pytest` again to make sure it is still working
+7. Run `mypy` to ensure that types are correct
+8. Run `flake8` to ensure that style is correct
+
+
+## Other help
+
+You can contribute by spreading a word about this library.
+It would also be a huge contribution to write
+a short article on how you are using this project.
+You can also share your best practices with us.
