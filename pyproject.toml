@@ -1,70 +1,82 @@
 [build-system]
-requires = ["setuptools"]
+requires = ["setuptools>=40.9.0", "wheel", "setuptools_scm"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "django-migration-linter"
-version = "5.1.0"
-description = "Detect backward incompatible migrations for your django project"
+name = "pip-licenses"
+description = "Dump the software license list of Python packages installed with pip."
+dynamic = ["version", "readme"]
+requires-python = ">=3.9"
+license = {text = "MIT"}
 authors = [
-  { name="3YOURMIND GmbH", email="fb@3yourmind.com" },
+    {name = "raimon", email = "raimon49@hotmail.com"}
 ]
-maintainers = [{name = "David Wobrock", email = "david.wobrock@gmail.com"}]
-readme = "README.md"
-requires-python = ">=3.7"
-dependencies = [
-    "django>=2.2",
-    "appdirs>=1.4.3",
-    "toml>=0.10.2",
-]
+keywords = ["pip", "pypi", "package", "license", "check"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
-    "Environment :: Web Environment",
-    "Framework :: Django",
-    "Framework :: Django :: 3.2",
-    "Framework :: Django :: 4.0",
-    "Framework :: Django :: 4.1",
-    "Framework :: Django :: 4.2",
-    "Framework :: Django :: 5.0",
-    "Programming Language :: Python",
+    "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.7",
-    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Topic :: System :: Systems Administration",
+    "Topic :: System :: System Shells",
+    "Typing :: Typed"
 ]
-keywords = [
-    "django",
-    "migration",
-    "lint",
-    "linter",
-    "database",
-    "backward",
-    "compatibility",
+dependencies = [
+    "prettytable >= 2.3.0",
+    "tomli >= 2"
 ]
-
-
-[project.urls]
-Changelog = "https://github.com/3YOURMIND/django-migration-linter/blob/main/CHANGELOG.md"
-Repository = "https://github.com/3YOURMIND/django-migration-linter"
 
 [project.optional-dependencies]
-test = [
-    "tox>=4.6.3",
-    "mysqlclient>=2.1.1",
-    "psycopg2>=2.9.6",
-    "django_add_default_value>=0.4.0",
-    "coverage>=7.2.7",
+dev = [
+    "autopep8",
+    "black",
+    "docutils",
+    "isort",
+    "wheel",
+    "mypy",
+    "pip-tools",
+    "pypandoc",
+    "pytest-cov",
+    "pytest-pycodestyle",
+    "pytest-runner",
+    "twine",
+    "tomli-w"
 ]
 
+[project.urls]
+Homepage = "https://github.com/raimon49/pip-licenses"
+Releases = "https://github.com/raimon49/pip-licenses/releases"
+Issues = "https://github.com/raimon49/pip-licenses/issues"
+
+[project.scripts]
+pip-licenses = "piplicenses:main"
+
+[tool.setuptools]
+py-modules = ["piplicenses"]
+
+[tool.setuptools.dynamic]
+version = {attr = "piplicenses.__version__"}
+readme = {file = ["README.md", "CHANGELOG.md"], content-type = "text/markdown"}
+
+[tool.pytest.ini_options]
+addopts = "--pycodestyle -v --cov --cov-report term-missing"
+
+[tool.black]
+line-length = 79
+
 [tool.isort]
-multi_line_output = 3
-include_trailing_comma = "True"
-force_grid_wrap = 0
-use_parentheses = "True"
-ensure_newline_before_comments = "True"
-line_length = 88
-add_imports = [ "from __future__ import annotations" ]
+line_length = 72
+known_first_party = ["piplicenses"]
+profile = "black"
+
+[tool.mypy]
+mypy_path = "stubs/"
+exclude = ["venv"]
+
+[tool.coverage.run]
+include = ["piplicenses.py"]

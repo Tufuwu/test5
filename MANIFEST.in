@@ -1,8 +1,6 @@
-prune tests
-include README.md
 include LICENSE
+include README.md
 include CHANGELOG.md
-include MANIFEST.in
-recursive-include docs *
-include tox.ini
-include pyproject.toml
+include py.typed
+include test_piplicenses.py
+include tests/fixtures/*.txt
