@@ -1,82 +1,60 @@
-name: django-cas-server
-run-name: ${{ github.actor }} is running django-cas-server CI tests
+name: pygameweb Test
 
-on: [push]
+on:
+    push:
+        branches: [master]
+    pull_request:
+        branches: [master]
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
 jobs:
-  flake8:
+  test:
     runs-on: ubuntu-latest
-    container:
-      image: python:bookworm
-    steps:
-      - uses: actions/checkout@v3
-      - run: pip install tox
-      - run: tox -e flake8
-  check_rst:
-    runs-on: ubuntu-latest
-    container:
-      image: python:bookworm
-    steps:
-      - uses: actions/checkout@v3
-      - run: pip install tox
-      - run: tox -e check_rst
-  coverage:
-    runs-on: ubuntu-latest
-    container:
-      image: python:bookworm
-    steps:
-      - uses: actions/checkout@v3
-      - run: pip install tox
-      - run: tox -e coverage
+    services:
+      postgres:
+        image: postgres:9.6
         env:
-          COVERAGE_TOKEN: ${{ secrets.COVERAGE_TOKEN }}
-  tests:
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        arch: ["amd64", "ppc64le"]
-        tox:
-          # REHL 7 support and Ubuntu bionic
-          - python: "3.9"
-            env: "py36-django111"
-          # RHEL 8 support
-          - python: "3.9"
-            env: "py36-django22"
-          # Debian buster support
-          - python: "3.9"
-            env: "py37-django111"
-          # Ubuntu focal support
-          - python: "3.9"
-            env: "py38-django22"
-          # Debian bullseye
-          - python: "3.9"
-            env: py39-django22
-          # Ubuntu jammy
-          - python: "3.9"
-            env: "py310-django32"
-          # Debian bookworm
-          - python: "3.9"
-            env: py311-django32
-          # Django additional supported version
-          - python: "3.9"
-            env: py39-django42
-          - python: "3.9"
-            env: py310-django42
-          - python: "3.9"
-            env: py311-django42
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
-      - uses: actions/checkout@v3
-      - if: matrix.arch != 'amd64'
-        name: "Install docker multiarch support"
-        run: |
-          sudo apt-get update -y
-          sudo apt-get install -y qemu qemu-user-static
-          sudo docker run --rm --privileged multiarch/qemu-user-static --reset -p yes --credential yes
-      - name: "Check docker arch ${{ matrix.arch }} support"
-        run: sudo docker run --platform linux/${{ matrix.arch }} --rm ${{ matrix.arch }}/python:${{ matrix.tox.python }} /bin/bash -c "echo -n \"Running with arch \"; uname -m;"
-      - name: "Run tests on arch ${{ matrix.arch }}"
-        run: sudo docker run --platform linux/${{ matrix.arch }} --rm -v $(pwd):$(pwd) ${{ matrix.arch }}/python:${{ matrix.tox.python }} /bin/bash -c "cd $(pwd); uname -m; pip install tox; tox -e ${{ matrix.tox.env }}"
+        - name: Checkout code
+          uses: actions/checkout@v2
+        - name: Set up Python 3.6
+          uses: actions/setup-python@v2
+          with:
+            python-version: 3.3.9
+        - name: Install dependencies
+          run: |
+              # sudo apt-get -qq update
+              sudo apt-get install -y yui-compressor optipng
+              pip install --upgrade pip
+              pip install wheel
+              pip install -r requirements.dev.txt
+              # pip install coveralls
+              pip install -e .
+        - name: Create database
+          env:
+              POSTGRES_PORT: 5432
+              POSTGRES_HOST: localhost
+              PGPASSWORD: postgres
+          run: |
+              cp example.env .env
+              psql -h $POSTGRES_HOST -p $POSTGRES_PORT -c 'create database pygame_test;' -U postgres
+              psql -h $POSTGRES_HOST -p $POSTGRES_PORT pygame_test -c "CREATE USER pygame_test WITH PASSWORD 'password';" -U postgres
+              psql -h $POSTGRES_HOST -p $POSTGRES_PORT pygame_test -c "GRANT ALL PRIVILEGES ON DATABASE pygame_test to pygame_test;" -U postgres
+        - name: Run tests
+          env:
+              APP_SECRET_KEY: a
+          run: pytest
+        # - name: Upload coverage report
+        #   uses: coverallsapp/github-action@v2
+        #   with:
+        #       github-token: ${{ secrets.GITHUB_TOKEN }}
+        #       file: cov.info

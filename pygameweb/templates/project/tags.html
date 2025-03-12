@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <style>
+      .dark-theme .media, .dark-theme .media-body {
+        overflow:initial;
+      }
+      .dark-theme .media-heading {
+        line-height: 1.4;
+        font-size: 13px;
+        font-style: initial;
+      }
+    </style>
+
+    <h1>{{ tag }}</h1>
+
+    <div class="row">
+      <div class="col-md-12">
+        {% for value, count, size in top_tag_counts %}
+            <a href='/tags/{{value}}' class="btn btn-default" role="button">{{value}} <span class="badge">{{ count }}</span></a>
+        {% endfor %}
+      </div>
+    </div>
+    <br>
+
+    {% for chunk in projects %}
+    <div class="row">
+      {% for project in chunk %}
+        <div class="col-md-4">
+            <div class="media">
+              <div class="media-left">
+                {% set thumb = project.image_thumb(100,100) %}
+                {% if thumb %}
+                    <a href="{{ url_for('project.view', project_id=project.id) }}">
+                        <img class="media-object" src="{{ thumb }}" alt="{{ project.title }}">
+                    </a>
+                {% endif %}
+              </div>
+              <div class="media-body">
+                <h4 class="media-heading"><a href="{{ url_for('project.view', project_id=project.id) }}">{{ project.title }}</a></h4>
+                {{ project.summary_html|safe }}
+              </div>
+            </div>
+            <br>
+        </div>
+      {% endfor %}
+    </div>
+    {% endfor %}
+
+    {% if prev_start != None %}
+        <a href='?start={{prev_start}}'>previous</a>
+    {% endif %}
+    <a href='?start={{next_start}}'>next</a>
+
+
+
+{% endblock %}

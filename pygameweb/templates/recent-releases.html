@@ -1,0 +1,77 @@
+{% cache 60*5 %}
+  {% set side_stuff = sidebar() %}
+  {% set recent_releases = side_stuff.recent_releases %}
+  {% set top_tag_counts = side_stuff.top_tag_counts %}
+
+  <style>
+    .project-title {
+      bottom:10px;
+    }
+    .project-releases .list-group-item {
+      min-height: 68px;
+    }
+    .project-releases span {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.7);
+      padding: 2px 4px;
+    }
+
+    .dark-theme .project-title {
+      bottom: 10px;
+      color: #fff;
+    }
+    .dark-theme .project-releases .list-group-item {
+      min-height: 68px;
+      background-color: #444;
+      border-color: #333;
+    }
+    .dark-theme .project-releases .list-group-item a {
+      font-style: initial;
+    }
+    .dark-theme .project-releases span {
+      position: absolute;
+      background-color: rgba(255, 255, 255, 0.7);
+      padding: 2px 4px;
+      color: #333;
+    }
+</style>
+
+  <h2>Recent Releases</h2>
+  <div class="list-group project-releases">
+  {% for user, project, release in recent_releases -%}
+    {% set thumb = project.image_thumb(230, 230) -%}
+    {% set project_version = '- ' + release.version if release and release.version else '' -%}
+    {% set project_title = project.title + project_version -%}
+    {#
+      Different layouts for:
+        * Long titles
+        * No image
+    -#}
+    {% set style_released = ' style=position:inherit;display:block;' if not thumb and project_title|length > 30 else '' -%}
+    {% set style_title = ' style=position:inherit;bottom:auto' if project_title|length > 30 else '' -%}
+    <a href="{{ url_for('project.release', project_id=project.id, release_id=release.id) }}"
+       class="list-group-item underline-on-hover"
+       title="{{ project.summary }}">
+      <span class="project-released"{{ style_released }}>
+        {{ release.datetimeon.strftime('%-d %b, %Y') }}
+      </span>
+      {% if thumb -%}
+	      <img class="img-responsive" src="{{ thumb }}" alt="{{ project.summary }}">
+      {% endif -%}
+      <span class="project-title dont-break-out underline-on-hover-underline"{{ style_title }}>
+        {{ project.title }}{% if release and release.version %} - {{ release.version }}{% endif %}
+      </span>
+    </a>
+  {% endfor -%}
+  </div>
+
+
+  <div>
+  {% for value, count, size in top_tag_counts -%}
+    <a href='/tags/{{value}}' class="btn btn-default" role="button">{{value}} <span class="badge">{{ count }}</span></a>
+  {% endfor -%}
+    <br/><br/>
+    <a href='/tags' class="btn btn-default" role="button">ALL the tags!</a>
+  </div>
+
+{% endcache %}

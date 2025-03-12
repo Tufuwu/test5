@@ -1,72 +1,69 @@
+""" pygameweb
+"""
+import io
 import os
-import pkg_resources
-from setuptools import setup
-from cas_server import VERSION
+import re
+from itertools import chain
+from setuptools import setup, find_packages
 
-with open(os.path.join(os.path.dirname(__file__), 'README.rst')) as readme:
-    README = readme.read()
+def read(*parts):
+    """Reads a file from *parts."""
+    try:
+        return io.open(os.path.join(*parts), 'r', encoding='utf-8').read()
+    except IOError:
+        return ''
 
-if __name__ == '__main__':
-    # allow setup.py to be run from any path
-    os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
+def get_version():
+    """Returns the version from pygameweb/__init__.py."""
+    version_file = read('pygameweb', '__init__.py')
+    version_match = re.search(r'^__version__ = [\'"]([^\'"]*)[\'"]', version_file, re.MULTILINE)
+    if version_match:
+        return version_match.group(1)
+    raise RuntimeError('Unable to find version string.')
 
-    setup(
-        name='django-cas-server',
-        version=VERSION,
-        packages=[
-            'cas_server', 'cas_server.migrations',
-            'cas_server.management', 'cas_server.management.commands',
-            'cas_server.tests', 'cas_server.templatetags'
+def get_requirements():
+    """Returns a list of requirements from requirements.txt files."""
+    requirements_files = ['requirements.txt']
+    requirements = []
+    for filename in requirements_files:
+        with open(filename) as file:
+            requirements.extend(line.strip() for line in file if not line.startswith('-r '))
+    return list(set(requirements))
+
+setup(
+    name='pygameweb',
+    version=get_version(),
+    description='Pygame.org website.',
+    long_description=read('README.rst'),
+    author='Rene Dudfield',
+    author_email='renesd@gmail.com',
+    url='https://github.com/pygame/pygameweb',
+    packages=find_packages(),
+    package_data={'pygameweb': []},
+    include_package_data=True,
+    install_requires=get_requirements(),
+    classifiers=[
+        'Development Status :: 1 - Planning',
+        'License :: OSI Approved :: BSD License',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.6',
+    ],
+    data_files=[('.', ['alembic.ini'])],
+    entry_points={
+        'console_scripts': [
+            'pygameweb_front=pygameweb.run:run_front',
+            'pygameweb_generate_json=pygameweb.dashboard.generate_json:main',
+            'pygameweb_generate_static=pygameweb.dashboard.generate_static:main',
+            'pygameweb_launchpad=pygameweb.builds.launchpad_build_badge:check_pygame_builds',
+            'pygameweb_update_docs=pygameweb.builds.update_docs:update_docs',
+            'pygameweb_stackoverflow=pygameweb.builds.stackoverflow:download_stack_json',
+            'pygameweb_loadcomments=pygameweb.comment.models:load_comments',
+            'pygameweb_trainclassifier=pygameweb.comment.classifier_train:classify_comments',
+            'pygameweb_worker=pygameweb.tasks.worker:work',
+            'pygameweb_release_version_correct=pygameweb.builds.update_version_from_git:release_version_correct',
+            'pygameweb_github_releases=pygameweb.project.gh_releases:sync_github_releases',
+            'pygameweb_fixtures=pygameweb.fixtures:populate_db',
         ],
-        include_package_data=True,
-        license='GPLv3',
-        description=(
-            'A Django Central Authentication Service server '
-            'implementing the CAS Protocol 3.0 Specification'
-        ),
-        long_description=README,
-        author='Valentin Samir',
-        author_email='valentin.samir@crans.org',
-        classifiers=[
-            'Environment :: Web Environment',
-            'Development Status :: 5 - Production/Stable',
-            'Framework :: Django',
-            'Framework :: Django :: 1.11',
-            'Framework :: Django :: 2.2',
-            'Framework :: Django :: 3.2',
-            'Framework :: Django :: 4.2',
-            'Intended Audience :: Developers',
-            'Intended Audience :: System Administrators',
-            'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
-            'Operating System :: OS Independent',
-            'Programming Language :: Python',
-            'Programming Language :: Python :: 3',
-            'Programming Language :: Python :: 3.6',
-            'Programming Language :: Python :: 3.7',
-            'Programming Language :: Python :: 3.8',
-            'Programming Language :: Python :: 3.9',
-            'Programming Language :: Python :: 3.10',
-            'Programming Language :: Python :: 3.11',
-            'Topic :: Software Development :: Libraries :: Python Modules',
-            'Topic :: Internet :: WWW/HTTP',
-            'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
-            'Topic :: System :: Systems Administration :: Authentication/Directory'
-        ],
-        package_data={
-            'cas_server': [
-                'templates/cas_server/*',
-                'static/cas_server/*',
-                'locale/*/LC_MESSAGES/*',
-            ]
-        },
-        keywords=['django', 'cas', 'cas3', 'server', 'sso', 'single sign-on', 'authentication', 'auth'],
-        install_requires=[
-            'Django >= 1.11,<4.3', 'requests >= 2.4', 'requests_futures >= 0.9.5',
-            'lxml >= 3.4', 'six >= 1'
-        ],
-        url="https://github.com/nitmir/django-cas-server",
-        download_url="https://github.com/nitmir/django-cas-server/releases/latest",
-        zip_safe=False,
-        setup_requires=['pytest-runner'],
-        tests_require=['pytest', 'pytest-django', 'pytest-pythonpath', 'pytest-warnings', 'mock>=1'],
-    )
+    },
+    license='BSD',
+)
