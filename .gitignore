@@ -1,37 +1,6 @@
-*.py[cod]
-MANIFEST
-
-# Packages
-/.eggs
-*.egg
-*.egg-info
-/dist
-/build
-/docs/_build/
-/eggs
-/bin
-/var
-/venv
-/sdist
-/develop-eggs
-/.installed.cfg
-
-# Installer logs
-/pip-log.txt
-
-# Unit test / coverage reports
+*.pyc
 .coverage
-.tox
-nosetests.xml
-
-# Translations
-*.mo
-
-# IDEs
-/.idea
-/.geany
-/.mr.developer.cfg
-/.project
-/.pydevproject
-/.settings
-/.release
+*.egg-info
+MANIFEST
+dist
+tags
