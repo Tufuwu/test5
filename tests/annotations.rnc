@@ -1,0 +1,57 @@
+namespace x = "http://www.example.com"
+namespace dc = "http://purl.org/dc/elements/1.1/"
+namespace sch = "http://www.ascc.net/xml/schematron"
+namespace a = "http://relaxng.org/ns/compatibility/annotations/1.0"
+
+x:entity [ name="picture" systemId="picture.jpg" notation="jpg" ]
+dc:title [ "Foo without contents & escaped" ]
+sch:ns [ uri = "http://purl.org/dc/elements/1.1" prefix = "dc" ]
+sch:pattern [
+  name = "Some thing & other"
+  sch:rule [
+    context = "//foo"
+    sch:assert [
+      test = "@bar = /@bar"
+      "attrib matches top-level attribute"
+    ]
+  ]
+  sch:rule [
+    context = "//barfoo"
+    sch:assert [
+      test = "@quick = @fast"
+      "tautology of speediness"
+    ]
+  ]
+  "one literal & next:"
+  "two literal"
+]
+
+[
+  a:documentation [
+    dc:title [ "schema starts here" ]
+  ]
+]
+div {
+  foo = element foo {
+    [ a:defaultValue = "1.0" ] attribute version { "1.0" }
+  }
+}
+
+start = foo
+
+## documentation for definition
+##     indented continuation on the next line
+## # subheading with leading # (perhaps markdown-style head)
+bar = element bar { empty }
+
+baz = element baz {
+  ## documentation for a group
+  (
+    foo,
+    ## documentation for a ref
+    bar
+  )
+}
+
+## combining definition
+baz |= empty

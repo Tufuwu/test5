@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+         ns="http://relaxng.org/ns/structure/1.0"
+         xmlns:rng="http://relaxng.org/ns/structure/1.0"
+         datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <start>
+    <ref name="pattern"/>
+  </start>
+  <define name="pattern">
+    <choice>
+      <element>
+        <name ns="http://relaxng.org/ns/structure/1.0">element</name>
+        <choice>
+          <ref name="nameQName"/>
+          <ref name="nameClass"/>
+        </choice>
+        <interleave>
+          <ref name="common"/>
+          <oneOrMore>
+            <ref name="pattern"/>
+          </oneOrMore>
+        </interleave>
+      </element>
+      <element>
+        <name ns="http://relaxng.org/ns/structure/1.0">attribute</name>
+        <choice>
+          <ref name="nameQName"/>
+          <ref name="nameClass"/>
+        </choice>
+        <interleave>
+          <ref name="common"/>
+          <optional>
+            <ref name="pattern"/>
+          </optional>
+        </interleave>
+      </element>
+      <element>
+        <choice>
+          <name ns="http://relaxng.org/ns/structure/1.0">group</name>
+          <name ns="http://relaxng.org/ns/structure/1.0">interleave</name>
+          <name ns="http://relaxng.org/ns/structure/1.0">choice</name>
+          <name ns="http://relaxng.org/ns/structure/1.0">optional</name>
+          <name ns="http://relaxng.org/ns/structure/1.0">zeroOrMore</name>
+          <name ns="http://relaxng.org/ns/structure/1.0">oneOrMore</name>
+          <name ns="http://relaxng.org/ns/structure/1.0">list</name>
+          <name ns="http://relaxng.org/ns/structure/1.0">mixed</name>
+        </choice>
+        <interleave>
+          <ref name="common"/>
+          <oneOrMore>
+            <ref name="pattern"/>
+          </oneOrMore>
+        </interleave>
+      </element>
+      <element>
+        <choice>
+          <name ns="http://relaxng.org/ns/structure/1.0">ref</name>
+          <name ns="http://relaxng.org/ns/structure/1.0">parentRef</name>
+        </choice>
+        <ref name="nameNCName"/>
+        <ref name="common"/>
+      </element>
+      <element>
+        <choice>
+          <name ns="http://relaxng.org/ns/structure/1.0">empty</name>
+          <name ns="http://relaxng.org/ns/structure/1.0">notAllowed</name>
+          <name ns="http://relaxng.org/ns/structure/1.0">text</name>
+        </choice>
+        <ref name="common"/>
+      </element>
+      <element>
+        <name ns="http://relaxng.org/ns/structure/1.0">data</name>
+        <ref name="type"/>
+        <zeroOrMore>
+          <ref name="param"/>
+        </zeroOrMore>
+        <interleave>
+          <ref name="common"/>
+          <optional>
+            <ref name="exceptPattern"/>
+          </optional>
+        </interleave>
+      </element>
+      <element>
+        <name ns="http://relaxng.org/ns/structure/1.0">value</name>
+        <ref name="commonAttributes"/>
+        <optional>
+          <ref name="type"/>
+        </optional>
+        <data type="string"/>
+      </element>
+      <element>
+        <name ns="http://relaxng.org/ns/structure/1.0">externalRef</name>
+        <ref name="href"/>
+        <ref name="common"/>
+      </element>
+      <element>
+        <name ns="http://relaxng.org/ns/structure/1.0">grammar</name>
+        <interleave>
+          <ref name="common"/>
+          <zeroOrMore>
+            <ref name="grammarContent"/>
+          </zeroOrMore>
+        </interleave>
+      </element>
+    </choice>
+  </define>
+  <define name="param">
+    <element>
+      <name ns="http://relaxng.org/ns/structure/1.0">param</name>
+      <ref name="commonAttributes"/>
+      <ref name="nameNCName"/>
+      <data type="string"/>
+    </element>
+  </define>
+  <define name="exceptPattern">
+    <element>
+      <name ns="http://relaxng.org/ns/structure/1.0">except</name>
+      <interleave>
+        <ref name="common"/>
+        <oneOrMore>
+          <ref name="pattern"/>
+        </oneOrMore>
+      </interleave>
+    </element>
+  </define>
+  <define name="grammarContent">
+    <choice>
+      <ref name="definition"/>
+      <element>
+        <name ns="http://relaxng.org/ns/structure/1.0">div</name>
+        <interleave>
+          <ref name="common"/>
+          <zeroOrMore>
+            <ref name="grammarContent"/>
+          </zeroOrMore>
+        </interleave>
+      </element>
+      <element>
+        <name ns="http://relaxng.org/ns/structure/1.0">include</name>
+        <ref name="href"/>
+        <interleave>
+          <ref name="common"/>
+          <zeroOrMore>
+            <ref name="includeContent"/>
+          </zeroOrMore>
+        </interleave>
+      </element>
+    </choice>
+  </define>
+  <define name="includeContent">
+    <choice>
+      <ref name="definition"/>
+      <element>
+        <name ns="http://relaxng.org/ns/structure/1.0">div</name>
+        <interleave>
+          <ref name="common"/>
+          <zeroOrMore>
+            <ref name="includeContent"/>
+          </zeroOrMore>
+        </interleave>
+      </element>
+    </choice>
+  </define>
+  <define name="definition">
+    <choice>
+      <element>
+        <name ns="http://relaxng.org/ns/structure/1.0">start</name>
+        <optional>
+          <ref name="combine"/>
+        </optional>
+        <interleave>
+          <ref name="common"/>
+          <oneOrMore>
+            <ref name="pattern"/>
+          </oneOrMore>
+        </interleave>
+      </element>
+      <element>
+        <name ns="http://relaxng.org/ns/structure/1.0">define</name>
+        <ref name="nameNCName"/>
+        <optional>
+          <ref name="combine"/>
+        </optional>
+        <interleave>
+          <ref name="common"/>
+          <oneOrMore>
+            <ref name="pattern"/>
+          </oneOrMore>
+        </interleave>
+      </element>
+    </choice>
+  </define>
+  <define name="combine">
+    <attribute>
+      <name ns="">combine</name>
+      <choice>
+        <value>choice</value>
+        <value>interleave</value>
+      </choice>
+    </attribute>
+  </define>
+  <define name="nameClass">
+    <choice>
+      <element>
+        <name ns="http://relaxng.org/ns/structure/1.0">name</name>
+        <ref name="commonAttributes"/>
+        <data type="QName"/>
+      </element>
+      <element>
+        <name ns="http://relaxng.org/ns/structure/1.0">anyName</name>
+        <interleave>
+          <ref name="common"/>
+          <optional>
+            <ref name="exceptNameClass"/>
+          </optional>
+        </interleave>
+      </element>
+      <element>
+        <name ns="http://relaxng.org/ns/structure/1.0">nsName</name>
+        <interleave>
+          <ref name="common"/>
+          <optional>
+            <ref name="exceptNameClass"/>
+          </optional>
+        </interleave>
+      </element>
+      <element>
+        <name ns="http://relaxng.org/ns/structure/1.0">choice</name>
+        <interleave>
+          <ref name="common"/>
+          <oneOrMore>
+            <ref name="nameClass"/>
+          </oneOrMore>
+        </interleave>
+      </element>
+    </choice>
+  </define>
+  <define name="exceptNameClass">
+    <element>
+      <name ns="http://relaxng.org/ns/structure/1.0">except</name>
+      <interleave>
+        <ref name="common"/>
+        <oneOrMore>
+          <ref name="nameClass"/>
+        </oneOrMore>
+      </interleave>
+    </element>
+  </define>
+  <define name="nameQName">
+    <attribute>
+      <name ns="">name</name>
+      <data type="QName"/>
+    </attribute>
+  </define>
+  <define name="nameNCName">
+    <attribute>
+      <name ns="">name</name>
+      <data type="NCName"/>
+    </attribute>
+  </define>
+  <define name="href">
+    <attribute>
+      <name ns="">href</name>
+      <data type="anyURI"/>
+    </attribute>
+  </define>
+  <define name="type">
+    <attribute>
+      <name ns="">type</name>
+      <data type="NCName"/>
+    </attribute>
+  </define>
+  <define name="common">
+    <ref name="commonAttributes"/>
+    <zeroOrMore>
+      <ref name="foreignElement"/>
+    </zeroOrMore>
+  </define>
+  <define name="commonAttributes">
+    <optional>
+      <attribute>
+        <name ns="">ns</name>
+        <data type="string"/>
+      </attribute>
+    </optional>
+    <optional>
+      <attribute>
+        <name ns="">datatypeLibrary</name>
+        <data type="anyURI"/>
+      </attribute>
+    </optional>
+    <zeroOrMore>
+      <ref name="foreignAttribute"/>
+    </zeroOrMore>
+  </define>
+  <define name="foreignElement">
+    <element>
+      <anyName>
+        <except>
+          <nsName ns="http://relaxng.org/ns/structure/1.0"/>
+        </except>
+      </anyName>
+      <zeroOrMore>
+        <choice>
+          <ref name="anyAttribute"/>
+          <text/>
+          <ref name="anyElement"/>
+        </choice>
+      </zeroOrMore>
+    </element>
+  </define>
+  <define name="foreignAttribute">
+    <attribute>
+      <anyName>
+        <except>
+          <choice>
+            <nsName ns="http://relaxng.org/ns/structure/1.0"/>
+            <nsName ns=""/>
+          </choice>
+        </except>
+      </anyName>
+      <text/>
+    </attribute>
+  </define>
+  <define name="anyElement">
+    <element>
+      <anyName/>
+      <zeroOrMore>
+        <choice>
+          <ref name="anyAttribute"/>
+          <text/>
+          <ref name="anyElement"/>
+        </choice>
+      </zeroOrMore>
+    </element>
+  </define>
+  <define name="anyAttribute">
+    <attribute>
+      <anyName/>
+      <text/>
+    </attribute>
+  </define>
+</grammar>

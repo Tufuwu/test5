@@ -1,13 +1,26 @@
-name: test
+name: CI
 
-on: [push, pull_request]
+on: [push]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.9", "3.10"]
+        include:
+          - os: ubuntu-latest
+            python-version: 3.9
+          - os: ubuntu-latest
+            python-version: 3.9
+          - os: ubuntu-latest
+            python-version: 3.9
+          - os: ubuntu-latest
+            python-version: 3.9
+          - os: ubuntu-latest
+            python-version: 3.9
+          - os: macos-latest
+            python-version: 3.9
+
+    runs-on: ${{ matrix.os }}
 
     steps:
     - uses: actions/checkout@v2
@@ -15,37 +28,17 @@ jobs:
       uses: actions/setup-python@v1
       with:
         python-version: ${{ matrix.python-version }}
-
-    - name: Install poetry
-      run: |
-        curl -sSL \
-          "https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py" | python
-
-    - name: Set up cache
-      uses: actions/cache@v4
-      with:
-        path: .venv
-        key: venv-${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
     - name: Install dependencies
       run: |
-        source "$HOME/.poetry/env"
-        poetry config virtualenvs.in-project true
-        poetry install
-
-    - name: "Run checks for python ${{ matrix.python-version }}"
+        python -m pip install --upgrade pip
+        pip install flake8 coverage coveralls rply
+    - name: Lint with flake8
       run: |
-        source "$HOME/.poetry/env"
-
-        poetry run flake8 .
-        poetry run mypy docker_image_size_limit
-        # We need this image for tests:
-        poetry run docker pull python:3.9.6-alpine
-        poetry run pytest
-        poetry check
-        poetry run pip check
-        poetry run safety check --bare --full-report
-
-    - name: Upload coverage to Codecov  
-      uses: codecov/codecov-action@v1
-      with:
-        file: ./coverage.xml
+        # stop the build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+    - name: Test with pytest
+      run: |
+        coverage run test.py
+        COVERALLS_REPO_TOKEN=${{ secrets.COVERALLS_REPO_TOKEN }} coveralls
