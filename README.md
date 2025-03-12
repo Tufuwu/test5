@@ -1,60 +1,75 @@
-# Mesa-Geo: GIS Extension for Mesa Agent-Based Modeling
+# Arista eAPI Python Library
 
-| | |
-| --- | --- |
-| CI/CD | [![GitHub CI](https://github.com/projectmesa/mesa-geo/workflows/build/badge.svg)](https://github.com/projectmesa/mesa-geo/actions) [![Read the Docs](https://readthedocs.org/projects/mesa-geo/badge/?version=stable)](https://mesa-geo.readthedocs.io/stable) [![Codecov](https://codecov.io/gh/projectmesa/mesa-geo/branch/main/graph/badge.svg)](https://codecov.io/gh/projectmesa/mesa-geo) |
-| Package | [![PyPI](https://img.shields.io/pypi/v/mesa-geo.svg)](https://pypi.org/project/mesa-geo) [![PyPI - License](https://img.shields.io/pypi/l/mesa-geo)](https://pypi.org/project/mesa-geo/) [![PyPI - Downloads](https://img.shields.io/pypi/dw/mesa-geo)](https://pypistats.org/packages/mesa-geo) |
-| Meta | [![linting - Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff) [![code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black) [![Hatch project](https://img.shields.io/badge/%F0%9F%A5%9A-Hatch-4051b5.svg)](https://github.com/pypa/hatch) [![DOI](https://zenodo.org/badge/DOI/10.1145/3557989.3566157.svg)](https://doi.org/10.1145/3557989.3566157) |
-| Chat | [![chat](https://img.shields.io/matrix/project-mesa:matrix.org?label=chat&logo=Matrix)](https://matrix.to/#/#project-mesa:matrix.org) |
+[![Build Status](https://travis-ci.org/arista-eosplus/pyeapi.svg?branch=develop)](https://travis-ci.org/arista-eosplus/pyeapi) [![Coverage Status](https://coveralls.io/repos/github/arista-eosplus/pyeapi/badge.svg?branch=develop)](https://coveralls.io/github/arista-eosplus/pyeapi?branch=develop) [![Documentation Status](https://readthedocs.org/projects/pyeapi/badge/?version=latest)](http://readthedocs.org/docs/pyeapi/en/latest/?badge=latest)
 
-Mesa-Geo implements a `GeoSpace` that can host GIS-based `GeoAgents`, which are like normal Agents, except they have a `geometry` attribute that is a [Shapely object](https://shapely.readthedocs.io/en/latest/manual.html) and a `crs` attribute for its Coordinate Reference System. You can use `Shapely` directly to create arbitrary geometries, but in most cases you will want to import your geometries from a file. Mesa-Geo allows you to create GeoAgents from any vector data file (e.g. shapefiles), valid GeoJSON objects or a GeoPandas GeoDataFrame.
+The Python library for Arista's eAPI command API implementation provides a
+client API work using eAPI and communicating with EOS nodes.  The Python
+library can be used to communicate with EOS either locally (on-box) or remotely
+(off-box).  It uses a standard INI-style configuration file to specify one or
+more nodes and connection properties.
 
-## Using Mesa-Geo
+The pyeapi library also provides an API layer for building native Python
+objects to interact with the destination nodes. The API layer is a convenient
+implementation for working with the EOS configuration and is extensible for
+developing custom implementations.
 
-To install Mesa-Geo, run:
-```bash
-pip install -U mesa-geo
-```
+This library is freely provided to the open source community for building
+robust applications using Arista EOS.  Support is provided as best effort
+through Github issues.
 
-Mesa-Geo pre-releases can be installed with:
-```bash
-pip install -U --pre mesa-geo
-```
+## Documentation
 
-You can also use `pip` to install the GitHub version:
-```bash
-pip install -U -e git+https://github.com/projectmesa/mesa-geo.git#egg=mesa-geo
-```
+* [Quickstart] [quickstart]
+* [Installation] [install]
+* [Modules] [modules]
+* [Release Notes] [rns]
+* [Contribute] [contribute]
 
-Or any other (development) branch on this repo or your own fork:
-``` bash
-pip install -U -e git+https://github.com/YOUR_FORK/mesa-geo@YOUR_BRANCH#egg=mesa-geo
-```
+### Building Local Documentation
 
-Take a look at the [examples](https://github.com/projectmesa/mesa-examples/tree/main/gis) repository for sample models demonstrating Mesa-Geo features.
+If you cannot access readthedocs.org you have the option of building the
+documentation locally.
 
-For more help on using Mesa-Geo, check out the following resources:
+1. ``pip install -r dev-requirements.txt``
+2. ``cd docs``
+3. ``make html``
+4. ``open _build/html/index.html``
 
-- [Introductory Tutorial](http://mesa-geo.readthedocs.io/stable/tutorials/intro_tutorial.html)
-- [Docs](http://mesa-geo.readthedocs.io/stable/)
-- [Mesa-Geo Discussions](https://github.com/projectmesa/mesa-geo/discussions)
-- [PyPI](https://pypi.org/project/mesa-geo/)
+# License
 
-## Contributing to Mesa-Geo
+Copyright (c) 2015, Arista Networks EOS+
+All rights reserved.
 
-Want to join the team or just curious about what is happening with Mesa & Mesa-Geo? You can...
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
 
-  * Join our [Matrix chat room](https://matrix.to/#/#mesa-geo:matrix.org) in which questions, issues, and ideas can be (informally) discussed.
-  * Come to a monthly dev session (you can find dev session times, agendas and notes at [Mesa discussions](https://github.com/projectmesa/mesa/discussions).
-  * Just check out the code at [GitHub](https://github.com/projectmesa/mesa-geo/).
+* Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
 
-If you run into an issue, please file a [ticket](https://github.com/projectmesa/mesa-geo/issues) for us to discuss. If possible, follow up with a pull request.
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
 
-If you would like to add a feature, please reach out via [ticket](https://github.com/projectmesa/mesa-geo/issues) or join a dev session (see [Mesa discussions](https://github.com/projectmesa/mesa/discussions)).
-A feature is most likely to be added if you build it!
+* Neither the name of the Arista nor the names of its
+  contributors may be used to endorse or promote products derived from
+  this software without specific prior written permission.
 
-Don't forget to check out the [Contributors guide](https://github.com/projectmesa/mesa-geo/blob/main/CONTRIBUTING.md).
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-## Citing Mesa-Geo
 
-To cite Mesa-Geo in your publication, you can use the [CITATION.bib](https://github.com/projectmesa/mesa-geo/blob/main/CITATION.bib).
+[pyeapi]: https://github.com/arista-eosplus/pyeapi
+[quickstart]: http://pyeapi.readthedocs.org/en/master/quickstart.html
+[install]: http://pyeapi.readthedocs.org/en/master/install.html
+[contribute]: http://pyeapi.readthedocs.org/en/master/contribute.html
+[modules]: http://pyeapi.readthedocs.org/en/master/modules.html
+[support]: http://pyeapi.readthedocs.org/en/master/support.html
+[rns]: http://pyeapi.readthedocs.org/en/master/release-notes.html
