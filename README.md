@@ -1,157 +1,159 @@
-# iocage
+# Bootstrap-Flask
 
-[![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/freebsd/iocage.svg)](http://isitmaintained.com/project/freebsd/iocage "Average time to resolve an issue")
-[![Percentage of issues still open](http://isitmaintained.com/badge/open/freebsd/iocage.svg)](http://isitmaintained.com/project/freebsd/iocage "Percentage of issues still open")
-![Python Version](https://img.shields.io/badge/Python-3.11-blue.svg)
-[![GitHub issues](https://img.shields.io/github/issues/freebsd/iocage.svg)](https://github.com/freebsd/iocage/issues)
-[![GitHub forks](https://img.shields.io/github/forks/freebsd/iocage.svg)](https://github.com/freebsd/iocage/network)
-[![GitHub stars](https://img.shields.io/github/stars/freebsd/iocage.svg)](https://github.com/freebsd/iocage/stargazers)
-[![Twitter](https://img.shields.io/twitter/url/https/github.com/freebsd/iocage.svg?style=social)](https://twitter.com/intent/tweet?text=@iocage)
+![PyPI - License](https://img.shields.io/pypi/l/bootstrap-flask)
+[![Current version on PyPI](https://img.shields.io/pypi/v/bootstrap-flask)](https://pypi.org/project/bootstrap-flask/)
+[![Build status](https://github.com/helloflask/bootstrap-flask/workflows/build/badge.svg)](https://github.com/helloflask/bootstrap-flask/actions)
+[![Coverage Status](https://coveralls.io/repos/github/helloflask/bootstrap-flask/badge.svg?branch=main)](https://coveralls.io/github/helloflask/bootstrap-flask?branch=main)
+[![Open Collective](https://img.shields.io/opencollective/all/bootstrap-flask)](https://opencollective.com/bootstrap-flask)
 
-## A FreeBSD jail manager
+Bootstrap-Flask is a collection of Jinja macros for Bootstrap 4 & 5 and Flask. It helps you to
+render Flask-related data and objects to Bootstrap markup HTML more easily:
 
-iocage is a jail/container manager amalgamating some of the best features and
-technologies the FreeBSD operating system has to offer. It is geared for ease
- of use with a simple and easy to understand command syntax.
+- Render Flask-WTF/WTForms form object to Bootstrap Form.
+- Render data objects (dict or class objects) to Bootstrap Table.
+- Render Flask-SQLAlchemy `Pagination` object to Bootstrap Pagination.
+- etc.
 
-iocage is in the FreeBSD ports tree as sysutils/py-iocage.
-To install using binary packages, simply run: `pkg install sysutils/iocage`
 
 ## Installation
 
-### GitHub:
+```
+$ pip install -U bootstrap-flask
+```
 
-The FreeBSD source tree ***must*** be located at `$SRC_BASE` (`/usr/src` by default) to build from git.
+## Example
 
-- `pkg install python3 git-lite lang/cython3 devel/py-pip`
-- `git clone https://github.com/freebsd/iocage`
-- `make install` as root
+Register the extension:
 
-To install subsequent updates: run `make install` as root.
+```python
+from flask import Flask
+# To follow the naming rule of Flask extension, although
+# this project's name is Bootstrap-Flask, the actual package
+# installed is named `flask_bootstrap`.
+from flask_bootstrap import Bootstrap5
 
-### Ports:
+app = Flask(__name__)
+bootstrap = Bootstrap5(app)
+```
 
-- Build the port as follows: `cd /usr/ports/sysutils/iocage/ ; make install clean`
+Assuming you have a Flask-WTF form like this:
 
-### Pkg:
+```python
+class LoginForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired(), Length(1, 20)])
+    password = PasswordField('Password', validators=[DataRequired(), Length(8, 150)])
+    remember = BooleanField('Remember me')
+    submit = SubmitField()
+```
 
-- It is possible to install pre-built packages using pkg(8) if you are using FreeBSD 10 or above: `pkg install sysutils/iocage`
+Now with the `render_form` macro:
 
-#### Upgrading from `iocage_legacy`:
+```html
+{% from 'bootstrap5/form.html' import render_form %}
+<html>
+<head>
+<!-- Bootstrap CSS -->
+</head>
+<body>
 
-This repository replaces `iocage_legacy`. To upgrade to the current version:
+<h2>Login</h2>
+{{ render_form(form) }}
 
-1. Stop the jails (`service iocage stop; iocage stop ALL`)
-1. Back up your data
-1. Remove the old `iocage` package if it is installed (`pkg delete iocage`)
-1. Install `iocage` using one of the methods above
-1. Migrate the jails. This can be done by running `iocage list` as root
-1. Start the jails (`service iocage onestart`)
+<!-- Bootstrap JS -->
+</body>
+</html>
+```
+
+You will get a form like this with only one line code (i.e. `{{ render_form(form) }}`):
+
+![form rendering](./docs/_static/form-example.png)
+
+When the validation fails, the error messages will be rendered with proper style:
+
+![error form rendering](./docs/_static/error-form-example.png)
+
+Read the [Basic Usage](https://bootstrap-flask.readthedocs.io/en/stable/basic) 
+docs for more details.
+
+
+## Live demo
+
+https://bootstrap-flask-example.azurewebsites.net/
+
+
+## Donate
+
+If you find Bootstrap-Flask useful, please consider
+[donating today](https://opencollective.com/bootstrap-flask/donate). Your donation keeps
+Bootstrap-Flask maintained and updated with Bootstrap.
+
 
 ## Links
 
-- **[iocage Project Website](https://freebsd.github.io/iocage/)**
+- [Documentation](https://bootstrap-flask.readthedocs.io)
+- [Example Application](https://github.com/helloflask/bootstrap-flask/tree/main/examples)
+- [PyPI Releases](https://pypi.org/project/Bootstrap-Flask/)
+- [Changelog](https://github.com/helloflask/bootstrap-flask/blob/main/CHANGES.rst)
+- [Discussions](https://github.com/helloflask/bootstrap-flask/discussions)
 
-## WARNING:
-- Some features of the previous iocage_legacy are either being dropped or simply not ported yet, feel free to open an issue asking about your favorite feature. But please search before opening a new one. PR's welcome for any feature you want!
 
-## Raising an issue:
+## Notes for Bootstrap 4 & 5 support
 
-We _like_ issues! If you are having trouble with `iocage` please open a GitHub [issue](https://github.com/freebsd/iocage/issues) and we will ~~run around with our hair on fire~~ look into it. Before doing so, please give us some information about the situation:
+The Bootstrap 5 support is added in Bootstrap-Flask 2.0 version. Now you can use
+the separate extension class for different Bootstrap major versions.
 
-- Tell us what version of FreeBSD you are using with something like `uname -ro`
-- It would also be helpful if you gave us the output of `iocage --version`
-- Most importantly, try to be detailed. Simply stating "I tried consoling into a jail and it broke" will not help us very much.
-- Use the [Markdown Basics](https://help.github.com/articles/markdown-basics/#code-formatting) GitHub page for more information on how to paste lines of code and terminal output.
+For Bootstrap 4, use the `Bootstrap4` class:
 
-## Submitting a pull request:
+```python
+from flask_bootstrap import Bootstrap4
 
-Please be detailed on the exact use case of your change and a short demo of
-it. Make sure it conforms with PEP-8 and that you supply a test with it if
-relevant. Lines may not be longer then 80 characters.
-
-## FEATURES
-
-- Ease of use
-- Rapid jail creation within seconds
-- Automatic package installation
-- Virtual networking stacks (vnet)
-- Shared IP based jails (non vnet)
-- Transparent ZFS snapshot management
-- Export and import
-- And many more!
-
-----
-
-## QUICK HOWTO
-
-Activate a zpool:
-
-`iocage activate ZPOOL`
-
-*NOTE: ZPOOL is a placeholder. Use `zpool list` and substitute it for the
-zpool you wish to use.*
-
-Fetch a release:
-
-`iocage fetch`
-
-Create a jail:
-
-`iocage create -n myjail ip4_addr="em0|192.168.1.10/24" -r 11.0-RELEASE`
-
-*NOTE: em0 and 11.0-RELEASE are placeholders. Please replace them with your
-real interface (`ifconfig`) and RELEASE chosen during `iocage fetch`.*
-
-Start the jail:
-
-`iocage start myjail`
-
-Congratulations, you have created your first jail with iocage!
-You can now use it like you would a real system.
-Since SSH won't be available by default, `iocage console myjail` is a useful
-spot to begin configuration of your jail.
-
-To see a list of commands available to you now, type `iocage` outside the jail.
-
-----
-
-### REQUIREMENTS
-
-- FreeBSD 11.4-RELEASE amd64 and higher or HardenedBSD/TrueOS
-- ZFS file system
-- Python 3.8+
-- UTF-8 locale (place into your ~/.login_conf):
-
-```plain
-me:\
-        :charset=UTF-8:\
-        :lang=en_US.UTF-8:\
-        :setenv=LC_COLLATE=C:
+# ...
+bootstrap = Bootstrap4(app)
 ```
 
-### Optional
+and import macros from the template path `bootstrap4/`:
 
-- Kernel compiled with:
+```html
+{% from 'bootstrap4/form.html' import render_form %}
+```
 
-        # This is optional and only needed if you need VNET
+For Bootstrap 5, use the `Bootstrap5` class:
 
-        options         VIMAGE # VNET/Vimage support
+```python
+from flask_bootstrap import Bootstrap5
 
-### Helpful Considerations
+# ...
+bootstrap = Bootstrap5(app)
+```
 
-- For the explanations on jail properties read jail(8)
-- Create bridge0 and bridge1 interfaces for VNET jails to attach to.
-- Use `iocage set` to modify properties and `iocage get` to retrieve property
- values
-- Type `iocage COMMAND --help` to see any flags the command supports and their help, for example:
+and import macros from the template path `bootstrap5/`:
 
-        iocage create --help
-        iocage fetch --help
-        iocage list --help
-- If using VNET consider adding the following to `/etc/sysctl.conf` on the host:
+```html
+{% from 'bootstrap5/form.html' import render_form %}
+```
 
-        net.inet.ip.forwarding=1       # Enable IP forwarding between interfaces
-        net.link.bridge.pfil_onlyip=0  # Only pass IP packets when pfil is enabled
-        net.link.bridge.pfil_bridge=0  # Packet filter on the bridge interface
-        net.link.bridge.pfil_member=0  # Packet filter on the member interface
+The `Bootstrap` class and `bootstrap/` template path are deprecated since 2.0
+and will be removed in 3.0.
+
+
+## Migration from Flask-Bootstrap
+
+If you come from Flask-Bootstrap, check out
+[this tutorial](https://bootstrap-flask.readthedocs.io/en/stable/migrate/) on how to
+migrate to this extension.
+
+
+## Contributing
+
+For guidance on setting up a development environment and how to make a
+contribution to Bootstrap-Flask, see the
+[development documentation](https://bootstrap-flask.readthedocs.io/en/stable/#development)
+and Flask's
+[contributing guidelines](https://github.com/pallets/flask/blob/main/CONTRIBUTING.rst).
+
+
+## License
+
+This project is licensed under the MIT License (see the `LICENSE` file for
+details). Some macros were part of Flask-Bootstrap and were modified under
+the terms of its BSD License.
