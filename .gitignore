@@ -1,4 +1,5 @@
-*.o
 *.pyc
-*.so
-*~
+
+*.egg-info/
+build/
+dist/

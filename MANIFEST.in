@@ -1,0 +1,8 @@
+recursive-include partd *.py
+
+include setup.py
+include README.rst
+include LICENSE.txt
+include MANIFEST.in
+include versioneer.py
+include partd/_version.py
