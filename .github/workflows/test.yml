@@ -1,41 +1,53 @@
-name: CI
+name: build
 
 on:
-  workflow_dispatch:
-  pull_request:
   push:
-    branches:
-      - main
-
-permissions:
-  contents: read
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
 jobs:
-  test:
-    name: Test
+  build:
     strategy:
-      fail-fast: false
       matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
         python-version: ["3.9", "3.10"]
-        os: [ubuntu-latest, macos-latest]
-
     runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash -l {0}
+
     steps:
-      - name: Checkout demo
-        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
-
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@0ebf233433c08fb9061af664d501c3f3ff0e9e20
-        with:
-          python-version: ${{ matrix.python-version }}
-          cache: 'pip'
-          cache-dependency-path: 'requirements.txt'
-
-      - name: Install dependencies
-        run: |
-          python3 -m pip install -U pip
-          python3 -m pip install -r requirements.txt
-
-      - name: Run demo
-        run: |
-          python3 run_demo_md.py
+    - uses: actions/checkout@v2
+    - uses: conda-incubator/setup-miniconda@v2
+      with:
+        activate-environment: test
+        channels: conda-forge
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        conda install -n test -q -y pip setuptools setuptools_scm
+    - name: Conda information
+      run: |
+        conda info --all
+        conda list -n test
+    - name: Install psrqpy
+      run: |
+        python -m pip install -e .[test,docs] -vv --no-build-isolation
+    - name: Run test suite
+      run: |
+        pytest --cov=psrqpy
+    - name: Test building docs
+      if: ${{ matrix.os == 'ubuntu-latest' && matrix.python-version == '3.8' }} 
+      run: |
+        cd docs
+        mkdir source/_static
+        make html
+        cd ..
+    - name: Upload coverage to Codecov
+      if: ${{ matrix.os == 'ubuntu-latest' && matrix.python-version == '3.8' }} 
+      uses: codecov/codecov-action@v2
+      with:
+        fail_ci_if_error: true
+        verbose: true
+        name: psrqpy

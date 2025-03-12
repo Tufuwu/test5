@@ -1,256 +1,206 @@
-# in-toto demo [![CI](https://github.com/in-toto/demo/actions/workflows/ci.yml/badge.svg)](https://github.com/in-toto/demo/actions/workflows/ci.yml)
+# PSRQpy
 
-In this demo, we will use in-toto to secure a software supply chain with a very
-simple workflow.  Bob is a developer for a project, Carl packages the software, and
-Alice oversees the project.  So, using in-toto's names for the parties, 
-Alice is the project owner - she creates and signs the software supply chain
-layout with her private key - and Bob and Carl are project functionaries -
-they carry out the steps of the software supply chain as defined in the layout.
+This module aims to provide a python interface for querying the [ATNF pulsar catalogue](http://www.atnf.csiro.au/research/pulsar/psrcat/). It is an unofficial
+package and is not endorsed by or affiliated with the ATNF.
 
-For the sake of demonstrating in-toto, we will have you run all parts of the
-software supply chain.
-This is, you will perform the commands on behalf of Alice, Bob and Carl as well
-as the client who verifies the final product.
+Full documentation of the module can be found [here](http://psrqpy.readthedocs.io/).
 
+Any comments or suggestions are welcome.
 
-## Download and setup in-toto on \*NIX (Linux, OS X, ..)
-__Virtual Environments (optional)__
+## Installation
 
-We highly recommend installing `in-toto` and its dependencies in a
-[`venv`](https://docs.python.org/3/library/venv.html) Python virtual
-environment. Just copy-paste the following snippet to create a virtual
-environment:
+To install the code from source, clone the git repository and run:
+
+```
+pip install .
+```
+
+The module can also be installed from the [PyPI repository](https://pypi.org/project/psrqpy/) using
+`pip` with:
+
+```
+pip install psrqpy
+```
+
+or in a [Conda](https://docs.conda.io/en/latest/) environment using:
+
+```
+conda install -c conda-forge psrqpy
+```
+
+### Requirements
+
+The requirements for installing the code are:
+
+ * [`requests`](http://docs.python-requests.org/en/master/)
+ * [`beautifulsoup4`](https://www.crummy.com/software/BeautifulSoup/bs4/doc/)
+ * [`numpy`](http://www.numpy.org/)
+ * [`scipy`](https://www.scipy.org/)
+ * [`astropy`](http://www.astropy.org/)
+ * [`pandas`](https://pandas.pydata.org/)
+ * [`ads`](https://ads.readthedocs.io/en/latest/)
+ * [`matplotlib`](https://matplotlib.org/)
+
+## Examples
+
+A simple query of the catalogue to, e.g., just return all pulsar frequencies, would be:
+
+```python
+import psrqpy
+
+q = psrqpy.QueryATNF(params='F0')
+
+# get frequencies as an astropy table
+t = q.table
+
+print(t['F0'])
+```
+
+You can query multiple parameters, e.g.:
+
+```python
+import psrqpy
+
+q = psrqpy.QueryATNF(params=['F0', 'F1', 'RAJ', 'DecJ'])
+
+# get values as an astropy table
+t = q.table
+
+print(t['F0'])
+```
+
+You can query specific pulsars, e.g.:
+
+```
+import psrqpy
+
+q = psrqpy.QueryATNF(params=['F0', 'F1', 'RAJ', 'DecJ'], psrs=['J0534+2200', 'J0537-6910'])
+
+# get values as an astropy table
+t = q.table
+
+# print the table
+print(t)
+  JNAME          F0       F0_ERR       F1      F1_ERR     RAJ      RAJ_ERR     DECJ     DECJ_ERR
+                 Hz         Hz       1 / s2    1 / s2                                           
+---------- ------------- ------- ------------- ------ ------------ ------- ------------ --------
+J0534+2200     29.946923   1e-06  -3.77535e-10  2e-15 05:34:31.973   0.005 +22:00:52.06     0.06
+J0537-6910 62.0261895958 1.3e-09 -1.992272e-10  4e-17 05:37:47.416    0.11 -69:10:19.88      0.6
+```
+
+You can set [conditions](http://www.atnf.csiro.au/research/pulsar/psrcat/psrcat_help.html?type=normal#condition) for the searches,
+e.g.:
+
+```python
+import psrqpy
+q = psrqpy.QueryATNF(params=['Jname', 'f0'], condition='f0 > 100 && f0 < 200', assoc='GC')
+```
+
+where `assoc=GC` looks for all pulsars in globular clusters.
+
+When a query is generated the entire catalogue is downloaded and stored in the `QueryATNF` object as
+a pandas [`DataFrame`](https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html).
+The query can therefore be re-used to access data on different parameters, different pulsars, or
+using different conditions, without the need to re-download the catalogue. We may originally want
+to query pulsar frequencies using only frequencies greater than 10 Hz, with
+
+```python
+import psrqpy
+q = psrqpy.QueryATNF(params=['F0'], condition='F0 > 10')
+freqs = q.table['F0']
+```
+
+Using the same `QueryATNF` object we could change to get frequency derivatives for pulsars
+with frequencies less than 10 Hz, with
+
+```python
+q.condition = 'F0 < 10'
+q.query_params = 'F1'
+
+fdot = q.table['F1']
+```
+
+In these cases the whole catalogue (with no conditions applied and all available parameters) stored as a pandas [`DataFrame`](https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html)
+is accessible with
+
+```python
+catalogue = q.catalogue
+```
+
+You can also [generate](http://psrqpy.readthedocs.io/en/latest/query.html#psrqpy.search.QueryATNF.ppdot) a
+_lovely_ period vs. period derivative plot based on the latest catalogue information, using
+just three lines of code, e.g.:
+
+```python
+from psrqpy import QueryATNF
+query = QueryATNF(params=['P0', 'P1', 'ASSOC', 'BINARY', 'TYPE', 'P1_I'])
+query.ppdot(showSNRs=True, showtypes='all')
+```
+
+gives
+
+![PPdot](../main/docs/source/images/ppdot.png)
+
+## Development and Support
+
+Code development is done via the package's [GitHib repository](https://github.com/mattpitkin/psrqpy).
+Any contributions can be made via a [fork and pull request](https://help.github.com/articles/creating-a-pull-request-from-a-fork/) model
+from that repository, and must adhere to the [MIT license](#License). Any problems with the code
+or support requests can be submitted via the repository's [Issue tracker](https://github.com/mattpitkin/psrqpy/issues).
+
+## Test suite
+
+There are tests supplied that cover many of the functions within PSRQpy. These can be run from the
+base directory of the repository (after installing the [`pytest`](https://docs.pytest.org/en/latest/) and
+[`pytest-socket`](https://pypi.org/project/pytest-socket/) modules, e.g., with `pip`) by just calling:
 
 ```bash
-# Create the virtual environment
-python -m venv in-toto-demo
-
-# Activate the virtual environment
-# This will add the prefix "(in-toto-demo)" to your shell prompt
-source in-toto-demo/bin/activate
+pytest
 ```
 
-__Get demo files and install in-toto__
-```bash
-# Fetch the demo repo using git
-git clone https://github.com/in-toto/demo.git
+These tests are not included in the `pip` installed version of the code.
 
-# Change into the demo directory
-cd demo
+## Copyright and referencing for the catalogue
 
-# Install a compatible version of in-toto
-pip install -r requirements.txt
-```
-*Note: If you are having troubles installing in-toto, make sure you have all
-the system dependencies. See the [installation guide on
-in-toto.readthedocs.io](https://in-toto.readthedocs.io/en/latest/installing.html)
-for details.*
+Regarding the use of the catalogue and software behind it, the [following statements](http://www.atnf.csiro.au/research/pulsar/psrcat/download.html) apply:
 
-Inside the demo directory you will find four directories: `owner_alice`,
-`functionary_bob`, `functionary_carl` and `final_product`. Alice, Bob and Carl
-already have RSA keys in each of their directories. This is what you see:
-```bash
-tree  # If you don't have tree, try 'find .' instead
-# the tree command gives you the following output
-# .
-# ├── README.md
-# ├── final_product
-# ├── functionary_bob
-# │   ├── bob
-# │   └── bob.pub
-# ├── functionary_carl
-# │   ├── carl
-# │   └── carl.pub
-# ├── owner_alice
-# │   ├── alice
-# │   ├── alice.pub
-# │   └── create_layout.py
-# ├── requirements.txt
-# ├── run_demo.py
-# └── run_demo_md.py
+> PSRCAT is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. PSRCAT is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+>
+> PSRCAT makes use of "evaluateExpression: A Simple Expression Evaluator". Copyright &copy; 1996 - 1999 Parsifal Software, All Rights Reserved.
+>
+> The programs and databases remain the property of the Australia Telescope National Facility, CSIRO, and are covered by the [CSIRO Legal Notice and Disclaimer](http://www.csiro.au/en/About/Footer/Legal-notice).
+>
+> If you make use of information from the ATNF Pulsar Catalogue in a publication, we would appreciate acknowledgement by reference to the publication "[The ATNF Pulsar Catalogue](http://adsabs.harvard.edu/abs/2005AJ....129.1993M)", R. N. Manchester, G. B. Hobbs, A. Teoh & M. Hobbs, Astronomical Journal, 129, 1993-2006 (2005) and by quoting the web address http://www.atnf.csiro.au/research/pulsar/psrcat for updated versions.
+
+If making use of this code to access the catalogue, or produce plots, I would be grateful if (as well as citing the ATNF pulsar catalogue [paper](http://adsabs.harvard.edu/abs/2005AJ....129.1993M) and [URL](http://www.atnf.csiro.au/research/pulsar/psrcat) given above) you consider citing the [JOSS](http://joss.theoj.org/) [paper](https://doi.org/10.21105/joss.00538) for this software:
+
+```tex
+@article{psrqpy,
+  author = {{Pitkin}, M.},
+   title = "{psrqpy: a python interface for querying the ATNF pulsar catalogue}",
+  volume = 3,
+  number = 22,
+   pages = 538,
+   month = feb,
+    year = 2018,
+ journal = "{Journal of Open Source Software}",
+     doi = {10.21105/joss.00538},
+     url = {https://doi.org/10.21105/joss.00538}
+}
 ```
 
-## Run the demo commands
-Note: if you don't want to type or copy & paste commands and would rather watch
-a script run through the commands, jump to [the last section of this document](#tired-of-copy-pasting-commands)
+## License
 
-### Define software supply chain layout (Alice)
-First, we will need to define the software supply chain layout. To simplify this
-process, we provide a script that generates a simple layout for the purpose of
-the demo.
+This code is licensed under the [MIT License](http://opensource.org/licenses/MIT).
 
-In this software supply chain layout, we have Alice, who is the project
-owner that creates the layout, Bob, who clones the project's repo and
-performs some pre-packaging editing (update version number), and Carl, who uses
-`tar` to package the project sources into a tarball, which
-together with the in-toto metadata composes the final product that will
-eventually be installed and verified by the end user.
+&copy; Matt Pitkin, 2017
 
-```shell
-# Create and sign the software supply chain layout on behalf of Alice
-cd owner_alice
-python create_layout.py
-```
-The script will create a layout, add Bob's and Carl's public keys (fetched from
-their directories), sign it with Alice's private key and dump it to `root.layout`.
-In `root.layout`, you will find that (besides the signature and other information)
-there are three steps, `clone`, `update-version` and `package`, that
-the functionaries Bob and Carl, identified by their public keys, are authorized
-to perform.
-
-### Clone project source code (Bob)
-Now, we will take the role of the functionary Bob and perform the step
-`clone` on his behalf, that is we use in-toto to clone the project repo from GitHub and
-record metadata for what we do. Execute the following commands to change to Bob's
-directory and perform the step.
-
-```shell
-cd ../functionary_bob
-in-toto-run --step-name clone --use-dsse --products demo-project/foo.py --signing-key bob -- git clone https://github.com/in-toto/demo-project.git
-```
-
-Here is what happens behind the scenes:
- 1. In-toto wraps the command `git clone https://github.com/in-toto/demo-project.git`,
- 1. hashes the contents of the source code, i.e. `demo-project/foo.py`,
- 1. adds the hash together with other information to a metadata file,
- 1. signs the metadata with Bob's private key, and
- 1. stores everything to `clone.[Bob's keyid].link`.
-
-### Update version number (Bob)
-Before Carl packages the source code, Bob will update
-a version number hard-coded into `foo.py`. He does this using the `in-toto-record` command,
-which produces the same link metadata file as above but does not require Bob to wrap his action in a single command.
-So first Bob records the state of the files he will modify:
-
-```shell
-# In functionary_bob directory
-in-toto-record start --step-name update-version --use-dsse --signing-key bob --materials demo-project/foo.py
-```
-
-Then Bob uses an editor of his choice to update the version number in `demo-project/foo.py`, e.g.:
-
-```shell
-sed -i.bak 's/v0/v1/' demo-project/foo.py && rm demo-project/foo.py.bak
-```
-
-And finally he records the state of files after the modification and produces
-a link metadata file called `update-version.[Bob's keyid].link`.
-```shell
-# In functionary_bob directory
-in-toto-record stop --step-name update-version --use-dsse --signing-key bob --products demo-project/foo.py
-```
-
-Bob has done his work and can send over the sources to Carl, who will create
-the package for the user.
-
-```shell
-# Bob has to send the update sources to Carl so that he can package them
-cp -r demo-project ../functionary_carl/
-```
-
-### Package (Carl)
-Now, we will perform Carl’s `package` step by executing the following commands
-to change to Carl's directory and create a package of the software project
-
-```shell
-cd ../functionary_carl
-in-toto-run --step-name package --use-dsse --materials demo-project/foo.py --products demo-project.tar.gz --signing-key carl -- tar --exclude ".git" -zcvf demo-project.tar.gz demo-project
-```
-
-This will create another step link metadata file, called `package.[Carl's keyid].link`.
-It's time to release our software now.
-
-
-### Verify final product (client)
-Let's first copy all relevant files into the `final_product` that is
-our software package `demo-project.tar.gz` and the related metadata files `root.layout`,
-`clone.[Bob's keyid].link`, `update-version.[Bob's keyid].link` and `package.[Carl's keyid].link`:
-```shell
-cd ..
-cp owner_alice/root.layout functionary_bob/clone.210dcc50.link functionary_bob/update-version.210dcc50.link functionary_carl/package.be06db20.link functionary_carl/demo-project.tar.gz final_product/
-```
-And now run verification on behalf of the client:
-```shell
-cd final_product
-# Fetch Alice's public key from a trusted source to verify the layout signature
-# Note: The functionary public keys are fetched from the layout
-cp ../owner_alice/alice.pub .
-in-toto-verify --layout root.layout --verification-keys alice.pub
-```
-This command will verify that
- 1. the layout has not expired,
- 2. was signed with Alice’s private key,
-<br>and that according to the definitions in the layout
- 3. each step was performed and signed by the authorized functionary
- 4. the recorded materials and products follow the artifact rules and
- 5. the inspection `untar` finds what it expects.
-
-
-From it, you will see the meaningful output `PASSING` and a return value
-of `0`, that indicates verification worked out well:
-```shell
-echo $?
-# should output 0
-```
-
-### Tampering with the software supply chain
-Now, let’s try to tamper with the software supply chain.
-Imagine that someone got a hold of the source code before Carl could package it.
-We will simulate this by changing `demo-project/foo.py` on Carl's machine
-(in `functionary_carl` directory) and then let Carl package and ship the
-malicious code.
-
-```shell
-cd ../functionary_carl
-echo something evil >> demo-project/foo.py
-```
-Carl thought that this is the genuine code he got from Bob and
-unwittingly packages the tampered version of foo.py
-
-```shell
-in-toto-run --step-name package --use-dsse --materials demo-project/foo.py --products demo-project.tar.gz --signing-key carl -- tar --exclude ".git" -zcvf demo-project.tar.gz demo-project
-```
-and ships everything out as final product to the client:
-```shell
-cd ..
-cp owner_alice/root.layout functionary_bob/clone.210dcc50.link functionary_bob/update-version.210dcc50.link functionary_carl/package.be06db20.link functionary_carl/demo-project.tar.gz final_product/
-```
-
-### Verifying the malicious product
-
-```shell
-cd final_product
-in-toto-verify --layout root.layout --verification-keys alice.pub
-```
-This time, in-toto will detect that the product `foo.py` from Bob's `update-version`
-step was not used as material in Carl's `package` step (the verified hashes
-won't match) and therefore will fail verification an return a non-zero value:
-```shell
-echo $?
-# should output 1
-```
-
-
-### Wrapping up
-Congratulations! You have completed the in-toto demo! This exercise shows a very
-simple case in how in-toto can protect the different steps within the software
-supply chain. More complex software supply chains that contain more steps can be
-created in a similar way. You can read more about what in-toto protects against
-and how to use it on [in-toto's Github page](https://in-toto.github.io/).
-
-## Cleaning up and automated run through
-### Clean slate
-If you want to run the demo again, you can use the following script to remove all the files you created above.
-
-```bash
-cd .. # You have to be the demo directory
-python run_demo.py -c
-```
-
-### Tired of copy-pasting commands?
-The same script can be used to sequentially execute all commands listed above. Just change into the `demo` directory, run `python run_demo.py` without flags and observe the output.
-
-```bash
-# In the demo directory
-python run_demo.py
-```
+[![PyPI version](https://badge.fury.io/py/psrqpy.svg)](https://badge.fury.io/py/psrqpy)
+[![Anaconda-Server Badge](https://anaconda.org/conda-forge/psrqpy/badges/version.svg)](https://anaconda.org/conda-forge/psrqpy)
+[![version](https://img.shields.io/pypi/pyversions/psrqpy.svg)](https://pypi.org/project/psrqpy/)
+[![Build Status](https://github.com/mattpitkin/psrqpy/workflows/build/badge.svg)](https://github.com/mattpitkin/psrqpy/actions?query=workflow%3Abuild)
+[![codecov](https://codecov.io/gh/mattpitkin/psrqpy/branch/master/graph/badge.svg)](https://codecov.io/gh/mattpitkin/psrqpy)
+[![Documentation Status](https://readthedocs.org/projects/psrqpy/badge/?version=latest)](http://psrqpy.readthedocs.io/en/latest/?badge=latest)
+[![status](http://joss.theoj.org/papers/711dc5566159f6e9f8ea5d07dbfaf5d2/status.svg)](http://joss.theoj.org/papers/711dc5566159f6e9f8ea5d07dbfaf5d2)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1489692.svg)](https://doi.org/10.5281/zenodo.1489692)
+[![ASCL](https://img.shields.io/badge/ascl-1812.017-blue.svg?colorB=262255)](http://ascl.net/1812.017)
