@@ -1,0 +1,138 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "patternProperties": {
+    "^__[a-z]+__$": {}
+  },
+  "properties": {
+    "__type__": {
+      "enum": [ "scalebar" ]
+    },
+    "include": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "align": {
+      "type": "string",
+      "enum": [ "left", "center", "right" ],
+      "additionalProperties": false,
+      "metadata": {
+        "minVersion": 5.2
+      }
+    },
+    "backgroundcolor": {
+      "$ref": "color.json"
+    },
+    "color": {
+      "$ref": "color.json"
+    },
+    "imagecolor": {
+      "$ref": "color.json"
+    },
+    "interlace": {
+      "type": "boolean",
+      "metadata": {
+        "maxVersion": 7.6
+      }
+    },
+    "intervals": {
+      "default": 4,
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 100
+    },
+    "labels": {
+      "type": "array",
+      "items": {
+        "$ref": "label.json"
+      },
+      "minItems": 0,
+      "maxItems": 1
+    },
+    "outlinecolor": {
+      "$ref": "color.json"
+    },
+    "position": {
+      "$ref": "position.json"
+    },
+    "postlabelcache": {
+      "type": "boolean"
+    },
+    "size": {
+      "default": [ 200, 3 ],
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 2,
+        "maximum": 1000
+      },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "status": {
+      "default": "off",
+      "type": "string",
+      "enum": [ "on", "off", "embed" ]
+    },
+    "style": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "transparent": {
+      "allOf": [
+        {
+          "$ref": "onoff.json"
+        }
+      ]
+    },
+    "units": {
+      "default": "miles",
+      "$ref": "sizeunits.json"
+    },
+    "extent": {
+      "$ref": "extent.json"
+    },
+    "image": {
+      "type": "string",
+      "description": "filename"
+    },
+    "marker": {
+      "oneOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "markersize": {
+      "type": "integer"
+    },
+    "minboxsize": {
+      "type": "integer"
+    },
+    "maxboxsize": {
+      "type": "integer"
+    },
+    "offset": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": -50,
+        "maximum": 50
+      },
+      "minItems": 2,
+      "maxItems": 2,
+      "metadata": {
+        "minVersion": 7.2
+      }
+    },
+    "outlinecolor": {
+      "$ref": "color.json"
+    }
+  }
+}

@@ -1,0 +1,21 @@
+colorama
+docutils
+flake8
+# git+git://github.com/lark-parser/lark.git#egg=lark
+pluggy
+py
+pydot
+pyparsing
+pytest
+pytest-cov
+virtualenv
+glob2
+coveralls
+sphinx
+black
+mypy
+types-jsonschema
+
+# for demo scripts
+# Pillow
+shapely

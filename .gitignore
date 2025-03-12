@@ -1,47 +1,23 @@
-nosetests.json
-.ropeproject
-.coverage
-.DS_Store
-
-# editor tmp files
-*~
-*.kate-swp
-
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-
-# C extensions
-*.so
-*.c
-
-# Distribution / packaging
-.Python
-env/
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-*.egg-info/
-.installed.cfg
-*.egg
-
-# PyInstaller
-#  Usually these files are written by a python script from a template
-#  before PyInstaller builds the exe, so as to inject date/other infos into it.
-*.manifest
-*.spec
-
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
-
-# other
-.directory
-.ipynb_checkpoints
+/notes.private.txt
+/mappyfile.sln
+/mappyfile.v12.suo
+*.pyc
+cache
+/Notes.ignore.txt
+/.pypirc
+/build/*
+/dist/*
+/mappyfile.egg-info/*
+/prospector.log
+/docs/_build/*
+.pypirc
+/.vs/mappyfile/v15/.suo
+/.tox
+/.eggs
+/.vs/*
+/.venv
+/.coverage
+/tests/mapfiles/large_map2.map
+/.vscode
+/mappyfile.pyproj.user
+_build
