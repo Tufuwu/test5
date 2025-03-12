@@ -1,0 +1,36 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:five="http://namespaces.zope.org/five"
+    xmlns:plone="http://namespaces.plone.org/plone"
+    >
+
+  <include file="meta.zcml" />
+  <subscriber
+      for="ZPublisher.interfaces.IPubStart"
+      handler=".events.subscriber_mark_as_api_request"
+      />
+
+  <include file="patches.zcml" />
+
+  <adapter factory=".traverse.RESTTraverse" />
+
+  <adapter
+      factory=".traverse.MarkAsRESTTraverser"
+      for="*
+           zope.publisher.interfaces.IRequest"
+      name="api"
+      />
+
+  <adapter
+      factory=".errors.ErrorHandling"
+      provides="zope.interface.Interface"
+      name="index.html"
+      />
+
+  <adapter
+      factory=".explicitacquisition.rest_allowed"
+      provides="plone.rest.interfaces.IShouldAllowAcquiredItemPublication"
+      />
+
+</configure>

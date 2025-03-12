@@ -1,2 +1,15 @@
-include LICENSE
-include README.md
+graft src/plone/rest
+include *.rst
+exclude *.cfg
+exclude *.yml
+exclude .flake8
+exclude bootstrap-buildout.py
+exclude Makefile
+exclude requirements.txt
+exclude requirements-*.txt
+exclude CODEOWNERS
+exclude .pre-commit-config.yaml
+global-exclude *.pyc
+include pyproject.toml
+recursive-exclude news *
+exclude news

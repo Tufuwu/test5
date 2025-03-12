@@ -1,0 +1,17 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:monkey="http://namespaces.plone.org/monkey"
+    i18n_domain="collective.monkeypatcher"
+    >
+
+  <include package="collective.monkeypatcher" />
+
+  <monkey:patch
+      original="__before_publishing_traverse__"
+      replacement=".patches.__before_publishing_traverse__"
+      class="Products.CMFCore.DynamicType.DynamicType"
+      description="Disables DynamicType traversal hook for REST requests."
+      preserveOriginal="true"
+      />
+
+</configure>
