@@ -1,4 +1,7 @@
-include VERSION
-include *.txt
-recursive-include docs *.bat *.py *.rst
-include docs/Makefile
+include README.rst
+include CHANGELOG.rst
+include LICENSE.rst
+
+prune tests
+exclude .gitignore
+global-exclude *.pyc

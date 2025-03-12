@@ -1,47 +1,37 @@
-name: Run tests
+name: Test
 
-on: [pull_request, workflow_dispatch]
+on: [push, pull_request, workflow_dispatch]
+
+env:
+  FORCE_COLOR: 1
 
 jobs:
-  run-tests:
-    strategy:
-      matrix:
-        runtime: ['2.7', '3.6', '3.8', 'pypy3.8']
-        os: ['ubuntu-latest', 'windows-latest']
-
+  test:
     runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.9", "3.10"]
+        os: [windows-latest, macos-latest, ubuntu-latest]
 
     steps:
-    - name: Clone the source
-      uses: actions/checkout@v3
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ matrix.runtime }}
-    - name: Install dev dependencies
-      run: python -m pip install -r dev_requirements.txt
-    - name: Install sat-solver
-      run: python -m pip install .
-    - name: Run tests
-      run: haas simplesat
+      - uses: actions/checkout@v3
 
-  build-docs:
-    runs-on: ubuntu-latest
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: docs/requirements.txt
 
-    steps:
-    - name: Clone the source
-      uses: actions/checkout@v3
-    - name: Install necessary apt-get packages
-      run: |
-        sudo apt-get update
-        sudo apt-get install graphviz
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.9'
-    - name: Install doc dependencies
-      run: python -m pip install -r doc_requirements.txt
-    - name: Install sat-solver
-      run: python -m pip install .
-    - name: Build docs
-      run: cd docs && make html
+      - name: Install dependencies
+        run: |
+          python -m pip install -U pip
+          python -m pip install -U wheel
+          python -m pip install -r docs/requirements.txt
+          python -m pip install -U pytest
+          python -m pip install -e .
+
+      - name: Test
+        run: |
+          pytest
