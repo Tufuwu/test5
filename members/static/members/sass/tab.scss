@@ -1,0 +1,34 @@
+@use "definitions";
+
+.tabs {
+    > ul {
+        display: flex;
+        list-style-type: none;
+        padding: 0 10px;
+        align-items: stretch;
+        @extend %bg-primary;
+
+        @include definitions.for-phone {
+            flex-wrap: wrap;
+        }
+        li {
+            width: 100%;
+            border-radius: 0.5em;
+            cursor: pointer;
+            background-color: definitions.$primary-color-muted;
+            display: flex;
+            justify-content: center;
+            text-align: center;
+            align-items: center;
+            padding: 20px 0;
+            font-size: 1.5em;
+            box-shadow: 0 0 2px black inset;
+            margin: 10px 5px;
+            &.tab-active {
+                color: black;
+                background-color: definitions.$yellow;
+                text-decoration: none;
+            }
+        }
+    }
+}

@@ -1,25 +1,47 @@
-FROM python:3.11.5-slim
+FROM python:3.10
+WORKDIR /app
 
-ENV PYTHONFAULTHANDLER=1 \
-    PYTHONUNBUFFERED=1 \
-    PYTHONDONTWRITEBYTECODE=1 \
-    PIP_DISABLE_PIP_VERSION_CHECK=on \
-    UV_NO_SYNC=1 \
-    UV_COMPILE_BYTECODE=1
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+    apt-get update && apt-get install -y \
+    graphviz \
+    nodejs
 
-RUN apt-get update && apt-get install -y --no-install-recommends make git
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
-ENV VIRTUAL_ENV=/opt/venv
+RUN npm install -g npm
 
-RUN uv venv $VIRTUAL_ENV --python 3.13
+# This is not a nice way to install npm packages, but it is the
+# closest it gets similar to venv-way of installing project-specific
+# packages.
+RUN mkdir -p /nodeapp
+WORKDIR /nodeapp
+COPY package.json package.json
+COPY package-lock.json package-lock.json
+RUN npm install
+WORKDIR /app
 
-ENV UV_PROJECT_ENVIRONMENT=$VIRTUAL_ENV
+COPY pyproject.toml  pyproject.toml
+COPY poetry.lock poetry.lock
 
-WORKDIR /usr/local/src/hexlet-friends
+ENV POETRY_VIRTUALENVS_CREATE false
 
-RUN git config --global --add safe.directory "$(pwd)"
+RUN pip install --upgrade pip \
+    && pip install poetry \
+    && poetry install
 
-COPY pyproject.toml ./
 
-RUN uv sync
+
+
+EXPOSE 8000
+
+
+COPY entrypoint.sh entrypoint.sh
+ENTRYPOINT ["/app/entrypoint.sh"]
+
+# Force stdin, stdout and stderr to be totally unbuffered.
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+COPY . /app
+
+# Set the default command to be executed.
+CMD gunicorn forenings_medlemmer.wsgi:application --bind 0.0.0.0:$PORT

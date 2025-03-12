@@ -1,15 +1,1 @@
-.venv/
-.idea/
-.vscode/
-.github/
-.devcontainer/
-**/__pycache__/
-staticfiles/
-htmlcov/
-
-.env
-.python-version
-*.sqlite3
-*.bak
-**/*.mo
-.coverage
+/node_modules

@@ -1,0 +1,56 @@
+@use 'definitions';
+
+nav {
+    @extend %container;
+    @extend %bg-primary;
+    padding: 0 5%;
+    display: flex;
+    align-items: center;
+    font-family: definitions.$header_font;
+    img {
+        width: 50px;
+    }
+    // Desktop horizontal nav bar
+    @include definitions.for-phone {
+        flex-direction: column;
+        justify-content: center;
+    }
+    @include definitions.for-desktop {
+        flex-direction: row;
+    }
+    > a {
+        @extend %rounded-rect;
+        color: white;
+        padding: 0 10px;
+        text-decoration: none;
+        &:hover {
+            color: #cccccc;
+        }
+        @include definitions.for-phone {
+            // Bigger buttons on phone
+            font-size: 24px;
+            padding: 15px 0;
+            margin: 15px 0;
+            width: 100%;
+            border: 1px solid white;
+            text-align: center !important;
+        }
+    }
+    > .account-sep {
+        text-align: right;
+        flex-grow: 2;
+    }
+}
+
+.inactive {
+    display: none;
+}
+
+#toggle {
+    @include definitions.for-desktop {
+        display: none;
+    }
+    @include definitions.for-phone {
+        display: inline;
+    }
+}

@@ -1,28 +1,25 @@
-name: CI
+name: Run tests & Analyse code
 
 on: [push, pull_request]
 
 jobs:
-  build:
+  Test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v1
+      - uses: actions/checkout@v1
+      - name: Setup Enviroment
+        run: cp .env.example .env
+      - name: Builds the stack
+        run: docker-compose build
+      - name: Test
+        run: docker-compose run web ./manage.py test
+      - name: Check formatting (Black)
+        run: docker-compose run web black --check .
+      - name: Static error check (Flake8)
+        run: docker-compose run web flake8
+      - name: Create and upload UML diagram
+        run: mkdir -p UML && docker-compose run web ./manage.py graph_models members -o UML/UML_diagram.png
+      - uses: actions/upload-artifact@v4
         with:
-          python-version: 3.9
-      - uses: actions/cache@v4
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-      - name: Install dependencies
-        run: |
-          pip install poetry
-          make install
-      - name: Run checks
-        run: make check
-        env:
-          SECRET_KEY: secret
-          GITHUB_AUTH_TOKEN: secret
-          GITHUB_WEBHOOK_TOKEN: secret
+          name: UML_diagram.png
+          path: UML
