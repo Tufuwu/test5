@@ -1,38 +1,51 @@
-# This workflow will install Python dependencies, run tests and lint with a single version of Python
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+name: CI
 
-name: Tests & Checks
-
+# Controls when the action will run.
 on:
-   push:
-     branches: [ "master" ]
-   pull_request:
-     branches: [ "master" ]
- 
-permissions:
-   contents: read
- 
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-   build:
- 
-     runs-on: ubuntu-latest
 
-     strategy:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    strategy:
       matrix:
-        python: ["3.9", "3.10"]
+        include:
+          - PY_VER: py39
+            python-version: 3.9
 
-     steps:
-     - uses: actions/checkout@v3
-     - name: Set up Python
-       uses: actions/setup-python@v3
-       with:
-        python-version: ${{matrix.python}}
-     - name: Install dependencies
-       run: |
-        python -m pip install --upgrade pip
-        pip install tox
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-     - name: Check with linters
-       run: tox -e lint
-     - name: Test with tox
-       run: tox -e py
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{matrix.python-version}}
+
+      - name: Install test dependencies
+        run: pip install tox coveralls
+
+      - name: Run lint
+        run: tox run -e lint;
+
+      - name: Run unit tests
+        run: tox run -e ${{matrix.PY_VER}};
+
+      - name: "Upload coverage"
+        if: ${{ matrix.PY_VER == 'py39' }}
+        run: coveralls
+        with:
+          fail_ci_if_error: true
+          verbose: true

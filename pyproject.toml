@@ -1,53 +1,28 @@
 [build-system]
-requires = [
-  "hatch-vcs>=0.3",
-  "hatchling>=1.12.2",
-]
+requires = ["hatchling"]
 build-backend = "hatchling.build"
 
+[tool.hatch.build]
+include = ["encyclopaedia/**"]
+
+[tool.hatch.version]
+path = "encyclopaedia/version.py"
+
 [project]
-name = "niet"
+name = "renpy-encyclopaedia"
 authors = [
-    {name = "Hervé Beraud", email = "herveberaud.pro@gmail.com"},
+  { name="jsfehler" },
 ]
-description = "A command-line tool to work with YAML, JSON, and TOML files."
-readme = "README.md"
+description = "A Ren'Py plugin to create an Encyclopaedia/Glossary/Bestiary or similar system."
+readme = "README.rst"
 requires-python = ">=3.9"
-license = {text = "MIT"}
-url.Homepage = "https://github.com/openuado/niet"
-url.Source = "https://github.com/openuado/niet"
-url.Tracker = "https://github.com/openuado/niet/issues"
 classifiers = [
-    "Environment :: Console",
-    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
-    "Programming Language :: Python",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: 3.13",
-    "Topic :: Software Development",
-    "Topic :: Utilities"
 ]
 dynamic = ["version"]
-dependencies = [
-    "pyyaml>=5.1",
-    "jmespath>=0.9.4",
-    "pytoml", # (hberaud) Remove it when support of python < 3.11 are removed
-]
 
-[project.optional-dependencies]
-dev = ["black", "isort", "pip-tools", "build", "twine", "pre-commit", "commitizen"]
-
-[project.scripts]
-niet = "niet.__main__:main"
-
-[options.packages.find]
-where = "niet"
-exclude = "tests*"
-
-[tool.hatch]
-version.source = "vcs"
+[project.urls]
+"Homepage" = "https://github.com/jsfehler/renpy-encyclopaedia"
+"Bug Tracker" = "https://github.com/jsfehler/renpy-encyclopaedia/issues"

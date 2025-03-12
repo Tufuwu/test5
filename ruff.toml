@@ -1,0 +1,82 @@
+exclude = ["docs"]
+line-length = 99
+
+[lint.mccabe]
+max-complexity = 8
+
+[lint.per-file-ignores]
+"**/tests/*" = [
+"ANN001",
+"ANN002",
+"ANN003",
+"ANN201",
+"ANN202",
+"D",
+"B018",
+"PLR2004",
+"PLW0603",
+"PT011",
+"S101",
+]
+"**/encyclopaedia/encyclopaedia_ren.py" = ["N802"]
+"**/encyclopaedia/book/book_ren.py" = ["N802"]
+
+[lint.pydocstyle]
+convention = "google"
+
+[lint]
+select = [
+"A",
+"ANN",
+"B",
+"BLE",
+"C4",
+"COM",
+"C90",
+"D",
+"E",
+"ERA",
+"F",
+"FURB",
+"N",
+"PERF",
+"PIE",
+"PL",
+"PT",
+"PTH",
+"PYI",
+"R",
+"RET",
+"RUF",
+"S",
+"SLOT",
+"TID",
+"T20",
+"TRY",
+"UP",
+"W",
+"YTT",
+]
+
+ignore = [
+"ANN401",
+"B026",
+"D100",
+"D107",
+"D204",
+"D205",
+"D413",
+"D415",
+"F405",
+"F821",
+"PERF402",
+"PIE790",
+"PLR0913",
+"RET504",
+"RET505",
+"RET506",
+"RUF010",
+"TID252",
+"TRY003",
+"UP037",
+]
