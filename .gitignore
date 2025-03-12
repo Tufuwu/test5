@@ -1,0 +1,15 @@
+.DS_Store
+.cache
+.vscode
+.venv
+*.egg-info
+docs/_build
+.eggs
+.ipynb_checkpoints
+.pytest_cache
+__pycache__
+venv
+.vscode
+dist
+examples/result.geojson
+build
