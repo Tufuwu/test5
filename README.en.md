@@ -19,8 +19,7 @@ ROS 2 package suite of CRANE-X7.
     - [Build from source](#build-from-source)
   - [Quick Start](#quick-start)
   - [Packages](#packages)
-  - [ライセンス](#ライセンス)
-  - [開発について](#開発について)
+  - [License](#license)
 
 ## Supported ROS 2 distributions
 
@@ -36,8 +35,8 @@ ROS 2 package suite of CRANE-X7.
 ## Requirements
 
 - CRANE-X7
-  - [製品ページ](https://rt-net.jp/products/crane-x7/)
-  - [ウェブショップ](https://www.rt-shop.jp/index.php?main_page=product_info&products_id=3660)
+  - [Product Introduction](https://rt-net.jp/products/crane-x7/)
+  - [Web Shop](https://www.rt-shop.jp/index.php?main_page=product_info&products_id=3660&language=en)
 - Linux OS
   - Ubuntu 24.04
 - ROS
@@ -77,46 +76,37 @@ $ ros2 launch crane_x7_examples example.launch.py example:='gripper_control'
 # Press [Ctrl-c] to terminate.
 ```
 
-詳細は[crane_x7_examples](./crane_x7_examples/README.md)を参照してください。
+Please refer to [crane_x7_examples](./crane_x7_examples/README.md) for details.
 
 ## Packages
 
 - crane_x7_control
   - [README](./crane_x7_control/README.md)
-  - CRANE-X7を制御するパッケージです
-  - USB通信ポートの設定方法をREAMDEに記載してます
+  - This package includes a hardware driver for CRANE-X7.
 - crane_x7_examples
   - [README](./crane_x7_examples/README.md)
-  - CRANE-X7のC++サンプルコード集です
+  - This package includes C++ example codes for CRANE-X7.
 - crane_x7_examples_py
   - [README](./crane_x7_examples_py/README.md)
-  - CRANE-X7のPythonサンプルコード集です  
+  - This package includes Python example codes for CRANE-X7.
 - crane_x7_gazebo
   - [README](./crane_x7_gazebo/README.md)
-  - CRANE-X7のGazeboシミュレーションパッケージです
+  - This package includes Gazebo simulation environments for CRANE-X7.
 - crane_x7_moveit_config
   - [README](./crane_x7_moveit_config/README.md)
-  - CRANE-X7の`moveit2`設定ファイルです
-- crane_x7_description (外部パッケージ)
-  - [README](https://github.com/rt-net/crane_x7_description/blob/ros2/README.md)
-  - CRANE-X7のモデルデータ（xacro）を定義するパッケージです
+  - This package includes configuration files for `moveit2`.
+- crane_x7_description (external package)
+  - [README](https://github.com/rt-net/crane_x7_description/blob/ros2/README.en.md)
+  - This package includes a model data (xacro) of CRANE-X7.
 
-## ライセンス
+---
+
+## License
 
 (C) 2018 RT Corporation \<support@rt-net.jp\>
 
-各ファイルはライセンスがファイル中に明記されている場合、そのライセンスに従います。
-特に明記されていない場合は、Apache License, Version 2.0に基づき公開されています。  
-ライセンスの全文は[LICENSE](./LICENSE)または[https://www.apache.org/licenses/LICENSE-2.0](https://www.apache.org/licenses/LICENSE-2.0)から確認できます。
+This repository is licensed under the Apache License, Version 2.0, see [LICENSE](./LICENSE).  
+Unless attributed otherwise, everything in this repository is under the Apache License, Version 2.0.
 
-本パッケージが依存する[crane_x7_description](https://github.com/rt-net/crane_x7_description/tree/ros2)には株式会社アールティの非商用ライセンスが適用されています。
-詳細は[crane_x7_description/LICENSE](https://github.com/rt-net/crane_x7_description/blob/ros2/LICENSE)を参照してください。
-
-## 開発について
-
-- 本ソフトウェアはオープンソースですが、開発はオープンではありません。
-- 本ソフトウェアは基本的にオープンソースソフトウェアとして「AS IS」（現状有姿のまま）で提供しています。
-- 本ソフトウェアに関する無償サポートはありません。
-- バグの修正や誤字脱字の修正に関するリクエストは常に受け付けていますが、
-それ以外の機能追加等のリクエストについては社内のガイドラインを優先します。
-詳しくは[コントリビューションガイドライン](./CONTRIBUTING.md)に従ってください。
+The crane_x7_ros depends on [crane_x7_description](https://github.com/rt-net/crane_x7_description/tree/ros2) package.
+The RT Corporation's [NON-COMMERCIAL LICENSE](https://github.com/rt-net/crane_x7_description/blob/ros2/LICENSE) applies to the package.
