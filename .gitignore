@@ -1,16 +1,17 @@
-# tox/cache
-.tox/
-.cache/
-**/__pycache__/
-
-# coverage
-htmlcov/
+.idea
+.pytest_cache
 .coverage
+htmlcov
+.nox
+coverage.xml
+.python-version
 
-# setuptools
-build/
-dist/
-*.egg-info/
-
+# byte-compiled / optimized
+__pycache__
 *.pyc
-*.sublime-workspace
+*.egg-info
+
+# packaging / distribution
+site
+dist
+build

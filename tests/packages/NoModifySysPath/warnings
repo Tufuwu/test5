@@ -1,3 +1,0 @@
-- Modifying sys.path is usually a bad idea and can interfere with other packages. Consider using relative imports instead.
-    File: plugin.py
-    Line: 3, Column: 1

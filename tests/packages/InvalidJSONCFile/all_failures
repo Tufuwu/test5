@@ -1,3 +1,0 @@
-- Invalid JSON (with comments)
-    File: invalid.sublime-settings
-    Exception: Expecting property name enclosed in double quotes: line 2 column 5 (char 6)

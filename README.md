@@ -1,67 +1,56 @@
-# st_package_reviewer
+# click-params
 
-[![Build Status](https://travis-ci.org/packagecontrol/st_package_reviewer.svg?branch=master)](https://travis-ci.org/packagecontrol/st_package_reviewer)
-[![Coverage Status](https://coveralls.io/repos/github/packagecontrol/st_package_reviewer/badge.svg?branch=master)](https://coveralls.io/github/packagecontrol/st_package_reviewer?branch=master)
-[![PyPI](https://img.shields.io/pypi/v/st-package-reviewer.svg)](https://pypi.python.org/pypi/st-package-reviewer)
-[![Python Versions](https://img.shields.io/pypi/pyversions/st-package-reviewer.svg)](https://pypi.python.org/pypi/st-package-reviewer)
+[![Pypi version](https://img.shields.io/pypi/v/click-params.svg)](https://pypi.org/project/click-params/)
+![](https://github.com/click-contrib/click_params/workflows/CI/badge.svg)
+[![Coverage Status](https://codecov.io/gh/click-contrib/click_params/branch/master/graphs/badge.svg?branch=master)](https://codecov.io/gh/click-contrib/click_params)
+[![Documentation Status](https://readthedocs.org/projects/click_params/badge/?version=latest)](https://click-params.readthedocs.io/en/latest/?badge=latest)
+[![License Apache 2](https://img.shields.io/hexpm/l/plug.svg)](http://www.apache.org/licenses/LICENSE-2.0)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/click-contrib/click_params)
+[![Poetry](https://img.shields.io/endpoint?url=https://python-poetry.org/badge/v0.json)](https://github.com/click-contrib/click_params)
 
-A tool to review packages for [Sublime Text][]
-(and its package manager [Package Control][]).
-Supports passing local file paths
-or URLs to GitHub repositories.
+A bunch of useful click parameter types.
 
-This README focuses on installation and usage of the tool.
-For how to *resolve* failures or warnings
-reported by the tool,
-[refer to the wiki][wiki].
+## Why?
+
+I often find myself wanting to use a click parameter able to handle list of strings, so I decide to put this in a library
+and I ended adding more parameter types that can be useful for various scripts including network, mathematics and so on.
 
 
 ## Installation
 
-Requires **Python 3.8** or higher.
-
 ```bash
-$ pip install st-package-reviewer
+pip install click-params
 ```
 
+click-params starts working from **python 3.8**. It has a few dependencies:
+- [click](https://click.palletsprojects.com/en/7.x/) >= 7.0
+- [validators](https://validators.readthedocs.io/en/latest/)
+- [deprecated](https://deprecated.readthedocs.io/en/latest/)
 
 ## Usage
 
-```
-usage: st_package_reviewer [-h] [--version] [--clip] [--repo-only] [-w] [-v]
-                           [--debug]
-                           [path_or_URL [path_or_URL ...]]
+```python
+import click
+from click_params import Ipv4AddressListParamType
 
-Check a Sublime Text package for common errors.
-
-positional arguments:
-  path_or_URL           URL to the repository or path to the package to be checked. If not provided, runs in interactive mode.
-
-optional arguments:
-  -h, --help            show this help message and exit
-  --version             show program's version number and exit
-  --clip                Copy report to clipboard.
-  --repo-only           Do not check the package itself and only its repository.
-  -w, --fail-on-warnings
-                        Return a non-zero exit code for warnings as well.
-  -v, --verbose         Increase verbosity.
-  --debug               Enter pdb on exceptions. Implies --verbose.
-
-Return values:
-    0: No errors
-    -1: Invalid command line arguments
-
-Additional return values in non-interactive mode (a combination of bit flags):
-    1: Package check finished with failures
-    2: Repository check finished with failures
-    4: Unable to download repository
-
-Interactive mode:
-    Enter package paths or repository URLS continuously.
-    Type `c` to copy the last report to your clipboard.
+@click.command()
+@click.option('-a', '--addresses', help='list of ipv4 addresses', prompt='list of ipv4 addresses to reserve',
+ type=Ipv4AddressListParamType())
+def pool(addresses):
+    click.echo('reserved ips:')
+    for ip in addresses:
+        click.echo(ip)
 ```
 
+```bash
+$ pool --addresses='192.168.1.1,192.168.1.14'
+reserved ips:
+192.168.1.1
+192.168.1.14
+```
 
-[Sublime Text]: https://sublimetext.com/
-[Package Control]: https://packagecontrol.io/
-[wiki]: https://github.com/packagecontrol/st_package_reviewer/wiki
+You can change the default separator "," by passing it when initializing the parameter type.
+
+## Documentation
+
+Documentation is available at https://click-params.readthedocs.io/en/latest/.
