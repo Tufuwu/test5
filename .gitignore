@@ -1,25 +1,60 @@
-.env
-venv/
-*.pyc
-config.py
-*.config.py
-limbo.sqlite3
-limbo.egg-info
-Makefile.local
-NOTES
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# Tempory files
+*~
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+env/
+venv
+bin/
 build/
+_build/
+develop-eggs/
 dist/
-slask.egg-info/
-.DS_Store
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+.eggs/
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
 .coverage
-.tox
-.start.sh
-.vagrant
-.python-version
 .cache
-.envrc
-__pycache__
-.pytest_cache
-.tool-versions
-.venv
-.mise.toml
+nosetests.xml
+coverage.xml
+.pytest_cache/
+
+# Translations
+*.mo
+
+# Mr Developer
+.mr.developer.cfg
+.project
+.pydevproject
+
+# Rope
+.ropeproject
+
+# Django stuff:
+*.log
+*.pot
+
+# Sphinx documentation
+docs/_build/

@@ -1,3 +1,0 @@
-#!/bin/bash
-source /tmp/secrets/limbo.env
-/app/bin/limbo
