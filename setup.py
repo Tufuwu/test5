@@ -1,44 +1,42 @@
 from setuptools import setup, find_packages
-from os import path
-from io import open
 
-# read the contents of your README file
-this_directory = path.dirname(path.abspath(__file__))
+with open('flavio/_version.py', encoding='utf-8') as f:
+    exec(f.read())
 
-with open(path.join(this_directory, "README.md")) as f:
-    long_description = f.read()
+with open('README.md', encoding='utf-8') as f:
+    LONG_DESCRIPTION = f.read()
 
-
-# Arguments marked as "Required" below must be included for upload to PyPI.
-# Fields marked as "Optional" may be commented out.
-
-setup(
-    name="django-multitenant",
-    version="4.1.1",  # Required
-    description="Django Library to Implement Multi-tenant databases",
-    long_description=long_description,
-    long_description_content_type="text/markdown",
-    url="https://github.com/citusdata/django-multitenant",
-    author="Gurkan Indibay",
-    author_email="gindibay@microsoft.com",
-    # Classifiers help users find your project by categorizing it.
-    #
-    # For a list of valid classifiers, see https://pypi.org/classifiers/
-    classifiers=[
-        "Development Status :: 5 - Production/Stable ",
-        "Topic :: Database",
-        "License :: OSI Approved :: MIT License",
-        "Intended Audience :: Developers",
-        "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3 :: Only",
-        "Programming Language :: Python :: 3.7",
-        "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",
-        "Programming Language :: Python :: 3.10",
-        "Programming Language :: Python :: 3.11",
-    ],
-    keywords=("citus django multi tenant" "django postgres multi-tenant"),
-    packages=find_packages(
-        exclude=["*.tests", "*.tests.*", "tests.*", "tests", "docs", "docs.*"]
-    ),
-)
+setup(name='flavio',
+      version=__version__,
+      author='David M. Straub',
+      author_email='straub@protonmail.com',
+      url='https://flav-io.github.io',
+      description='A Python package for flavour physics phenomenology in the Standard Model and beyond',
+      long_description=LONG_DESCRIPTION,
+      long_description_content_type='text/markdown',
+      license='MIT',
+      packages=find_packages(),
+      package_data={
+      'flavio':['data/*.yml',
+                'data/test/*',
+                'physics/data/arXiv-0810-4077v3/*',
+                'physics/data/arXiv-1503-05534v1/*',
+                'physics/data/arXiv-1503-05534v2/*',
+                'physics/data/arXiv-1501-00367v2/*',
+                'physics/data/arXiv-1602-01399v1/*',
+                'physics/data/arXiv-1602-01399v1/*',
+                'physics/data/arXiv-1811-00983v1/*',
+                'physics/data/arXiv-2102.07233v2/*',
+                'physics/data/arXiv-2305-06301v1/*',
+                'physics/data/qcdf_interpolate/*',
+                'physics/data/wcsm/*',
+                ]
+      },
+      install_requires=['numpy>=1.20.0', 'scipy', 'setuptools>=3.3', 'pyyaml',
+                        'ckmutil>=1.2.0', 'wilson>=2.4', 'particle>=0.21.0', 'parton>=0.2.1', ],
+      extras_require={
+            'testing': ['nose2'],
+            'plotting': ['matplotlib>=2.0'],
+            'sampling': ['iminuit>=2.0'],
+            },
+    )

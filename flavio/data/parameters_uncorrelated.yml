@@ -1,0 +1,577 @@
+# This file contains the central values and uncertainties of parameters
+# whose uncertainties are not correlated with any others.
+#
+# To modify them, without modifiying this file directly, you have two options.
+#
+# 1) Create a copy of this file (or a subset of it) and read it into your
+#    ParameterConstraints() object, e.g.:
+#
+#    my_parameters = flavio.ParameterConstraints()
+#    flavio.parameters.read_file_values('my_parameters_uncorr.yml', my_parameters)
+#
+#    Instead of my_parameters, you can also overload the flavio default parameters
+#    by calling
+#
+#    flavio.parameters.read_file_values(..., flavio.default_parameters)
+#
+# 2) Modify values at runtime by calling, for instance,
+#
+#    my_parameters = flavio.ParameterConstraints()
+#    my_parameters.set_constraint('alpha_s', '0.1176(8)')
+#
+#    this can also be done with flavio.default_parameters instead of my_parameters.
+
+# Coupling constants
+
+GF: 1.1663788(6)e-5  # PDG 2023 Review Sec. 1
+alpha_e: 0.00781549(55) # = 1/127.951(9) PDG 2023 Review Sec. 10
+alpha_s: 0.1184(8)    # FLAG 2023
+s2w: 0.23121(4)       # PDG 2023 Review Sec. 1
+
+
+Delta_alpha_e_had: 0.027572 ± 0.000359 # hep-ph/0104304 page 5
+Delta_alpha_e_lep: 0.0314977 # hep-ph/9803313 table 1
+
+# di->djnunu Wilson coefficient loop function
+
+Xt_di->djnunu: 1.462 ± 0.017 ± 0.002 # 2105.02868 Eq. (5)
+
+# CKM parameters
+
+Vus: 0.2248(6)   # FLAG 2023 Nf=2+1+1
+Vub: 3.64(16)e-3  # FLAG 2023 Nf=2+1 B->pilnu
+Vcb: 41.97(48) 1e-3 # 2310.20324
+gamma: 1.15(6)  # HFLAV 2022 B -> DK
+
+
+# Meson decay constants
+
+f_rho0: 0.212(4)  # 1501.06569 table 1
+f_omega: 0.185(5)  # 1501.06569 table 1
+f_phi: 0.231(5)  # 1501.06569 table 1
+f_Bc: 0.434(15) # 1503.05762v2 eq. (20)
+
+# Parameters for LFV quarkonium decay
+# see also Tables 9 and 11 in 1707.07144 for results of decay constants
+f_J/psi: 0.4104(17) # 2005.01845 abstract
+fT_J/psi: 0.3927(27) # 2008.02024 abstract
+BR_exp(J/psi->ee): 0.05971(32) # PDG 2021
+
+f_psi(2S): 0.2926(12) # Table 3 in 1503.04159 (0.713*f_J/psi), consistent with Tab II in hep-ph/0603164 (0.293)
+fT_psi(2S): 0.2926(12) # assuming equality to vector form factor. This is consistent with the non-relativistic color singlet model.
+BR_exp(psi(2S)->ee): 0.00793(17) # PDG 2021
+
+f_Upsilon(1S): 0.6772(97) # Eq. (29) in 2101.08103
+fT_Upsilon(1S):  0.6772(97) # assuming equality to vector form factor. This is consistent with the non-relativistic color singlet model.
+BR_exp(Upsilon(1S)->ee): 0.0238(11) # PDG 2021
+
+f_Upsilon(2S): 0.481(39) # Eq. (24) in 1408.5768
+fT_Upsilon(2S): 0.481(39) # assuming equality to vector form factor. This is consistent with the non-relativistic color singlet model.
+BR_exp(Upsilon(2S)->ee): 0.0191(16) # PDG 2021
+
+f_Upsilon(3S): 0.395(25) # using Eq.(5.45c) in 2007.01737, consistent with hep-ph/0603164 (0.388)
+fT_Upsilon(3S): 0.395(25) # assuming equality to vector form factor. This is consistent with the non-relativistic color singlet model.
+BR_exp(Upsilon(3S)->ee): 0.0218(20) # PDG 2021
+
+f_eta_c(1S): 0.387(7) # 1312.2858
+a_eta_c(1S): 0.0 # Hazard, Petrov 1607.00815
+
+f_eta_b(1S): 0.724(12) # 2101.08103
+a_eta_b(1S): 0.0 # Hazard, Petrov 1607.00815
+
+f_chi_c0(1P): 0.887 # 1510.04659 - Note, the definition of the decay constant follows 1607.00815
+a_chi_c0(1P): 0.0 # Hazard, Petrov 1607.00815
+
+f_chi_b0(1P): 0.423 # 1510.04659 - Note, the definition of the decay constant follows 1607.00815
+a_chi_b0(1P): 0.0 # Hazard, Petrov 1607.00815
+
+f_chi_b0(2P): 0.421 # 1510.04659 - Note, the definition of the decay constant follows 1607.00815
+a_chi_b0(2P): 0.0 # Hazard, Petrov 1607.00815
+
+m_eta_b(1S): 9.3987(20) # PDG 2022
+tau_eta_b(1S): 100(50) # PDG 2022 (lower error slightly increased to have symmetric errors)
+
+tau_chi_b0(1P): 815(113) # lifetime calculated following 1510.04659
+tau_chi_b0(2P): 1300(255) # calculated following 1510.04659. The final result for the lifetime has been obtained using a simple weighted average of the lifetimes estimated from BR(Upsilon(1S)+gamma) and BR(Upsilon(2S)+gamma) with errors added in quadrature.
+
+
+# Parameters needed for meson light-cone distribution amplitudes
+
+f_perp_omega: 0.135(16)  # 1503.05534v2 table 1, but at 2 GeV, error enlarged
+f_perp_phi: 0.175(4)  # 1503.05534v2 table 1, but at 2 GeV
+a2_para_omega: 0.15(12)
+a2_perp_omega: 0.14(12)
+a2_para_phi: 0.23(8)
+a2_perp_phi: 0.14(7)
+
+# odd Gegenbauers vanish for rho, omega, phi
+a1_para_omega: 0
+a1_perp_omega: 0
+a1_para_phi: 0
+a1_perp_phi: 0
+a1_para_rho0: 0
+a1_perp_rho0: 0
+a1_para_rho+: 0
+a1_perp_rho+: 0
+
+
+# Meson bag parameters
+
+# SM operator
+# for the bag parameters of the SM operator OVLL,
+# the "hatted" ones need to be divided by 1.517
+# (for B_q) and 1.369 (for K) to obtain the MSbar ones
+# (see also flavio.physics.mesonmixing.common.bag_msbar2rgi())
+bag_K0_1: 0.5237(131)(117)  # =0.717(18)(16) for Bhat. FLAG 2016 Nf=2+1+1
+
+# BSM operators
+bag_K0_2: 0.468(7)(16)   # 1609.03334 table VI; converted from 3->2 GeV by multpying with 0.96
+bag_K0_3: 0.713(13)(62)  # 1609.03334 table VI; converted from 3->2 GeV by multpying with 0.96
+bag_K0_4: 0.883(12)(15)   # 1609.03334 table VI; converted from 3->2 GeV by multpying with 0.96
+bag_K0_5: 0.679(8)(42)  # 1609.03334 table VI; converted from 3->2 GeV by multpying with 0.96
+
+bag_D0_1: 0.727(26)(4)  # 1505.06639 table 2; converted from 3->2 GeV by multpying with 0.96
+bag_D0_2: 0.62(3)(2)   # 1505.06639 table 2; converted from 3->2 GeV by multpying with 0.96
+bag_D0_3: 0.92(8)(2)  # 1505.06639 table 2; converted from 3->2 GeV by multpying with 0.96
+bag_D0_4: 0.87(5)(4)   # 1505.06639 table 2; converted from 3->2 GeV by multpying with 0.96
+bag_D0_5: 0.93(7)(1)  # 1505.06639 table 2; converted from 3->2 GeV by multpying with 0.96
+
+# DeltaF=2 QCD correction factors
+
+eta_tt_B0: 0.55        # Buras:1990fn
+eta_tt_Bs: 0.55
+eta_tt_K0: 0.5765(65)  # Buras:1990fn
+eta_cc_K0: 1.87(76)    # 1108.2036
+eta_ct_K0: 0.496(47)   # 1007.0684
+eta_tt_K0_ut: 0.55 +- 0.0231 # 1911.06822
+eta_ut_K0_ut: 0.402 +- 0.0053 # 1911.06822
+eta_uu_K0_ut: 1.87(76) # equal amplitudes with ut and ct unitarity
+
+
+# Parameters needed for epsilon_K
+
+kappa_epsilon: 0.923(6)       # 1111.1699
+DeltaM_K0: 3.483(6)e-15 # PDG; this is (0.5293±0.0009)*1e10/s
+
+# Parameters needed for K decays
+deltaPcu: 0.04(2) # hep-ph/0503107
+kappa_plus_tilde: 0.5173(25)e-10
+kappa_L_tilde: 2.231(13)e-10
+
+# Coefficients parametrizing SM contributions to Gamma_12
+
+# taken from 1511.09466 eq. (81)-(82)
+Gamma12_Bs_c: -48.0(8.3)
+Gamma12_Bs_a: 12.3(1.4)
+Gamma12_B0_c: -49.5(8.5)
+Gamma12_B0_a: 11.7(1.3)
+
+# experimental decay width differences
+DeltaGamma/Gamma_B0: -0.002(10) # HFAG Summer 2016
+DeltaGamma/Gamma_Bs: 0.129(9) # HFAG Summer 2016
+
+# B->D* form factors
+B->D* CLN R_0(1): 1.14(11) # 1203.2654 appendix B
+B->D* CLN h_A1(1): 0.906(4)(12) # 1403.0635
+B->D* IW a_T1: 0 ± 0.1 # ±10% power correction to Isgur-Wise relation
+B->D* IW a_T2: 0 ± 0.1 # ±10% power correction to Isgur-Wise relation
+B->D* IW a_T23: 0 ± 0.2 # ±20% power correction to Isgur-Wise relation
+
+# B->D form factors
+B->D IW a_T: 0 ± 0.2 # ±20% power correction to Isgur-Wise relation
+ # 1505.03925
+B->D BCL m0: 0
+B->D BCL m+: 0
+
+# B->K form factors (2305.06301)
+B->K BCL m0: 5.630 # m_Bs*(0+)
+B->K BCL m+: 5.415 # m_Bs*(1-)
+
+# B->pi form factors
+B->pi BCL m0: 0
+B->pi BCL m+: 5.319 # m_B*(1-)
+B->pi IW a_T: 0 ± 0.2 # ±20% power correction to Isgur-Wise relation
+B->pi BCL LMVD m0: 5.540 # resonance mass used in LMVD (arXiv:2102.07233)
+B->pi BCL LMVD m+: 5.325 # resonance mass used in LMVD (arXiv:2102.07233)
+B->pi BCL LMVD m_B+: 5.279 # mB+ used in LMVD (arXiv:2102.07233)
+B->pi BCL LMVD m_pi0: 0.135 # mpi0 used in LMVD (arXiv:2102.07233)
+
+# Bs->K form factors (1501.05373v3)
+Bs->K BCL m0: 5.63 # m_B*(0+)
+Bs->K BCL m+: 5.3252 # m_B*(1-)
+
+# Parameters needed for B->gamma form factors (hep-ph/0208256)
+B->gamma KM betav: 0.28
+B->gamma KM deltav: 0.04
+B->gamma KM betaa: 0.26
+B->gamma KM deltaa: 0.30
+B->gamma KM betatv: 0.30
+B->gamma KM deltatv: 0.04
+B->gamma KM betata: 0.33
+B->gamma KM deltata: 0.30
+
+# D->pi form factors
+D->pi BCL m0: 2.318 # m_D*(0+)
+D->pi BCL m+: 2.007  # m_D*(1-)
+
+# D->K form factors
+D->K BCL m0: 2.318  # m_Ds*(0+)
+D->K BCL m+: 2.112  # m_Ds*(1-)
+
+
+# B->Xqgamma uncertainty parameters
+delta_BXsgamma: 0 ± 0.06557 # 5% + 3% + 3%
+delta_BXdgamma: 0 ± 0.06557 # 5% + 3% + 3%
+
+# charm quark mass entering alpha_s corrections to B->Vgamma.
+# Its uncertainty is due to the scheme ambiguity.
+m_c BVgamma: 1.5 +- 0.2
+
+# parameters needed for power corrections to B->Xqll
+lambda_1: -0.362 ± 0.067 # 1503.04849
+lambda_2: 0.12 ± 0.02    # 1503.04849
+
+# ChPT parameters needed for P->lnu decays
+c1_K+lnu: -1.98(50) # (116) of 0707.4464
+c2_K+lnu: 4.3(0.4)(0.01) # table 1 of 0707.4464
+c3_K+lnu: -4.73(9.2)(0.28) # matching error inflated by factor 4!
+c4_K+munu: 0.22(0.01)
+c2t_K+lnu: 7.84(0.07)e-2
+c1_pi+lnu: -2.56(50) # (115) of 0707.4464
+c2_pi+lnu: 5.2(0.4)(0.01) # table 1 of 0707.4464
+c3_pi+lnu: -10.5(2.3)(0.53) # matching error inflated by factor 4!
+c4_pi+munu: 1.69(0.07)
+c2t_pi+lnu: 0
+
+# Parameters needed for K->pi form factors
+K->pi f+(0): 0.9698(17)            # FLAG 2021 Nf=2+1+1 average
+K->pi fT(0): 0.417(15)             # 1108.1021
+K->pi sT: 1.10(14)                 #  "
+K->pi delta_K+pi0: 0.0252(11)      # 2208.11707, in text of sec. 2
+K->pi ln(C): 0.1998(138)           # 1602.04113
+K->pi Lambda_+: 24.22(1.16) 1e-3   #  "
+K->pi D: 0.0209(21)                # 0903.1654 table 1
+K->pi d: 0.0398(44)                #  "
+K->pi k: 0.0045(4)                 #  "
+K->pi H1: (1.92 + 0.63 - 0.32) e-3 # 0903.1654 table 2
+K->pi H2: (2.63 + 0.28 - 0.15) e-4 #  "
+
+# Lambda decay parameters
+Lambda->ppi alpha_-: 0.750 ± 0.009 ± 0.004  # BESIII arXiv:1808.08917
+
+# Parameters for subleading hadronic effects in Lambdab->Lambdall
+Lambdab->Lambda deltaC7 a_perp0 Re: 0 ± 0.1
+Lambdab->Lambda deltaC7 a_perp0 Im: 0 ± 0.1
+Lambdab->Lambda deltaC7 a_para0 Re: 0 ± 0.1
+Lambdab->Lambda deltaC7 a_para0 Im: 0 ± 0.1
+Lambdab->Lambda deltaC7 a_perp1 Re: 0 ± 0.03
+Lambdab->Lambda deltaC7 a_perp1 Im: 0 ± 0.03
+Lambdab->Lambda deltaC7 a_para1 Re: 0 ± 0.03
+Lambdab->Lambda deltaC7 a_para1 Im: 0 ± 0.03
+Lambdab->Lambda deltaC7 b_perp0 Re: 0 ± 0.05
+Lambdab->Lambda deltaC7 b_perp0 Im: 0 ± 0.05
+Lambdab->Lambda deltaC7 b_para0 Re: 0 ± 0.05
+Lambdab->Lambda deltaC7 b_para0 Im: 0 ± 0.05
+Lambdab->Lambda deltaC7 b_perp1 Re: 0 ± 0.02
+Lambdab->Lambda deltaC7 b_perp1 Im: 0 ± 0.02
+Lambdab->Lambda deltaC7 b_para1 Re: 0 ± 0.02
+Lambdab->Lambda deltaC7 b_para1 Im: 0 ± 0.02
+Lambdab->Lambda deltaC9 c_perp0 Re: 0 ± 0.3
+Lambdab->Lambda deltaC9 c_perp0 Im: 0 ± 0.3
+Lambdab->Lambda deltaC9 c_para0 Re: 0 ± 0.3
+Lambdab->Lambda deltaC9 c_para0 Im: 0 ± 0.3
+Lambdab->Lambda deltaC9 c_perp1 Re: 0 ± 0.3
+Lambdab->Lambda deltaC9 c_perp1 Im: 0 ± 0.3
+Lambdab->Lambda deltaC9 c_para1 Re: 0 ± 0.3
+Lambdab->Lambda deltaC9 c_para1 Im: 0 ± 0.3
+
+# Parameters for the form factor calculation in the quark model of Lambdab->Lambda(1520)ll
+Lambdab->Lambda(1520) m_q: 0.2848
+Lambdab->Lambda(1520) m_s: 0.5553
+Lambdab->Lambda(1520) alpha_Lambdab: 0.443
+Lambdab->Lambda(1520) alpha_Lambda(1520): 0.333
+
+Lambdab->Lambda(1520) fVt uncertainty: 1 +- 0.1
+Lambdab->Lambda(1520) fVperp uncertainty: 1 +- 0.1
+Lambdab->Lambda(1520) fV0 uncertainty: 1 +- 0.1
+Lambdab->Lambda(1520) fVg uncertainty: 1 +- 0.3
+Lambdab->Lambda(1520) fAt uncertainty: 1 +- 0.1
+Lambdab->Lambda(1520) fAperp uncertainty: 1 +- 0.1
+Lambdab->Lambda(1520) fA0 uncertainty: 1 +- 0.1
+Lambdab->Lambda(1520) fAg uncertainty: 1 +- 0.3
+Lambdab->Lambda(1520) fTt uncertainty: 1 +- 0.1
+Lambdab->Lambda(1520) fTperp uncertainty: 1 +- 0.1
+Lambdab->Lambda(1520) fT0 uncertainty: 1 +- 0.1
+Lambdab->Lambda(1520) fTg uncertainty: 1 +- 0.3
+Lambdab->Lambda(1520) fT5t uncertainty: 1 +- 0.1
+Lambdab->Lambda(1520) fT5perp uncertainty: 1 +- 0.1
+Lambdab->Lambda(1520) fT50 uncertainty: 1 +- 0.1
+Lambdab->Lambda(1520) fT5g uncertainty: 1 +- 0.3
+
+Lambdab->Lambda(1520) F1 a0: -1.66
+Lambdab->Lambda(1520) F1 a2: -0.295
+Lambdab->Lambda(1520) F1 a4: 0.00924
+Lambdab->Lambda(1520) F2 a0: 0.544
+Lambdab->Lambda(1520) F2 a2: 0.194
+Lambdab->Lambda(1520) F2 a4: -0.00420
+Lambdab->Lambda(1520) F3 a0: 0.126
+Lambdab->Lambda(1520) F3 a2: 0.00799
+Lambdab->Lambda(1520) F3 a4: -0.000365
+Lambdab->Lambda(1520) F4 a0: -0.0330
+Lambdab->Lambda(1520) F4 a2: -0.00977
+Lambdab->Lambda(1520) F4 a4: 0.00211
+Lambdab->Lambda(1520) G1 a0: -0.964
+Lambdab->Lambda(1520) G1 a2: -0.100
+Lambdab->Lambda(1520) G1 a4: 0.00264
+Lambdab->Lambda(1520) G2 a0: 0.625
+Lambdab->Lambda(1520) G2 a2: 0.219
+Lambdab->Lambda(1520) G2 a4: -0.00508
+Lambdab->Lambda(1520) G3 a0: -0.183
+Lambdab->Lambda(1520) G3 a2: -0.0380
+Lambdab->Lambda(1520) G3 a4: 0.00351
+Lambdab->Lambda(1520) G4 a0: 0.0530
+Lambdab->Lambda(1520) G4 a2: 0.0161
+Lambdab->Lambda(1520) G4 a4: -0.00221
+
+Lambdab->Lambda(1520) H1 a0: -1.08
+Lambdab->Lambda(1520) H1 a2: -0.0732
+Lambdab->Lambda(1520) H1 a4: 0.00464
+Lambdab->Lambda(1520) H2 a0: -0.507
+Lambdab->Lambda(1520) H2 a2: -0.246
+Lambdab->Lambda(1520) H2 a4: 0.00309
+Lambdab->Lambda(1520) H3 a0: 0.187
+Lambdab->Lambda(1520) H3 a2: 0.0295
+Lambdab->Lambda(1520) H3 a4: -0.00107
+Lambdab->Lambda(1520) H4 a0: 0.0772
+Lambdab->Lambda(1520) H4 a2: 0.0267
+Lambdab->Lambda(1520) H4 a4: -0.00217
+Lambdab->Lambda(1520) H5 a0: -0.0517
+Lambdab->Lambda(1520) H5 a2: -0.0173
+Lambdab->Lambda(1520) H5 a4: 0.00259
+Lambdab->Lambda(1520) H6 a0: 0.0206
+Lambdab->Lambda(1520) H6 a2: 0.00679
+Lambdab->Lambda(1520) H6 a4: -0.000220
+
+
+# Parameters for SM contribution to D-Dbar mixing
+# As it is poorly known, these are only conservative guesses to
+# accomodate the experimental measurement
+M12_D a_bb: 0
+M12_D a_bs: 0 ± 0.1
+M12_D a_ss: -0.1 ± 0.1
+Gamma12_D a_bb: 0
+Gamma12_D a_bs: 0 ± 0.35
+Gamma12_D a_ss: -0.35 ± 0.1
+
+# Parameters for neutron EDM
+# taken from 1308.6493, eq. (22), e~1/3
+nEDM ~rho_d: 0.2 */ 2  # 0.1..0.4
+nEDM ~rho_u: 0.1 */ 2  # 0.05..0.2
+nEDM ~rho_s: 0 ± 0.5  # poorly known
+# corresponding to e 20 MeV w in eq. (4) of hep-ph/0208257
+nEDM beta_G: 6e-7 */ 3  # 2e-7..18e-7
+
+# Parameters for LFV decays
+BR(tau->mununu): 17.39(4)e-2
+BR(tau->enunu): 17.82(4)e-2
+BR(tau->rhonu): 25.2(3)e-2
+
+# Parameters for Lambdab->Lambda(->NKbar)ll helicity amplitudes, PDG 2020
+BR(Lambda(1520)->NKbar)_exp: 0.45 +- 0.01
+
+# Parameters needed for eps'/eps
+eps_K: 2.228(11)e-3
+omega+: (4.53 ± 0.02) 1e-2
+Omegahat_eff: (14.8 ± 8.0) 1e-2
+epsp a: 1.017
+# convention h=1!
+ReA0(K->pipi): 27.12e-8
+ReA2(K->pipi): 1.208e-8
+# arXiv:1505.07863 table S II
+# scaled to mu=1.3, rescaled by 1/h=1/sqrt(3/2)
+Kpipi M0 3: -0.0326(532)(96)
+Kpipi M0 4:  0.218(76)(53)
+Kpipi M0 5: -0.146(39)(38)
+Kpipi M0 6: -0.277(79)(74)
+Kpipi M0 7:  0.127(30)(43)
+Kpipi M0 8:  1.26(5)(33)
+Kpipi M0 9: -0.161(44)(40)
+Kpipi M2 7:  0.0996(42)(58)
+Kpipi M2 8:  0.684(23)(25)
+Kpipi M2 9:  0.0132(2)(5)
+# from arXiv:1803.08052
+# using naive 30% uncertainty
+Kpipi M0 g-: 0.0033(10)
+# NP matrix elements from dual QCD Aebischer/Buras/Gerard arXiv:1807.01709
+# for SD basis with mu = 1.3 GeV
+# using naive 20% uncertainty
+# from table 4
+Kpipi M0 SLL1_u: -0.005(1)
+Kpipi M0 SLL2_u: -0.044(9)
+Kpipi M0 SLL3_u: -0.371(74)
+Kpipi M0 SLL4_u: -0.214(43)
+# from table 5
+Kpipi M0 SLR1_u: -0.015(3)
+Kpipi M0 SLR2_u: -0.141(28)
+Kpipi M0 SLL1_d:  0.0070(14)
+Kpipi M2 SLL1_d: -0.0020(4)
+Kpipi M0 SLL2_d: -0.088(18)
+Kpipi M2 SLL2_d:  0.031(6)
+
+# Parameters for Z decays
+# table 6 of arXiv:1401.2447
+delta_Gammae,mu: 0 ± 0.012e-3
+delta_Gammatau: 0 ± 0.012e-3
+delta_Gammau: 0 ± 0.12e-3
+delta_Gammac: 0 ± 0.12e-3
+delta_Gammad,s: 0 ± 0.09e-3
+delta_Gammab: 0 ± 0.21e-3
+delta_Gammanu: 0 ± 0.014e-3
+
+# anomalous magnetic moment of the muon
+# arXiv:2006.04822
+a_mu SM: 116591810(43) e-11
+
+# anomalous magnetic moment of the tau
+# arXiv:hep-ph/0701260 eq. (33)
+a_tau SM: 0.00117721(5)
+
+# anomalous magnetic moment of the electron
+# arXiv:1804.07409 p. 13
+a_e SM:  0.00115965218157(23)
+
+# Parameters for W decays
+GammaW_had: 1411.40 ± 0.96 ± 0.04 e-3  # arXiv:1603.06501
+GammaW_lep: 0.6803384  # arXiv:hep-ph/0005060
+
+# Parameters for K->ll decays
+chi_disp(KL->gammagamma): 0 ± 0.71 ± 0.15 ± 1.0
+
+# parameters needed for power corrections to B->Xlnu
+mu_pi^2: 0.4(2)  # estimate based on hep-ph/0302262
+mu_G^2: 0.38(2)  # arXiv:1802.04248
+rho_D^3: 0.2(1)  # estimate based on hep-ph/0302262
+rho_LS^3: -0.2(2)  # estimate based on hep-ph/0302262
+delta_BXlnu: 0 ± 0.01  # 1% residual uncertainty in BR(B->Xlnu)
+
+# parameters needed for neutrinoless mu to e conversion in Au{197,79}
+#Overlap integrals from hep-ph/0203110 in units of m_\mu^{5/2}
+D Au: 0.189
+Sp Au: 0.0614
+Vp Au: 0.0974
+Sn Au: 0.0918
+Vn Au: 0.146
+GammaCapture Au: 8.602830204798002 ± 0.18429934639200744 e-18 #[GeV] https://doi.org/10.1103/PhysRevC.35.2212
+# parameters needed for neutrinoless mu to e conversion in Al{27,13}
+#Overlap integrals from hep-ph/0203110 in units of m_\mu^{5/2}
+D Al: 0.0362
+Sp Al: 0.0155
+Vp Al: 0.0161
+Sn Al: 0.0167
+Vn Al: 0.0173
+GammaCapture Al: 4.6430271051756 ± 0.008556755368246523 e-19 #[GeV] https://doi.org/10.1103/PhysRevC.35.2212
+# parameters needed for neutrinoless mu to e conversion in Ti{48,22}
+#Overlap integrals from hep-ph/0203110 in units of m_\mu^{5/2}
+D Ti: 0.0864
+Sp Ti: 0.0368
+Vp Ti: 0.0396
+Sn Ti: 0.0435
+Vn Ti: 0.0468
+GammaCapture Ti: 1.7047689541260003 ± 0.007898543416806797 e-18 #[GeV] https://doi.org/10.1103/PhysRevC.35.2212
+
+# Parameters for nuclear matrix elements (EDMs, beta decays)
+gT_u: 0.784(28)(10)  # 1808.07597, table III
+gT_d: -0.204(11)(10)  # 1808.07597, table III
+gT_s: -0.0027(16)  # 1808.07597, table III
+gA_s: -0.053(8)  # 1806.10604
+sigma_piN: (59.1 ± 3.5) 1e-3  # 1506.04142
+sigma_s: (41.0 ± 8.8) 1e-3  # 1204.3866 + FLAG 2019
+delta_mN: (2.32 ± 0.17) 1e-3
+g_A: 1.251(33)  # FLAG 2019 Nf=2+1+1
+gS_u-d: 1.022(80)(60)  # FLAG 2019 Nf=2+1+1
+
+tau_Bc_SM: (8.34 ± 2.28) 1e11  # 0.55 ± 0.15 ps, hep-ph/0211432
+
+# Parameters for paramagnetic EDMs
+# 1809.09114 eq. (44)-(47)
+# e cm = sqrt(4 * pi  / 137.036) * 1e-2 * flavio.physics.units.meter = 15346209583444.148
+# mrad/s / 1e-7 = = 6.582119569509066e-21 rad
+# mrad/s / (1e-27 e cm) = 4.2890848933863195e-14 rad
+# units: 1 / GeV
+alpha_de(Tl): -573 ± 20
+alpha_CS(Tl): (1.07 ± 0.05) 1e-4  # (700 ± 35) 1e-20 * ecm
+# units: rad
+alpha_de(YbF): (-8.40 ± 0.6) 1e-13  # (-19.6±1.5)(mrad/s)(1e-27ecm)
+alpha_CS(YbF): (-1.16 ± 0.13) 1e-19  # (-17.6±2.0)(mrad/s) 1e-7
+alpha_de(HfF): (1.50 ± 0.06) 1e-12  # (34.9±1.4)(mrad/s)(1e-27ecm)
+alpha_CS(HfF): (2.11 ± 0.09) 1e-19  # (32.0±1.3)(mrad/s) 1e-7
+alpha_de(ThO): (5.17 ± 0.21) 1e-12  # (120.6±4.9)(mrad/s)(1e-27ecm)
+alpha_CS(ThO): (1.20 ± 0.04) 1e-18  # (181.6±7.3)(mrad/s) 1e-7
+
+# Parameters for HQET form factors
+chi_2(1): -0.077 ± 0.020
+chi_2p(1): -0.018 ± 0.020
+chi_3p(1): 0.028 ± 0.017
+eta(1): 0.336 ± 0.031
+etap(1): 0.416 ± 0.141
+CLN rho2_xi: 1.454 ± 0.064
+CLN c_xi: 1.337 ± 0.095
+CLN xi3: 0
+CLN l_1(1): 0
+CLN l_2(1): 0
+CLN l_3(1): 0
+CLN l_4(1): 0
+CLN l_5(1): 0
+CLN l_6(1): 0
+CLN lp_1(1): 0
+CLN lp_2(1): 0
+CLN lp_3(1): 0
+CLN lp_4(1): 0
+CLN lp_5(1): 0
+CLN lp_6(1): 0
+
+# Parameters for beta decays
+DeltaRV: 0.02467(27)  # Average from 2208.11707
+# one third of the Z^2alpha^3 term in table V of 0710.3181,
+# as suggested in 1411.5987
+delta_deltaRp_Z2: 0 ± 0.00004e-2
+# Systematic uncertainty on delta_NS,A (eq. 16 of Hardy:2020qwl)
+delta_deltaNS,A: 0 +- 0.033e-2
+# Systematic uncertainty on delta_NS,E (eq. 18 of Hardy:2020qwl)
+delta_deltaNS,E_QEC: 0 +- 0.008e-2
+f_n: 1.6887(1)  # Hardy & Towner
+deltaRp_n: 0.014902(2)
+Lambda->p f_1(0): -1.2247 ± 0.05  # -sqrt(3/2) +-  "few percent"
+Lambda->p g_1(0): -0.88(9)  # see 1605.07114, 1102.3407; 10% SU(3) breaking
+
+# Parameters for D->pi,K form factors in the BSZ parametrization
+# arXiv:1706.03017, arXiv:1803.04807
+# a0_f+ = f_+(0) was taken directly from the paper
+# the central values of a1_X where chosen to reproduce f_i(q2max) given
+# in the paper, and a naive 10% uncorrelated unceratainty was added
+# D->pi
+D->pi BSZ a0_fT: 0.506(79)
+D->pi BSZ a1_fT: 0.28(3)
+D->pi BSZ a2_fT: 0
+# D->K
+D->K BSZ a0_fT: 0.687(54)
+D->K BSZ a1_fT: 0.10(1)
+D->K BSZ a2_fT: 0
+
+# Parameters for parton distribution functions
+PDFmembers avg=0 replicas=1-100:
+  distribution: discrete_uniform
+  lowest_value: 0
+  highest_value: 100
+  central_value: 0
+
+# Parameter for Bs->K*0mumu uncertainty inside resonant regions
+# 2209.04457, appendix B, Eq. B7, we save a relative uncertainty
+delta_BsKstarmumu: 0 ± 0.078
+
+# Updated EM corrections for Ke3 decays
+# From 2103.04843 (Table VI)
+# Uncertainties combined in quadrature, factor of 2 normalisation difference since
+# flavio used the normalisation of 1005.2323
+K0e3 delta_EM: 0.580(16)1e-2
+K+e3 delta_EM: 0.105(24)1e-2
