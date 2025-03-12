@@ -1,0 +1,23 @@
+@require(prototype, symbol, return_value, parameters, extra)
+@extends('base_symbol.html')
+
+@def content():
+@prototype
+@symbol.formatted_doc
+
+@include("parameters.html")
+
+@if return_value:
+	@return_value
+@end
+
+@if extra:
+\
+@for name, ex in extra.items():
+<p>
+	<b>@name:</b>\
+	@ex
+</p>
+@end
+@end
+@end

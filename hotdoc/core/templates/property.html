@@ -1,0 +1,17 @@
+@require(prototype, property, extra)
+@extends('base_symbol.html')
+
+@def content():
+@prototype
+@property.formatted_doc
+
+@if extra:
+\
+@for name, ex in extra.items():
+<p>
+	@name :\
+	@ex
+</p>
+@end
+@end
+@end

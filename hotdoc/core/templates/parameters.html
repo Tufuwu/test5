@@ -1,0 +1,15 @@
+@require(parameters, symbol)
+
+@(param_header_level = '5' if symbol.extension_attributes['order_by_section'] else '4')
+@if parameters:
+	<div class="parameter_container">
+		<h@param_header_level data-toc-skip=true>Parameters</h@param_header_level>
+		<table>
+			<tbody>
+				@for parameter in parameters:
+					@parameter
+				@end
+			</tbody>
+		</table>
+	</div>
+@end

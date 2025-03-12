@@ -1,0 +1,31 @@
+@require(return_value, name, parameters, is_pointer)
+
+@(
+param_offset = ' ' * (len (name) + 2)
+if is_pointer:
+	param_offset += 3 * ' '
+)
+
+<pre class="c-prototype language-c">
+@if return_value:
+@return_value
+@end
+@if is_pointer:
+(*\
+@end
+@name\
+@if is_pointer:
+)\
+@end
+ (\
+@if parameters:
+\
+@for i, parameter in enumerate (parameters):
+@if i != 0:
+,
+@param_offset\
+@end
+@parameter\
+@end
+@end
+)</pre>

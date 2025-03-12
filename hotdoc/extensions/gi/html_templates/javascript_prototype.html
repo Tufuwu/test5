@@ -1,0 +1,29 @@
+@require(function_name, parameters, comment, throws, is_method)
+<pre class="javascript-prototype language-javascript">
+<code>function @function_name\
+(\
+@if parameters:
+\
+@for i, parameter in enumerate (parameters):
+\
+@if not parameter.get_extension_attribute('gi-extension', 'is_destroy'):
+@if i != 0:
+, \
+@end
+\
+@for j in range (parameter.array_nesting):
+Array(\
+@end
+@parameter.argname: \
+@parameter.extension_contents.get('type-link')\
+@for j in range (parameter.array_nesting):
+)\
+@end
+\
+@end
+@end
+@end
+): \
+{
+    // @comment
+}</code></pre>

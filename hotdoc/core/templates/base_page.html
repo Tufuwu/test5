@@ -1,0 +1,42 @@
+@require(page, meta, scripts, stylesheets, dark_stylesheets, light_stylesheets)
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+@for key, value in meta.items():
+<meta data-hd-key="@str(key)" data-hd-value="@str(value)" />
+@end
+
+<title>@page.get_title()</title>
+
+@for script in scripts:
+<script src="assets/js/@script"></script>
+@end
+
+@for stylesheet in stylesheets:
+<link rel="stylesheet" href="assets/css/@stylesheet" type="text/css"/>
+@end
+
+@for stylesheet in dark_stylesheets:
+<link rel="stylesheet" href="assets/css/@stylesheet" type="text/css" title="dark"/>
+@end
+
+@for stylesheet in light_stylesheets:
+<link rel="alternate stylesheet" href="assets/css/@stylesheet" type="text/css" title="light"/>
+@end
+
+</head>
+
+<div class="page_container">
+	@def content():
+	@end
+	@content()
+</div>
+<footer>
+	@def footer():
+	@end
+	@footer()
+</footer>
+</html>

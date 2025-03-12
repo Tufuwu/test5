@@ -1,0 +1,9 @@
+@require(symbol, languages)
+
+@for lang, lang_doc in languages.items():
+<div class="gi-symbol gi-symbol-@lang">
+@if lang_doc:
+@lang_doc
+@end
+</div>
+@end

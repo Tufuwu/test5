@@ -1,0 +1,10 @@
+@require(definition, constant)
+@extends('base_symbol.html')
+
+@def content():
+\
+@if definition:
+@definition
+@end
+@constant.formatted_doc
+@end
