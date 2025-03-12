@@ -1,40 +1,59 @@
----
 name: CI
 
 on:
   push:
-    branches:
-      - master
-    tags:
-      - v*
+    branches: [ master ]
   pull_request:
-    branches:
-      - master
+    branches: [ master ]
   workflow_dispatch:
 
 jobs:
-  build:
+
+  travis-check:
+
+    name: Python ${{ matrix.python-version }}
     runs-on: ubuntu-latest
+
     strategy:
       matrix:
         python-version: ["3.9", "3.10"]
+      fail-fast: false
+
     steps:
-      - uses: actions/checkout@v2
+      - run: echo "Job triggered by a ${{ github.event_name }} event on branch is ${{ github.ref }} in repository is ${{ github.repository }}"
+      - name: Check out repository code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install Dependencies
+      - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install flake8
-          pip install -r requirements.txt
-      - name: Lint with flake8
+         pip install Sphinx==1.3b1
+         pip install -r requirements-travis.txt
+      - name: Check out Avocado libs
+        uses: actions/checkout@v2
+        with:
+          repository: 'avocado-framework/avocado'
+          path: 'avocado-libs'
+          fetch-depth: 0
+      - name: Install avocado libs
+        working-directory: ./avocado-libs
+        run: pip install -e .
+      - name: Finish installing dependencies
         run: |
-          flake8 etip/
-      - name: Run Tests
+         pip install -e .
+      - name: Create some fake binaries to make vt-bootstrap happy
         run: |
-          cd etip
-          python manage.py test
-        env:
-          DJANGO_SETTINGS_MODULE: etip.settings.dev
+         mkdir -p /tmp/dummy_bin
+         touch /tmp/dummy_bin/arping
+         touch /tmp/dummy_bin/tcpdump
+         chmod 777 /tmp/dummy_bin/*
+         echo "/tmp/dummy_bin" >> $GITHUB_PATH
+      - name: Setup Avocado-vt for functional tests
+        run: AVOCADO_LOG_DEBUG=yes avocado vt-bootstrap --vt-skip-verify-download-assets --yes-to-all
+      - name: Run tests
+        run: inspekt checkall --disable-lint W,R,C,E1002,E1101,E1103,E1120,F0401,I0011,E1003,W605 --disable-style W605,W606,E501,E265,W601,E402,E722,E741 --exclude avocado-libs,scripts/github --no-license-check
+      - run: echo "This job's status is ${{ job.status }}."
