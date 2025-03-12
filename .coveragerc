@@ -1,6 +1,5 @@
-[run]
-branch = True
-source = dlt
-
 [report]
-show_missing = True
+omit =
+    */site-packages/*
+    */python?.?/*
+    ckan/*
