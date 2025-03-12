@@ -1,16 +1,12 @@
-exclude better-defaults.diff
-exclude bootstrap-buildout.py
-exclude *.cfg
-exclude .coveragerc
-exclude docs/Makefile
-exclude .gitattributes
-exclude tox.ini
-global-exclude *.pyc
-global-exclude .*py.un~
-include docs/LICENSE.GPL
-recursive-include docs *.rst
-recursive-include docs *.py
-recursive-include docs *.txt
-include *.rst
-prune etc
-recursive-include src *
+include AUTHORS
+include LICENSE
+include CHANGELOG.md
+include tox.ini
+include package.json
+include webpack.config.js
+include requirements.pip
+include requirements_tests.pip
+recursive-include docs *
+recursive-include django_comments_xtd/locale *
+recursive-include django_comments_xtd/templates *
+recursive-include django_comments_xtd/static *

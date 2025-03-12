@@ -1,183 +1,36 @@
-collective.solr - Solr integration for the Plone CMS
-====================================================
+django-comments-xtd |gha-tests-badge|
+=====================================
 
-.. image:: https://github.com/collective/collective.solr/workflows/collective.solr%20CI/badge.svg
-    :target: https://github.com/collective/collective.solr/actions?query=workflow%3A%22collective.solr+CI%22
+.. |gha-tests-badge| image:: https://github.com/danirus/django-comments-xtd/workflows/tests/badge.svg
+.. _gha-tests-badge: https://github.com/danirus/django-comments-xtd/actions/workflows/ci-pipeline.yml
 
-.. image:: https://coveralls.io/repos/collective/collective.solr/badge.svg?branch=master
-    :target: https://coveralls.io/r/collective/collective.solr
+A Django pluggable application that adds comments to your project.
 
-.. image:: https://img.shields.io/pypi/v/collective.solr.svg
-    :target: https://pypi.org/project/collective.solr/
-    :alt: Latest Version
+.. image:: https://github.com/danirus/django-comments-xtd/blob/master/docs/images/cover.png
 
-.. image:: https://img.shields.io/pypi/status/collective.solr.svg
-    :target: https://pypi.org/project/collective.solr/
-    :alt: Egg Status
+It extends the once official `django-contrib-comments <https://pypi.python.org/pypi/django-contrib-comments>`_ with the following features:
 
-.. image:: https://img.shields.io/pypi/l/collective.solr.svg
-    :target: https://pypi.org/project/collective.solr/
-    :alt: License
+#. Thread support, so comments can be nested.
+#. Customizable maximum thread level, either for all models or on a per app.model basis.
+#. Optional notifications on follow-up comments via email.
+#. Mute links to allow cancellation of follow-up notifications.
+#. Comment confirmation via email when users are not authenticated.
+#. Comments hit the database only after they have been confirmed.
+#. Registered users can like/dislike comments and can suggest comments removal.
+#. Template tags to list/render the last N comments posted to any given list of app.model pairs.
+#. Emails sent through threads (can be disable to allow other solutions, like a Celery app).
+#. Fully functional JavaScript plugin using ReactJS, Bootstrap 5.3 and Remarkable.
 
-.. contents::
-    :depth: 1
+Example sites and tests work under officially Django `supported versions <https://www.djangoproject.com/download/#supported-versions>`_:
 
+* Django 5.1, 5.0, 4.2, 4.1
+* Python 3.13, 3.12, 3.11, 3.10
 
-``collective.solr`` integrates the `Solr`_ search engine with `Plone`_.
+Additional Dependencies:
 
-Apache Solr is based on Lucene and is *the* enterprise open source search engine.
-It powers the search of sites like Twitter,
-the Apple and iTunes Stores, Wikipedia, Netflix and many more.
+* django-contrib-comments >=2.2
+* djangorestframework >=3.12,<3.16
 
-Solr does not only scale to any level of content,
-but provides rich search functionality,
-like faceting, geospatial search, suggestions, spelling corrections, indexing of binary formats and a whole variety of powerful tools to configure custom search solutions.
-It has integrated clustering and load-balancing to provide a high level of robustness.
+Checkout the Docker image `danirus/django-comments-xtd-demo <https://hub.docker.com/r/danirus/django-comments-xtd-demo/>`_.
 
-``collective.solr`` comes with a default configuration and setup of Solr that makes it extremely easy to get started,
-yet provides a vastly superior search quality compared to Plone's integrated text search based on ``ZCTextIndex``.
-
-
-Features
-========
-
-Solr Features
--------------
-
-* Schema and Schemaless Configuration
-* Information Retrieval System
-* Speed (in comparission to ZCTextIndex)
-
-
-Features of Solr Integration into Plone
----------------------------------------
-
-Search Enhancements
-*******************
-
-* Facets
-* Indexing of binary documents
-* Spellchecking / suggestions
-* Wildcard searches
-* Exclude from search
-* Elevation
-
-
-Detailed Documentation
-======================
-
-A full Documentation of the Solr integration of Plone could be found on `collectivesolr.readthedocs.org`_.
-
-.. _`collectivesolr.readthedocs.org`: https://collectivesolr.readthedocs.org/en/latest/
-
-
-Installation & Configuration
-============================
-
-Download the latest default Solr configuration from github::
-
-  $ wget https://github.com/collective/collective.solr/raw/master/solr.cfg
-  $ wget https://raw.githubusercontent.com/collective/collective.solr/master/solr-4.10.x.cfg
-
-.. note: Please do not extend your buildout directly with those files since they are likely to change over time.
-   Always fetch the files via wget to have a stable local copy.
-   In general you should never rely on extending buildout config files from servers that aren't under your control.
-
-Extend your buildout to use those files
-and make sure collective.solr is added to the eggs in your instance section.
-Your full buildout file should look something like this::
-
-  [buildout]
-  parts += instance
-  extends =
-      https://dist.plone.org/release/4.3.8/versions.cfg
-      solr.cfg
-      solr-4.10.x.cfg
-
-  [instance]
-  recipe = plone.recipe.zope2instance
-  http-address = 8080
-  user = admin:admin
-  eggs =
-      Plone
-      collective.solr
-
-  [versions]
-  collective.recipe.solrinstance = 5.3.2
-
-After saving this to let's say ``buildout.cfg``,
-the buildout can be run and the `Solr`_ server and `Plone`_ instance started::
-
-  $ python bootstrap-buildout.py
-  $ bin/buildout
-  ...
-  $ bin/solr-instance start
-  $ bin/instance start
-
-Next you should activate the ``collective.solr (site search)`` add-on in the add-on control panel of Plone.
-After activation you should review the settings in the new ``Solr Settings`` control panel.
-To index all your content in Solr you can call the provided maintenance view::
-
-  http://localhost:8080/plone/@@solr-maintenance/reindex
-
-
-Solr connection configuration in ZCML
--------------------------------------
-
-The connections settings for Solr can be configured in ZCML and thus in buildout.
-This makes it easier when copying databases between multiple Zope instances with different Solr servers.
-
-Example::
-
-    zcml-additional =
-        <configure xmlns:solr="http://namespaces.plone.org/solr">
-            <solr:connection host="localhost" port="8983" base="/solr/plone"/>
-       </configure>
-
-
-Current Project Status
-======================
-
-The code is used in production in many sites and considered stable.
-This add-on can be installed in a `Plone`_ 4.3 (or later) site to enable indexing operations
-as well as searching (site and live search) using `Solr`_.
-Doing so will not only significantly improve search quality and performance -
-especially for a large number of indexed objects,
-but also reduce the memory footprint of your `Plone`_ instance
-by allowing you to remove the ``SearchableText``, ``Description`` and ``Title`` indexes from the catalog
-as well as the lexicons if no other indexes are using them.
-
-In large sites with 100000 content objects and more,
-searches using ``ZCTextIndex`` often taken 10 seconds or more
-and require a good deal of memory from ZODB caches.
-Solr will typically answer these requests in 10ms to 50ms
-at which point network latency and the rendering speed of Plone's page templates are a more dominant factor.
-
-Plone Compatibility
-===================
-
-collective.solr works with Plone 5.2 and Plone 6.
-
-Python Compatibility
-====================
-
-collective.solr works with Python 3.8 and 3.9. Older versions might still work but we do not test them.
-
-Solr Compatibility
-==================
-
-collective.solr works with Solr 7,8, and 9. Older versions might work as well but we do not test them.
-
-
-Bug Reporting & Development
-===========================
-
-Releases can be found on the Python Package Index at https://pypi.org/project/collective.solr.
-The code and issue trackers can be found on GitHub at https://github.com/collective/collective.solr.
-
-For outstanding issues and features remaining to be implemented please see the `issue tracker`__.
-
-  .. __: https://github.com/collective/collective.solr/issues
-
-  .. _`Solr`: https://lucene.apache.org/solr/
-  .. _`Plone`: https://www.plone.org/
+`Read The Docs <http://readthedocs.org/docs/django-comments-xtd/>`_.

@@ -1,0 +1,8 @@
+[build-system]
+requires = ["setuptools>=65.6.3", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.pytest]
+addopts = "--create-db"
+django_find_project = false
+python_files = "test_*.py"
