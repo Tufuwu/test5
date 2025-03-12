@@ -1,86 +1,56 @@
-[build-system]
-requires = ["flit_core >=3.2,<4"]
-build-backend = "flit_core.buildapi"
-
 [project]
-name = "e3fp"
-version = "1.2.7"
-requires-python = ">=3.9, <3.14"
-description = "Molecular 3D fingerprinting"
-readme = "README.rst"
-authors = [
-    {name = "Seth Axen", email = "seth.axen@gmail.com"},
-]
-license = {file = "LICENSE.txt"}
-keywords = ["e3fp", "3d", "molecule", "fingerprint", "conformer"]
-classifiers = [
-    "Programming Language :: Python",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: 3.13",
-    "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
-    "Operating System :: OS Independent",
-    "Development Status :: 4 - Beta",
-    "Intended Audience :: Science/Research",
-    "Intended Audience :: Developers",
-    "Topic :: Scientific/Engineering :: Chemistry",
-    "Topic :: Software Development :: Libraries :: Python Modules",
-]
+name = "fimfarchive"
+version = "0.1.0"
+description = "Preserves stories from Fimfiction"
+readme = "README.md"
+requires-python = "~=3.8"
 dependencies = [
-    "mmh3>=2.3.1",
-    "numpy>=1.11.3",
-    "rdkit>=2016.03.4",
-    "scipy>=0.18.0",
-    "sdaxen_python_utilities>=0.1.5",
-    "smart_open>=1.8.3",
+    "arrow~=1.3",
+    "bbcode~=1.1",
+    "blinker~=1.8",
+    "jinja2~=3.1",
+    "jmespath~=1.0",
+    "jsonapi-client",
+    "requests~=2.32",
+    "tqdm~=4.66",
 ]
 
 [project.optional-dependencies]
-optional = [
-    "h5py",
-    "mpi4py",
-    "numba",
-    "six", # needed by standardiser, but not listed as a dependency
-    "standardiser",
-]
-test = [
-    "mock",
-    "pytest",
-    "pytest-cov",
-    "e3fp[optional]",
-]
-docs = [
-    "sphinx",
-    "sphinxcontrib-programoutput",
-    "sphinx-rtd-theme",
-]
-dev = [
-    "e3fp[docs]",
-    "e3fp[test]",
+lz4 = ["lz4~=4.3"]
+
+[tool.uv]
+compile-bytecode = true
+dev-dependencies = [
+    "mypy~=1.11",
+    "pytest~=8.3",
+    "requests-mock~=1.12",
+    "ruff~=0.6",
+    "types-jmespath~=1.0",
+    "types-requests~=2.32",
+    "types-tqdm~=4.66",
 ]
 
-[project.urls]
-Homepage = "https://github.com/keiserlab/e3fp"
-Download = "https://github.com/keiserlab/e3fp/tarball/{version}"
+[tool.uv.sources.jsonapi-client]
+git = "https://github.com/JockeTF/jsonapi-client.git"
 
-[project.scripts]
-e3fp-fingerprint = "e3fp.fingerprint.generate:main"
-e3fp-conformer = "e3fp.conformer.generate:main"
+[tool.mypy]
+files = ["fimfarchive", "tests"]
+ignore_missing_imports = true
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
 
 [tool.pytest.ini_options]
-addopts = "-ra -q"
-testpaths = ["e3fp/test"]
+testpaths = ["tests"]
 
-# https://github.com/astral-sh/uv/issues/6281
-[tool.uv]
-constraint-dependencies = ["numba>=0.60.0"]
-# Resolve dependencies separately for each Python version
-environments = [
-    "python_version>='3.13'",
-    "python_version=='3.12'",
-    "python_version=='3.11'",
-    "python_version=='3.10'",
-    "python_version=='3.9'",
-]
+[tool.ruff]
+extend-exclude = ["fimfarchive/__init__.py"]
+
+[tool.ruff.lint]
+select = ["A", "E", "F", "N", "RUF", "T10", "W"]
+ignore = ["N801", "RUF012", "RUF022"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

@@ -1,11 +1,11 @@
 """
-Tests for Fimfarchive.
+Main module script.
 """
 
 
 #
 # Fimfarchive, preserves stories from Fimfiction.
-# Copyright (C) 2015  Joakim Soderlund
+# Copyright (C) 2019  Joakim Soderlund
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,3 +20,14 @@ Tests for Fimfarchive.
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
+
+
+import sys
+
+from fimfarchive.commands import RootCommand
+
+
+if __name__ == '__main__':
+    cmd = RootCommand()
+    code = cmd(*sys.argv[1:])
+    exit(code=code)

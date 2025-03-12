@@ -1,5 +1,5 @@
 """
-Tests for Fimfarchive.
+Converter base class.
 """
 
 
@@ -20,3 +20,31 @@ Tests for Fimfarchive.
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
+
+
+from abc import ABC, abstractmethod
+
+from fimfarchive.stories import Story
+
+
+__all__ = (
+    'Converter',
+)
+
+
+class Converter(ABC):
+    """
+    Converter for stories.
+    """
+
+    @abstractmethod
+    def __call__(self, story: Story) -> Story:
+        """
+        Applies the conversion.
+
+        Args:
+            *story: The story to convert.
+
+        Returns:
+            A converted story.
+        """

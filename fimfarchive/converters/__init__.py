@@ -1,11 +1,11 @@
 """
-Tests for Fimfarchive.
+Converter module.
 """
 
 
 #
 # Fimfarchive, preserves stories from Fimfiction.
-# Copyright (C) 2015  Joakim Soderlund
+# Copyright (C) 2019  Joakim Soderlund
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,3 +20,19 @@ Tests for Fimfarchive.
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
+
+
+from .base import Converter
+from .alpha_beta import AlphaBetaConverter
+from .fpub_epub import FpubEpubConverter
+from .json_fpub import JsonFpubConverter
+from .local_utc import LocalUtcConverter
+
+
+__all__ = (
+    'Converter',
+    'AlphaBetaConverter',
+    'FpubEpubConverter',
+    'JsonFpubConverter',
+    'LocalUtcConverter',
+)

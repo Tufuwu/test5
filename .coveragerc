@@ -1,8 +1,7 @@
-# .coveragerc to control coverage.py
 [run]
-branch = True
-source = e3fp
-omit =
-    */e3fp/test/*
-    */setup.py
-    */doc/*
+include = fimfarchive/*
+
+[report]
+exclude_lines =
+    pragma: no cover
+    raise NotImplementedError

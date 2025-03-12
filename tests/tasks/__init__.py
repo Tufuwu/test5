@@ -1,5 +1,5 @@
 """
-Tests for Fimfarchive.
+Task tests.
 """
 
 

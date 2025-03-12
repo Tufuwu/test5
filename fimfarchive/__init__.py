@@ -1,5 +1,10 @@
-"""
-Tests for Fimfarchive.
+r"""
+______ _            __                _     _            
+|  ___(_)_ __ ___  / _| __ _ _ __ ___| |__ (_)_   _____  
+| |_  | | '_ ` _ \| |_ / _` | '__/ __| '_ \| \ \ / / _ \ 
+|  _| | | | | | | |  _| (_| | | | (__| | | | |\ V /  __/ 
+|_|   |_|_| |_| |_|_|  \__,_|_|  \___|_| |_|_| \_/ \___| 
+                                                         
 """
 
 
@@ -20,3 +25,9 @@ Tests for Fimfarchive.
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
+
+
+__author__ = 'Joakim Soderlund'
+__copyright__ = 'Copyright (C) 2015  Joakim Soderlund'
+__license__ = 'GPLv3'
+__version__ = '0.1.0'

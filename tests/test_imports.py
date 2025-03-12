@@ -1,5 +1,5 @@
 """
-Tests for Fimfarchive.
+Import tests.
 """
 
 
@@ -20,3 +20,39 @@ Tests for Fimfarchive.
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
+
+
+import pytest
+
+
+MODULES = (
+    'commands',
+    'converters',
+    'exceptions',
+    'fetchers',
+    'flavors',
+    'mappers',
+    'selectors',
+    'signals',
+    'stampers',
+    'stories',
+    'tasks',
+    'utils',
+    'writers',
+)
+
+
+class TestImport:
+    """
+    Tests import.
+    """
+
+    @pytest.mark.parametrize('module', MODULES)
+    def test_wildcard_import(self, module):
+        """
+        Tests wildcard import.
+        """
+        template = 'from fimfarchive.{} import *'
+        statement = template.format(module)
+
+        exec(statement)

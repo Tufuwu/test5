@@ -1,5 +1,5 @@
 """
-Tests for Fimfarchive.
+Exceptions for Fimfarchive.
 """
 
 
@@ -20,3 +20,28 @@ Tests for Fimfarchive.
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
+
+
+__all__ = (
+    'FimfarchiveError',
+    'InvalidStoryError',
+    'StorySourceError',
+)
+
+
+class FimfarchiveError(Exception):
+    """
+    Base class for Fimfarchive exceptions.
+    """
+
+
+class InvalidStoryError(FimfarchiveError):
+    """
+    Story does not exist.
+    """
+
+
+class StorySourceError(FimfarchiveError):
+    """
+    Story source is unusable.
+    """

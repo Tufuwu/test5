@@ -1,5 +1,5 @@
 """
-Tests for Fimfarchive.
+Story fetchers.
 """
 
 
@@ -20,3 +20,19 @@ Tests for Fimfarchive.
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
+
+
+from .base import Fetcher
+from .directory import DirectoryFetcher
+from .fimfarchive import FimfarchiveFetcher
+from .fimfiction import FimfictionFetcher
+from .fimfiction2 import Fimfiction2Fetcher
+
+
+__all__ = (
+    'Fetcher',
+    'DirectoryFetcher',
+    'FimfarchiveFetcher',
+    'FimfictionFetcher',
+    'Fimfiction2Fetcher',
+)

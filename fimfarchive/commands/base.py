@@ -1,5 +1,5 @@
 """
-Tests for Fimfarchive.
+Command base class.
 """
 
 
@@ -20,3 +20,32 @@ Tests for Fimfarchive.
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
+
+
+from abc import ABC, abstractmethod
+
+
+__all__ = (
+    'Command',
+)
+
+
+class Command(ABC):
+    """
+    Command line interface for tasks.
+    """
+
+    @abstractmethod
+    def __call__(self, *args: str) -> int:
+        """
+        Runs the command.
+
+        Args:
+            *args: Command line arguments.
+
+        Returns:
+            Application exit status.
+
+        Raises:
+            SystemExit: If the arguments are invalid.
+        """

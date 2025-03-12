@@ -1,0 +1,526 @@
+\documentclass[hidelinks,a4paper,12pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{float}
+\usepackage[hmargin=2cm,vmargin=2cm]{geometry}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{longtable}
+\usepackage{lstautogobble}
+
+\begin{document}
+
+\title{Fimfarchive}
+\date{20250301}
+
+\maketitle
+\newpage
+\tableofcontents
+\newpage
+
+\section{Introduction} \label{sec:introduction}
+
+Fimfarchive is a project which aims to release all stories available on Fimfiction, together with their metadata, as a single archive. The archive is organized by author and could be used for backup, offline reading, or data mining.
+
+A new version will be released each season via BitTorrent, approximately once every three months. When suitable, an xdelta3 patch will also be provided for users who do not wish to redownload unchanged stories.
+
+Note that the archive contains a large number of files. Unzipping it to your file system may not be necessary if the archive is to be used together with some application. If you are a developer, reading directly from the ZIP-file may be preferable.
+
+
+\section{Index} \label{sec:index}
+
+The metadata of each story can be found in \path{index.json}. The file contains one story entry per line ordered by story ID. It was constructed using data from the Fimfiction API, which is incomplete. Additionally, each entry includes the attribute \path{archive.path} which shows where in the archive the story is located. Below is an example entry for the story \emph{Sunny Skies All Day Long}. Note that the structure of the metadata may change in the future.
+
+\begin{lstlisting}[breaklines, basicstyle=\ttfamily\small, columns=flexible]
+{
+  "archive": {
+    "date_checked": "2025-01-30T09:03:38.241144+00:00",
+    "date_created": null,
+    "date_fetched": "2025-01-30T09:03:38.241144+00:00",
+    "date_updated": "2017-11-03T12:03:47.175215+00:00",
+    "path": "epub/p/phantomfox-26190/sunny_skies_all_day_long-20685.epub"
+  },
+  "author": {
+    "avatar": {
+      "128": "https://cdn-img.fimfiction.net/user/p8d8-1431820610-26190-128",
+      "160": "https://cdn-img.fimfiction.net/user/p8d8-1431820610-26190-160",
+      "192": "https://cdn-img.fimfiction.net/user/p8d8-1431820610-26190-192",
+      "256": "https://cdn-img.fimfiction.net/user/p8d8-1431820610-26190-256",
+      "32": "https://cdn-img.fimfiction.net/user/p8d8-1431820610-26190-32",
+      "320": "https://cdn-img.fimfiction.net/user/p8d8-1431820610-26190-320",
+      "384": "https://cdn-img.fimfiction.net/user/p8d8-1431820610-26190-384",
+      "48": "https://cdn-img.fimfiction.net/user/p8d8-1431820610-26190-48",
+      "512": "https://cdn-img.fimfiction.net/user/p8d8-1431820610-26190-512",
+      "64": "https://cdn-img.fimfiction.net/user/p8d8-1431820610-26190-64",
+      "96": "https://cdn-img.fimfiction.net/user/p8d8-1431820610-26190-96"
+    },
+    "bio_html": "",
+    "date_joined": "2012-04-13T19:09:19+00:00",
+    "id": 26190,
+    "name": "PhantomFox",
+    "num_blog_posts": 1,
+    "num_followers": 730,
+    "num_stories": 3,
+    "url": "https://www.fimfiction.net/user/26190/PhantomFox"
+  },
+  "chapters": [
+    {
+      "chapter_number": 1,
+      "date_modified": "2012-09-26T17:27:44+00:00",
+      "date_published": "2012-09-26T17:27:44+00:00",
+      "id": 63408,
+      "num_views": 110641,
+      "num_words": 8536,
+      "published": true,
+      "title": "Chapter 1",
+      "url": "https://www.fimfiction.net/story/20685/1/sunny-skies-all-day-long/chapter-1"
+    }
+  ],
+  "color": {
+    "hex": "dfbeae",
+    "rgb": [
+      223,
+      190,
+      174
+    ]
+  },
+  "completion_status": "complete",
+  "content_rating": "everyone",
+  "cover_image": {
+    "full": "https://cdn-img.fimfiction.net/story/5c7h-1432428695-20685-full",
+    "large": "https://cdn-img.fimfiction.net/story/5c7h-1432428695-20685-large",
+    "medium": "https://cdn-img.fimfiction.net/story/5c7h-1432428695-20685-medium",
+    "thumbnail": "https://cdn-img.fimfiction.net/story/5c7h-1432428695-20685-tiny"
+  },
+  "date_modified": null,
+  "date_published": "2012-04-14T14:42:21+00:00",
+  "date_updated": "2012-04-14T14:42:21+00:00",
+  "description_html": "<p>Princess Celestia tires of constantly being surrounded by decorum, deference, and formality, and decides to take a day off from being Princess.  But visiting Ponyville incognito is harder than she expects.  Will she be able to fit in and make friends without blowing her cover?</p>",
+  "id": 20685,
+  "num_chapters": 1,
+  "num_comments": 811,
+  "num_dislikes": 145,
+  "num_likes": 9549,
+  "num_views": 110640,
+  "num_words": 8536,
+  "prequel": null,
+  "published": true,
+  "rating": 99,
+  "short_description": "Celestia's Day Off",
+  "status": "visible",
+  "submitted": true,
+  "tags": [
+    {
+      "id": 73,
+      "name": "Main 6",
+      "old_id": "c:74",
+      "type": "character",
+      "url": "https://www.fimfiction.net/tag/main-6"
+    },
+    {
+      "id": 16,
+      "name": "Princess Celestia",
+      "old_id": "c:17",
+      "type": "character",
+      "url": "https://www.fimfiction.net/tag/princess-celestia"
+    },
+    {
+      "id": 237,
+      "name": "Slice of Life",
+      "old_id": "g:slice_of_life",
+      "type": "genre",
+      "url": "https://www.fimfiction.net/tag/slice-of-life"
+    },
+    {
+      "id": 4,
+      "name": "My Little Pony: Friendship is Magic",
+      "old_id": "",
+      "type": "series",
+      "url": "https://www.fimfiction.net/tag/mlp-fim"
+    }
+  ],
+  "title": "Sunny Skies All Day Long",
+  "total_num_views": 110640,
+  "url": "https://www.fimfiction.net/story/20685/sunny-skies-all-day-long"
+}
+\end{lstlisting}
+
+
+\section{Changelog} \label{sec:changelog}
+
+\begin{longtable}{|r|r|r|r|r|r|} \hline
+\textbf{Version} & \textbf{Stories} & \textbf{Added} & \textbf{Updated} & \textbf{Removed} \\ \hline
+20250301         & $221824$         & $1454$         & $2920$           & $0$              \\ \hline
+20241201         & $220370$         & $1578$         & $3084$           & $3$              \\ \hline
+20240901         & $218795$         & $1605$         & $3157$           & $0$              \\ \hline
+20240601         & $217190$         & $1580$         & $3312$           & $0$              \\ \hline
+20240301         & $215610$         & $1688$         & $3243$           & $0$              \\ \hline
+20231201         & $213922$         & $1557$         & $3277$           & $0$              \\ \hline
+20230901         & $212365$         & $1796$         & $3358$           & $16$             \\ \hline
+20230601         & $210585$         & $1512$         & $3440$           & $0$              \\ \hline
+20230301         & $209073$         & $1653$         & $3360$           & $2$              \\ \hline
+20221201         & $207422$         & $1608$         & $3488$           & $0$              \\ \hline
+20220901         & $205814$         & $1551$         & $3591$           & $0$              \\ \hline
+20220601         & $204263$         & $1712$         & $3652$           & $0$              \\ \hline
+20220301         & $202551$         & $1815$         & $3705$           & $0$              \\ \hline
+20211201         & $200736$         & $2060$         & $4088$           & $6$              \\ \hline
+20210901         & $198682$         & $1962$         & $4104$           & $0$              \\ \hline
+20210601         & $196720$         & $2240$         & $4502$           & $95$             \\ \hline
+20210301         & $194575$         & $2229$         & $4424$           & $0$              \\ \hline
+20201201         & $192346$         & $2277$         & $4573$           & $2$              \\ \hline
+20200901         & $190071$         & $2519$         & $4762$           & $0$              \\ \hline
+20200601         & $187552$         & $2653$         & $4999$           & $0$              \\ \hline
+20200301         & $184899$         & $2429$         & $4626$           & $0$              \\ \hline
+20191201         & $182470$         & $2805$         & $4824$           & $0$              \\ \hline
+20190901         & $179665$         & $2484$         & $5016$           & $9$              \\ \hline
+20190601         & $177190$         & $2736$         & $5058$           & $45$             \\ \hline
+20190301         & $174499$         & $2563$         & $5111$           & $0$              \\ \hline
+20181201         & $171936$         & $2858$         & $5359$           & $0$              \\ \hline
+20180901         & $169078$         & $2667$         & $5603$           & $0$              \\ \hline
+20180601         & $166411$         & $2980$         & $6061$           & $0$              \\ \hline
+20180307         & $163431$         & $3322$         & $7872$           & $0$              \\ \hline
+20171203         & $160109$         & $3261$         & $110426$         & $0$              \\ \hline
+20170907         & $156848$         & $3301$         & $5202$           & $0$              \\ \hline
+20170601         & $153547$         & $3644$         & $5265$           & $0$              \\ \hline
+20170301         & $149903$         & $4608$         & $5632$           & $0$              \\ \hline
+20161201         & $145295$         & $4582$         & $5685$           & $0$              \\ \hline
+20160901         & $140713$         & $5278$         & $6106$           & $0$              \\ \hline
+20160525         & $135435$         & $5059$         & $6238$           & $0$              \\ \hline
+20160225         & $130376$         & $6045$         & $6569$           & $0$              \\ \hline
+20151125         & $124331$         & $5399$         & $104124$         & $0$              \\ \hline
+20150901         & $118932$         & $6752$         & $6752$           & $0$              \\ \hline
+20150601         & $112180$         & $6969$         & $6946$           & $0$              \\ \hline
+20150307         & $105211$         & $6664$         & $6756$           & $0$              \\ \hline
+20141201         & $98547$          & $11028$        & $8296$           & $0$              \\ \hline
+20140719         & $87519$          & $8286$         & $7395$           & $3$              \\ \hline
+20140418         & $79236$          & $8818$         & $65208$          & $2$              \\ \hline
+20140120         & $70420$          & $9821$         & $7317$           & $14$             \\ \hline
+20131015         & $60613$          & $13446$        & $7694$           & $0$              \\ \hline
+20130616         & $47167$          & $47167$        & $0$              & $0$              \\ \hline
+\end{longtable}
+
+\subsection{20250301}  \label{sec:changelog_20250301}
+
+\begin{itemize}
+\item Updated archive contents.
+\item Fixed a stale story that couldn't be updated.
+  \\ (Approach suggested by Silk Rose)
+\item Fixed missing index fields in the release candidate.
+  \\ (Found and reported by hawthornbunny)
+\end{itemize}
+
+\subsection{20241201}  \label{sec:changelog_20241201}
+
+\begin{itemize}
+\item Updated archive contents.
+\end{itemize}
+
+\subsection{20240901}  \label{sec:changelog_20240901}
+
+\begin{itemize}
+\item Updated archive contents.
+\end{itemize}
+
+\subsection{20240601}  \label{sec:changelog_20240601}
+
+\begin{itemize}
+\item Updated archive contents.
+\end{itemize}
+
+\subsection{20240301}  \label{sec:changelog_20240301}
+
+\begin{itemize}
+\item Updated archive contents.
+\end{itemize}
+
+\subsection{20231201}  \label{sec:changelog_20231201}
+
+\begin{itemize}
+\item Updated archive contents.
+\end{itemize}
+
+\subsection{20230901}  \label{sec:changelog_20230901}
+
+\begin{itemize}
+\item Updated archive contents.
+\end{itemize}
+
+\subsection{20230601}  \label{sec:changelog_20230601}
+
+\begin{itemize}
+\item Updated archive contents.
+\end{itemize}
+
+\subsection{20230301}  \label{sec:changelog_20230301}
+
+\begin{itemize}
+\item Updated archive contents.
+\end{itemize}
+
+\subsection{20221201}  \label{sec:changelog_20221201}
+
+\begin{itemize}
+\item Updated archive contents.
+\end{itemize}
+
+\subsection{20220901}  \label{sec:changelog_20220901}
+
+\begin{itemize}
+\item Updated archive contents.
+\end{itemize}
+
+\subsection{20220601}  \label{sec:changelog_20220601}
+
+\begin{itemize}
+\item Updated archive contents.
+\end{itemize}
+
+\subsection{20220301}  \label{sec:changelog_20220301}
+
+\begin{itemize}
+\item Updated archive contents.
+\end{itemize}
+
+\subsection{20211201}  \label{sec:changelog_20211201}
+
+\begin{itemize}
+\item Updated archive contents.
+\end{itemize}
+
+\subsection{20210901}  \label{sec:changelog_20210901}
+
+\begin{itemize}
+\item Updated archive contents.
+\end{itemize}
+
+\subsection{20210601}  \label{sec:changelog_20210601}
+
+\begin{itemize}
+\item Updated archive contents.
+\end{itemize}
+
+\subsection{20210301}  \label{sec:changelog_20210301}
+
+\begin{itemize}
+\item Updated archive contents.
+\end{itemize}
+
+\subsection{20201201}  \label{sec:changelog_20201201}
+
+\begin{itemize}
+\item Updated archive contents.
+\end{itemize}
+
+\subsection{20200901}  \label{sec:changelog_20200901}
+
+\begin{itemize}
+\item Updated archive contents.
+\end{itemize}
+
+\subsection{20200601}  \label{sec:changelog_20200601}
+
+\begin{itemize}
+\item Updated archive contents.
+\end{itemize}
+
+\subsection{20200301}  \label{sec:changelog_20200301}
+
+\begin{itemize}
+\item Updated archive contents.
+\end{itemize}
+
+\subsection{20191201}  \label{sec:changelog_20191201}
+
+\begin{itemize}
+\item Updated archive contents.
+\end{itemize}
+
+\subsection{20190901}  \label{sec:changelog_20190901}
+
+\begin{itemize}
+\item Updated archive contents.
+\item Fixed author ID sometimes being a string.
+\end{itemize}
+
+\subsection{20190601}  \label{sec:changelog_20190601}
+
+\begin{itemize}
+\item Updated archive contents.
+\item Rewrote the builder.
+\end{itemize}
+
+\subsection{20190301}  \label{sec:changelog_20190301}
+
+\begin{itemize}
+\item Updated archive contents.
+\item Fixed inconsistency in completion status.
+  \\ (Reported by Midnight Sapphire)
+\end{itemize}
+
+\subsection{20181201}  \label{sec:changelog_20181201}
+
+\begin{itemize}
+\item Updated archive contents.
+\end{itemize}
+
+\subsection{20180901}  \label{sec:changelog_20180901}
+
+\begin{itemize}
+\item Updated archive contents.
+\end{itemize}
+
+\subsection{20180601}  \label{sec:changelog_20180601}
+
+\begin{itemize}
+\item Updated archive contents.
+\end{itemize}
+
+\subsection{20180307}  \label{sec:changelog_20180307}
+
+\begin{itemize}
+\item Updated archive contents.
+\end{itemize}
+
+\subsection{20171203}  \label{sec:changelog_20171203}
+
+\begin{itemize}
+\item Updated archive contents.
+\item Redownloaded all available stories.
+\item Changed to Fimfiction APIv2.
+\item Added archive metadata.
+\item Added author's notes.
+\end{itemize}
+
+\subsection{20170907}  \label{sec:changelog_20170907}
+
+\begin{itemize}
+\item Updated archive contents.
+\end{itemize}
+
+\subsection{20170601}  \label{sec:changelog_20170601}
+
+\begin{itemize}
+\item Updated archive contents.
+\end{itemize}
+
+\subsection{20170301}  \label{sec:changelog_20170301}
+
+\begin{itemize}
+\item Updated archive contents.
+\item Added wordless stories.
+\item Rewrote the updater.
+\end{itemize}
+
+\subsection{20161201}  \label{sec:changelog_20161201}
+
+\begin{itemize}
+\item Updated archive contents.
+\end{itemize}
+
+\subsection{20160901}  \label{sec:changelog_20160901}
+
+\begin{itemize}
+\item Updated archive contents.
+\end{itemize}
+
+\subsection{20160525}  \label{sec:changelog_20160525}
+
+\begin{itemize}
+\item Updated archive contents.
+\end{itemize}
+
+\subsection{20160225}  \label{sec:changelog_20160225}
+
+\begin{itemize}
+\item Updated archive contents.
+\end{itemize}
+
+\subsection{20151125}  \label{sec:changelog_20151125}
+
+\begin{itemize}
+\item Updated archive contents.
+\item Redownloaded all available stories.
+\item Processed all stories with Calibre.
+\item Removed readme section about formatting.
+\end{itemize}
+
+\subsection{20150901}  \label{sec:changelog_20150901}
+
+\begin{itemize}
+\item Updated archive contents.
+\end{itemize}
+
+\subsection{20150601}  \label{sec:changelog_20150601}
+
+\begin{itemize}
+\item Updated archive contents.
+\end{itemize}
+
+\subsection{20150307}  \label{sec:changelog_20150307}
+
+\begin{itemize}
+\item Updated archive contents.
+\item Added readme section about formatting.
+\end{itemize}
+
+\subsection{20141201} \label{sec:changelog_20141201}
+
+\begin{itemize}
+\item Updated archive contents.
+\item Changed EPUB content source to Fimfiction's HTML exporter.
+\end{itemize}
+
+\subsection{20140719} \label{sec:changelog_20140719}
+
+\begin{itemize}
+\item Updated archive contents.
+\end{itemize}
+
+\subsection{20140418} \label{sec:changelog_20140418}
+
+\begin{itemize}
+\item Updated archive contents.
+\item Redownloaded all available stories.
+\item Fixed mime type issues with repackaged stories.
+\end{itemize}
+
+\subsection{20140120} \label{sec:changelog_20140120}
+
+\begin{itemize}
+\item Updated archive contents.
+\item Updated stories with new style from Fimfiction.
+\item Removed now empty stories.
+\end{itemize}
+
+\subsection{20131015} \label{sec:changelog_20131015}
+
+\begin{itemize}
+\item Updated archive contents.
+\item Added anthro category.
+\end{itemize}
+
+\subsection{20130616} \label{sec:changelog_20130616}
+
+\begin{itemize}
+\item Initial release.
+\end{itemize}
+
+
+\section{Links} \label{sec:links}
+
+\begin{itemize}
+\item Fimfarchive: \\ \url{http://www.fimfarchive.net/}
+\item Fimfarchive on Fimfiction: \\ \url{http://www.fimfiction.net/user/Fimfarchive}
+\item Fimfarchive on Reddit: \\ \url{http://www.reddit.com/user/Fimfarchive}
+\item Fimfiction: \\ \url{http://www.fimfiction.net/}
+\item xdelta: \\ \url{http://xdelta.org/}
+\end{itemize}
+
+
+\section{Contact} \label{sec:contact}
+
+To contact Fimfarchive, send an e-mail to \href{mailto:fimfarchive@gmail.com}{fimfarchive@gmail.com}.
+
+\end{document}

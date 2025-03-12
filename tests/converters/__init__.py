@@ -1,5 +1,5 @@
 """
-Tests for Fimfarchive.
+Converter tests.
 """
 
 
