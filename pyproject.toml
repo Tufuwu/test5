@@ -1,66 +1,85 @@
-[project]
-name = "boltons"
-version = "25.0.1dev"
-description = "When they're not builtins, they're boltons."
-readme = "README.md"
-authors = [{ name = "Mahmoud Hashemi", email = "mahmoud@hatnote.com" }]
+[tool.poetry]
+name = "snug"
+version = "2.4.0"
+description = "Write reusable web API interactions"
+authors = ["Arie Bovenberg <a.c.bovenberg@gmail.com>"]
+license = "MIT"
 classifiers = [
-    # See: https://pypi.python.org/pypi?:action=list_classifiers
-    "Topic :: Utilities",
-    "Intended Audience :: Developers",
-    "License :: OSI Approved :: BSD License",
-    "Topic :: Software Development :: Libraries",
-    "Development Status :: 5 - Production/Stable",
-    "Operating System :: OS Independent",
-    # List of python versions and their support status:
-    # https://en.wikipedia.org/wiki/CPython#Version_history
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.7",
-    "Programming Language :: Python :: 3.8",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Development Status :: 4 - Beta",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
-    "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: Implementation :: CPython",
-    "Programming Language :: Python :: Implementation :: PyPy",
 ]
-requires-python = ">=3.7"
-license = { file = "LICENSE" }
-
-[project.urls]
-Homepage = "https://github.com/mahmoud/boltons"
-
-[tool.flit.sdist]
-include = ["doc/", "tests/", "CHANGELOG.md", "tox.ini"]
-exclude = ["doc/_build"]
-
-[tool.pytest.ini_options]
-doctest_optionflags = [
-    "ALLOW_UNICODE",
-    "ELLIPSIS",
-    "IGNORE_EXCEPTION_DETAIL",
-    "NORMALIZE_WHITESPACE",
+packages = [
+    { include = "snug", from = "src" },
 ]
+readme = "README.rst"
+include = ["CHANGELOG.rst", "README.rst"]
+repository = "https://github.com/ariebovenberg/snug"
+keywords = [
+    "api-wrapper",
+    "http",
+    "async",
+    "graphql",
+    "rest",
+]
+
+[tool.poetry.dependencies]
+python = "^3.9,<4.0"
+aiohttp = {version = "^3.4.4", optional = true}
+requests = {version = "^2.20", optional = true}
+httpx = {version = ">=0.21.1,<0.29.0", optional = true}
+
+[tool.poetry.group.test.dependencies]
+pytest = "^8"
+pytest-cov = "^6"
+pytest-mock = "^3.10"
+pytest-httpbin = "^2.0.0"
+# Werkzeug == 2.1.0 does not work with httpbin
+#    https://github.com/postmanlabs/httpbin/issues/673
+Werkzeug = "==2.0.3"
+
+[tool.poetry.group.typecheck.dependencies]
+mypy = "^1.0"
+
+[tool.poetry.group.linting.dependencies]
+black = "^25"
+flake8 = "^7"
+isort = "^6"
+slotscheck = "^0.19.1"
+
+[tool.poetry.extras]
+aiohttp = ["aiohttp"]
+requests = ["requests"]
+httpx = ["httpx"]
+
+[tool.black]
+line-length = 79
+include = '\.pyi?$'
+exclude = '''
+/(
+  \.eggs
+| \.git
+| \.mypy_cache
+| \.tox
+| \.venv
+| _build
+| build
+| dist
+)/
+'''
+
+[tool.isort]
+line_length = 79
+profile = 'black'
+
+[tool.slotscheck]
+strict-imports = true
+require-superclass = true
 
 [build-system]
-requires = ["flit_core >=3.2,<4"]
-build-backend = "flit_core.buildapi"
-
-# A brief checklist for release:
-# * tox
-# * git commit (if applicable)
-# * Bump pyproject.toml version off of -dev
-# * git commit -a -m "bump version for x.y.z release"
-# * rm -rf dist/*
-# * flit build
-# * flit publish
-# * bump docs/conf.py version
-# * git commit
-# * git tag -a x.y.z -m "brief summary"
-# * write CHANGELOG
-# * git commit
-# * bump pyproject.toml version onto n+1 dev
-# * git commit
-# * git push
+requires = ["poetry-core>=1.1.0"]
+build-backend = "poetry.core.masonry.api"

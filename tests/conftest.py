@@ -1,26 +1,20 @@
-import sys
-import re
+import pytest
 
 
-_VERSION_MARKER = re.compile(r'_py(?P<major_version>\d)(?P<minor_version>\d)?')
+def pytest_addoption(parser):
+    parser.addoption(
+        "--live",
+        action="store_true",
+        default=False,
+        help="run against live data",
+    )
 
 
-def pytest_ignore_collect(path, config):
-    """
-    Ignore tests that end with _pyX, where X does not equal this
-    interpreter's major version.
-    """
-    filename = path.basename
-    modulename = filename.split('.', 1)[0]
-    match = _VERSION_MARKER.search(modulename)
-    if not match:
-        return False
-    major_version = match.group('major_version')
-    minor_version = match.group('minor_version')
-
-    if minor_version:
-        version_match = (int(major_version), int(minor_version)) == sys.version_info[:2]
-    else:
-        version_match = int(major_version) == sys.version_info[0]
-
-    return not version_match  # because this is an _ignore_ (not an include)
+def pytest_collection_modifyitems(config, items):
+    if config.getoption("--live"):
+        # --live given in cli: do not skip live tests
+        return
+    skip_live = pytest.mark.skip(reason="need --live option to run")
+    for item in items:
+        if "live" in item.keywords:
+            item.add_marker(skip_live)
