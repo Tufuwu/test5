@@ -1,15 +1,9 @@
-include LICENSE
-include MANIFEST.in
-include NEWS
-include README.rst
-include debian/*
-include examples/*
-include pglookout.json
-include pglookout.spec
-include pglookout.unit
-include pglookout/*.py
-include setup.py
-include test/*.py
-include version.py
+include MANIFEST.in LICENSE *.md
 
-recursive-exclude *~ *.pyc \.*
+graft src/protontricks
+graft data
+
+exclude *.yml
+
+global-exclude *.py[cod]
+global-exclude __pycache__

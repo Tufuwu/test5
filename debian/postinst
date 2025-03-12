@@ -1,1 +1,0 @@
-adduser --quiet --system --group --home /var/lib/pglookout pglookout

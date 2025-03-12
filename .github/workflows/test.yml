@@ -1,74 +1,51 @@
-name: Build pglookout
+# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
 
-on:
-  push:
-    branches:
-      - master
-    tags:
-      - '**'
-  pull_request:
+name: Python package
+
+on: [push, pull_request]
 
 jobs:
-
-  lint:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        # only use the newest version for the lint step -> as long as the other version can run it it's ok
-        python-version: ["3.9", "3.10"]
-
-    steps:
-
-      - id: checkout-code
-        uses: actions/checkout@v2
-
-      - id: prepare-python
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python-version }}
-
-      - id: dependencies
-        run: |
-          pip install -e .
-          pip install --upgrade pylint flake8 pytest mock
-
-      - id: pylint
-        run: make pylint
-
-      - id: flake8
-        run: make flake8
-
   test:
     runs-on: ubuntu-latest
-    needs: lint
     strategy:
-      max-parallel: 4
       matrix:
         python-version: ["3.9", "3.10"]
-        pg-version: [9.6, 10, 11, 12, 13]
 
     steps:
-      - id: checkout-code
-        uses: actions/checkout@v2
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install pytest-cov  coveralls
+        pip install .
+    - name: Test with pytest
+      run: |
+        pytest -vv --cov=protontricks --cov-report term --cov-report xml tests
+    - name: Upload coverage
+      run: |
+        coveralls
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        COVERALLS_FLAG_NAME: python-${{ matrix.python-version }}
+        COVERALLS_PARALLEL: true
 
-      - id: prepare-python
+  coveralls-finish:
+    name: Finish Coveralls
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: ${{ matrix.python-version }}
-
-      - id: dependencies
+          python-version: 3.9
+      - name: Finished
         run: |
-          # Setup the Postgres repositories
-          sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
-          wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
-          sudo apt-get update
-          # Setup build deps
-          sudo apt-get install -y libsnappy-dev
-          sudo apt-get install -y postgresql-${{ matrix.pg-version }}
-          # Setup common python dependencies
-          python -m pip install --upgrade pip
-          pip install --upgrade pytest mock
-          pip install -e .
-
-      - id: unittest
-        run: make unittest
+          python -m pip install --upgrade coveralls
+          coveralls --finish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

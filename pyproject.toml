@@ -1,96 +1,15 @@
-[tool.black]
-line-length = 125
-
-[tool.isort]
-no_sections = true
-force_alphabetical_sort = true
-combine_as_imports = true
-profile = "black"
-skip_gitignore = true
-line_length = 125
-
-[tool.pytest.ini_options]
-python_classes = "!TestPG"  # Ignore class named `TestPG`.
-testpaths = 'test/'
-addopts = '-vv'
-
-[tool.flake8]
-ignore = [
-    'E722',  # https://www.flake8rules.com/rules/E722.html Do not use bare except, specify exception instead
-    'E203',  # https://www.flake8rules.com/rules/E203.html Whitespace before ':'
-    'W503',  # https://www.flake8rules.com/rules/W503.html Line break occurred before a binary operator
+[build-system]
+requires = [
+    "setuptools",
+    "wheel",
+    "setuptools-scm"
 ]
-max-line-length = 125
+build-backend = "setuptools.build_meta"
 
-[tool.mypy]
-strict = true
-files = [
-    'pglookout/',
-    'test/',
+[tool.setuptools_scm]
+write_to = "src/protontricks/_version.py"
+
+[tool.coverage.report]
+omit = [
+  "*/protontricks/_vdf/*"
 ]
-exclude = [
-    # Implementation.
-    'pglookout/__main__.py',
-    'pglookout/cluster_monitor.py',
-    'pglookout/common.py',
-    'pglookout/current_master.py',
-    'pglookout/logutil.py',
-    'pglookout/pglookout.py',
-    'pglookout/pgutil.py',
-    'pglookout/statsd.py',
-    'pglookout/version.py',
-    'pglookout/webserver.py',
-    # Tests.
-    'test/conftest.py',
-    'test/test_cluster_monitor.py',
-    'test/test_common.py',
-    'test/test_lookout.py',
-    'test/test_pgutil.py',
-    'test/test_webserver.py',
-    'test/utils.py',
-    # Other.
-    'setup.py',
-    'version.py',
-]
-
-
-[tool.pylint.'MESSAGES CONTROL']
-disable = [
-    'bad-option-value',
-    'duplicate-code',
-    'fixme',
-    'import-outside-toplevel',
-    'invalid-name',
-    'len-as-condition',
-    'locally-disabled',
-    'missing-docstring',
-    'no-else-raise',
-    'no-else-return',
-    'no-self-use',
-    'raise-missing-from',
-    'too-few-public-methods',
-    'too-many-ancestors',
-    'too-many-arguments',
-    'too-many-boolean-expressions',
-    'too-many-branches',
-    'too-many-function-args',
-    'too-many-instance-attributes',
-    'too-many-locals',
-    'too-many-public-methods',
-    'too-many-statements',
-    'ungrouped-imports',
-    'unspecified-encoding',
-    'wrong-import-order',
-    'wrong-import-position',
-]
-
-[tool.pylint.'FORMAT']
-max-line-length = 125
-max-module-lines = 1300
-
-[tool.pylint.'REPORTS']
-output-format = 'text'
-reports = 'no'
-
-[tool.pylint.'TYPECHECK']
-extension-pkg-whitelist = 'pydantic'
