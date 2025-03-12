@@ -1,19 +1,20 @@
 .. include:: ../README.rst
 
-.. include:: internals.rst
-
-Show me the code
+Reference
 ----------------
-Check the code to see details.
 
-.. toctree::
-   :maxdepth: 2
+Bot Interface
+~~~~~~~~~~~~~~~~
 
-   api
+.. automodule:: aiotg.bot
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
-Indices and tables
-==================
+Chat Interface
+~~~~~~~~~~~~~~~~~
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+.. automodule:: aiotg.chat
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -1,22 +1,35 @@
-# https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
-name: ci
+name: Python package
+
 on:
   push:
-    branches:
-      - master
+    branches: [ $default-branch ]
   pull_request:
-    branches:
-      - master
+    branches: [ $default-branch ]
+
 jobs:
-  ci:
+  build:
+
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.9", "3.10"]
+
     steps:
     - uses: actions/checkout@v3
-    - uses: actions/setup-python@4
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
       with:
-        python-version: 3.x
-    - run: pip install --upgrade pip
-    - run: pip install pytest ruff .
-    - run: ruff --format=github --ignore=E501 --target-version=py37 .
-    - run: pytest
-   
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install .
+        pip install black
+    - name: Lint
+      run: |
+        flake8 .
+        black --check --diff .
+    - name: Test
+      run: |
+        python setup.py -q test

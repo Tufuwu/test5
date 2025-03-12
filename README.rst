@@ -1,179 +1,83 @@
-Python Toolkit for WMO BUFR Messages
-====================================
+aiotg
+=====
 
-.. image:: https://travis-ci.org/ywangd/pybufrkit.svg?branch=master
-    :target: https://travis-ci.org/ywangd/pybufrkit
+Asynchronous Python API for building Telegram bots, featuring:
 
-`PyBufrKit <https://github.com/ywangd/pybufrkit>`_ is a **pure** Python package
-to work with WMO BUFR (FM-94) messages. It can be used as both a
-command line tool or library to decode and encode BUFR messages. Here is a brief
-list of some of the features:
+- Easy and declarative API
+- Hassle-free setup - no need for SSL certificates or static IP
+- Built-in support for analytics via chatbase.com
+- Automatic handling of Telegram API throttling or timeouts
 
-* Pure Python
-* Handles both compressed and un-compressed messages
-* Handles all practical operator descriptors, including data quality info,
-  stats, bitmaps, etc.
-* Option to construct hierarchial structure of a message, e.g. associate
-  first order stats data to their owners.
-* Convenient subsetting support for BUFR messages
-* Comprehensive query support for BUFR messages
-* Script support enables flexible extensions, e.g. filtering through large number of files.
-* Tested with the same set of BUFR files used by
-  `ecCodes <https://software.ecmwf.int/wiki/display/ECC/ecCodes+Home>`_
-  and `BUFRDC <https://software.ecmwf.int/wiki/display/BUFR/BUFRDC+Home>`_.
+Install it with pip:
 
-More documentation at http://pybufrkit.readthedocs.io/
+.. code:: sh
 
-An `online BUFR decoder <http://aws-bufr-webapp.s3-website-ap-southeast-2.amazonaws.com/>`_ powered by PyBufrKit, 
-`Serverless <https://serverless.com/>`_ and `AWS Lambda <https://aws.amazon.com/lambda/>`_.
+    pip install aiotg
 
-Installation
-------------
-PyBufrKit is compatible with Python 2.7, 3.5+, and `PyPy <https://pypy.org/>`_.
-To install from PyPi::
+Then you can create a new bot in few lines:
 
-    pip install pybufrkit
+.. code:: python
 
-Or from `conda-forge <https://conda-forge.org>`_::
+    from aiotg import Bot, Chat
 
-    conda install -c conda-forge pybufrkit
+    bot = Bot(api_token="...")
 
-Or from source::
+    @bot.command(r"/echo (.+)")
+    def echo(chat: Chat, match):
+        return chat.reply(match.group(1))
 
-    python setup.py install
+    bot.run()
 
-Command Line Usage
-------------------
+Now run it with a proper API\_TOKEN and it should reply to /echo commands.
 
-The command line usage of the toolkit takes the following form::
+.. note:: Type annotations are not required but will help your editor/IDE to provide code completion.
 
-    pybufrkit [OPTIONS] command ...
+The example above looks like a normal synchronous code but it actually returns a coroutine.
+If you want to make an external request (and that's what bots usually do) just use aiohttp and async/await syntax:
 
-where the ``command`` is one of following actions that can be performed by the tool:
+.. code:: python
 
-* ``decode`` - Decode a BUFR file to outputs of various format, e.g. JSON
-* ``encode`` - Encode a BUFR file from a JSON input
-* ``info`` - Decode only the metadata sections (i.e. section 0, 1, 2, 3) of given BUFR files
-* ``split`` - Split given BUFR files into one message per file
-* ``subset`` - Subset the given BUFR file and save as new file
-* ``query`` - Query metadata or data of given BUFR files
-* ``script`` - Embed BUFR query expressions into normal Python script
-* ``lookup`` - Look up information about the given list of comma separated BUFR descriptors
-* ``compile`` - Compile the given comma separated BUFR descriptors
+    import aiohttp
+    from aiotg import Bot, Chat
 
-Here are a few examples using the tool from command line. For more details, please refer
-to the help option, e.g. ``pybufrkit decode -h``. Also checkout the
-`documentation <http://pybufrkit.readthedocs.io/>`_.
+    bot = Bot(api_token="...")
 
-.. code-block:: Bash
+    @bot.command("bitcoin")
+    async def bitcoin(chat: Chat, match):
+        url = "https://apiv2.bitcoinaverage.com/indices/global/ticker/BTCUSD"
+        async with aiohttp.ClientSession() as session:
+            response = await session.get(url)
+            info = await response.json()
+            await chat.send_text(str(info["averages"]["day"]))
 
-    # Decode a BUFR file and output in the default flat text format
-    pybufrkit decode BUFR_FILE
-
-    # Decode a file that is a concatenation of multiple BUFR messages,
-    # skipping any erroneous messages and continue on next one
-    pybufrkit decode -m --continue-on-error FILE
-
-    # Filter through a multi-message file and only decode messages
-    # that have data_category equals to 2. See below for details
-    # about usable filter expressions.
-    pybufrkit decode -m --filter '${%data_category} == 2' FILE
-
-    # Decode a BUFR file and display it in a hierarchical structure
-    # corresponding to the BUFR Descriptors. In addition, the attribute
-    # descriptors are associated to their (bitmap) corresponding descriptors.
-    pybufrkit decode -a BUFR_FILE
-
-    # Decode a BUFR file and output in the flat JSON format
-    pybufrkit decode -j BUFR_FILE
-
-    # Encode from a flat JSON file to BUFR
-    pybufrkit encode -j JSON_FILE BUFR_FILE
-
-    # Decode a BUFR file, pipe it to the encoder to encode it back to BUFR
-    pybufrkit decode BUFR_FILE | pybufrkit encode -
-
-    # Decode only the metadata sections of a BUFR file
-    pybufrkit info BUFR_FILE
-
-    # Split a BUFR file into one message per file
-    pybufrkit split BUFR_FILE
-
-    # Subset from a given BUFR file
-    pybufrkit subset 0,3,6,9 BUFR_FILE
-
-    # Query values from the metadata sections (section 0, 1, 2, 3):
-    pybufrkit query %n_subsets BUFR_FILE
-
-    # Query all values for descriptor 001002 of the data section
-    pybufrkit query 001002 BUFR_FILE
-
-    # Query for those root level 001002 of the BUFR Template
-    pybufrkit query /001002 BUFR_FILE
-
-    # Query for 001002 that is a direct child of 301001
-    pybufrkit query /301001/001002 BUFR_FILE
-
-    # Query for all 001002 of the first subset
-    pybufrkit query '@[0] > 001002' BUFR_FILE
-
-    # Query for associated field of 021062
-    pybufrkit query 021062.A21062 BUFR_FILE
-
-    # Filtering through a number of BUFR files with Script support
-    # (find files that have multiple subsets):
-    pybufrkit script 'if ${%n_subsets} > 1: print(PBK_FILENAME)' DIRECTORY/*.bufr
-
-    # Lookup information for a Element Descriptor (along with its code table)
-    pybufrkit lookup -l 020003
-
-    # Compile a BUFR Template composed as a comma separated list of descriptors
-    pybufrkit compile 309052,205060
+    bot.run()
 
 
-Library Usage
--------------
+But what if you just want to write a quick integration and don't need to provide a conversational interface? We've got you covered!
+You can send messages (or any other media) by constructing a Chat object with user_id or channel name. We even saved you some extra keystrokes by providing handy Channel constructors:
 
-The following code shows an example of basic library usage
+.. code:: python
 
-.. code-block:: Python
+    ...
+    channel = bot.channel("@yourchannel")
+    private = bot.private("1111111")
 
-    # Decode a BUFR file
-    from pybufrkit.decoder import Decoder
-    decoder = Decoder()
-    with open(SOME_BUFR_FILE, 'rb') as ins:
-        bufr_message = decoder.process(ins.read())
+    async def greeter():
+        await channel.send_text("Hello from channel!")
+        await private.send_text("Why not greet personally?")
+    ...
 
-    # Convert the BUFR message to JSON
-    from pybufrkit.renderer import FlatJsonRenderer
-    json_data = FlatJsonRenderer().render(bufr_message)
 
-    # Encode the JSON back to BUFR file
-    from pybufrkit.encoder import Encoder
-    encoder = Encoder()
-    bufr_message_new = encoder.process(json_data)
-    with open(BUFR_OUTPUT_FILE, 'wb') as outs:
-        outs.write(bufr_message_new.serialized_bytes)
+Examples
+---------------
 
-    # Decode for multiple messages from a single file
-    from pybufrkit.decoder import generate_bufr_message
-    with open(SOME_FILE, 'rb') as ins:
-        for bufr_message in generate_bufr_message(decoder, ins.read()):
-            pass  # do something with the decoded message object
+- `Async IO <https://github.com/szastupov/aiotg/blob/master/examples/async.py>`__
+- `Send image <https://github.com/szastupov/aiotg/blob/master/examples/getimage.py>`__
+- `Post to channel <https://github.com/szastupov/aiotg/blob/master/examples/post_to_channel.py>`__
+- `Webhooks mode <https://github.com/szastupov/aiotg/blob/master/examples/webhook.py>`__
+- `Sender id <https://github.com/szastupov/aiotg/blob/master/examples/whoami.py>`__
 
-    # Query the metadata
-    from pybufrkit.mdquery import MetadataExprParser, MetadataQuerent
-    n_subsets = MetadataQuerent(MetadataExprParser()).query(bufr_message, '%n_subsets')
+For a real world example, take a look at
+`WhatisBot <https://github.com/szastupov/whatisbot/blob/master/main.py>`__ or `Music Catalog Bot <https://github.com/szastupov/musicbot>`__.
 
-    # Query the data
-    from pybufrkit.dataquery import NodePathParser, DataQuerent
-    query_result = DataQuerent(NodePathParser()).query(bufr_message, '001002')
-
-    # Script
-    from pybufrkit.script import ScriptRunner
-    # NOTE: must use the function version of print (Python 3), NOT the statement version
-    code = """print('Multiple' if ${%n_subsets} > 1 else 'Single')"""
-    runner = ScriptRunner(code)
-    runner.run(bufr_message)
-
-**For more help, please check the documentation site at** http://pybufrkit.readthedocs.io/
+For more information on how to use the project, see the project's `documentation <http://szastupov.github.io/aiotg/index.html>`__.
