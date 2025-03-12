@@ -1,2 +1,4 @@
-include README.md
-recursive-include prometheus_speedtest *
+include LICENSE
+include CHANGES.rst
+include README.rst
+include CONTRIBUTORS.rst
