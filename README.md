@@ -1,115 +1,251 @@
-# Aztec Code generator
+# AI Fairness 360 (AIF360)
 
-[![PyPI](https://img.shields.io/pypi/v/aztec_code_generator.svg)](https://pypi.python.org/pypi/aztec_code_generator)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Build Status](https://github.com/dlenski/aztec_code_generator/workflows/test_and_release/badge.svg)](https://github.com/dlenski/aztec_code_generator/actions?query=workflow%3Atest_and_release)
+[![Continuous Integration](https://github.com/Trusted-AI/AIF360/actions/workflows/ci.yml/badge.svg)](https://github.com/Trusted-AI/AIF360/actions/workflows/ci.yml)
+[![Documentation](https://readthedocs.org/projects/aif360/badge/?version=latest)](https://aif360.readthedocs.io/en/latest/?badge=latest)
+[![PyPI version](https://badge.fury.io/py/aif360.svg)](https://badge.fury.io/py/aif360)
+[![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/aif360)](https://cran.r-project.org/package=aif360)
 
-This is a pure-Python library to generate [Aztec Code](https://en.wikipedia.org/wiki/Aztec_code) 2D barcodes.
+The AI Fairness 360 toolkit is an extensible open-source library containing techniques developed by the
+research community to help detect and mitigate bias in machine learning models throughout the AI application lifecycle. AI Fairness 360 package is available in both Python and R.
 
-## Changelog
+The AI Fairness 360 package includes
+1) a comprehensive set of metrics for datasets and models to test for biases,
+2) explanations for these metrics, and
+3) algorithms to mitigate bias in datasets and models.
+It is designed to translate algorithmic research from the lab into the actual practice of domains as wide-ranging
+as finance, human capital management, healthcare, and education. We invite you to use it and improve it.
 
-- `v0.1`-`v0.2`: initial Python packaging
-- `v0.3`: allow optional border, more efficient matrix representation
-- `v0.4`: merge https://github.com/delimitry/aztec_code_generator/pull/5 and fix tests
-- `v0.5`:
-  - code simplification
-  - more efficient internal data structures (`Enum`)
-  - encoding of `FLG(n)`
-  - correct handling of Python 3 `str` vs. `bytes` (Aztec Code natively encodes _bytes_, not characters, and a reader's default interpretation of those bytes should be [ISO-8859-1 aka Latin-1](https://en.wikipedia.org/wiki/Iso-8859-1))
-- `v0.6`:
-  - more code simplification
-  - make Pillow dependency optional
-  - add `print_fancy` for UTF-8 output (inspired by `qrencode -t ansiutf8`)
-  - bugfix for `DIGIT`→`PUNCT` transition (and add missed test case)
-  - allow customization of error correction percentage level
-- `v0.7`:
-  - support standard-compliant encoding of strings in character sets other than [ISO-8859-1](https://en.wikipedia.org/wiki/ISO-8859-1)
-    via [ECI indications](https://en.wikipedia.org/wiki/Extended_Channel_Interpretation)
-- `v0.8`-`v0.9`:
-  - replace Travis-CI with Github Actions for CI
-- `v0.10`
-  - bugfix for lowercase → uppercase transition (fixes encoding of strings like `abcABC`)
-- `v0.11`
-  - fix docstrings
-  - change default `module_size` in image output to 2 pixels; ZXing can't read with `module_size=1`
+The [AI Fairness 360 interactive experience](https://aif360.res.ibm.com/data)
+provides a gentle introduction to the concepts and capabilities. The [tutorials
+and other notebooks](./examples) offer a deeper, data scientist-oriented
+introduction. The complete API is also available.
+
+Being a comprehensive set of capabilities, it may be confusing to figure out
+which metrics and algorithms are most appropriate for a given use case. To
+help, we have created some [guidance
+material](https://aif360.res.ibm.com/resources#guidance) that can be
+consulted.
+
+We have developed the package with extensibility in mind. This library is still
+in development. We encourage the contribution of your metrics, explainers, and
+debiasing algorithms.
+
+Get in touch with us on [Slack](https://aif360.slack.com) (invitation
+[here](https://join.slack.com/t/aif360/shared_invite/zt-5hfvuafo-X0~g6tgJQ~7tIAT~S294TQ))!
 
 
-## Installation
+## Supported bias mitigation algorithms
 
-Releases [from PyPi](https://pypi.org/project/aztec-code-generator/) may be installed with `pip3 install aztec_code_generator`.
+* Optimized Preprocessing ([Calmon et al., 2017](http://papers.nips.cc/paper/6988-optimized-pre-processing-for-discrimination-prevention))
+* Disparate Impact Remover ([Feldman et al., 2015](https://doi.org/10.1145/2783258.2783311))
+* Equalized Odds Postprocessing ([Hardt et al., 2016](https://papers.nips.cc/paper/6374-equality-of-opportunity-in-supervised-learning))
+* Reweighing ([Kamiran and Calders, 2012](http://doi.org/10.1007/s10115-011-0463-8))
+* Reject Option Classification ([Kamiran et al., 2012](https://doi.org/10.1109/ICDM.2012.45))
+* Prejudice Remover Regularizer ([Kamishima et al., 2012](https://rd.springer.com/chapter/10.1007/978-3-642-33486-3_3))
+* Calibrated Equalized Odds Postprocessing ([Pleiss et al., 2017](https://papers.nips.cc/paper/7151-on-fairness-and-calibration))
+* Learning Fair Representations ([Zemel et al., 2013](http://proceedings.mlr.press/v28/zemel13.html))
+* Adversarial Debiasing ([Zhang et al., 2018](https://arxiv.org/abs/1801.07593))
+* Meta-Algorithm for Fair Classification ([Celis et al., 2018](https://arxiv.org/abs/1806.06055))
+* Rich Subgroup Fairness ([Kearns, Neel, Roth, Wu, 2018](https://arxiv.org/abs/1711.05144))
+* Exponentiated Gradient Reduction ([Agarwal et al., 2018](https://arxiv.org/abs/1803.02453))
+* Grid Search Reduction ([Agarwal et al., 2018](https://arxiv.org/abs/1803.02453), [Agarwal et al., 2019](https://arxiv.org/abs/1905.12843))
+* Fair Data Adaptation ([Plečko and Meinshausen, 2020](https://www.jmlr.org/papers/v21/19-966.html), [Plečko et al., 2021](https://arxiv.org/abs/2110.10200))
+* Sensitive Set Invariance/Sensitive Subspace Robustness ([Yurochkin and Sun, 2020](https://arxiv.org/abs/2006.14168), [Yurochkin et al., 2019](https://arxiv.org/abs/1907.00020))
 
-Bleeding-edge version from `master` branch of this repository can be installed with
-`pip3 install https://github.com/dlenski/aztec_code_generator/archive/master.zip`.
+## Supported fairness metrics
 
-### Dependencies
+* Comprehensive set of group fairness metrics derived from selection rates and error rates including rich subgroup fairness
+* Comprehensive set of sample distortion metrics
+* Generalized Entropy Index ([Speicher et al., 2018](https://doi.org/10.1145/3219819.3220046))
+* Differential Fairness and Bias Amplification ([Foulds et al., 2018](https://arxiv.org/pdf/1807.08362))
+* Bias Scan with Multi-Dimensional Subset Scan ([Zhang, Neill, 2017](https://arxiv.org/abs/1611.08292))
 
-[Pillow](https://pillow.readthedocs.io) (Python image generation library) is required if you want to generate image objects and files.
+## Setup
 
-## Usage
+### R
 
-### Creating and encoding
-
-```python
-from aztec_code_generator import AztecCode
-data = 'Aztec Code 2D :)'
-aztec_code = AztecCode(data)
+``` r
+install.packages("aif360")
 ```
 
-The `AztecCode()` constructor takes additional, optional arguments:
+For more details regarding the R setup, please refer to instructions [here](aif360/aif360-r/README.md).
 
-- `size` and `compact`: to set a specific symbol size (e.g. `19, True` for a compact 19×19 symbol); see `keys(aztec_code_generator.configs)` for possible values
-- `ec_percent` for error correction percentage (default is the recommended 23), plus `size` a
+### Python
 
-### Saving an image file
+Supported Python Configurations:
 
-`aztec_code.save('aztec_code.png', module_size=4, border=1)` will save an image file `aztec_code.png` of the symbol, with 4×4 blocks of white/black pixels in
-the output, and with a 1-block border.
+| OS      | Python version |
+| ------- | -------------- |
+| macOS   | 3.8 – 3.11     |
+| Ubuntu  | 3.8 – 3.11     |
+| Windows | 3.8 – 3.11     |
 
-![Aztec Code](https://1.bp.blogspot.com/-OZIo4dGwAM4/V7BaYoBaH2I/AAAAAAAAAwc/WBdTV6osTb4TxNf2f6v7bCfXM4EuO4OdwCLcB/s1600/aztec_code.png "Aztec Code with data")
+### (Optional) Create a virtual environment
 
-### Creating an image object
+AIF360 requires specific versions of many Python packages which may conflict
+with other projects on your system. A virtual environment manager is strongly
+recommended to ensure dependencies may be installed safely. If you have trouble
+installing AIF360, try this first.
 
-`aztec_code.image()` will yield a monochrome-mode [PIL `Image` object](https://pillow.readthedocs.io/en/stable/reference/Image.html) representing the image
-in-memory. It also accepts optional `module_size` and `border`.
+#### Conda
 
-### Text-based output
+Conda is recommended for all configurations though Virtualenv is generally
+interchangeable for our purposes. [Miniconda](https://conda.io/miniconda.html)
+is sufficient (see [the difference between Anaconda and
+Miniconda](https://conda.io/docs/user-guide/install/download.html#anaconda-or-miniconda)
+if you are curious) if you do not already have conda installed.
 
-`aztec_code.print_fancy()` will print the resulting Aztec Code to standard output using
-[Unicode half-height block elements](https://en.wikipedia.org/wiki/Block_Elements) encoded
-with UTF-8 and ANSI color escapes. It accepts optional `border`.
+Then, to create a new Python 3.11 environment, run:
 
-`aztec_code.print_out()` will print out the resulting Aztec Code to standard
-output as plain ASCII text, using `#` and ` ` characters:
-
-```
-##  # ## ####
- #   ## #####  ###
- #  ##  # #   # ###
-## #  #    ## ##
-    ## # #    # #
-## ############ # #
- ### #       ###  #
-##   # ##### # ## #
- #   # #   # ##
- # # # # # # ###
-    ## #   # ## ##
-#### # ##### ## #
-  # ##       ## ##
- ##  ########### #
-  ##    # ##   ## #
-     ## # ### #  ##
-      ############
-##   #     # ##   #
-##  #    ## ###   #
+```bash
+conda create --name aif360 python=3.11
+conda activate aif360
 ```
 
-## Authors:
+The shell should now look like `(aif360) $`. To deactivate the environment, run:
 
-Originally written by [Dmitry Alimov (delimtry)](https://github.com/delimitry).
+```bash
+(aif360)$ conda deactivate
+```
 
-Updates, bug fixes, Python 3-ification, and careful `bytes`-vs.-`str` handling
-by [Daniel Lenski (dlenski)](https://github.com/dlenski).
+The prompt will return to `$ `.
 
-## License:
+### Install with `pip`
 
-Released under [The MIT License](https://github.com/delimitry/aztec_code_generator/blob/master/LICENSE).
+To install the latest stable version from PyPI, run:
+
+```bash
+pip install aif360
+```
+
+Note: Some algorithms require additional dependencies (although the metrics will
+all work out-of-the-box). To install with certain algorithm dependencies
+included, run, e.g.:
+
+```bash
+pip install 'aif360[LFR,OptimPreproc]'
+```
+
+or, for complete functionality, run:
+
+```bash
+pip install 'aif360[all]'
+```
+
+The options for available extras are: `OptimPreproc, LFR, AdversarialDebiasing,
+DisparateImpactRemover, LIME, ART, Reductions, FairAdapt, inFairness,
+LawSchoolGPA, notebooks, tests, docs, all`
+
+If you encounter any errors, try the [Troubleshooting](#troubleshooting) steps.
+
+### Manual installation
+
+Clone the latest version of this repository:
+
+```bash
+git clone https://github.com/Trusted-AI/AIF360
+```
+
+If you'd like to run the examples, download the datasets now and place them in
+their respective folders as described in
+[aif360/data/README.md](aif360/data/README.md).
+
+Then, navigate to the root directory of the project and run:
+
+```bash
+pip install --editable '.[all]'
+```
+
+#### Run the Examples
+
+To run the example notebooks, complete the manual installation steps above.
+Then, if you did not use the `[all]` option, install the additional requirements
+as follows:
+
+```bash
+pip install -e '.[notebooks]'
+```
+
+Finally, if you did not already, download the datasets as described in
+[aif360/data/README.md](aif360/data/README.md).
+
+### Troubleshooting
+
+If you encounter any errors during the installation process, look for your
+issue here and try the solutions.
+
+#### TensorFlow
+
+See the [Install TensorFlow with pip](https://www.tensorflow.org/install/pip)
+page for detailed instructions.
+
+Note: we require `'tensorflow >= 1.13.1'`.
+
+Once tensorflow is installed, try re-running:
+
+```bash
+pip install 'aif360[AdversarialDebiasing]'
+```
+
+TensorFlow is only required for use with the
+`aif360.algorithms.inprocessing.AdversarialDebiasing` class.
+
+#### CVXPY
+
+On MacOS, you may first have to install the Xcode Command Line Tools if you
+never have previously:
+
+```sh
+xcode-select --install
+```
+
+On Windows, you may need to download the [Microsoft C++ Build Tools for Visual
+Studio 2019](https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=BuildTools&rel=16).
+See the [CVXPY Install](https://www.cvxpy.org/install/index.html#mac-os-x-windows-and-linux)
+page for up-to-date instructions.
+
+Then, try reinstalling via:
+
+```bash
+pip install 'aif360[OptimPreproc]'
+```
+
+CVXPY is only required for use with the
+`aif360.algorithms.preprocessing.OptimPreproc` class.
+
+## Using AIF360
+
+The `examples` directory contains a diverse collection of jupyter notebooks
+that use AI Fairness 360 in various ways. Both tutorials and demos illustrate
+working code using AIF360. Tutorials provide additional discussion that walks
+the user through the various steps of the notebook. See the details about
+[tutorials and demos here](examples/README.md)
+
+## Citing AIF360
+
+A technical description of AI Fairness 360 is available in this
+[paper](https://arxiv.org/abs/1810.01943). Below is the bibtex entry for this
+paper.
+
+```
+@misc{aif360-oct-2018,
+    title = "{AI Fairness} 360:  An Extensible Toolkit for Detecting, Understanding, and Mitigating Unwanted Algorithmic Bias",
+    author = {Rachel K. E. Bellamy and Kuntal Dey and Michael Hind and
+	Samuel C. Hoffman and Stephanie Houde and Kalapriya Kannan and
+	Pranay Lohia and Jacquelyn Martino and Sameep Mehta and
+	Aleksandra Mojsilovic and Seema Nagar and Karthikeyan Natesan Ramamurthy and
+	John Richards and Diptikalyan Saha and Prasanna Sattigeri and
+	Moninder Singh and Kush R. Varshney and Yunfeng Zhang},
+    month = oct,
+    year = {2018},
+    url = {https://arxiv.org/abs/1810.01943}
+}
+```
+
+## AIF360 Videos
+
+* Introductory [video](https://www.youtube.com/watch?v=X1NsrcaRQTE) to AI
+  Fairness 360 by Kush Varshney, September 20, 2018 (32 mins)
+
+## Contributing
+The development fork for Rich Subgroup Fairness (`inprocessing/gerryfair_classifier.py`) is [here](https://github.com/sethneel/aif360). Contributions are welcome and a list of potential contributions from the authors can be found [here](https://trello.com/b/0OwPcbVr/gerryfair-development).
