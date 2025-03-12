@@ -1,0 +1,20 @@
+question: What is the maximum you charge a day for a product manager (excluding VAT and expenses)?
+question_advice: The maximum price will be fixed for the duration of the framework agreement. You will not be able to charge a higher rate when you apply for opportunities.
+depends:
+  - "on": lot
+    being:
+      - digital-specialists
+type: pricing
+fields:
+  maximum_price: productManagerPriceMax
+field_defaults:
+  price_unit: Person
+  price_interval: Day
+
+validations:
+  - name: answer_required
+    field: productManagerPriceMax
+    message: Enter the amount you will charge for a product manager
+  - name: not_money_format
+    field: productManagerPriceMax
+    message: Maximum price must be a number, without units, like 99.95

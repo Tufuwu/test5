@@ -1,0 +1,18 @@
+name: What is the name of the room in the studio where participants and researchers carry out testing?
+question: >
+  What is the name of the room in the studio where participants and researchers carry out testing?
+type: text
+
+depends:
+  -
+    "on": lot
+    being:
+      - user-research-studios
+
+validations:
+  -
+    name: answer_required
+    message: Enter the name of the room
+  -
+    name: under_character_limit
+    message: The name of the room must be 100 characters or fewer

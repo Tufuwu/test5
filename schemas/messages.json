@@ -1,0 +1,152 @@
+{
+  "title": "Message",
+  "$schema": "http://json-schema.org/schema#",
+  "type": "object",
+  "anyOf": [
+    {"$ref": "#/definitions/frameworkStates"},
+    {"$ref": "#/definitions/urls"},
+    {"$ref": "#/definitions/contract_variation"},
+    {"$ref": "#/definitions/advice"},
+    {"$ref": "#/definitions/descriptions"},
+    {"$ref": "#/definitions/e-signature"}
+  ],
+  "definitions": {
+    "frameworkStates": {
+      "properties": {
+        "coming": {
+          "type": ["object", "string"]
+        },
+        "open": {
+          "type": ["object", "string"]
+        },
+        "pending": {
+          "type": ["object", "string"]
+        },
+        "standstill": {
+          "type": ["object", "string"]
+        },
+        "live": {
+          "type": ["object", "string"]
+        },
+        "expired": {
+          "type": ["object", "string"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "urls": {
+      "properties": {
+        "call_off_contract_url": {"type": "string"},
+        "framework_url": {"type": "string"},
+        "framework_agreement_url": {"type": "string"},
+        "framework_agreement_pdf_url": {"type": "string"},
+        "supplier_guide_url": {"type": "string"},
+        "customer_benefits_record_form_url": {"type": "string"},
+        "customer_benefits_record_form_email": {"type": "string"}
+      },
+      "required": [
+        "supplier_guide_url"
+      ],
+      "additionalProperties": false
+    },
+    "advice": {
+      "properties": {
+        "use_of_service_data": {"type": "string"},
+        "lots": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "slug": {
+                "type": "string"
+              },
+              "body": {
+                "type": "string"
+              },
+              "advice": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "slug",
+              "body"
+            ]
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "contract_variation": {
+      "properties": {
+        "variation_description_not_in_place": {
+          "type": "string"
+        },
+        "variation_not_yet_agreed_extra": {
+          "type": "string"
+        },
+        "variation_description_in_place": {
+          "type": "string"
+        },
+        "variation_description_not_in_place_but_agreed": {
+          "type": "string"
+        },
+        "variation_comes_in_effect_description": {
+          "type": "string"
+        },
+        "variation_agreement_label": {
+          "type": "string"
+        },
+        "confirmation_message": {
+          "type": "string"
+        },
+        "framework_agreement_changes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "clause": {
+                "type": "string"
+              },
+              "change": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "call_off_contract_changes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "clause": {
+                "type": "string"
+              },
+              "change": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "variation_description_not_in_place",
+        "variation_description_in_place",
+        "framework_agreement_changes",
+        "call_off_contract_changes"
+      ],
+      "additionalProperties": false
+    },
+    "descriptions": {
+      "properties": {
+        "framework": {"type": "string"}
+      },
+      "required": ["framework"]
+    },
+    "e-signature": {
+      "properties": {
+        "framework_contract_title": {"type": "string"}
+      },
+      "required": ["framework_contract_title"]
+    }
+  }
+}

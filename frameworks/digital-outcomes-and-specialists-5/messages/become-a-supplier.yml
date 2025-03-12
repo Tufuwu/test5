@@ -1,0 +1,41 @@
+coming: |
+  ### Digital Outcomes and Specialists
+
+  Digital Outcomes and Specialists is opening for applications.
+
+  You will be able to apply to sell:
+
+  - digital outcomes, for example a team to build a service
+  - digital specialists, for example an individual developer or user researcher
+  - user research studios
+  - user research participants
+
+open: |
+  ### Digital Outcomes and Specialists
+
+  Digital Outcomes and Specialists is open for applications.
+
+  You can apply to sell:
+
+  - digital outcomes, for example a team to build a service
+  - digital specialists, for example an individual developer or user researcher
+  - user research studios
+  - user research participants
+
+pending: &can_not_apply |
+  ### Digital Outcomes and Specialists
+
+  Digital Outcomes and Specialists is closed for applications. You can create an account when it is open.
+
+  You will be able to apply to sell:
+
+  - digital outcomes, for example a team to build a service
+  - digital specialists, for example an individual developer or user researcher
+  - user research studios
+  - user research participants
+
+standstill: *can_not_apply
+
+live: *can_not_apply
+
+expired: *can_not_apply

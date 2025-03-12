@@ -1,8 +1,0 @@
-# .coveragerc to control coverage.py
-[run]
-source = luma.lcd
-omit =
-    luma/__init__.py
-    setup.py
-    .tox/*
-    doc/*

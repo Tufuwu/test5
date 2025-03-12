@@ -1,0 +1,18 @@
+question: Town or city
+
+depends:
+  - "on": lot
+    being:
+      - user-research-studios
+type: text
+
+validations:
+  -
+    name: answer_required
+    message: Enter a town or city
+  -
+    name: under_20_words
+    message: Town or city must be 20 words or fewer
+  -
+    name: under_character_limit
+    message: Town or city must be 200 characters or fewer

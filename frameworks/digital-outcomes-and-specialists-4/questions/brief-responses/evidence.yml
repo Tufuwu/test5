@@ -1,0 +1,10 @@
+question: '{{ item }}'
+type: textbox_large
+max_length_in_words: 100
+validations:
+  -
+    name: answer_required
+    message: 'Enter evidence for {{ item }}'
+  -
+    name: under_100_words
+    message: 'Your answer must be 100 words or fewer'

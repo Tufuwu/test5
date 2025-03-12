@@ -1,0 +1,11 @@
+question: Do you provide toilets?
+
+depends:
+  - "on": lot
+    being:
+      - user-research-studios
+
+type: boolean
+validations:
+  - name: answer_required
+    message: Select yes if you provide toilets

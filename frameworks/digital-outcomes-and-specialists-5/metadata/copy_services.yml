@@ -1,0 +1,37 @@
+questions_to_exclude:
+  - labDesktopStreaming
+  - labDeviceStreaming
+  - labEyeTracking
+  - labHosting
+  - labStreaming
+  - labTechAssistance
+  - labViewingArea
+  - labWaitingArea
+  - agileCoachPriceMin
+  - businessAnalystPriceMin
+  - communicationsManagerPriceMin
+  - contentDesignerPriceMin
+  - dataArchitectPriceMin
+  - dataEngineerPriceMin
+  - dataScientistPriceMin
+  - deliveryManagerPriceMin
+  - designerPriceMin
+  - developerPriceMin
+  - performanceAnalystPriceMin
+  - portfolioManagerPriceMin
+  - productManagerPriceMin
+  - programmeManagerPriceMin
+  - qualityAssurancePriceMin
+  - securityConsultantPriceMin
+  - serviceManagerPriceMin
+  - technicalArchitectPriceMin
+  - userResearcherPriceMin
+  - webOperationsPriceMin
+  - developerAccessibleApplications
+  - contentDesignerAccessibleApplications
+  - qualityAssuranceAccessibleApplications
+  - technicalArchitectAccessibleApplications
+  - webOperationsAccessibleApplications
+  - serviceManagerAccessibleApplications
+  - designerAccessibleApplications
+source_framework: digital-outcomes-and-specialists-4

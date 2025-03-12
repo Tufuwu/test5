@@ -1,0 +1,24 @@
+name: Modern slavery statement optional
+question: |
+  You can choose to upload a statement.
+question_advice: |
+  Your statement should:
+
+  - be an Open Document Format (ODF) or PDF/A
+  - have a maximum file size of 5MB
+  - meet accessibility standards
+hint: |
+  <a class="govuk-link" href="https://www.gov.uk/guidance/how-to-publish-on-gov-uk/accessible-pdfs" target="_blank" rel="noopener noreferrer">Read the guidance on accessible documents (opens in new tab)</a>.
+
+  <a class="govuk-link" href="https://www.gov.uk/government/publications/transparency-in-supply-chains-a-practical-guide" target="_blank" rel="noopener noreferrer">Read the Home Office guidance about how to write a statement and what information to include (opens in new tab)</a>.
+
+hidden: true
+type: upload
+
+validations:
+  - name: file_is_open_document_format
+    message: The selected document must be an Open Document Format (ODF) or PDF/A (eg .pdf, .odt)
+  - name: file_is_less_than_5mb
+    message: The selected document must be smaller than 5MB
+  - name: file_can_be_saved
+    message: The selected document could not be uploaded - try again
