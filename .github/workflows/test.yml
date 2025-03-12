@@ -18,7 +18,7 @@ jobs:
       # SPHINXINTL_TRANSIFEX_PASSWORD: from GitHub secrets
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Get date
       id: get-date
       run: |
@@ -34,7 +34,7 @@ jobs:
           ~/.local/
         key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}-${{ steps.get-date.outputs.yyyymm }}
     - name: Setup Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v5
       with:
         python-version: 3.9
     - name: Check Python version
@@ -61,7 +61,7 @@ jobs:
         git add .
         git commit -m "[skip ci] by GHA (JOB ${{ GITHUB_ACTION }}) https://github.com/${{ github.repository }}/actions/runs/${{ github.run_number }}"
     - name: GitHub Push
-      uses: ad-m/github-push-action@v0.6.0
+      uses: ad-m/github-push-action@v0.8.0
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branch: ${{ github.ref }}
