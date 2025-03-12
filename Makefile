@@ -1,37 +1,29 @@
-.PHONY: clean
+.PHONY: all venv install-deps freeze lint test coverage wheel upload
 
-# Helper function to complete multiple steps in a release -- compute the next
-# version, patch the code to embed it, and tag it in Git
-define release
-	$(eval NEXTVER := $(shell python admin/next_version.py --$(1)))
-	python admin/patch_version.py ${NEXTVER}
-	git commit -m \"Version $(NEXTVER)\" -- openid/__init__.py # &&
-	git tag "v$(NEXTVER)" -m \"Version $(NEXTVER)\"
-endef
+all: lint coverage
 
-clean:
-	find . -name '*.pyc' -exec rm -f {} +
-	find . -name '*.pyo' -exec rm -f {} +
-	find . -name '*~' -exec rm -f  {} +
+venv:
+	sudo apt-get -y install python3-virtualenv
+	python3 -m venv venv
 
-upload:
-	rm -rf dist/*
-	python setup.py clean sdist bdist_wheel
-	twine upload dist/*
+install-deps:
+	pip install -r requirements-dev.lock
+
+freeze:
+	@pip freeze | grep -v '^pkg-resources='
+
+lint:
+	python -m flake8 soft_webauthn.py tests
+	python -m pylint --ignore=example_server.py soft_webauthn.py tests
 
 test:
-	coverage run -m unittest openid.test.test_suite
+	python -m pytest -v
 
-release-patch: clean test
-	@$(call release,patch)
+coverage:
+	coverage run --source soft_webauthn -m pytest tests -x -vv
+	coverage report --show-missing --fail-under 100
 
-release-minor: clean test
-	@$(call release,minor)
-
-release-major: clean test
-	@$(call release,major)
-
-push-tags:
-	git push --tags origin HEAD:master
-
-publish: push-tags upload
+wheel:
+	python setup.py sdist bdist_wheel
+upload:
+	twine upload dist/*

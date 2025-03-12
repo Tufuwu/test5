@@ -1,66 +1,56 @@
-_NOTE_: This started out as a fork of the Python OpenID library, with changes
-to make it Python 3 compatible. It's now a port of that library, including
-cleanups and updates to the code in general.
+# Python software webauthn token
 
-[![Build Status](https://github.com/necaris/python3-openid/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/necaris/python3-openid/actions?query=branch%3Amain)
-[![Coverage Status](https://coveralls.io/repos/necaris/python3-openid/badge.svg?branch=master&service=github)](https://coveralls.io/github/necaris/python3-openid?branch=master)
+[![Build Status](https://travis-ci.org/bodik/soft-webauthn.svg?branch=master)](https://travis-ci.org/bodik/soft-webauthn)
 
-# requirements
+Package is used for testing webauthn enabled web applications. The use-case is
+authenticator and browser emulation during web application development
+continuous integration.
 
-- Python 3.5+ (tested on CPython 3.5-3.8, and PyPy3 (although some tests may fail on PyPy))
+`SoftWebauthnDevice` class interface exports basic navigator interface used for
+webauthn features:
 
-# installation
+* `SoftWebauthnDevice.create(...)` aka `navigator.credentials.create(...)`
+* `SoftWebauthnDevice.get(...)` aka `navigator.credentials.get(...)`
 
-The recommended way is to install from PyPI with `pip`:
+To support authentication tests without prior registration/attestation, the
+class exports additional functions:
 
-    pip install python3-openid
+* `SoftWebauthnDevice.cred_init(rp_id, user_handle)`
+* `SoftWebauthnDevice.cred_as_attested()`
 
-Alternatively, you can run the following command from a source checkout:
+There is no standard/specification for *Client* (browser) to *Relying party*
+(web application) communication. Therefore the class should be be used in a web
+application test suite along with other code handling webapp specific tasks
+such as conveying *CredentialCreationOptions* from webapp and
+*PublicKeyCredential* back to the webapp.
 
-    python setup.py install
+The example usage can be found in `tests/test_interop.py` (Token/Client vs RP
+API) and `tests/test_example.py` (Token/Client vs RP HTTP). Despite internal
+usage of `yubico/python-fido2` package, the project should be usable againts
+other RP implementations as well.
 
-If you want to use MySQL or PostgreSQL storage options, be sure to install
-the relevant "extra":
+## References
 
-    pip install python3-openid[mysql]
+* https://w3c.github.io/webauthn
+* https://webauthn.guide/
+* https://github.com/Yubico/python-fido2
 
-# getting started
+## Development
 
-The library should follow the existing `python-openid` API as closely as possible.
+```
+git clone https://github.com/bodik/soft-webauthn
+cd soft-webauthn
+ln -s ../../git_hookprecommit.sh .git/hooks/pre-commit
 
-_NOTE_: documentation will be auto-generated as soon as I can figure out how to
-update the documentation tools.
+# OPTIONAL, create and activate virtualenv
+make venv
+. venv/bin/activate
 
-_NOTE_: The examples directory includes an example server and consumer
-implementation. See the README file in that directory for more
-information on running the examples.
+# install dependencies
+make install-deps
 
-# logging
-
-This library offers a logging hook that will record unexpected
-conditions that occur in library code. If a condition is recoverable,
-the library will recover and issue a log message. If it is not
-recoverable, the library will raise an exception. See the
-documentation for the `openid.oidutil` module for more on the logging
-hook.
-
-# documentation
-
-The documentation in this library is in Epydoc format, which is
-detailed at:
-
-http://epydoc.sourceforge.net/
-
-# contact
-
-Bug reports, suggestions, and feature requests are [very welcome](../../issues)!
-
-There are also the `#python-openid` and `#openid` channels on FreeNode IRC.
-
-# contributors
-
-- @necaris
-- @moreati
-- @vstoykov
-- @earthday
-- @bkmgit
+# profit
+make lint
+make test
+make coverage
+```
