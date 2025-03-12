@@ -1,39 +1,41 @@
-# This workflow will install Python dependencies, run tests and lint with a variety of Python versions.
-# Based upon:
-#   https://github.com/actions/starter-workflows/blob/main/ci/python-package.yml
-# As directed from:
-#   https://docs.github.com/en/actions/guides/building-and-testing-python#starting-with-the-python-workflow-template
+# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+name: Python package
 
 on:
-  pull_request:
   push:
-    branches: [ $default-branch ]
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  schedule:
+    - cron: '0 0 * * *'
+
+env:
+  MJKEY: ${{ secrets.MJKEY }}
 
 jobs:
-  check:
+  test-docker:
 
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.9", "3.10"]
 
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
+    - name: Build the Docker image
       run: |
-        python -m pip install --upgrade pip
-        python -m pip install flake8 pytest
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-    - name: Lint with flake8
+        docker pull rlworkgroup/metaworld-ci:latest
+        docker build \
+            --cache-from rlworkgroup/metaworld-ci:latest \
+            -f docker/Dockerfile \
+            -t "rlworkgroup/metaworld-ci:$GITHUB_RUN_ID" \
+            .
+
+    - name: Run the Docker image
       run: |
-        # stop the build if there are Python syntax errors or undefined names
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    - name: Test with pytest
-      run: |
-        pytest
+        docker run \
+            -t \
+            --rm \
+            -e "MJKEY=$MJKEY" \
+            --memory 7000m \
+            --memory-swap 7000m \
+            --name metaworld-ci rlworkgroup/metaworld-ci pytest -n 0 -v -m 'not large and not skip_on_ci'

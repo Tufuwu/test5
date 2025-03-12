@@ -1,364 +1,226 @@
-ably-python
------------
+# Meta-World
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/Farama-Foundation/metaworld/blob/master/LICENSE)
+![Build Status](https://github.com/Farama-Foundation/Metaworld/workflows/MetaWorld%20CI/badge.svg)
 
-![.github/workflows/check.yml](https://github.com/ably/ably-python/workflows/.github/workflows/check.yml/badge.svg)
-[![Features](https://github.com/ably/ably-python/actions/workflows/features.yml/badge.svg)](https://github.com/ably/ably-python/actions/workflows/features.yml)
-[![PyPI version](https://badge.fury.io/py/ably.svg)](https://badge.fury.io/py/ably)
+# The current version of Meta-World is a work in progress. If you find any bugs/errors please open an issue.
 
-## Overview
+__Meta-World is an open-source simulated benchmark for meta-reinforcement learning and multi-task learning consisting of 50 distinct robotic manipulation tasks.__ We aim to provide task distributions that are sufficiently broad to evaluate meta-RL algorithms' generalization ability to new behaviors.
 
-This is a Python client library for Ably. The library currently targets the [Ably 2.0 client library specification](https://sdk.ably.com/builds/ably/specification/main/features/).
+For more background information, please refer to our [website](https://meta-world.github.io) and the accompanying [conference publication](https://arxiv.org/abs/1910.10897), which **provides baseline results for 8 state-of-the-art meta- and multi-task RL algorithms**.
 
-## Running example
+__Table of Contents__
+- [Installation](#installation)
+- [Using the benchmark](#using-the-benchmark)
+  * [Basics](#basics)
+  * [Seeding a Benchmark Instance](#seeding-a-benchmark-instance)
+  * [Running ML1, MT1](#running-ml1-or-mt1)
+  * [Running ML10, ML45, MT10, MT50](#running-a-benchmark)
+  * [Accessing Single Goal Environments](#accessing-single-goal-environments)
+- [Citing Meta-World](#citing-meta-world)
+- [Accompanying Baselines](accompanying-baselines)
+- [Become a Contributor](#become-a-contributor)
+- [Acknowledgements](#acknowledgements)
 
-```python
-import asyncio
-from ably import AblyRest
+## Join the Community
 
-async def main():
-    async with AblyRest('api:key') as ably:
-        channel = ably.channels.get("channel_name")
+Metaworld is now maintained by the Farama Foundation! You can interact with our community and the new developers in our [Discord server](https://discord.gg/PfR7a79FpQ)
 
-if __name__ == "__main__":
-    asyncio.run(main())
-```
+## Maintenance Status
+The current roadmap for Meta-World can be found [here](https://github.com/Farama-Foundation/Metaworld/issues/409)
 
 ## Installation
+To install everything, run:
 
-### Via PyPI
-
-The client library is available as a [PyPI](https://pypi.python.org/pypi/ably) package.
 
 ```
-pip install ably
+pip install git+https://github.com/Farama-Foundation/Metaworld.git@master#egg=metaworld
 ```
 
-Or, if you need encryption features:
+Alternatively, you can clone the repository and install an editable version locally:
 
-```
-pip install 'ably[crypto]'
-```
-
-### Via GitHub
-
-```
-git clone --recurse-submodules https://github.com/ably/ably-python.git
-cd ably-python
-python setup.py install
+```sh
+git clone https://github.com/Farama-Foundation/Metaworld.git
+cd Metaworld
+pip install -e .
 ```
 
-## Upgrade / Migration Guide
+For users attempting to reproduce results found in the Meta-World paper please use this command:
+```
+pip install git+https://github.com/Farama-Foundation/Metaworld.git@04be337a12305e393c0caf0cbf5ec7755c7c8feb
+```
 
-Please see our [Upgrade / Migration Guide](UPDATING.md) for notes on changes you need to make to your code to update it to use the new APIs when migrating from older versions.
+## Using the benchmark
+Here is a list of benchmark environments for meta-RL (ML*) and multi-task-RL (MT*):
+* [__ML1__](https://meta-world.github.io/figures/ml1.gif) is a meta-RL benchmark environment which tests few-shot adaptation to goal variation within single task. You can choose to test variation within any of [50 tasks](https://meta-world.github.io/figures/ml45-1080p.gif) for this benchmark.
+* [__ML10__](https://meta-world.github.io/figures/ml10.gif) is a meta-RL benchmark which tests few-shot adaptation to new tasks. It comprises 10 meta-train tasks, and 3 test tasks.
+* [__ML45__](https://meta-world.github.io/figures/ml45-1080p.gif) is a meta-RL benchmark which tests few-shot adaptation to new tasks. It comprises 45 meta-train tasks and 5 test tasks.
+* [__MT10__](https://meta-world.github.io/figures/mt10.gif), __MT1__, and __MT50__ are multi-task-RL benchmark environments for learning a multi-task policy that perform 10, 1, and 50 training tasks respectively. __MT1__ is similar to __ML1__ because you can choose to test variation within any of [50 tasks](https://meta-world.github.io/figures/ml45-1080p.gif) for this benchmark.  In the original Meta-World experiments, we augment MT10 and MT50 environment observations with a one-hot vector which identifies the task. We don't enforce how users utilize task one-hot vectors, however one solution would be to use a Gym wrapper such as [this one](https://github.com/rlworkgroup/garage/blob/master/src/garage/envs/multi_env_wrapper.py)
 
-## Usage
 
-### Using the Rest API
+### Basics
+We provide a `Benchmark` API, that allows constructing environments following the [`gymnasium.Env`](https://github.com/Farama-Foundation/Gymnasium/blob/main/gymnasium/core.py#L21) interface.
 
-> [!NOTE]  
-> Please note that since version 2.0.2 we also provide a synchronous variant of the REST interface which is can be accessed as `from ably.sync import AblyRestSync`.
+To use a `Benchmark`, first construct it (this samples the tasks allowed for one run of an algorithm on the benchmark).
+Then, construct at least one instance of each environment listed in `benchmark.train_classes` and `benchmark.test_classes`.
+For each of those environments, a task must be assigned to it using
+`env.set_task(task)` from `benchmark.train_tasks` and `benchmark.test_tasks`,
+respectively.
+`Tasks` can only be assigned to environments which have a key in
+`benchmark.train_classes` or `benchmark.test_classes` matching `task.env_name`.
+Please see the sections [Running ML1, MT1](#running-ml1-or-mt1) and [Running ML10, ML45, MT10, MT50](#running-a-benchmark)
+for more details.
 
-All examples assume a client and/or channel has been created in one of the following ways:
+You may wish to only access individual environments used in the Metaworld benchmark for your research. See the
+[Accessing Single Goal Environments](#accessing-single-goal-environments) for more details.
 
-With closing the client manually:
+
+### Seeding a Benchmark Instance
+For the purposes of reproducibility, it may be important to you to seed your benchmark instance.
+For example, for the ML1 benchmark environment with the 'pick-place-v2' environment, you can do so in the following way:
 ```python
-from ably import AblyRest
+import metaworld
 
-async def main(): 
-    client = AblyRest('api:key')
-    channel = client.channels.get('channel_name')
-    await client.close()
+SEED = 0  # some seed number here
+benchmark = metaworld.ML1('pick-place-v2', seed=SEED)
 ```
 
-When using the client as a context manager, this will ensure that client is properly closed 
-while leaving the `with` block:
-
+### Running ML1 or MT1
 ```python
-from ably import AblyRest
+import metaworld
+import random
 
-async def main():
-    async with AblyRest('api:key') as ably:
-        channel = ably.channels.get("channel_name")
+print(metaworld.ML1.ENV_NAMES)  # Check out the available environments
+
+ml1 = metaworld.ML1('pick-place-v2') # Construct the benchmark, sampling tasks
+
+env = ml1.train_classes['pick-place-v2']()  # Create an environment with task `pick_place`
+task = random.choice(ml1.train_tasks)
+env.set_task(task)  # Set task
+
+obs = env.reset()  # Reset environment
+a = env.action_space.sample()  # Sample an action
+obs, reward, done, info = env.step(a)  # Step the environment with the sampled random action
 ```
-
-You can define the logging level for the whole library, and override for a
-specific module:
+__MT1__ can be run the same way except that it does not contain any `test_tasks`
+### Running a benchmark
+Create an environment with train tasks (ML10, MT10, ML45, or MT50):
 ```python
-import logging
-import ably
+import metaworld
+import random
 
-logging.getLogger('ably').setLevel(logging.WARNING)
-logging.getLogger('ably.rest.auth').setLevel(logging.INFO)
+ml10 = metaworld.ML10() # Construct the benchmark, sampling tasks
+
+training_envs = []
+for name, env_cls in ml10.train_classes.items():
+  env = env_cls()
+  task = random.choice([task for task in ml10.train_tasks
+                        if task.env_name == name])
+  env.set_task(task)
+  training_envs.append(env)
+
+for env in training_envs:
+  obs = env.reset()  # Reset environment
+  a = env.action_space.sample()  # Sample an action
+  obs, reward, done, info = env.step(a)  # Step the environment with the sampled random action
 ```
-You need to add a handler to see any output:
+Create an environment with test tasks (this only works for ML10 and ML45, since MT10 and MT50 don't have a separate set of test tasks):
 ```python
-logger = logging.getLogger('ably')
-logger.addHandler(logging.StreamHandler())
-```
-### Publishing a message to a channel
+import metaworld
+import random
 
+ml10 = metaworld.ML10() # Construct the benchmark, sampling tasks
+
+testing_envs = []
+for name, env_cls in ml10.test_classes.items():
+  env = env_cls()
+  task = random.choice([task for task in ml10.test_tasks
+                        if task.env_name == name])
+  env.set_task(task)
+  testing_envs.append(env)
+
+for env in testing_envs:
+  obs = env.reset()  # Reset environment
+  a = env.action_space.sample()  # Sample an action
+  obs, reward, done, info = env.step(a)  # Step the environment with the sampled random action
+```
+
+## Accessing Single Goal Environments
+You may wish to only access individual environments used in the Meta-World benchmark for your research.
+We provide constructors for creating environments where the goal has been hidden (by zeroing out the goal in
+the observation) and environments where the goal is observable. They are called GoalHidden and GoalObservable
+environments respectively.
+
+You can access them in the following way:
 ```python
-await channel.publish('event', 'message')
+from metaworld.envs import (ALL_V2_ENVIRONMENTS_GOAL_OBSERVABLE,
+                            ALL_V2_ENVIRONMENTS_GOAL_HIDDEN)
+                            # these are ordered dicts where the key : value
+                            # is env_name : env_constructor
+
+import numpy as np
+
+door_open_goal_observable_cls = ALL_V2_ENVIRONMENTS_GOAL_OBSERVABLE["door-open-v2-goal-observable"]
+door_open_goal_hidden_cls = ALL_V2_ENVIRONMENTS_GOAL_HIDDEN["door-open-v2-goal-hidden"]
+
+env = door_open_goal_hidden_cls()
+env.reset()  # Reset environment
+a = env.action_space.sample()  # Sample an action
+obs, reward, done, info = env.step(a)  # Step the environment with the sampled random action
+assert (obs[-3:] == np.zeros(3)).all() # goal will be zeroed out because env is HiddenGoal
+
+# You can choose to initialize the random seed of the environment.
+# The state of your rng will remain unaffected after the environment is constructed.
+env1 = door_open_goal_observable_cls(seed=5)
+env2 = door_open_goal_observable_cls(seed=5)
+
+env1.reset()  # Reset environment
+env2.reset()
+a1 = env1.action_space.sample()  # Sample an action
+a2 = env2.action_space.sample()
+next_obs1, _, _, _ = env1.step(a1)  # Step the environment with the sampled random action
+
+next_obs2, _, _, _ = env2.step(a2)
+assert (next_obs1[-3:] == next_obs2[-3:]).all() # 2 envs initialized with the same seed will have the same goal
+assert not (next_obs2[-3:] == np.zeros(3)).all()   # The env's are goal observable, meaning the goal is not zero'd out
+
+env3 = door_open_goal_observable_cls(seed=10)  # Construct an environment with a different seed
+env1.reset()  # Reset environment
+env3.reset()
+a1 = env1.action_space.sample()  # Sample an action
+a3 = env3.action_space.sample()
+next_obs1, _, _, _ = env1.step(a1)  # Step the environment with the sampled random action
+next_obs3, _, _, _ = env3.step(a3)
+
+assert not (next_obs1[-3:] == next_obs3[-3:]).all() # 2 envs initialized with different seeds will have different goals
+assert not (next_obs1[-3:] == np.zeros(3)).all()   # The env's are goal observable, meaning the goal is not zero'd out
+
 ```
 
-If you need to add metadata when publishing a message, you can use the `Message` constructor to create a message with custom fields:
-```python
-from ably.types.message import Message
+## Citing Meta-World
+If you use Meta-World for academic research, please kindly cite our CoRL 2019 paper the using following BibTeX entry.
 
-message_object = Message(name="message_name",
-                         data="payload",
-                         extras={"headers": {"metadata_key": "metadata_value"}})
-await channel.publish(message_object)
+```
+@inproceedings{yu2019meta,
+  title={Meta-World: A Benchmark and Evaluation for Multi-Task and Meta Reinforcement Learning},
+  author={Tianhe Yu and Deirdre Quillen and Zhanpeng He and Ryan Julian and Karol Hausman and Chelsea Finn and Sergey Levine},
+  booktitle={Conference on Robot Learning (CoRL)},
+  year={2019}
+  eprint={1910.10897},
+  archivePrefix={arXiv},
+  primaryClass={cs.LG}
+  url={https://arxiv.org/abs/1910.10897}
+}
 ```
 
-### Querying the History
+## Accompanying Baselines
+If you're looking for implementations of the baselines algorithms used in the Meta-World conference publication, please look at our sister directory, [Garage](https://github.com/rlworkgroup/garage).
 
-```python
-message_page = await channel.history() # Returns a PaginatedResult
-message_page.items # List with messages from this page
-message_page.has_next() # => True, indicates there is another page
-next_page = await message_page.next() # Returns a next page
-next_page.items # List with messages from the second page
-```
+Note that these aren't the exact same baselines that were used in the original conference publication, however they are true to the original baselines.
 
-### Current presence members on a channel
+## Become a Contributor
+We welcome all contributions to Meta-World. Please refer to the [contributor's guide](https://github.com/Farama-Foundation/Metaworld/blob/master/CONTRIBUTING.md) for how to prepare your contributions.
 
-```python
-members_page = await channel.presence.get() # Returns a PaginatedResult
-members_page.items
-members_page.items[0].client_id # client_id of first member present
-```
+## Acknowledgements
+Meta-World is a work by [Tianhe Yu (Stanford University)](https://cs.stanford.edu/~tianheyu/), [Deirdre Quillen (UC Berkeley)](https://scholar.google.com/citations?user=eDQsOFMAAAAJ&hl=en), [Zhanpeng He (Columbia University)](https://zhanpenghe.github.io), [Ryan Julian (University of Southern California)](https://ryanjulian.me), [Karol Hausman (Google AI)](https://karolhausman.github.io),  [Chelsea Finn (Stanford University)](https://ai.stanford.edu/~cbfinn/) and [Sergey Levine (UC Berkeley)](https://people.eecs.berkeley.edu/~svlevine/).
 
-### Querying the presence history
-
-```python
-presence_page = await channel.presence.history() # Returns a PaginatedResult
-presence_page.items
-presence_page.items[0].client_id # client_id of first member
-```
-
-### Getting the channel status
-
-```python
-channel_status = await channel.status() # Returns a ChannelDetails object
-channel_status.channel_id # Channel identifier
-channel_status.status # ChannelStatus object
-channel_status.status.occupancy # ChannelOccupancy object
-channel_status.status.occupancy.metrics # ChannelMetrics object
-```
-
-### Symmetric end-to-end encrypted payloads on a channel
-
-When a 128 bit or 256 bit key is provided to the library, all payloads are encrypted and decrypted automatically using that key on the channel. The secret key is never transmitted to Ably and thus it is the developer's responsibility to distribute a secret key to both publishers and subscribers.
-
-```python
-key = ably.util.crypto.generate_random_key()
-channel = rest.channels.get('communication', cipher={'key': key})
-channel.publish(u'unencrypted', u'encrypted secret payload')
-messages_page = await channel.history()
-messages_page.items[0].data #=> "sensitive data"
-```
-
-### Generate a Token
-
-Tokens are issued by Ably and are readily usable by any client to connect to Ably:
-
-```python
-token_details = await client.auth.request_token()
-token_details.token # => "xVLyHw.CLchevH3hF....MDh9ZC_Q"
-new_client = AblyRest(token=token_details)
-await new_client.close()
-```
-
-### Generate a TokenRequest
-
-Token requests are issued by your servers and signed using your private API key. This is the preferred method of authentication as no secrets are ever shared, and the token request can be issued to trusted clients without communicating with Ably.
-
-```python
-token_request = await client.auth.create_token_request(
-    {
-        'client_id': 'jim',
-        'capability': {'channel1': '"*"'},
-        'ttl': 3600 * 1000, # ms
-    }
-)
-# => {"id": ...,
-#     "clientId": "jim",
-#     "ttl": 3600000,
-#     "timestamp": ...,
-#     "capability": "{\"*\":[\"*\"]}",
-#     "nonce": ...,
-#     "mac": ...}
-
-new_client = AblyRest(token=token_request)
-await new_client.close()
-```
-
-### Fetching your application's stats
-
-```python
-stats = await client.stats() # Returns a PaginatedResult
-stats.items
-await client.close()
-```
-
-### Fetching the Ably service time
-
-```python
-await client.time()
-await client.close()
-```
-
-## Using the realtime client
-
-### Create a client using an API key
-
-```python
-from ably import AblyRealtime
-
-
-# Create a client using an Ably API key
-async def main():
-    client = AblyRealtime('api:key')
-```
-
-### Create a client using token auth
-
-```python
-# Create a client using kwargs, which must contain at least one auth option
-# the available auth options are key, token, token_details, auth_url, and auth_callback
-# see https://www.ably.com/docs/rest/usage#client-options for more details
-from ably import AblyRealtime
-from ably import AblyRest
-async def main():
-    rest_client = AblyRest('api:key')
-    token_details = rest_client.request_token()
-    client = AblyRealtime(token_details=token_details)
-```
-
-### Subscribe to connection state changes
-
-```python
-# subscribe to 'failed' connection state
-client.connection.on('failed', listener)
-
-# subscribe to 'connected' connection state
-client.connection.on('connected', listener)
-
-# subscribe to all connection state changes
-client.connection.on(listener)
-
-# wait for the next state change
-await client.connection.once_async()
-
-# wait for the connection to become connected
-await client.connection.once_async('connected')
-```
-
-```python
-# subscribe to 'failed' connection state
-client.connection.on('failed', listener)
-
-# subscribe to 'connected' connection state
-client.connection.on('connected', listener)
-
-# subscribe to all connection state changes
-client.connection.on(listener)
-
-# wait for the next state change
-await client.connection.once_async()
-
-# wait for the connection to become connected
-await client.connection.once_async('connected')
-```
-
-### Get a realtime channel instance
-
-```python
-channel = client.channels.get('channel_name')
-```
-
-### Subscribing to messages on a channel
-
-```python
-
-def listener(message):
-    print(message.data)
-
-# Subscribe to messages with the 'event' name
-await channel.subscribe('event', listener)
-
-# Subscribe to all messages on a channel
-await channel.subscribe(listener)
-```
-
-Note that `channel.subscribe` is a coroutine function and will resolve when the channel is attached
-
-### Unsubscribing from messages on a channel
-
-```python
-# unsubscribe the listener from the channel
-channel.unsubscribe('event', listener)
-
-# unsubscribe all listeners from the channel
-channel.unsubscribe()
-```
-
-### Attach to a channel
-
-```python
-await channel.attach()
-```
-
-### Detach from a channel
-
-```python
-await channel.detach()
-```
-
-### Managing a connection
-
-```python
-# Establish a realtime connection.
-# Explicitly calling connect() is unnecessary unless the autoConnect attribute of the ClientOptions object is false
-client.connect()
-
-# Close a connection
-await client.close()
-
-# Send a ping
-time_in_ms = await client.connection.ping()
-```
-
-## Resources
-
-Visit https://ably.com/docs for a complete API reference and more examples.
-
-## Requirements
-
-This SDK supports Python 3.7+.
-
-We regression-test the SDK against a selection of Python versions (which we update over time, 
-but usually consists of mainstream and widely used versions). Please refer to [check.yml](.github/workflows/check.yml) 
-for the set of versions that currently undergo CI testing.
-
-## Known Limitations
-
-Currently, this SDK only supports [Ably REST](https://ably.com/docs/rest) and realtime message subscription as documented above.
-However, you can use the [MQTT adapter](https://ably.com/docs/mqtt) to implement [Ably's Realtime](https://ably.com/docs/realtime) features using Python.
-
-See [our roadmap for this SDK](roadmap.md) for more information.
-
-## Support, feedback and troubleshooting
-
-Please visit https://ably.com/support for access to our knowledge base and to ask for any assistance.
-
-You can also view the [community reported GitHub issues](https://github.com/ably/ably-python/issues).
-
-To see what has changed in recent versions of Bundler, see the [CHANGELOG](CHANGELOG.md).
-
-If you find any compatibility issues, please [do raise an issue](https://github.com/ably/ably-python/issues/new) in this repository or [contact Ably customer support](https://ably.com/support) for advice.
-
-## Contributing
-
-For guidance on how to contribute to this project, see [CONTRIBUTING.md](https://github.com/ably/ably-python/blob/main/CONTRIBUTING.md)
+The code for Meta-World was originally based on [multiworld](https://github.com/vitchyr/multiworld), which is developed by [Vitchyr H. Pong](https://people.eecs.berkeley.edu/~vitchyr/), [Murtaza Dalal](https://github.com/mdalal2020), [Ashvin Nair](http://ashvin.me/), [Shikhar Bahl](https://shikharbahl.github.io), [Steven Lin](https://github.com/stevenlin1111), [Soroush Nasiriany](http://snasiriany.me/), [Kristian Hartikainen](https://hartikainen.github.io/) and [Coline Devin](https://github.com/cdevin). The Meta-World authors are grateful for their efforts on providing such a great framework as a foundation of our work. We also would like to thank Russell Mendonca for his work on reward functions for some of the environments.
