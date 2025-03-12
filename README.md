@@ -1,138 +1,82 @@
-# Datatable View
+# html2text
 
-This package is used in conjunction with the jQuery plugin [DataTables](http://datatables.net/), and supports state-saving detection with [fnSetFilteringDelay](http://datatables.net/plug-ins/api).  The package consists of a class-based view, and a small collection of utilities for rendering table data from models.
+[![CI](https://github.com/Alir3z4/html2text/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/Alir3z4/html2text/actions/workflows/main.yml)
+[![codecov](https://codecov.io/gh/Alir3z4/html2text/graph/badge.svg?token=OoxiyymjgU)](https://codecov.io/gh/Alir3z4/html2text)
 
-[![PyPI Downloads][pypi-dl-image]][pypi-dl-link]
-[![PyPI Version][pypi-v-image]][pypi-v-link]
-[![Build Status][travis-image]][travis-link]
-[![Documentation Status][rtfd-image]][rtfd-link]
 
-[pypi-dl-link]: https://pypi.python.org/pypi/django-datatable-view
-[pypi-dl-image]: https://img.shields.io/pypi/dm/django-datatable-view.png
-[pypi-v-link]: https://pypi.python.org/pypi/django-datatable-view
-[pypi-v-image]: https://img.shields.io/pypi/v/django-datatable-view.png
-[travis-link]: https://travis-ci.org/pivotal-energy-solutions/django-datatable-view
-[travis-image]: https://travis-ci.org/pivotal-energy-solutions/django-datatable-view.svg?branch=traviscl
-[rtfd-link]: http://django-datatable-view.readthedocs.org/en/latest/?badge=latest
-[rtfd-image]: https://readthedocs.org/projects/django-datatable-view/badge/?version=latest
 
-Dependencies:
+html2text is a Python script that converts a page of HTML into clean, easy-to-read plain ASCII text. Better yet, that ASCII also happens to be valid Markdown (a text-to-HTML format).
 
-* Python 3.8 or later
-* [Django](http://www.djangoproject.com/) >= 2.2
-* [dateutil](http://labix.org/python-dateutil) library for flexible, fault-tolerant date parsing.
-* [jQuery](https://jquery.com/) >= 2
-* [dataTables.js](https://datatables.net/) >= 1.10
 
-# Getting Started
+Usage: `html2text [filename [encoding]]`
 
-Install the package:
+| Option                                                 | Description
+|--------------------------------------------------------|---------------------------------------------------
+| `--version`                                            | Show program's version number and exit
+| `-h`, `--help`                                         | Show this help message and exit
+| `--ignore-links`                                       | Don't include any formatting for links
+|`--escape-all`                                          | Escape all special characters.  Output is less readable, but avoids corner case formatting issues.
+| `--reference-links`                                    | Use reference links instead of links to create markdown
+| `--mark-code`                                          | Mark preformatted and code blocks with [code]...[/code]
 
-```bash
-pip install django-datatable-view
+For a complete list of options see the [docs](https://github.com/Alir3z4/html2text/blob/master/docs/usage.md)
+
+
+Or you can use it from within `Python`:
+
+```
+>>> import html2text
+>>>
+>>> print(html2text.html2text("<p><strong>Zed's</strong> dead baby, <em>Zed's</em> dead.</p>"))
+**Zed's** dead baby, _Zed's_ dead.
+
 ```
 
-Add to ``INSTALLED_APPS`` (so default templates and js can be discovered), and use the ``DatatableView`` like a Django ``ListView``:
 
-```python
-# settings.py
-INSTALLED_APPS = [
-    'datatableview',
-    # ...
-]
+Or with some configuration options:
+```
+>>> import html2text
+>>>
+>>> h = html2text.HTML2Text()
+>>> # Ignore converting links from HTML
+>>> h.ignore_links = True
+>>> print h.handle("<p>Hello, <a href='https://www.google.com/earth/'>world</a>!")
+Hello, world!
 
+>>> print(h.handle("<p>Hello, <a href='https://www.google.com/earth/'>world</a>!"))
 
-# views.py
-from datatableview.views import DatatableView
-class ZeroConfigurationDatatableView(DatatableView):
-    model = MyModel
+Hello, world!
+
+>>> # Don't Ignore links anymore, I like links
+>>> h.ignore_links = False
+>>> print(h.handle("<p>Hello, <a href='https://www.google.com/earth/'>world</a>!"))
+Hello, [world](https://www.google.com/earth/)!
+
 ```
 
-Use the ``{{ datatable }}`` provided in the template context to render the table and initialize from server ajax:
+*Originally written by Aaron Swartz. This code is distributed under the GPLv3.*
 
-```html
-<!-- myapp/mymodel_list.html -->
 
-<!-- Load dependencies -->
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"
-        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-        crossorigin="anonymous"></script>
-<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
-<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+## How to install
 
-<!-- Load js for initializing tables via their server-side options -->
-<script type="text/javascript" charset="utf8" src="{% static 'js/datatableview.js' %}"></script>
-<script type="text/javascript">
-    $(function(){
-        datatableview.initialize($('.datatable'));
-    });
-</script>
+`html2text` is available on pypi
+https://pypi.org/project/html2text/
 
-<!-- Render the table skeleton, includes the .datatable class for the on-ready initializer. -->
-{{ datatable }}
+```
+$ pip install html2text
 ```
 
-# Features at a glance
 
-* ``DatatableView``, a drop-in replacement for ``ListView`` that allows options to be specified for the datatable that will be rendered on the page.
-* ``MultipleDatatableView`` for configurating multiple Datatable specifications on a single view
-* ``ModelForm``-like declarative table design.
-* Support for ``ValuesQuerySet`` execution mode instead of object instances
-* Queryset caching between requests
-* Customizable table headers
-* Compound columns (columns representing more than one model field)
-* Columns backed by methods or callbacks instead of model fields
-* Easy related fields
-* Automatic search and sort support
-* Total control over cell contents (HTML, processing of raw values)
-* Search data fields that aren't present on the table
-* Support for DT_RowData
-* Customization hook for full JSON response object
-* Drop-in x-editable support, per-column
-* Customizable table templates
-* Easy Bootstrap integration
-* Allows all normal dataTables.js and x-editable Javascript options
-* Small library of common column markup processors
-* Full test suite
+## How to run unit tests
 
-# Documentation and Live Demos
-Read the module documentation at http://django-datatable-view.readthedocs.org.
+    tox
 
-A public live demo server is in the works.  For version 0.8, we will continue to keep the live demo site alive at http://django-datatable-view.appspot.com/  Please note that 0.8 does not reflect the current state or direction of the project.
+To see the coverage results:
 
-You can run the live demos locally from the included example project, using a few common setup steps.
+    coverage html
 
-```bash
-$ git clone https://github.com/pivotal-energy-solutions/django-datatable-view.git
-$ cd django-datatable-view
-$ mkvirtualenv datatableview
-(datatableview)$ pip install -r requirements.txt
-(datatableview)$ datatableview/tests/example_project/manage.py migrate
-(datatableview)$ datatableview/tests/example_project/manage.py loaddata initial_data
-(datatableview)$ datatableview/tests/example_project/manage.py runserver
-```
+then open the `./htmlcov/index.html` file in your browser.
 
-The example project is configured to use a local sqlite3 database, and relies on the ``django-datatable-view`` app itself, which is made available in the python path by simply running the project from the distributed directory root.
+## Documentation
 
-
-## Authors
-
-* Autumn Valenta
-* Steven Klass
-
-
-## Copyright and license
-
-Copyright 2011-2023 Pivotal Energy Solutions.  All rights reserved.
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this work except in compliance with the License.
-You may obtain a copy of the License in the LICENSE file, or at:
-
-   http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+Documentation lives [here](https://github.com/Alir3z4/html2text/blob/master/docs/usage.md)

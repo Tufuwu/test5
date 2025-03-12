@@ -1,138 +1,95 @@
-# This is used for DatatableView
+name: CI
 
-name: Django Datatable View Tests
-
+# Controls when the action will run. 
 on:
+  # Triggers the workflow on push or pull request events but only for the master branch
   push:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
-        with:
-          python-version: "3.9"
-          cache: 'pip'
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install .
-          pip install .[test]
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
 
-      - name: outdated
-        run: pip list --outdated --not-required --user | grep . && echo "There are outdated packages" && exit 1 || echo "All packages up to date"
-
-  black:
-    name: Black
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
-        with:
-          python-version: "3.9"
-          cache: 'pip'
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install .
-          pip install .[test]
-
-      - name: Black
-        run: black --check .
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
-        with:
-          python-version: "3.9"
-          cache: 'pip'
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install .
-          pip install .[test]
-          pre-commit install
-
-      - name: Pre-Commit
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
-        with:
-          python-version: "3.9"
-          cache: 'pip'
-
-      - name: Install dependencies
-        run: |
-          pip install .
-          pip install .[test]
-
-      - name: Bandit
-        run: bandit -c pyproject.toml -r -f json -o report.json .
-
-      - name: Show report
-        if: ${{ success() || failure() }}
-  tests:
-    name: Python ${{ matrix.python-version }} / ${{ matrix.db }} / Django ${{ matrix.django-version}}
+jobs:
+  code-quality:
     runs-on: ubuntu-latest
-#    continue-on-error: ${{ matrix.django-version == '~=5.0' }}
     strategy:
-      max-parallel: 4
       matrix:
-        db: [ sqlite, mariadb ]
-        django-version: ["~=4.2.0", "~=5.0"]
-        python-version: ["3.9", "3.10"]
+        toxenv:
+          - black
+          - flake8
+          - mypy
+          - isort
+    env:
+      TOXENV: ${{ matrix.toxenv }}
+    
+    name: "Tox ${{ matrix.toxenv }}"
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      
+      - name: setup python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+        
+      - name: Install Requirements [${{ matrix.toxenv }}]
+        run: pip install tox
+      
+      - name: Tox-${{ matrix.toxenv }}
+        run: tox
+  # This workflow contains a single job called "build"
+  test:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        toxenv:
+          - py38
+          - py39
+          - py310
+        include:
+          - toxenv: py38
+            python-version: '3.9'
+          - toxenv: py39
+            python-version: '3.9'
+          - toxenv: py310
+            python-version: '3.9'
+          - toxenv: py311
+            python-version: '3.9'
+          - toxenv: py312
+            python-version: '3.9'
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      TOXENV: ${{ matrix.toxenv }}
+    name: "Python ${{ matrix.python-version }} | Tox ${{ matrix.toxenv }}"
 
-    services:
-      mariadb:
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+      
+      - name: setup python
+        uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
-          cache: 'pip'
-
-      - name: Install dependencies
-        run: |
-          pip install .
-          pip install .[test]
-          pip uninstall -y Django
-          pip install Django${{ matrix.django-version }}
-
-        env:
-          PYTHONWARNINGS: once::DeprecationWarning
-          DB_TYPE: ${{ matrix.db }}
-        run: export PYTHONPATH=`pwd` && coverage run
-      - name: "Upload Coverage Results for PY:${{ matrix.python-version }} DB:${{ matrix.db}} DJ:${{ matrix.django-version }}"
-        uses: actions/upload-artifact@v4
-        with:
-          retention-days: 1
-
-      - name: Django Check
-        run: python demo_app/manage.py check
-
-  coverage:
-    name: Upload Coverage to Codecov
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
-        with:
-          python-version: "3.9"
-
-      - name: Install dependencies
-        run: |
-          pip install .
-          pip install .[test]
-
-      - uses: actions/download-artifact@v3
-        with:
-      - name: Combine Report Coverage
-        run: |
-          coverage combine coverage-*/.coverage
-          coverage report
-          coverage xml
-
+        
+      - name: Install Requirements [Python-${{ matrix.python-version }}]
+        run: pip install tox
+      
+      - name: Tox-${{ matrix.toxenv }}
+        run: tox
+      
       - name: Upload coverage to Codecov
-          fetch-depth: 0
-      - uses: actions/setup-python@v4
+        # see https://github.com/codecov/codecov-action/blob/master/README.md
+        uses: codecov/codecov-action@v2
         with:
-          python-version: "3.9"
-      - name: Install dependencies
-        run: |
-          pip install git+https://${{ secrets.ORGANIZATIONAL_REPO_TOKEN }}@github.com/pivotal-energy-solutions/tensor-infrastructure@master#egg=infrastructure
-          PYTHONWARNINGS: once::DeprecationWarning
-          GITHUB_TOKEN: ${{ secrets.ORGANIZATIONAL_REPO_TOKEN }}
-        run: |
-          bumper -P
-          echo "bumped=$(jq '.bumped' out.json)" >> $GITHUB_OUTPUT
-          echo "bump_version=$(jq '.bump_version' out.json)" >> $GITHUB_OUTPUT
-          echo "bump_sha=$(jq '.bump_sha' out.json)" >> $GITHUB_OUTPUT
+          flags: unittests-${{ matrix.python-version }}
+          fail_ci_if_error: true  # default = false
+          os: toxenv
+          verbose: true  # default = false
