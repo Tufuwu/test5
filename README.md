@@ -1,99 +1,151 @@
-# adhocracy+
+Distro - an OS platform information API
+=======================================
 
-[adhocracy.plus](https://adhocracy.plus/) is a free Open-Source participation platform maintained and primarily developed by Liquid Democracy e.V.. It is based on [adhocracy 4](https://github.com/liqd/adhocracy4) and [Django](https://github.com/django/django). The project's [technical documentation](https://liqd.github.io/adhocracy-plus/) currently is in progress. You are welcome to provide feedback by creating a GitHub issue.
+[![CI Status](https://github.com/python-distro/distro/workflows/CI/badge.svg)](https://github.com/python-distro/distro/actions/workflows/ci.yaml)
+[![PyPI version](http://img.shields.io/pypi/v/distro.svg)](https://pypi.python.org/pypi/distro)
+[![Supported Python Versions](https://img.shields.io/pypi/pyversions/distro.svg)](https://img.shields.io/pypi/pyversions/distro.svg)
+[![Code Coverage](https://codecov.io/github/python-distro/distro/coverage.svg?branch=master)](https://codecov.io/github/python-distro/distro?branch=master)
+[![Is Wheel](https://img.shields.io/pypi/wheel/distro.svg?style=flat)](https://pypi.python.org/pypi/distro)
+[![Latest Github Release](https://readthedocs.org/projects/distro/badge/?version=stable)](http://distro.readthedocs.io/en/latest/)
 
-![Build Status](https://github.com/liqd/adhocracy-plus/actions/workflows/django.yml/badge.svg)
-[![Coverage Status](https://coveralls.io/repos/github/liqd/adhocracy-plus/badge.svg?branch=main)](https://coveralls.io/github/liqd/adhocracy-plus?branch=main)
+`distro` provides information about the
+OS distribution it runs on, such as a reliable machine-readable ID, or
+version information.
 
-## Getting started
+It is the recommended replacement for Python's original
+[`platform.linux_distribution`](https://docs.python.org/3.7/library/platform.html#platform.linux_distribution)
+function (removed in Python 3.8). It also provides much more functionality
+which isn't necessarily Python bound, like a command-line interface.
 
-adhocracy+ is designed to make online participation easy and accessible to everyone. It can be used on our SaaS-platform or installed on your own servers. How to get started on our platform is explained [here](https://adhocracy.plus/info/start/).
+Distro currently supports Linux and BSD based systems but [Windows and OS X support](https://github.com/python-distro/distro/issues/177) is also planned.
 
-## Installation for development
+For Python 2.6 support, see https://github.com/python-distro/distro/tree/python2.6-support
 
-### Requirements
+## Installation
 
- * nodejs (+ npm) 
- * python 3.x (+ venv + pip)
- * libpq (only if postgres should be used)
- * sqlite3 [with JSON1 enabled](https://code.djangoproject.com/wiki/JSON1Extension)
- * redis (in production, not needed for development)
- * pillow-heif (required for macOS M1 Monterey and newer versions)
+Installation of the latest released version from PyPI:
 
-### Installation
-
-    git clone https://github.com/liqd/adhocracy-plus.git
-    cd adhocracy-plus
-    make install 
-    make fixtures
-
-### Start virtual environment
-```
-source venv/bin/activate
-```
-### Check if tests work
-```
-make test
-```
-### Start a local server
-```
-make watch
-```
-Go to http://localhost:8004/ and login with admin@liqd.net | password
-
-## Installation on a production system
-
-You like adhocracy+ and want to run your own version? An installation guide for production systems can be found [here](./docs/installation_prod.md).
-
-## Contributing or maintaining your own fork
-
-If you found an issue, want to contribute, or would like to add your own features to your own version of adhocracy+, check out our [contributing](./docs/contributing.md) document.
-
-## Security
-
-We take security seriously. If you find any security issues, please feel free to email us at info [at] liqd [dot] net.
-
-
-## Advanced settings 
-
-### Use postgresql database for testing
-
-run the following command once:
-```
-make postgres-create
-```
-to start the test server with postgresql, run:
-```
-export DATABASE=postgresql
-make postgres-start
-make watch
+```shell
+pip install distro
 ```
 
-### Use Celery for task queues
+Installation of the latest development version:
 
-For a celery worker to pick up tasks you need to make sure that:
-- the redis server is running. Check it by running
-```
-redis-cli ping 
-```
-it should return: PONG
-
-- the celery config parameter "always eager" is disabled (add `CELERY_TASK_ALWAYS_EAGER = False` to your `local.py`)
-Celery's always_eager is disabled to ensure tests run the celery tasks inline instead of scheduling them via the Redis broker.
-local.py should be under adhocracy_plus/config/settings, create one if it doesn't exist. This file saves settings for local development.
-
-To start a celery worker node in the foreground, call:
-```
-make celery-worker-start
+```shell
+pip install https://github.com/python-distro/distro/archive/master.tar.gz
 ```
 
-To inspect all registered tasks, list the running worker nodes, call:
-```
-make celery-worker-status
+To use as a standalone script, download `distro.py` directly:
+
+```shell
+curl -O https://raw.githubusercontent.com/python-distro/distro/master/src/distro/distro.py
+python distro.py
 ```
 
-To send a dummy task to the queue and report the result, call:
+``distro`` is safe to vendor within projects that do not wish to add
+dependencies.
+
+```shell
+cd myproject
+curl -O https://raw.githubusercontent.com/python-distro/distro/master/src/distro/distro.py
 ```
-make celery-worker-dummy-task
+
+## Usage
+
+```bash
+$ distro
+Name: Antergos Linux
+Version: 2015.10 (ISO-Rolling)
+Codename: ISO-Rolling
+
+$ distro -j
+{
+    "codename": "ISO-Rolling",
+    "id": "antergos",
+    "like": "arch",
+    "version": "16.9",
+    "version_parts": {
+        "build_number": "",
+        "major": "16",
+        "minor": "9"
+    }
+}
+
+
+$ python
+>>> import distro
+>>> distro.name(pretty=True)
+'CentOS Linux 8'
+>>> distro.id()
+'centos'
+>>> distro.version(best=True)
+'8.4.2105'
 ```
-Check out our extensive [celery documentation](https://github.com/liqd/adhocracy-plus/compare/docs/celery.md?expand=1)
+
+
+## Documentation
+
+On top of the aforementioned API, several more functions are available. For a complete description of the
+API, see the [latest API documentation](http://distro.readthedocs.org/en/latest/).
+
+## Background
+
+An alternative implementation became necessary because Python 3.5 deprecated
+this function, and Python 3.8 removed it altogether. Its predecessor function
+[`platform.dist`](https://docs.python.org/3.7/library/platform.html#platform.dist)
+was already deprecated since Python 2.6 and removed in Python 3.8. Still, there
+are many cases in which access to that information is needed. See [Python issue
+1322](https://bugs.python.org/issue1322) for more information.
+
+The `distro` package implements a robust and inclusive way of retrieving the
+information about a distribution based on new standards and old methods,
+namely from these data sources (from high to low precedence):
+
+* The os-release file `/etc/os-release` if present, with a fall-back on `/usr/lib/os-release` if needed.
+* The output of the `lsb_release` command, if available.
+* The distro release file (`/etc/*(-|_)(release|version)`), if present.
+* The `uname` command for BSD based distrubtions.
+
+
+## Python and Distribution Support
+
+`distro` is supported and tested on Python 3.6+ and PyPy and on any
+distribution that provides one or more of the data sources covered.
+
+This package is tested with test data that mimics the exact behavior of the data sources of [a number of Linux distributions](https://github.com/python-distro/distro/tree/master/tests/resources/distros).
+
+
+## Testing
+
+```shell
+git clone git@github.com:python-distro/distro.git
+cd distro
+pip install tox
+tox
+```
+
+
+## Contributions
+
+Pull requests are always welcome to deal with specific distributions or just
+for general merriment.
+
+See [CONTRIBUTIONS](https://github.com/python-distro/distro/blob/master/CONTRIBUTING.md) for contribution info.
+
+Reference implementations for supporting additional distributions and file
+formats can be found here:
+
+* https://github.com/saltstack/salt/blob/develop/salt/grains/core.py#L1172
+* https://github.com/chef/ohai/blob/master/lib/ohai/plugins/linux/platform.rb
+* https://github.com/ansible/ansible/blob/devel/lib/ansible/module_utils/facts/system/distribution.py
+* https://github.com/puppetlabs/facter/blob/master/lib/src/facts/linux/os_linux.cc
+
+## Package manager distributions
+
+* https://src.fedoraproject.org/rpms/python-distro
+* https://www.archlinux.org/packages/community/any/python-distro/
+* https://launchpad.net/ubuntu/+source/python-distro
+* https://packages.debian.org/stable/python3-distro
+* https://packages.gentoo.org/packages/dev-python/distro
+* https://pkgs.org/download/python3-distro
+* https://slackbuilds.org/repository/14.2/python/python-distro/
