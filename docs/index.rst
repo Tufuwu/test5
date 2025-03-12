@@ -1,50 +1,15 @@
-.. GPIO Zero: a library for controlling the Raspberry Pi's GPIO pins
-..
-.. Copyright (c) 2015-2021 Dave Jones <dave@waveform.org.uk>
-.. Copyright (c) 2017-2019 Ben Nuttall <ben@bennuttall.com>
-..
-.. SPDX-License-Identifier: BSD-3-Clause
+django-health-check
+-------------------
 
-.. include:: ../README.rst
-
-Table of Contents
-=================
+This project checks for various conditions and provides reports when anomalous
+behavior is detected. Many of these checks involve connecting to back-end
+services and ensuring basic operations are successful.
 
 .. toctree::
-    :maxdepth: 1
-    :numbered:
+   :maxdepth: 2
+   :caption: Contents:
 
-    installing
-    recipes
-    recipes_advanced
-    remote_gpio
-    recipes_remote_gpio
-    pi_zero_otg
-    source_values
-    cli_tools
-    faq
-    compat
-    migrating_from_rpigpio
-    contributing
-    development
-    api_input
-    api_output
-    api_spi
-    api_boards
-    api_internal
-    api_generic
-    api_tools
-    api_fonts
-    api_tones
-    api_info
-    api_pins
-    api_exc
-    changelog
-    license
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   readme
+   contrib
+   settings
+   changelog
