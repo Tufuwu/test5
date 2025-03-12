@@ -1,47 +1,19 @@
-name: Python CI
-
-on:
-   push:
-     branches: [ master ]
-   pull_request:
-     branches:
-       - '**'
-
-
+name: Tests
+on: [push]
 jobs:
-   run_tests:
-     name: tests
-     runs-on: ${{ matrix.os }}
-     strategy:
-       matrix:
-         os: [ ubuntu-latest ]
-         python-version: ["3.9", "3.10"]
-         toxenv: ['django22', 'quality']
-         exclude:
-           - python-version: '3.9'
-             toxenv: 'quality'
-
-     steps:
-       - uses: actions/checkout@v1
-       - name: setup python
-         uses: actions/setup-python@v2
-         with:
-           python-version: ${{ matrix.python-version }}
-
-       - name: Install pip
-         run: pip install -r requirements/pip.txt
-
-       - name: Install Dependencies
-         run: pip install -r requirements/ci.txt
-
-       - name: Run Tests
-         env:
-           TOXENV: ${{ matrix.toxenv }}
-         run: make test
-
-       - name: Run Coverage
-         if: matrix.python-version == '3.8' && matrix.toxenv=='django22'
-         uses: codecov/codecov-action@v1
-         with:
-           flags: unittests
-           fail_ci_if_error: true
+  tests:
+    name: ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.9", "3.10"]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: pip deps
+        run: pip install peewee wtforms
+      - name: runtests
+        run: python runtests.py
