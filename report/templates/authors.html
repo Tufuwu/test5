@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 id="list_of_authors"><a href="#list_of_authors">Authors statistics (top-{{project.top_authors_statistics|length}}) </a></h2>
+<table class="authors sortable" id="authors">
+    <tr>
+        <th>Author</th>
+        <th>Commits</th><th>Merge commits</th>
+        <th>+ lines</th><th>- lines</th>
+        <th>First commit</th><th>Latest commit</th>
+        <th>Contributed (days)</th><th>Actively contributed (days)</th>
+    </tr>
+    {% for _, row in project.top_authors_statistics.iterrows() %}
+    <tr>
+        <td>{{ row['author_name'] }}</td>
+        <td>{{ row['commits_count'] }} ({{'%0.2f'| format(row['commits_count']|to_percentage(project.total_commits_count))}}%)</td>
+        <td>{{ row['merge_commits_count'] }} ({{'%0.2f'| format(row['merge_commits_count']|to_percentage(project.total_commits_count))}}%)</td>
+        <td>{{ row['insertions'] }}</td><td>{{ row['deletions'] }}</td>
+        <td>{{ row['first_commit_date'].strftime('%Y-%m-%d') }}</td>
+        <td>{{ row['latest_commit_date'].strftime('%Y-%m-%d') }}</td>
+        <td>{{ row['contributed_days_count'] }}</td><td>{{ row['active_days_count'] }}</td>
+    </tr>
+    {% endfor %}
+</table>
+<div>
+<p class="moreauthors">These didn't make it to the top:</p>
+<ul class="nontop">
+{% for author in project.non_top_authors %}
+    <li>{{ author }}</li>
+{% endfor %}
+</ul>
+</div>
+
+{% if project.is_blame_data_available %}
+<h2 id="contribution"><a href="#contribution">Contribution<sup>*</sup></a></h2>
+<div id="chart_contribution" style="border: 1px solid #808080; width: 507px"><svg style="height: 480px; width: 100%"></svg></div>
+<p><sup>*</sup><small> Lines from an author left in the HEAD commit</small></p>
+{% endif %}
+
+<h2 id="cumulated_added_lines_of_code_per_author"><a href="#cumulated_added_lines_of_code_per_author">Cumulated Added Lines of Code per Author</a></h2>
+<div id="chart_loc" style="border: 1px solid #808080; width: 1014px"><svg style="height: 480px; width: 100%"></svg></div>
+
+<h2 id="commits_per_author"><a href="#commits_per_author">Commits per Author</a></h2>
+
+<div style="border: 1px solid #808080; width: 1014px">
+<div id="chart_commits"><svg style="height: 480px; width: 100%"></svg></div>
+<div id="chart_steam"><svg style="height: 480px; width: 100%"></svg></div>
+</div>
+
+<h2 id="author_of_month"><a href="#author_of_month">Author of the Month</a></h2>
+<table class="sortable" id="aom">
+    <tr>
+        <th>Month</th>
+        <th>Author</th><th>Commits count</th>
+        <th class="unsortable">Next top {{project.authors_top}}</th>
+        <th>Total authors count</th>
+    </tr>
+    {% for month in project.months %}
+    <tr>
+        <td>{{month.date}}</td>
+        <td>{{month.top_author.name}}</td>
+        <td align="center">{{month.top_author.commits_count}} (of {{month.all_commits_count}})</td>
+        <td>{{month.next_top_authors}}</td>
+        <td align="center">{{month.total_authors_count}}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h2 id="author_of_year"><a href="#author_of_year">Author of the Year</a></h2>
+<table class="sortable" id="aoy">
+    <tr>
+        <th>Year</th>
+        <th>Author</th><th>Commits count</th>
+        <th class="unsortable">Next top {{project.authors_top}}</th>
+        <th>Total authors count</th>
+    </tr>
+    {% for year in project.years %}
+    <tr>
+        <td>{{year.date}}</td>
+        <td>{{year.top_author.name}}</td>
+        <td align="center">{{year.top_author.commits_count}} (of {{year.all_commits_count}})</td>
+        <td>{{year.next_top_authors}}</td>
+        <td align="center">{{year.total_authors_count}}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% if project.is_blame_data_available %}
+<h2 id="knowledge_carriers"><a href="#knowledge_carriers">Top knowledge carriers</a></h2>
+<table>
+    <tr>
+        <th>Author</th>
+        <th>Lines count</th>
+    </tr>
+    {% for _, row  in project.top_knowledge_carriers.iterrows() %}
+    <tr>
+        <td>{{row["committer_name"]}}</td>
+        <td>{{row["lines_count"]}}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endif %}
+
+<h2 id="commits_by_domains"><a href="#commits_by_domains">Commits by Email Domains</a></h2>
+<div id="chart_domains" style="border: 1px solid #808080; width: 507px"><svg style="height: 480px; width: 100%"></svg></div>
+<script src="authors.js"></script>
+{% endblock %}

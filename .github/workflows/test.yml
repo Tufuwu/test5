@@ -1,72 +1,36 @@
-name: Continuous integration checks
+# This workflow will install Python dependencies, run tests and lint with a single version of Python
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+name: Repostat for Ubuntu 20.04
 
 on:
   push:
-  schedule:
-    - cron: '0 7 * * 0' # weekly
-
 jobs:
-  test:
+  ubuntu_build:
+
     runs-on: ubuntu-latest
-    name: Python ${{ matrix.python-version }} / ${{ matrix.django-version }}
     strategy:
       matrix:
         python-version: ["3.9", "3.10"]
-        django-version:
-          - "2.2"
-          - "3.0"
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Cache pip
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip setuptools wheel
-          pip install -r requirements/tests.txt django=="${{ matrix.django-version }}.*"
-          pip freeze
-      - name: Run tests
-        run: |
-          pytest
 
-  quality:
-    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python 3.8
-      uses: actions/setup-python@v2
       with:
-        python-version: '3.9'
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements/tests.txt
-        pip install -r requirements/quality.txt
-        pip freeze
-    - name: Run quality checks
-      run: |
-        make quality
+        fetch-depth: 0
 
-  docs:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.8
+    - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
-        python-version: '3.9'
-    - name: Install dependencies
+        python-version: ${{ matrix.python-version }}
+
+    - name: Upgrade pip
+      run: python -m pip install --upgrade pip
+
+    - name: Check generated report integrity
+      run: python tools/check_report_files.py --is-relocatable /tmp
+
+    - name: Check unit tests
       run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements/tests.txt
-        pip install -r requirements/docs.txt
-        pip freeze
-    - name: Run quality checks
-      run: |
-        make docs
+        git config --global user.name "Repo Stat"
+        git config --global user.email "ci@repo.stat"
+        python -m unittest -v

@@ -1,31 +1,30 @@
-*.py[cod]
-.cache
-.ropeproject
-*.sublime-*
-.python-version
+# virtual environment
+venv/
+venv3
 
-# Packages
-*.egg
-*.egg-info
-dist
+# compiled python
+*.pyc
+
+# generated files
+output/
+
+# package installation files
+repo_stat.egg-info/
+
+
+#csv export unittest output folder
+test/csv_outs
+
+# pycharm project
+.idea
+# Visual Studio files 
+.vscode
+
+# pip install --develop files
 build
-eggs
-parts
-bin
-var
-sdist
-develop-eggs
-.installed.cfg
+dist
 
-# Installer logs
-pip-log.txt
-
-# Unit test / coverage reports
-.coverage
-htmlcov
-
-# Sphinx
-docs/_build
-
-# Django
-*.sqlite3
+# stdeb files
+deb_dist/
+*.tar.gz
+/.mailmap

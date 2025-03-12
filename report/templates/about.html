@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1><a href="https://github.com/vifactor/repostat">Repostat</a> {{repostat.version}}</h1>
+<dl>
+<dt>Tools</dt>
+<dd>
+    <ul>
+    {% for tool in repostat.tools %}
+    <li>{{tool}}</li>
+    {% endfor %}
+    </ul>
+<dd>
+<br>
+<dt>Contributors</dt><br>
+<p>
+    {% set contributors_count_max = 5 %}
+    {{ repostat.contributors[:contributors_count_max]|join(", ") }}
+    {% if repostat.contributors|length > contributors_count_max %}
+        and others.
+    {% endif %}
+</p>
+
+<dt>Licence</dt><br>
+<p>
+    Repostat license is GPLv2/GPLv3, but it contains:
+    <br>
+    <ul>
+        <li>sortable.js which is licensed under the MIT license</li>
+        <li>colormaps.py file and the colormaps which are in it are released under the CC0 license</li>
+    </ul>
+    See the files for details.
+</p>
+{% endblock %}
+</dl>

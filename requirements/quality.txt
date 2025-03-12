@@ -1,6 +1,0 @@
-check-manifest
-check-oldies[toml]
-isort
-pylint
-pylint_strict_informational
-twine
