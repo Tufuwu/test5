@@ -1,21 +1,21 @@
-# Started from: https://github.com/github/gitignore/blob/master/Python.gitignore
-
-.vscode/
-.metals/
-config.yaml
-venv/
-*example.py
-flintrock-logo/
-.hypothesis/
-*.prf
-.DS_Store
+*.err
+*.tmp
+*.json
+venv*
+mykrobe-data/
+src/mykrobe/data/
+*.gz
+example-data/
+# Custom
 .pytest_cache/
-/resources/
-.python-version
+mccortex/
+atlas/
+tmp/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+*$py.class
 
 # C extensions
 *.so
@@ -34,6 +34,7 @@ lib64/
 parts/
 sdist/
 var/
+wheels/
 *.egg-info/
 .installed.cfg
 *.egg
@@ -56,6 +57,8 @@ htmlcov/
 .cache
 nosetests.xml
 coverage.xml
+*.cover
+.hypothesis/
 
 # Translations
 *.mo
@@ -63,9 +66,58 @@ coverage.xml
 
 # Django stuff:
 *.log
+local_settings.py
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
 
 # Sphinx documentation
 docs/_build/
 
 # PyBuilder
 target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# celery beat schedule file
+celerybeat-schedule
+
+# SageMath parsed files
+*.sage.py
+
+# dotenv
+.env
+
+# virtualenv
+.venv
+venv/
+ENV/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+src/api/123.json
+data
+test-probes.txt
+z.test.pncA_T2ATAC.txt
+
+.idea
+src/mykrobe/cortex/mccortex31
+.mongodb
