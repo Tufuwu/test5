@@ -1,0 +1,6 @@
+api_version: '1.4'
+repositories:
+    dummy-github:
+        vcs: git
+        url: 'GITURL'
+        revision: master

@@ -1,41 +1,164 @@
-# Contributing to this repository
+Contributing
+============
 
-### Ready to make a change? Fork the repo
+Feedback and pull-requests
+--------------------------
 
-Fork using GitHub Desktop:
+For feature requests, bug reports, vulnerability reports, and feedback, please
+provide them as GitHub issues.
 
-- [Getting started with GitHub Desktop](https://docs.github.com/en/desktop/installing-and-configuring-github-desktop/getting-started-with-github-desktop) will guide you through setting up Desktop.
-- Once Desktop is set up, you can use it to [fork the repo](https://docs.github.com/en/desktop/contributing-and-collaborating-using-github-desktop/cloning-and-forking-repositories-from-github-desktop)!
+To submit a patch please create a pull request from your topic branch.
+You should create a separate branch for each single topic (bug fix or
+new feature). Please follow commit message guideline from
+[git-scm book](http://git-scm.com/book/ch5-2.html). Try to break several
+logical changes or bug fixes in several commits.
 
-Fork using the command line:
+We also ask you to sign our [Contributor Licence Agreement](https://github.com/AdaCore/contributing-howto).
 
-- [Fork the repo](https://docs.github.com/en/github/getting-started-with-github/fork-a-repo#fork-an-example-repository) so that you can make your changes without affecting the original project until you're ready to merge them.
+Code conventions
+----------------
 
-Fork with [GitHub Codespaces](https://github.com/features/codespaces):
+### pre-commit checks
 
-- [Fork, edit, and preview](https://docs.github.com/en/free-pro-team@latest/github/developing-online-with-codespaces/creating-a-codespace) using [GitHub Codespaces](https://github.com/features/codespaces) without having to install and run the project locally.
+Before contributing a change please activate pre-commit checks locally:
 
-### Make your update:
-Make your changes to the file(s) you'd like to update. 
-Test your changes by running all tests with `python -m unittest discover`.
+```bash
 
-### Open a pull request
-When you're done making changes and you'd like to propose them for review, use the [pull request template](#pull-request-template) to open your PR (pull request).
+$ pip3 install pre-commit
+$ pre-commit install
+```
 
-### Submit your PR & get it reviewed
-- Once you submit your PR, others from the pybsn community will review it with you.
-- Automatic tests and code analysis will be run against your contribution. Make sure your code passes these checks. 
-- After that, we may have questions, check back on your PR to keep up with the conversation.
+Note that the pre-commit check configuration can be found in ``.pre-commit-config.yaml``. Before any change to that file please run:
 
-### Your PR is merged!
-Congratulations! The pybsn community thanks you. :sparkles:
+```bash
+$ pre-commit run --all-files
+```
 
-### How to release a new version of pybsn
-To help release a new version of pybsn, there are two github actions. They are triggered when a new tag is pushed to the repository. Each tag push is considered a release, and each of the two actions will attempt to create a release using the version found in [setup.py](https://github.com/bigswitch/pybsn/blob/main/setup.py). The name of the tag does not matter from a technical perspective, but should match the version in the `setup.py` file.
-1. [release-github.yml](https://github.com/bigswitch/pybsn/blob/main/.github/workflows/release-github.yml)
-Creates a release on github. The release description is the message of the last commit of the release branch (`main`).
-2. [release-pypi.yml](https://github.com/bigswitch/pybsn/blob/main/.github/workflows/release-pypi.yml)
-Creates a release on [PyPi](https://pypi.org/project/pybsn/).
+The pre-commit checks will format the code with Black and run flake8.
 
-### Attribution
-This `CONTRIBUTING.md` has been adapted from [Github Docs](https://github.com/github/docs/blob/main/CONTRIBUTING.md).
+### Flake8, mypy, and Black
+
+All code should follow [PEP8](https://www.python.org/dev/peps/pep-0008/),
+[PEP257](https://www.python.org/dev/peps/pep-0257/). The code is automatically
+formatted with Black at commit time.
+
+All changes should contain type hinting and running mypy should be clean of
+errors.
+
+You should also document your method's parameters and their return values
+in *reStructuredText* format:
+
+```python
+"""Doc string for function
+
+:param myparam1: description for param1
+:param myparam2: description for param1
+:return: description for returned object
+"""
+```
+The code is automatically formatted with Black.
+
+### logger
+
+All logging done by `e3` must be done via a logger returned by the function
+`e3.log.getLogger`. Very verbose logging can be achieved by adding calls to
+`e3.log.debug()`. This will be activated when an application using
+`e3.main.Main` is run with: `-v -v`.
+
+### Main
+
+All entry points must instanciate `e3.main.Main` to parse their options.
+
+### Exceptions
+
+Exceptions raised by `e3` should derived from `e3.error.E3Error`.
+
+The `e3` namespace
+------------------
+
+The `e3` framework provides a namespace package. It allows creating
+separated packages living under the `e3` namespace.
+
+Such a package must:
+
+   * define an `e3/__init__.py` file containing **only**:
+
+     ```python
+     __import__('pkg_resources').declare_namespace(__name__)
+     ```
+
+   * set to `e3` the value of the *namespace package* argument
+     of the setup() function of its ``setup.py`` (see [setup.py](setup.py)).
+
+See [setuptools namespace-packages doc][1] for more info.
+
+[1]: http://pythonhosted.org/setuptools/setuptools.html#namespace-packages
+
+Plugin system
+-------------
+
+`e3` uses a plugin system based on
+[stevedore](https://github.com/openstack/stevedore) built on top of setuptools
+entry points. `e3-core` is meant to be as small as possible and extented with
+plugins.
+
+To add a new feature based on plugins, first define a base class with
+[abc (Abstract Base Classes)](https://docs.python.org/2/library/abc.html) that
+will implement the plugin interface. Other packages can then create plugin by
+deriving the base class (the interface) and referencing the entry point in its
+``setup.py``. `e3-core` can then use the plugin via `stevedore`. See the
+[plugin system documentation](https://github.com/AdaCore/e3-core/wiki/Plugins).
+
+Documentation
+-------------
+
+All public API methods must be documented.
+
+`e3-core` documentation is available in the [e3-core GitHub wiki](https://github.com/AdaCore/e3-core/wiki).
+
+Testing
+-------
+
+All features or bug fixes must be tested. Make sure that pre-commit checks are activated before any pull-requests.
+
+Requires: [tox](https://pypi.python.org/pypi/tox)
+If not already installed, install it via:
+
+```bash
+pip install tox
+```
+
+On Windows, you will need additional tools in your PATH to run the testsuite cleanly.
+If you have installed Git and are using PowerShell, then you can add them by running:
+
+```bash
+$ENV:PATH += ";$ENV:ProgramFiles/Git/usr/bin"
+```
+
+On macOS, it might be required to add some GNU tools in your PATH. At least
+one test does not work with patch `2.0-12u11-Apple`. You can install GNU patch
+by running
+
+```bash
+brew install gpatch
+```
+
+In order to run the public testsuite of `e3-core`, do:
+
+```bash
+tox
+```
+
+Coverage
+--------
+
+The code needs to be covered as much as possible. We're aiming for 100%
+coverage. If something cannot be tested on a platform add `no cover`
+instruction in the code. This should be done for all platform specific code or for
+defensive code that should never be executed. See the file `tests/coverage_<platform>.rc` for patterns to use in order to exclude some line from the coverage report.
+
+Supported Python version
+------------------------
+
+To simplify our testing and reduce the technical debt, we are only supporting the two
+last versions of Python.

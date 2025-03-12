@@ -1,0 +1,20 @@
+from e3.anod.spec import Anod
+from e3.anod.package import ExternalSourceBuilder, \
+    ThirdPartySourceBuilder, Source
+
+
+class Spec11(Anod):
+
+    build_source_list = [Source('spec1-src', publish=True),
+                         Source('unmanaged-src', publish=True),
+                         Source('external-src', publish=True)]
+
+    build_deps = [Anod.Dependency('spec1', require='source_pkg')]
+
+    source_pkg_build = [
+        ThirdPartySourceBuilder(name='unmanaged-src'),
+        ExternalSourceBuilder(name='external-src')]
+
+    @Anod.primitive()
+    def build(self):
+        pass
