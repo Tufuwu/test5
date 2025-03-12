@@ -1,0 +1,7 @@
+
+[Added Associations]
+text/html=mousepad.desktop;
+text/x-readme=mousepad.desktop;
+text/x-python=mousepad.desktop;
+text/plain=mousepad.desktop;
+inode/directory=pcmanfm.desktop;

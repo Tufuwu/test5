@@ -1,0 +1,12 @@
+#!/usr/bin/env xdg-open
+
+[Desktop Entry]
+Version=1.0
+Type=Application
+Terminal=false
+Name[en_US]=Rescuezilla
+Exec=rescuezilla
+Comment[en_US]=System backup and restore utility
+Name=Rescuezilla
+Comment=System backup and restore utility
+Icon=rescuezilla

@@ -1,3 +1,9 @@
-*.pyc
-pypi_notifier/pypi_notifier.db
-cache/
+build/*
+pkg.cache/*
+/**/.idea/*
+/**/*~
+/**/*#
+/**/*.swp
+/**/__pycache__
+/**/*.pyc
+.vscode

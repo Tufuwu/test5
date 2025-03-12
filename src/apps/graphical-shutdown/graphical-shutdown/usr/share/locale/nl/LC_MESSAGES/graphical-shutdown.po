@@ -1,0 +1,29 @@
+# Artem <KovalevArtem.ru@gmail.com>, 2021.
+# Shasheen Ediriweera <shasheene@gmail.com>, 2021, 2023.
+# Gideon van Melle <translations@gvmelle.com>, 2022.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2023-09-26 19:51+0000\n"
+"Last-Translator: Shasheen Ediriweera <shasheene@gmail.com>\n"
+"Language-Team: Dutch <https://hosted.weblate.org/projects/rescuezilla/"
+"graphical-shutdown/nl/>\n"
+"Language: nl\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.1-dev\n"
+
+msgid "End Session"
+msgstr "Einde sessie"
+
+msgid "Cancel"
+msgstr "Annuleren"
+
+msgid "Shutdown"
+msgstr "Afsluiten"
+
+msgid "Reboot"
+msgstr "Herstarten"
+
+msgid "Choose action."
+msgstr "Kies actie."

@@ -1,0 +1,35 @@
+#!/bin/sh -e
+#
+# rc.local
+#
+# This script is executed at the end of each multiuser runlevel.
+# Make sure that the script will "exit 0" on success or any other
+# value on error.
+#
+# In order to enable or disable this script just change the execution
+# bits.
+#
+# By default this script does nothing.
+
+# Set the time to the local hardware clock
+hwclock -s --localtime --noadjfile
+
+# Change ownership livecd user home dir to the ubuntu user
+# Otherwise its the UID/GID of the account which runs the build
+# FIXME: Find a better way. Permissions are managed by git works well, but
+# FIXME: user/group ownership are not tracked.
+chown -R ubuntu:ubuntu /home/ubuntu
+
+# Disable swap partitions as Rescuezilla for disaster recovery from dying disks
+# or in data forensics, situations where writing to a disk is a bad thing.
+# FIXME: Find a way ensure swap is never enabled including early in the boot process.
+swapoff --all
+
+# When Rescuezilla is booted using "toram" kernel option, the /isodevice path is
+# automatically mounted for some reason. But after teh boot with "toram" is complete
+# this path can be safely unmounted.
+#
+# [1] https://github.com/rescuezilla/rescuezilla/wiki/Installing-Rescuezilla-as-a-rescue-partition
+sudo umount -lrf /isodevice
+
+exit 0
