@@ -1,11 +1,7 @@
-include CONTRIBUTING.rst
-include CHANGELOG.rst
-include LICENSE
-include README.rst
-
-global-exclude *.pyc
-recursive-include nvd3 *
-recursive-exclude * __pycache__
-recursive-exclude * *.py[co]
-
-recursive-include docs *.rst conf.py Makefile make.bat
+include CHANGELOG.md LICENSE README.md
+recursive-include libfaketime *.py
+include libfaketime/vendor/libfaketime/Makefile
+include libfaketime/vendor/libfaketime/src/Makefile
+include libfaketime/vendor/libfaketime/src/Makefile.OSX
+include libfaketime/vendor/libfaketime/COPYING
+recursive-include libfaketime/vendor/libfaketime/src *.c *.h *.map

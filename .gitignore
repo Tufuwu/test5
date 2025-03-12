@@ -1,50 +1,59 @@
+.pytest_cache/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
 *.py[cod]
-env
 
 # C extensions
 *.so
 
-# Packages
-*.egg
-*.egg-info
-dist
-build
-eggs
-parts
-bin
-var
-sdist
-develop-eggs
+# Distribution / packaging
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
 .installed.cfg
-lib
-lib64
+*.egg
+
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
 
 # Installer logs
 pip-log.txt
+pip-delete-this-directory.txt
 
 # Unit test / coverage reports
+htmlcov/
+.tox/
 .coverage
-.tox
+.cache
 nosetests.xml
+coverage.xml
 
 # Translations
 *.mo
+*.pot
 
-# Npm
-package.json
+# Django stuff:
+*.log
 
-# Bower
-bower_components
-.bowerrc
-bower.json
-bower_components
+# Sphinx documentation
+docs/_build/
 
-archive
-env
-myenv
-nvd3_env
+# PyBuilder
+target/
 
-htmlcov
-test_*.html
-#[vim]
-*.swp
+# IntelliJ/PyCharm IDE config
+/.idea
