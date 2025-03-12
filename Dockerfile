@@ -1,15 +1,9 @@
 FROM python:3.11-slim-bookworm
 
-RUN apt-get update \
- && apt-get install -y --no-install-recommends dexdump=11.0* \
- && rm -rf /var/lib/apt/lists/*
+COPY ./requirements.txt /opt/requirements.txt
+RUN pip3 install -r /opt/requirements.txt
 
-WORKDIR /
-COPY requirements.txt .
+COPY . /exodus-core
+WORKDIR /exodus-core
 
-RUN pip install --no-cache-dir -r requirements.txt
-
-COPY exodus_analyze.py .
-
-ENTRYPOINT ["/exodus_analyze.py"]
-CMD ["app.apk"]
+ENV PATH "${PATH}:/exodus-core/exodus_core/dexdump/"

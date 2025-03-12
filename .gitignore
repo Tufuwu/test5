@@ -1,6 +1,6 @@
-venv
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+venv/
+.idea
 .vscode
-__pycache__
-
-apks
-config.py
