@@ -1,4 +1,12 @@
-include CHANGELOG.md
+include Changes.rst
 include LICENSE
-include README.md
-graft tests
+graft doc/html
+graft Include
+graft examples
+graft rst
+graft util
+graft test
+prune test/.cache
+exclude MANIFEST.in
+recursive-include src *.pyx *.pyi *.py *.pxi *.pxd *.c *.h
+global-exclude *.pyc
