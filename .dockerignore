@@ -1,3 +1,6 @@
+.dockerignore
+Dockerfile
+
 venv
 .vscode
 __pycache__
