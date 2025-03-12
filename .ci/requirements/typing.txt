@@ -1,4 +1,0 @@
-git+https://github.com/Jackenmen/Red-DiscordBot@V3/typing_progress
-mypy
-types-cachetools
-types-emoji~=1.2
