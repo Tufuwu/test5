@@ -1,43 +1,39 @@
 name: CI
-
-on:
-  - pull_request
-  - push
-
+on: [push, pull_request]
 jobs:
-  mypy:
-    name: mypy
+  test:
     runs-on: ubuntu-latest
-
+    services:
+      postgres:
+        image: postgres:10.1
+        ports:
+          - 5432:5432
     steps:
-      - uses: actions/checkout@master
-
-      - name: Set up Python
-        uses: actions/setup-python@v2
-
-      - name: Install tox
-        run: pip install tox
-
-      - name: Run tests
-        run: tox -e mypy
-
-  tests:
-    name: Python ${{ matrix.python-version }}
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.9", "3.10"]
-
-    steps:
-      - uses: actions/checkout@master
-
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
+      - name: Check out repository
+        uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
         with:
-          python-version: ${{ matrix.python-version }}
-
-      - name: Install tox
-        run: pip install tox
-
-      - name: Run tests
-        run: tox -e py
+          python-version: 3.3.9
+      - name: Cache Python dependencies
+        uses: actions/cache@v4
+        env:
+          cache-name: pythondotorg-cache-pip
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-${{ github.job }}-${{ env.cache-name }}-${{ hashFiles('requirements.txt', '*-requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ github.job }}-${{ env.cache-name }}-
+            ${{ runner.os }}-${{ github.job }}-
+            ${{ runner.os }}-
+      - name: Install Python dependencies
+        run: |
+          pip install -U pip setuptools wheel
+          pip install -r dev-requirements.txt
+      - name: Run Tests
+        run: |
+          python -Wd -m coverage run manage.py test -v2
+        env:
+          DATABASE_URL: postgres://postgres:@127.0.0.1:5432/python.org
+      - name: Coverage
+        run: |
+          coverage report -m --fail-under=75

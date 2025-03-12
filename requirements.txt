@@ -1,5 +1,2 @@
-pytest
-pytest-cov
-coveralls
-python-dateutil >= 2.7
-maya; python_version < '3.12'
+-r base-requirements.txt
+-r prod-requirements.txt
