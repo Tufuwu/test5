@@ -1,0 +1,35 @@
+#
+# Peekaboo Extended Email Attachment Behavior Observation Owl
+# Copyright (c) 2016-2022 science + computing ag.
+#
+# Install as /etc/systemd/system/peekaboo.service
+#
+
+
+[Unit]
+Description=Peekaboo Extended Email Attachment Behavior Observation Owl
+After=network.target cuckoo-api.service mysql.service postgresql.service
+
+[Service]
+User=peekaboo
+WorkingDirectory=/opt/peekaboo/
+ExecStart=/opt/peekaboo/bin/peekaboo -c /opt/peekaboo/etc/peekaboo.conf -D
+Restart=always
+Type=notify
+
+DeviceAllow=/dev/null rw
+CapabilityBoundingSet=~CAP_SYS_PTRACE
+
+
+ProtectSystem=full
+# strict
+# Not supported by "stable" systemd
+# ReadWritePaths=/opt/peekaboo/tmp
+# ProtectControlGroups=true
+# ProtectKernelTunables=true
+# ProtectKernelModules=true
+# RestrictRealtime=true
+
+[Install]
+WantedBy=multi-user.target
+Alias=peekabood.service

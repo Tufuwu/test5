@@ -1,0 +1,10 @@
+Sphinx
+twine
+pydoctor
+babel
+git-lint
+docutils
+pycodestyle
+pylint
+flask
+flask-restful
