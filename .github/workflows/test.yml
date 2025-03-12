@@ -1,122 +1,59 @@
+name: Build
 
-name: "CI"
-concurrency:  # Cancel any existing runs of this workflow for this same PR
-  group: "${{ github.workflow }}-${{ github.ref }}"
-  cancel-in-progress: true
-on: # yamllint disable-line rule:truthy rule:comments
+on:
   push:
-    branches:
-      - "master"
-    tags:
-      - "v*"
-  pull_request: ~
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
 
 jobs:
-  black:
-    runs-on: "ubuntu-latest"
-    steps:
-      - name: "Check out repository code"
-        uses: "actions/checkout@v2"
-      - name: "Setup environment"
-        uses: "networktocode/gh-action-setup-poetry-environment@v2"
-      - name: "Linting: black"
-        run: "poetry run black ./ --diff --check"
-  flake8:
-    runs-on: "ubuntu-latest"
-    steps:
-      - name: "Check out repository code"
-        uses: "actions/checkout@v2"
-      - name: "Setup environment"
-        uses: "networktocode/gh-action-setup-poetry-environment@v2"
-      - name: "Linting: flake8"
-        run: "poetry run flake8 ./"
-    needs:
-      - "black"
-  yamllint:
-    runs-on: "ubuntu-latest"
-    steps:
-      - name: "Check out repository code"
-        uses: "actions/checkout@v2"
-      - name: "Setup environment"
-        uses: "networktocode/gh-action-setup-poetry-environment@v2"
-      - name: "Linting: yamllint"
-        run: "poetry run yamllint ./"
-    needs:
-      - "black"
-  tests:
+  build:
+
+    runs-on: ubuntu-latest
     strategy:
-      fail-fast: true
       matrix:
         python-version: ["3.9", "3.10"]
-    runs-on: "ubuntu-latest"
+
     steps:
-      - name: "Check out repository code"
-        uses: "actions/checkout@v2"
-      - name: "Set up Python"
-        uses: "actions/setup-python@v2"
-        with:
-          python-version: "${{ matrix.python-version }}"
-      - name: "Install Poetry"
-        run: "pip install poetry==1.1.15"
-      - name: "Install Python Packages"
-        run: "poetry install"
-      - name: "Running tests"
-        run: "poetry run pytest -v"
-    needs:
-      - "flake8"
-      - "yamllint"
-  publish_gh:
-    name: "Publish to GitHub"
-    runs-on: "ubuntu-latest"
-    if: "startsWith(github.ref, 'refs/tags/v')"
-    steps:
-      - name: "Check out repository code"
-        uses: "actions/checkout@v2"
-      - name: "Set up Python"
-        uses: "actions/setup-python@v2"
-        with:
-          python-version: "3.9"
-      - name: "Install Python Packages"
-        run: "pip install poetry"
-      - name: "Set env"
-        run: "echo RELEASE_VERSION=${GITHUB_REF:10} >> $GITHUB_ENV"
-      - name: "Run Poetry Version"
-        run: "poetry version $RELEASE_VERSION"
-      - name: "Run Poetry Build"
-        run: "poetry build"
-      - name: "Upload binaries to release"
-        uses: "svenstaro/upload-release-action@v2"
-        with:
-          repo_token: "${{ '{{ secrets.NTC_GITHUB_TOKEN }}' }}"
-          file: "dist/*"
-          tag: "${{ '{{ github.ref }}' }}"
-          overwrite: true
-          file_glob: true
-    needs:
-      - "tests"
-  publish_pypi:
-    name: "Push Package to PyPI"
-    runs-on: "ubuntu-latest"
-    if: "startsWith(github.ref, 'refs/tags/v')"
-    steps:
-      - name: "Check out repository code"
-        uses: "actions/checkout@v2"
-      - name: "Set up Python"
-        uses: "actions/setup-python@v2"
-        with:
-          python-version: "3.9"
-      - name: "Install Python Packages"
-        run: "pip install poetry"
-      - name: "Set env"
-        run: "echo RELEASE_VERSION=${GITHUB_REF:10} >> $GITHUB_ENV"
-      - name: "Run Poetry Version"
-        run: "poetry version $RELEASE_VERSION"
-      - name: "Run Poetry Build"
-        run: "poetry build"
-      - name: "Push to PyPI"
-        uses: "pypa/gh-action-pypi-publish@release/v1"
-        with:
-          user: "__token__"
-          password: "${{ '{{ secrets.PYPI_API_TOKEN }}' }}"
-    needs:
-      - "tests"
+    - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Set up Node 
+      uses: actions/setup-node@v3
+      with:
+        node-version: '10'
+    - name: Set up Chrome
+      uses: browser-actions/setup-chrome@latest
+    - name: Install Dependencies
+      run: |
+        sudo apt-get purge -y postgresql-14 postgresql-client-14
+        sudo add-apt-repository -y ppa:timescale/timescaledb-ppa
+        sudo apt-get update
+        sudo apt-get install -y postgresql-10 gdal-bin libgdal-dev postgresql-10-postgis-2.4 timescaledb-postgresql-10
+        sudo bash -c "echo \"shared_preload_libraries = 'timescaledb'\" >>/etc/postgresql/10/main/postgresql.conf"
+        sudo service postgresql restart
+        sudo -u postgres psql -U postgres -c "create extension postgis"
+        sudo -u postgres psql -U postgres -c "create user runner password 'topsecret' superuser"
+        sudo -u postgres psql -U postgres -c "create database openmeteo owner runner"
+        python -m pip install --upgrade pip 'setuptools<58'  # See https://stackoverflow.com/questions/69123406
+        CPLUS_INCLUDE_PATH=/usr/include/gdal C_INCLUDE_PATH=/usr/include/gdal pip install 'gdal==2.2.3'
+        pip install 'psycopg2>=2.8,<2.9' codecov coverage isort flake8 black
+        wget -O chromedriver_version https://chromedriver.storage.googleapis.com/LATEST_RELEASE_`google-chrome --version|awk '{ print $3 }'|awk -F. '{ print $1 }'`
+        wget https://chromedriver.storage.googleapis.com/`cat chromedriver_version`/chromedriver_linux64.zip
+        sudo unzip chromedriver_linux64.zip -d /usr/local/bin
+        pip install -r requirements.txt
+        pip install -r requirements-dev.txt
+        npm install
+        cp enhydris_project/settings/ci.py enhydris_project/settings/local.py
+    - name: Run Tests
+      run: |
+        python manage.py makemigrations --check
+        black --check .
+        flake8 --max-line-length=88 .
+        isort --check-only --diff .
+        npm run lint
+        coverage run --include="./*" --omit="*/tests/*","*/tests.py","*/migrations/*","./enhydris_project/*" manage.py test -v2
+        npm run test
+        codecov

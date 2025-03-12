@@ -1,0 +1,13 @@
+{% load i18n %}
+
+<div class="station-info-group">
+  {% blocktrans with owner=station.owner %}
+    <p><b>Owner:</b> {{owner}}</p>
+  {% endblocktrans %}
+
+  {% if station.overseer %}
+    {% blocktrans with overseer=station.overseer %}
+      <p><b>Overseer:</b> {{overseer}}</p>
+    {% endblocktrans %}
+  {% endif %}
+</div>

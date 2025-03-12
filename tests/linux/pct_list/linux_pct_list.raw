@@ -1,5 +1,0 @@
-
-VMID       Status     Lock         Name                
-100        stopped                 netmiko       
-101        stopped                 ntc_templates    
-1001       running                 something

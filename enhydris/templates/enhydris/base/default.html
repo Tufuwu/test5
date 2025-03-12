@@ -1,0 +1,101 @@
+{% load i18n %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <title>{% block title %}{% trans "Enhydris" %}{% endblock %}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    {% block basecss %}
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css" integrity="sha512-oc9+XSs1H243/FRN9Rw62Fn8EtxjEYWHXRvjS43YtueEewbS6ObfXcJNyohjHqVKFPoXXUxwc+q1K7Dee6vv9g==" crossorigin="anonymous">
+      {% if object.gentityimage_set.exists %}
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/6.4.15/swiper-bundle.min.css" integrity="sha512-uA1+kHA/0O68FTSM4jeTzJNnRvNWxdCCSnE3gv8LaySXYxQT3nc5uPX9buMPtI1gxUBcxm0+5Lcw59jjl0nMDQ==" crossorigin="anonymous">
+      {% endif %}
+      <link href="{% static 'css/enhydris.css' %}" rel="stylesheet">
+      <link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.css" rel="stylesheet" media="screen">
+      <link href="{% static 'css/vendor/L.Control.MousePosition.css' %}" rel="stylesheet">
+      <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.0/css/bootstrap-datepicker.min.css" rel="stylesheet" media="screen">
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    {% endblock %}
+
+    {% block shortcut_icon %}
+      <link href="{% static 'images/favicon.ico' %}" rel="icon" type="image/x-icon">
+    {% endblock %}
+
+    {% block extracss %}{% endblock %}
+    {% block extra_head %}{% endblock %}
+  </head>
+
+  <body class="{% block body_classes %}{% endblock %}" onload="{% block body_onload %}{% endblock %}">
+    <header class="page-header">
+      <div class="container">
+      {% block header %}
+        {% include "enhydris/base/navbar.html" %}
+        {% include "enhydris/base/messages.html" %}
+      {% endblock header %}
+      </div>
+    </header>
+
+    <main class="page-main">
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer class="page-footer">
+      <div class="container page-footer-content">
+      {% block footer %}
+        {% include "enhydris/base/footer.html" %}
+      {% endblock %}
+      </div>
+    </footer>
+
+    {% block bodyend %}{% endblock %}
+
+    {% block mainjs %}
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js" integrity="sha512-ubuT8Z88WxezgSqf3RLuNi5lmjstiJcyezx34yIU2gAHonIi27Na7atqzUZCOoY4CExaoFumzOsFQ2Ch+I/HCw==" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/js/bootstrap.min.js" integrity="sha512-8qmis31OQi6hIRgvkht0s6mCOittjMa9GMqtK9hes5iEQBQE/Ca6yGE5FsW36vyipGoWQswBj/QBm2JR086Rkw==" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js" integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ==" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.js"></script>
+      {% block leaflet_plugins %}
+        <script src="{% static 'js/vendor/L.Control.MousePosition.js'%}"></script>
+      {% endblock %}
+      <script type="text/javascript" src="{% static 'js/vendor/arg.js.v1.1.min.js' %}"></script>
+      <script>
+        const enhydris = {};
+        enhydris.staticUrl = '{% static "" %}';
+        enhydris.rootUrl = '{% url "station_list" %}';
+      </script>
+      {% if object.gentityimage_set.exists %}
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/6.4.15/swiper-bundle.min.js" integrity="sha512-NahckN+grB6fSxu3vQdKiyC69swjW6+xYUjaPVWTGtRuia8zUIlw2gkgjhZmAd8lAECEHV3HdCudarnAZaWkZw==" crossorigin="anonymous"></script>
+        <script>
+          var galleryStation = new Swiper('.swiper-container', {
+            slidesPerView: 'auto',
+            navigation: {
+              nextEl: '.swiper-button-next',
+              prevEl: '.swiper-button-prev',
+            },
+            breakpoints: {
+              768: {
+                spaceBetween: 20,
+              },
+              320: {
+                spaceBetween: 15,
+              }
+            }
+          });
+        </script>
+      {% endif %}
+      <script src="{% static 'js/enhydris.js' %}"></script>
+      <script>
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+          return new bootstrap.Tooltip(tooltipTriggerEl)
+        });
+      </script>
+    {% endblock %}
+
+    {% block extrajs %}{% endblock %}
+  </body>
+</html>

@@ -1,0 +1,60 @@
+{% load i18n %}
+{% load tz %}
+
+<div id="timeseries_groups" class="tab-pane fade show active" role="tabpanel" aria-labelledby="timeseries_groups">
+  {% if station.timeseriesgroup_set.count %}
+    <table class="table station-table">
+      <thead>
+        <tr>
+          <th class="station-column-id">{% trans 'ID' %}</th>
+          <th class="station-column-desc">{% trans 'Name' %}</th>
+          <th class="station-column-date">{% trans 'Start date' %}</th>
+          <th class="station-column-date">{% trans 'End date' %}</th>
+          <th class="station-column-blank"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for tg in station.timeseriesgroup_set.all %}
+          {% if not tg.hidden %}
+            {% with tg.id as tg_id %}
+              {% url "timeseries_group_detail" tg_id as timeseries_group_url %}
+              <tr>
+                <td class="station-column-id">
+                  <span class="station-cell-title">{% trans 'ID' %}</span>
+                  <span>{{ tg_id }}</span>
+                </td>
+                <td class="station-column-desc">
+                  <span class="station-cell-title">{% trans 'Name' %}</span>
+                  <a href="{% url 'timeseries_group_detail' station_id=station.id pk=tg_id %}">{% if tg.name %}{{ tg.name }}{% else %}{{ tg.variable }}{% endif %}</a>
+                </td>
+                <td class="station-column-date">
+                  <span class="station-cell-title">{% trans 'Start date' %}</span>
+                  <span>
+                    {% if tg.start_date and tg.end_date %}
+                      {% localtime off %}
+                        {{ tg.start_date|date:"SHORT_DATETIME_FORMAT" }}
+                      {% endlocaltime %}
+                    {% endif %}
+                  </span>
+                </td>
+                <td class="station-column-date">
+                  <span class="station-cell-title">{% trans 'End date' %}</span>
+                  <span>
+                    {% if tg.start_date and tg.end_date %}
+                      {% localtime off %}
+                        {{ tg.end_date|date:"SHORT_DATETIME_FORMAT" }} {{ tg.end_date|date:"(O)" }}
+                      {% endlocaltime %}
+                    {% endif %}
+                  </span>
+                </td>
+                <td class="station-column-blank"></td>
+              </tr>
+            {% endwith %}
+          {% endif %}
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <div class="mt-4 alert alert-info" role="alert">{% trans 'No data exist' %}</div>
+  {% endif %}
+</div>

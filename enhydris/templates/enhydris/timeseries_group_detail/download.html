@@ -1,0 +1,16 @@
+{% load i18n %}
+{% load rules %}
+
+<div class="station-download">
+  {% if timeseries_set %}
+    <div>
+      <p><b>Download data</b></p>
+      <p></p>
+      {% include "enhydris/timeseries_group_detail/download_button.html" %}
+    </div>
+  {% else %}
+    <div class="mt-4 alert alert-info" role="alert">
+      {% trans "No data is available for downloading." %}
+    </div>
+  {% endif %}
+</div>

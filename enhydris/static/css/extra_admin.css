@@ -1,0 +1,19 @@
+/* When an inline has fieldsets, we don't use a blue heading, otherwise the
+ * inline fieldset's heading is confused with the inline's heading.
+ */
+
+.inline-related h2 {
+  color: #666;
+
+  background-color: #f8f8f8;
+}
+
+.inline-related h2 .collapse-toggle {
+  color: #447e9b;
+}
+
+/* DJANGO ADMIN */
+
+.help {
+  max-width: 30em;
+}
