@@ -1,66 +1,136 @@
+#!/usr/bin/env python
 """
-Installation setup for mtgjson5
+Setup to allow pip installs of edx-rest-api-client module.
 """
-import configparser
-import pathlib
 
-import setuptools
+import os
+import re
 
-# Establish project directory
-project_root: pathlib.Path = pathlib.Path(__file__).resolve().parent
+from setuptools import find_packages, setup
 
-# Read config details to determine version-ing
-config_file = project_root.joinpath("mtgjson5/resources/mtgjson.properties")
-config = configparser.ConfigParser()
-if config_file.is_file():
-    config.read(str(config_file))
+from edx_rest_api_client import __version__
 
-setuptools.setup(
-    name="mtgjson5",
-    version=config.get("MTGJSON", "version", fallback="5.0.0+fallback"),
-    author="Zach Halpern",
-    author_email="zach@mtgjson.com",
-    url="https://mtgjson.com/",
-    description="Magic: the Gathering compiled database generator",
-    long_description=project_root.joinpath("README.md").open(encoding="utf-8").read(),
-    long_description_content_type="text/markdown",
-    license="MIT",
+with open('README.rst') as readme:
+    long_description = readme.read()
+
+
+def load_requirements(*requirements_paths):
+    """
+    Load all requirements from the specified requirements files.
+
+    Requirements will include any constraints from files specified
+    with -c in the requirements files.
+    Returns a list of requirement strings.
+    """
+    # UPDATED VIA SEMGREP - if you need to remove/modify this method remove this line and add a comment specifying why.
+
+    # e.g. {"django": "Django", "confluent-kafka": "confluent_kafka[avro]"}
+    by_canonical_name = {}
+
+    def check_name_consistent(package):
+        """
+        Raise exception if package is named different ways.
+
+        This ensures that packages are named consistently so we can match
+        constraints to packages. It also ensures that if we require a package
+        with extras we don't constrain it without mentioning the extras (since
+        that too would interfere with matching constraints.)
+        """
+        canonical = package.lower().replace('_', '-').split('[')[0]
+        seen_spelling = by_canonical_name.get(canonical)
+        if seen_spelling is None:
+            by_canonical_name[canonical] = package
+        elif seen_spelling != package:
+            raise Exception(
+                f'Encountered both "{seen_spelling}" and "{package}" in requirements '
+                'and constraints files; please use just one or the other.'
+            )
+
+    requirements = {}
+    constraint_files = set()
+
+    # groups "pkg<=x.y.z,..." into ("pkg", "<=x.y.z,...")
+    re_package_name_base_chars = r"a-zA-Z0-9\-_."  # chars allowed in base package name
+    # Two groups: name[maybe,extras], and optionally a constraint
+    requirement_line_regex = re.compile(
+        r"([%s]+(?:\[[%s,\s]+\])?)([<>=][^#\s]+)?"
+        % (re_package_name_base_chars, re_package_name_base_chars)
+    )
+
+    def add_version_constraint_or_raise(current_line, current_requirements, add_if_not_present):
+        regex_match = requirement_line_regex.match(current_line)
+        if regex_match:
+            package = regex_match.group(1)
+            version_constraints = regex_match.group(2)
+            check_name_consistent(package)
+            existing_version_constraints = current_requirements.get(package, None)
+            # It's fine to add constraints to an unconstrained package,
+            # but raise an error if there are already constraints in place.
+            if existing_version_constraints and existing_version_constraints != version_constraints:
+                raise BaseException(f'Multiple constraint definitions found for {package}:'
+                                    f' "{existing_version_constraints}" and "{version_constraints}".'
+                                    f'Combine constraints into one location with {package}'
+                                    f'{existing_version_constraints},{version_constraints}.')
+            if add_if_not_present or package in current_requirements:
+                current_requirements[package] = version_constraints
+
+    # Read requirements from .in files and store the path to any
+    # constraint files that are pulled in.
+    for path in requirements_paths:
+        with open(path) as reqs:
+            for line in reqs:
+                if is_requirement(line):
+                    add_version_constraint_or_raise(line, requirements, True)
+                if line and line.startswith('-c') and not line.startswith('-c http'):
+                    constraint_files.add(os.path.dirname(path) + '/' + line.split('#')[0].replace('-c', '').strip())
+
+    # process constraint files: add constraints to existing requirements
+    for constraint_file in constraint_files:
+        with open(constraint_file) as reader:
+            for line in reader:
+                if is_requirement(line):
+                    add_version_constraint_or_raise(line, requirements, False)
+
+    # process back into list of pkg><=constraints strings
+    constrained_requirements = [f'{pkg}{version or ""}' for (pkg, version) in sorted(requirements.items())]
+    return constrained_requirements
+
+
+def is_requirement(line):
+    """
+    Return True if the requirement line is a package requirement.
+
+    Returns:
+        bool: True if the line is not blank, a comment,
+        a URL, or an included file
+    """
+    # UPDATED VIA SEMGREP - if you need to remove/modify this method remove this line and add a comment specifying why
+
+    return line and line.strip() and not line.startswith(('-r', '#', '-e', 'git+', '-c'))
+
+
+setup(
+    name='edx-rest-api-client',
+    version=__version__,
+    description='Client utilities to access various Open edX Platform REST APIs.',
+    long_description=long_description,
+    long_description_content_type="text/x-rst",
     classifiers=[
-        "Intended Audience :: Developers",
-        "Intended Audience :: Education",
-        "Intended Audience :: Science/Research",
-        "License :: OSI Approved :: MIT License",
-        "Natural Language :: English",
-        "Operating System :: MacOS :: MacOS X",
-        "Operating System :: Microsoft :: Windows :: Windows 10",
-        "Operating System :: Microsoft :: Windows :: Windows 11",
-        "Operating System :: Unix",
-        "Programming Language :: Python :: 3 :: Only",
-        "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",
-        "Programming Language :: Python :: 3.10",
-        "Programming Language :: Python :: 3.11",
-        "Programming Language :: Python :: 3.12",
-        "Programming Language :: Python",
-        "Topic :: Database",
-        "Topic :: Software Development :: Version Control :: Git",
+        'Development Status :: 5 - Production/Stable',
+        'License :: OSI Approved :: Apache Software License',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
+        'Framework :: Django :: 4.2',
+        'Topic :: Internet',
+        'Intended Audience :: Developers',
+        'Environment :: Web Environment',
     ],
-    keywords=[
-        "Big Data",
-        "Card Games",
-        "Collectible",
-        "Database",
-        "JSON",
-        "MTG",
-        "MTGJSON",
-        "Trading Cards",
-        "Magic: The Gathering",
-    ],
-    include_package_data=True,
-    packages=setuptools.find_packages(),
-    install_requires=project_root.joinpath("requirements.txt")
-    .open(encoding="utf-8")
-    .readlines()
-    if project_root.joinpath("requirements.txt").is_file()
-    else [],  # Use the requirements file, if able
+    keywords='edx rest api client',
+    url='https://github.com/openedx/edx-rest-api-client',
+    author='edX',
+    author_email='oscm@edx.org',
+    license='Apache',
+    packages=find_packages(exclude=['*.tests']),
+    install_requires=load_requirements('requirements/base.in'),
 )
