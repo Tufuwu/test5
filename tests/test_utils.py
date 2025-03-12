@@ -1,63 +1,84 @@
+#
+# Copyright (c) 2017 Grigori Goronzy <greg@chown.ath.cx>
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+
+"""Tests for utility functions and other misc parts"""
+
+import argparse
 import unittest
-
-import numpy as np
-
-from denstream import utils
-
+from stcgal.utils import Utils, BaudType
 
 class TestUtils(unittest.TestCase):
-    def setUp(self):
-        self.TOL = 1e-8
-        self.SEED = 42
+    """Test for utility functions in the Utils class"""
 
-    def test_fading_function(self):
-        """
-        This test is designed to check that the fading function works as expected,
-            both for scalars and vectors (numpy arrays).
-        """
+    def test_to_bool(self):
+        """Test special utility function for bool conversion"""
+        self.assertTrue(Utils.to_bool(True))
+        self.assertTrue(Utils.to_bool("true"))
+        self.assertTrue(Utils.to_bool("True"))
+        self.assertTrue(Utils.to_bool("t"))
+        self.assertTrue(Utils.to_bool("T"))
+        self.assertTrue(Utils.to_bool(1))
+        self.assertTrue(Utils.to_bool(-1))
+        self.assertFalse(Utils.to_bool(0))
+        self.assertFalse(Utils.to_bool(None))
+        self.assertFalse(Utils.to_bool("false"))
+        self.assertFalse(Utils.to_bool("False"))
+        self.assertFalse(Utils.to_bool("f"))
+        self.assertFalse(Utils.to_bool("F"))
+        self.assertFalse(Utils.to_bool(""))
 
-        # Testing fading function for scalar values
-        lambd = 1.0
-        time = 2
-        assert np.abs(utils.fading_function(lambd, time) - 0.25) < self.TOL
+    def test_to_int(self):
+        """Test wrapped integer conversion"""
+        self.assertEqual(Utils.to_int("2"), 2)
+        self.assertEqual(Utils.to_int("0x10"), 16)
+        with self.assertRaises(ValueError):
+            Utils.to_int("a")
+        with self.assertRaises(ValueError):
+            Utils.to_int("")
+        with self.assertRaises(ValueError):
+            Utils.to_int(None)
 
-        # Testing fading function for numpy arrays
-        lambd_array = np.repeat(lambd, 4).reshape((4, 1))
-        time_array = np.array([1, 2, 3, 4]).reshape((4, 1))
+    def test_hexstr(self):
+        """Test byte array formatter"""
+        self.assertEqual(Utils.hexstr([10]), "0A")
+        self.assertEqual(Utils.hexstr([1, 2, 3]), "010203")
+        with self.assertRaises(Exception):
+            Utils.hexstr([400, 500])
 
-        expected_array = np.array([0.5, 0.25, 0.125, 0.0625]).reshape((4, 1))
-        actual_array = utils.fading_function(lambd_array, time_array)
+    def test_decode_packed_bcd(self):
+        """Test packed BCD decoder"""
+        self.assertEqual(Utils.decode_packed_bcd(0x01), 1)
+        self.assertEqual(Utils.decode_packed_bcd(0x10), 10)
+        self.assertEqual(Utils.decode_packed_bcd(0x11), 11)
+        self.assertEqual(Utils.decode_packed_bcd(0x25), 25)
+        self.assertEqual(Utils.decode_packed_bcd(0x99), 99)
 
-        self.assertTrue(np.linalg.norm(actual_array - expected_array) < self.TOL)
+class TestBaudType(unittest.TestCase):
+    """Test BaudType class"""
 
-    def test_cf1_calculations(self):
-        """
-        This test checks that the calculation of the CF1-score is the same for the numpy and the numba version.
-        """
-
-        np.random.seed(self.SEED)
-        x = np.random.uniform(0, 1, size=(100, 2))
-        fading_array = np.random.uniform(0, 1, size=(100, 1))
-
-        np_cf1 = utils.numpy_cf1(x, fading_array)
-        numba_cf1 = utils.numba_cf1(x, fading_array)
-
-        self.assertTrue(np.linalg.norm(np_cf1 - numba_cf1) < self.TOL)
-
-    def test_cf2_calculations(self):
-        """
-        This test checks that the calculation of the CF2-score is the same for the numpy and the numba version.
-        """
-
-        np.random.seed(self.SEED)
-        x = np.random.uniform(0, 1, size=(100, 2))
-        fading_array = np.random.uniform(0, 1, size=(100, 1))
-
-        np_cf2 = utils.numpy_cf2(x, fading_array)
-        numba_cf2 = utils.numba_cf2(x, fading_array)
-
-        self.assertTrue(np.linalg.norm(np_cf2 - numba_cf2) < self.TOL)
-
-
-if __name__ == "__main__":
-    unittest.main()
+    def test_create_baud_type(self):
+        """Test creation of BaudType instances"""
+        baud_type = BaudType()
+        self.assertEqual(baud_type("2400"), 2400)
+        self.assertEqual(baud_type("115200"), 115200)
+        with self.assertRaises(argparse.ArgumentTypeError):
+            baud_type("2374882")

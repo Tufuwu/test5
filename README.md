@@ -1,36 +1,62 @@
-# pyDenStream
+[![Build Status](https://github.com/grigorig/stcgal/workflows/Python%20package/badge.svg?branch=master)](https://github.com/grigorig/stcgal/actions?query=workflow%3A%22Python+package%22)
+[![Coverage Status](https://coveralls.io/repos/github/grigorig/stcgal/badge.svg?branch=master)](https://coveralls.io/github/grigorig/stcgal?branch=master)
+[![PyPI version](https://badge.fury.io/py/stcgal.svg)](https://badge.fury.io/py/stcgal)
 
-![master](https://github.com/MrParosk/pyDenStream/workflows/master/badge.svg?branch=master) [![codecov](https://codecov.io/gh/MrParosk/pyDenStream/branch/master/graph/badge.svg?token=HEKMVIH5WO)](https://codecov.io/gh/MrParosk/pyDenStream)
+stcgal - STC MCU ISP flash tool
+===============================
 
-Implementation of the algorithm [Density-Based Clustering over an Evolving Data Stream with Noise](https://archive.siam.org/meetings/sdm06/proceedings/030caof.pdf) in Python.
+stcgal is a command line flash programming tool for [STC MCU Ltd](http://stcmcu.com/).
+8051 compatible microcontrollers.
 
-## Installation
+STC microcontrollers have an UART/USB based boot strap loader (BSL). It
+utilizes a packet-based protocol to flash the code memory and IAP
+memory over a serial link. This is referred to as in-system programming
+(ISP).  The BSL is also used to configure various (fuse-like) device
+options. Unfortunately, this protocol is not publicly documented and
+STC only provide a (crude) Windows GUI application for programming.
 
-```Shell
-pip install denstream
-```
+stcgal is a full-featured Open Source replacement for STC's Windows
+software; it supports a wide range of MCUs, it is very portable and
+suitable for automation.
 
-## Example usage
+Features
+--------
 
-```python
-import numpy as np
-from denstream import DenStream
+* Support for STC 89/90/10/11/12/15/8/32 series
+* UART and USB BSL support
+* Display part info
+* Determine operating frequency
+* Program flash memory
+* Program IAP/EEPROM
+* Set device options
+* Read unique device ID (STC 10/11/12/15/8)
+* Trim RC oscillator frequency (STC 15/8)
+* Automatic power-cycling with DTR toggle or a custom shell command
+* Automatic UART protocol detection
 
-# Model parameters
-eps = 0.3
-lambd = 0.1
-beta = 0.2
-mu = 10
-min_samples = 1
+Quickstart
+----------
 
-model = DenStream(eps, beta, mu, lambd, min_samples)
+Install stcgal (might need root/administrator privileges):
+    
+    pip3 install stcgal
 
-x = np.array([[1, 2]])
-t = 0
+Call stcgal and show usage:
 
-model.partial_fit(x, t)
-```
+    stcgal -h
 
-## In depth example
+Further information
+-------------------
 
-A more in depth example of how to use this package is included in *examples/user_guide.ipynb*.
+[Installation](doc/INSTALL.md)
+
+[How to use stcgal](doc/USAGE.md)
+
+[Frequently Asked Questions](doc/FAQ.md)
+
+[List of tested MCU models](doc/MODELS.md)
+
+License
+-------
+
+stcgal is published under the MIT license.
