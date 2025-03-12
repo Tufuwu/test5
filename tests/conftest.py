@@ -1,16 +1,24 @@
-import os
+from pathlib import Path
+from shutil import rmtree
+
+import log
 import pytest
-import shutil
 
-from tests import TEST_DIR
+from datafiles import settings
 
-@pytest.fixture(scope="package", autouse=True)
-def setup_and_package():
-    try:
-        shutil.rmtree(TEST_DIR)
-    except FileNotFoundError:
-        pass
+settings.HIDDEN_TRACEBACK = False
+settings.WRITE_DELAY = 0.1
 
-    os.makedirs(TEST_DIR)
-    yield
-    shutil.rmtree(TEST_DIR)
+
+def pytest_configure(config):
+    terminal = config.pluginmanager.getplugin("terminal")
+    terminal.TerminalReporter.showfspath = False
+    log.init(debug=True)
+
+
+@pytest.fixture(autouse=True)
+def create_tmp():
+    path = Path("tmp")
+    if path.exists():
+        rmtree(path)
+    path.mkdir(exist_ok=True)
