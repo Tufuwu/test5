@@ -1,0 +1,71 @@
+#! /usr/bin/env python
+
+import os
+import cv2
+import logging
+from argparse import ArgumentParser, Action, ArgumentTypeError, FileType, Namespace
+from image_recognition_face_recognition.face_recognizer import FaceRecognizer
+
+
+logging.basicConfig()
+logger = logging.getLogger(__name__)
+
+
+def main(model_dir, output_file, device: str, threshold: float, verbose: bool = False) -> None:
+    if verbose:
+        logger.setLevel(logging.DEBUG)
+    else:
+        logger.setLevel(logging.INFO)
+
+    face_recognizer = FaceRecognizer(device=device, distance_threshold=threshold)
+
+    dirs = [o for o in os.listdir(model_dir) if os.path.isdir(os.path.join(model_dir, o))]
+    for cat in dirs:
+        logger.info("loading images for %s", cat)
+        path = os.path.join(model_dir, cat)
+
+        logger.debug("loading images from %s", path)
+        for filename in os.listdir(path):
+            f = os.path.join(path, filename)
+            logger.debug("processing %s", f)
+
+            img = cv2.imread(f, 1)  # load as color
+
+            try:
+                logger.debug("training...")
+                face_recognizer.train(img, cat)
+                logger.debug("success!")
+            except Exception:
+                logger.exception(f"face_recognizer failed to process {f}")
+
+    logger.info("saving database...")
+    face_recognizer.save_trained_faces(output_file)
+    logger.info("done!")
+
+
+class ReadableDir(Action):
+    def __call__(self, parser: ArgumentParser, namespace: Namespace, values, option_string=None):
+        prospective_dir = values
+        if not os.path.isdir(prospective_dir):
+            raise ArgumentTypeError("readable_dir:{0} is not a valid path".format(prospective_dir))
+        if os.access(prospective_dir, os.R_OK):
+            setattr(namespace, self.dest, prospective_dir)
+        else:
+            raise ArgumentTypeError("readable_dir:{0} is not a readable dir".format(prospective_dir))
+
+
+if __name__ == "__main__":
+    parser = ArgumentParser(description="Train openface from a database of images")
+
+    parser.add_argument("model_dir", action=ReadableDir, help="Directory with folders for each category")
+    parser.add_argument("output_file", type=FileType("wb"), help="Where to output the trained faces database")
+
+    parser.add_argument("-d", "--device", type=str, help="device", required=False, default="cuda:0")
+    parser.add_argument("-t", "--threshold", type=float, help="Distance threshold for differentiating faces",
+                        required=False,
+                        default=1.0)
+
+    parser.add_argument("-v", "--verbose", action="store_true")
+
+    args = parser.parse_args()
+    main(**vars(args))

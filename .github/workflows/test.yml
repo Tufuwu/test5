@@ -1,108 +1,29 @@
-name: Caster Lint/Unit Tests
+name: CI
 
-on: [push]
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: '0 0 * * 2'
 
 jobs:
-  python-windows-2-7:
-        name: python 2 windows
-        runs-on: windows-latest
-        strategy:
-          matrix:
-            python-version: ["3.9", "3.10"]
-        steps:
-          - uses: actions/checkout@v2
-          - name: Set up Python
-            uses: actions/setup-python@v2
-            with:
-              python-version: ${{ matrix.python-version }}
-          - name: Install dependencies
-            run: |
-              choco install vcpython27
-              python -m pip install --upgrade pip
-              pip install --upgrade setuptools
-              pip install -U -r requirements-dev.txt
-          - name: Lint with pylint
-            run: |
-              pylint -E _caster.py
-              pylint -E castervoice
-          - name: Unit Tests Via Testrunner
-            run: |
-              python tests/testrunner.py
-
-  python-windows-3-8-x:
-        name: python 3 windows
-        runs-on: windows-latest
-        strategy:
-          matrix:
-            python-version: ["3.9", "3.10"]
-        steps:
-          - uses: actions/checkout@v2
-          - name: Set up Python
-            uses: actions/setup-python@v2
-            with:
-              python-version: ${{ matrix.python-version }}
-          - name: Install dependencies
-            run: |
-              python -m pip install --upgrade pip
-              pip install --upgrade setuptools
-              pip install -U -r requirements-dev.txt
-          - name: Lint with pylint
-            run: |
-              pylint -E _caster.py
-              pylint -E castervoice
-          - name: Unit Tests Via Testrunner
-            run: |
-              python tests/testrunner.py
-
-  python-linux-3-8-x:
-        name: python 3 linux
-        runs-on: ubuntu-latest
-        strategy:
-          matrix:
-            python-version: ["3.9", "3.10"]
-        steps:
-          - uses: actions/checkout@v2
-          - name: Set up Python
-            uses: actions/setup-python@v2
-            with:
-              python-version: ${{ matrix.python-version }}
-          - name: Install dependencies
-            run: |
-              sudo apt-get install libgtk-3-dev
-              sudo apt-get install python3-tk
-              python -m pip install --upgrade pip
-              pip install --upgrade setuptools
-              python -m pip install -U https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-latest/wxPython-4.1.1-cp38-cp38-linux_x86_64.whl
-              pip install -U -r requirements-mac-linux.txt
-          - name: Lint with pylint
-            run: |
-              pylint -E _caster.py
-              pylint -E castervoice
-          - name: Unit Tests Via Testrunner
-            run: |
-              python tests/testrunner.py
-
-  python-macos-3-8-x:
-        name: python 3 MacOs
-        runs-on: macos-latest
-        strategy:
-          matrix:
-            python-version: ["3.9", "3.10"]
-        steps:
-          - uses: actions/checkout@v2
-          - name: Set up Python
-            uses: actions/setup-python@v2
-            with:
-              python-version: ${{ matrix.python-version }}
-          - name: Install dependencies
-            run: |
-              python -m pip install --upgrade pip
-              pip install --upgrade setuptools
-              pip install -U -r requirements-mac-linux.txt
-          - name: Lint with pylint
-            run: |
-              pylint -E _caster.py
-              pylint -E castervoice
-          - name: Unit Tests Via Testrunner
-            run: |
-              python tests/testrunner.py
+  industrial_ci:
+    strategy:
+      matrix:
+        env:
+          - {ROS_DISTRO: melodic, ROS_REPO: main}
+    env:
+      ADDITIONAL_DEBS: "python-pip"
+      BEFORE_INSTALL_TARGET_DEPENDENCIES: "pip install --upgrade pip && hash -r pip && pip install --upgrade --progress-bar=off enum34 pyasn1-modules 'tensorflow>=2.1' 'keras<2.4'"
+      CCACHE_DIR: /github/home/.ccache # Directory for ccache (and how we enable ccache in industrial_ci)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      # This step will fetch/store the directory used by ccache before/after the ci run
+      - uses: actions/cache@v4
+        with:
+          path: ${{ env.CCACHE_DIR }}
+          key: ccache-${{ matrix.env.ROS_DISTRO }}-${{ matrix.env.ROS_REPO }}
+      # Run industrial_ci
+      - uses: 'ros-industrial/industrial_ci@master'
+        env: ${{ matrix.env }}
