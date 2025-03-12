@@ -1,46 +1,15 @@
-FROM python:3.7-slim-buster
+FROM python:3.11-slim-buster
 
-MAINTAINER Strateos <engineering@strateos.com>
+WORKDIR /mtgjson
 
-# Default userid=1000 as that is the first non-root userid on linux
-ARG NB_UID=1000
-ARG NB_USER=txpy
+COPY ./mtgjson5 ./mtgjson5
+COPY ./requirements.txt ./requirements.txt
 
-# Dependencies for scientific libraries
-RUN apt-get update --fix-missing && \
-    apt-get install -y \
-	pkg-config \
-        libjpeg-dev \
-        zlib1g-dev \
-	libblas-dev \
-	liblapack-dev \
-	gfortran \
-	wget \
-	git \
-	&& \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+RUN apt update \
+    && apt install -y --no-install-recommends git bzip2 xz-utils zip htop  \
+    && apt purge -y --auto-remove \
+    && rm -rf /var/lib/apt/lists/*
 
+RUN pip3 install -r ./requirements.txt pip
 
-# Change default install directory of pip and eggs
-RUN mkdir /pip_cache && \
-    mkdir /python_eggs
-ENV XDG_CONFIG_HOME /pip_cache
-ENV PYTHON_EGG_CACHE /python_eggs
-
-# Install Jupyter, nbgitpuller for separate notebook/environment
-RUN pip install --no-cache-dir notebook==5.* && \
-    pip install nbgitpuller==1.*
-
-# Install TxPy
-RUN pip install 'transcriptic[jupyter, analysis]'
-
-# Add user txpy with specified uid
-RUN useradd -u $NB_UID -m -s /bin/bash $NB_USER
-ENV HOME /home/$NB_USER
-WORKDIR /home/$NB_USER
-
-RUN chown -R $NB_USER /home/$NB_USER
-USER $NB_USER
-
-ENTRYPOINT []
+ENTRYPOINT ["python3", "-m", "mtgjson5", "--use-envvars"]

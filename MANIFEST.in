@@ -1,1 +1,1 @@
-recursive-include transcriptic/templates *
+include mtgjson5/resources/*

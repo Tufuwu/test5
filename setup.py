@@ -1,109 +1,66 @@
-#!/usr/bin/env python3
-import sys
+"""
+Installation setup for mtgjson5
+"""
+import configparser
+import pathlib
 
-from setuptools import setup
-from setuptools.command.test import test as TestCommand
+import setuptools
 
+# Establish project directory
+project_root: pathlib.Path = pathlib.Path(__file__).resolve().parent
 
-# Load version
-exec(open("transcriptic/version.py").read())
+# Read config details to determine version-ing
+config_file = project_root.joinpath("mtgjson5/resources/mtgjson.properties")
+config = configparser.ConfigParser()
+if config_file.is_file():
+    config.read(str(config_file))
 
-
-# Test Runner (reference: https://docs.pytest.org/en/latest/goodpractices.html)
-class PyTest(TestCommand):
-    user_options = [("pytest-args=", "a", "Arguments to pass to pytest")]
-
-    def initialize_options(self):
-        TestCommand.initialize_options(self)
-        self.pytest_args = "--cov=transcriptic --cov-report=term"
-
-    def run_tests(self):
-        import shlex
-
-        # import here, cause outside the eggs aren't loaded
-        import pytest
-
-        errno = pytest.main(shlex.split(self.pytest_args))
-        sys.exit(errno)
-
-
-# Test and Documentation dependencies
-test_deps = [
-    "coverage>=4.5, <5",
-    "jsonschema>=2.6, <3",
-    "mock>=3, <4",
-    "pre-commit>=2.4, <3",
-    "pylint==2.5.2",  # should be consistent with .pre-commit-config.yaml
-    "pytest>=5.4, <6",
-    "pytest-cov>=2, <3",
-    "tox>=3.15, <4",
-    "responses>=0.13.4",
-]
-
-doc_deps = [
-    "Sphinx>=2.4, <3",
-    "mock>=3, <4",
-    "releases>=1.6.3, <2",
-    "sphinx_rtd_theme>=0.4.3, <1",
-]
-
-# Extra module dependencies
-jupyter_deps = ["pandas>=1, <2", "responses>=0.12.0,<1", "jupyter>=1.0.0, <2"]
-
-analysis_deps = [
-    "autoprotocol>=7.6.1,<8",
-    "matplotlib>=3,<4",
-    # Version 1.21 upwards only support Python >= 3.7
-    "numpy>=1.14,<=1.20.3",
-    "pandas>=1,<2",
-    "pillow>=8,<9",
-    "plotly>=1.13,<2",
-]
-
-
-setup(
-    name="transcriptic",
-    description="Transcriptic CLI & Python Client Library",
-    url="https://github.com/transcriptic/transcriptic",
-    version=__version__,  # pylint: disable=undefined-variable
-    packages=["transcriptic", "transcriptic.jupyter", "transcriptic.analysis"],
-    include_package_data=True,
-    tests_require=test_deps,
-    python_requires=">=3.6",
-    install_requires=[
-        "Click>=7.0,<8",
-        "httpsig==1.3.0",
-        "requests>2.21.0,<3",
-        "pycryptodome==3.9.6",
-        "python-magic>=0.4,<1",
-        "Jinja2>=3.0,<4",
-        "responses>=0.13.4",
-    ],
-    extras_require={
-        "jupyter": jupyter_deps,
-        "analysis": analysis_deps,
-        "docs": doc_deps,
-        "test": test_deps,
-    },
-    cmdclass={"pytest": PyTest},
-    entry_points="""
-        [console_scripts]
-        transcriptic=transcriptic.cli:cli
-    """,
-    license="BSD",
+setuptools.setup(
+    name="mtgjson5",
+    version=config.get("MTGJSON", "version", fallback="5.0.0+fallback"),
+    author="Zach Halpern",
+    author_email="zach@mtgjson.com",
+    url="https://mtgjson.com/",
+    description="Magic: the Gathering compiled database generator",
+    long_description=project_root.joinpath("README.md").open(encoding="utf-8").read(),
+    long_description_content_type="text/markdown",
+    license="MIT",
     classifiers=[
-        "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
+        "Intended Audience :: Education",
         "Intended Audience :: Science/Research",
+        "License :: OSI Approved :: MIT License",
+        "Natural Language :: English",
         "Operating System :: MacOS :: MacOS X",
-        "Operating System :: Microsoft :: Windows",
+        "Operating System :: Microsoft :: Windows :: Windows 10",
+        "Operating System :: Microsoft :: Windows :: Windows 11",
         "Operating System :: Unix",
-        "Programming Language :: Python",
-        "Topic :: Scientific/Engineering",
-        "Topic :: Software Development",
-        "Programming Language :: Python :: 3.6",
-        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3 :: Only",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python",
+        "Topic :: Database",
+        "Topic :: Software Development :: Version Control :: Git",
     ],
+    keywords=[
+        "Big Data",
+        "Card Games",
+        "Collectible",
+        "Database",
+        "JSON",
+        "MTG",
+        "MTGJSON",
+        "Trading Cards",
+        "Magic: The Gathering",
+    ],
+    include_package_data=True,
+    packages=setuptools.find_packages(),
+    install_requires=project_root.joinpath("requirements.txt")
+    .open(encoding="utf-8")
+    .readlines()
+    if project_root.joinpath("requirements.txt").is_file()
+    else [],  # Use the requirements file, if able
 )
