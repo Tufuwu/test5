@@ -1,0 +1,14 @@
+resource "null_resource" "apply-auth-config-map" {
+
+  provisioner "local-exec" {
+    environment {
+      KUBECONFIG="${path.module}/../../../clusters/kubeconfigs/${var.environment}-${var.cluster-id}.config"
+    }
+    command = "cat <<EOF | kubectl apply -f -\n${local.config_map_aws_auth}\nEOF"
+  }
+
+  depends_on = [
+    "aws_eks_cluster.aam-eks-cluster",
+    "null_resource.configure-kubectl-local",
+  ]
+}
