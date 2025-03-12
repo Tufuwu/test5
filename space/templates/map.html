@@ -1,0 +1,76 @@
+{% load bootstrap4 %}
+{% load formatting %}
+{% load humanize %}
+<div class="well">
+        <p>UrLab se trouve sur le campus du Solbosh, à l'ULB et est ouvert à tout le monde.</p>
+        <iframe width="350" height="350" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
+                src="https://www.openstreetmap.org/export/embed.html?bbox=4.3815574049949655%2C50.811014423688874%2C4.3844541907310495%2C50.812375356434686&amp;layer=mapnik&amp;marker=50.81169489501826%2C4.383005797863007">
+        </iframe><br/>
+        </p>
+    <hr/>
+
+    {% if space_open %}
+    <div class="alert alert-success">Le hackerspace est actuellement ouvert ! Venez nous dire bonjour !</div>
+    {% else %}
+    <div class="alert alert-warning">Le hackerspace est fermé pour l'instant :(</div>
+    {% endif %}
+
+    <div class="text-right">
+        <h3>Social</h3>
+        <a href="https://twitter.com/UrLabBxl" title="Twitter" target="_blank">
+        <span class="wow fa-stack fa-lg">
+            <i class="fa fa-square-o fa-stack-2x"></i>
+            <i class="fa fa-twitter fa-stack-1x"></i>
+        </span>
+        </a>
+        <a href="https://www.facebook.com/urlabbxl" title="Facebook" target="_blank">
+        <span class="wow fa-stack fa-lg">
+            <i class="fa fa-square-o fa-stack-2x"></i>
+            <i class="fa fa-facebook fa-stack-1x"></i>
+        </span>
+        </a>
+        <a href="https://github.com/UrLab" title="GitHub" target="_blank">
+        <span class="wow fa-stack fa-lg">
+            <i class="fa fa-square-o fa-stack-2x"></i>
+            <i class="fa fa-github fa-stack-1x"></i>
+        </span>
+        </a>
+        <a href="https://www.youtube.com/UrLabBXL" title="Vidéos" target="_blank">
+        <span class="wow fa-stack fa-lg">
+            <i class="fa fa-square-o fa-stack-2x"></i>
+            <i class="fa fa-youtube fa-stack-1x"></i>
+        </span>
+        </a>
+        <a href="http://urlab.be/events/urlab.ics" title="iCal" target="_blank">
+        <span class="wow fa-stack fa-lg">
+            <i class="fa fa-square-o fa-stack-2x"></i>
+            <i class="fa fa-calendar fa-stack-1x"></i>
+        </span>
+        </a>
+        <a href="https://discord.gg/CNbfeXm2HN" title="Discord" target="_blank">
+            <span class="wow fa-stack fa-lg">
+                <i class="fa fa-square-o fa-stack-2x"></i>
+                <i class="fab fa-discord fa-stack-1x"></i>
+            </span>
+        </a>
+        <h3>Contact</h3>
+        <h4>Mail
+            <small>
+                <a href="mailto:contact@urlab.be">con<!---->tact<!---->@<!---->ur<!---->lab<!---->.be</a>
+            </small>
+        </h4>
+        <h4>Chat
+            <small>
+                <a target="_blank" href="https://guest.irc.urlab.be/#/connect">
+                    irc.libera.chat#urlab
+                </a>
+            </small>
+        </h4>
+        <h4>Adresse
+            <small>UB2.126 A, 50 Avenue Franklin Roosevelt, 1050 Ixelles</small>
+        </h4>
+        <h4>Téléphone
+            <small>02/650.49.67</small>
+        </h4>
+    </div>
+</div>

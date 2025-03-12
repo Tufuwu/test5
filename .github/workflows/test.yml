@@ -1,77 +1,50 @@
-name: Tests
+name: Run tests
 
 on:
   push:
+    branches:
+      - main
   pull_request:
     branches:
-      - master
+      - main
 
 jobs:
-  check_duplicate_runs:
-    name: Check for duplicate runs
-    continue-on-error: true
+  build:
     runs-on: ubuntu-latest
-    outputs:
-      should_skip: ${{ steps.skip_check.outputs.should_skip }}
-    steps:
-      - id: skip_check
-        uses: fkirc/skip-duplicate-actions@master
-        with:
-          concurrent_skipping: always
-          cancel_others: true
-          skip_after_successful_duplicate: true
-          paths_ignore: '["**/README.md", "**/CHANGELOG.md", "**/LICENSE.md"]'
-          do_not_skip: '["pull_request"]'
-
-  tests:
-    name: Run tests (Python ${{matrix.python}})
-    needs: check_duplicate_runs
-    if: ${{ needs.check_duplicate_runs.outputs.should_skip != 'true' }}
 
     strategy:
       matrix:
-        python: ["3.9", "3.10"]
+        pyversion: [3.8]
 
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.pyversion }}
+
+      - name: Install Python dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Lint python code
+        run: flake8 --ignore=E501,F401,E402,F811,E731,F403 .
+      
+      - name: Run django checks
+        run: ./manage.py check
+
+      - name: Check migrations
+        run: ./manage.py makemigrations --dry-run --check
+
+      - name: Run tests
+        run: FAKE_REDIS=1 DEBUG=1 py.test
+
+  docker:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python }}
-
-    - name: Cache pip
-      uses: actions/cache@v4
-      with:
-        path: ~/.cache/pip
-        key: ${{ runner.os }}-python-${{ matrix.python }}-pip-${{ hashFiles('**/requirements*.txt') }}
-        restore-keys: |
-          ${{ runner.os }}-python-${{ matrix.python }}-pip-${{ hashFiles('**/requirements*.txt') }}
-          ${{ runner.os }}-python-${{ matrix.python }}-pip-
-          ${{ runner.os }}-python
-          ${{ runner.os }}-
-
-    - name: Upgrade pip
-      run: python -m pip install --upgrade pip setuptools wheel
-
-    - name: Install dependencies
-      run: |
-        pip install --upgrade -r requirements.txt -r requirements-test.txt
-        pip install -e .
-        pip freeze
-
-    - name: Show help
-      run: jupyter kernelgateway --help
-
-    - name: Run tests
-      run: nosetests --process-restartworker --with-coverage --cover-package=kernel_gateway
-      env:
-        ASYNC_TEST_TIMEOUT: 10
-
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v1
-      with:
-        fail_ci_if_error: true
+      - name: Build docker image
+        run: docker build -t urlab/incubator .
