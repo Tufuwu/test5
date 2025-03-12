@@ -1,3 +1,5 @@
-include LICENSE README.md
-include src/riskparityportfolio/*.h
-graft third-party
+include ChangeLog Makefile README.md
+include MANIFEST.in Doxyfile.in
+include TODO doc/LICENSE.rst
+include screed/version.py
+graft screed/tests/test-data

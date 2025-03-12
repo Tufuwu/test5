@@ -1,22 +1,12 @@
 [build-system]
 requires = [
-  "setuptools>=40.6.0",
-  "wheel",
-  "setuptools_scm",
-  "oldest-supported-numpy",
-  "pybind11>=2.4",
+    "setuptools >= 48",
+    "setuptools_scm[toml] >= 4, <6",
+    "setuptools_scm_git_archive",
+    "wheel >= 0.29.0",
 ]
-build-backend = "setuptools.build_meta"
+build-backend = 'setuptools.build_meta'
 
-[tool.black]
-line-length = 79
-
-[tool.isort]
-line_length = 79
-multi_line_output = 3
-include_trailing_comma = true
-force_grid_wrap = 0
-use_parentheses = true
-
-[tool.pytest.ini_options]
-addopts = "-v"
+[tool.setuptools_scm]
+write_to = "screed/version.py"
+git_describe_command = "git describe --dirty --tags --long --match v* --first-parent"
