@@ -1,39 +1,29 @@
+##  Makefile (for maintenance purpose)
+##
 
+PYTHON=python
+RM=rm -f
+CP=cp -f
+MKDIR=mkdir
 
-PYTEST := py.test
-
-# This path is relative to src/bkl/parser from where java is ran from.
-ANTLR_JAR := ../../../3rdparty/antlr3/antlr.jar
-ANTLR  := java -jar $(ANTLR_JAR)
-
-generated_antlr_files := \
-		src/bkl/parser/BakefileParser.py \
-		src/bkl/parser/BakefileLexer.py \
-		src/bkl/parser/Bakefile.tokens \
-		src/bkl/parser/BakefileQuotedStringParser.py \
-		src/bkl/parser/BakefileQuotedStringLexer.py \
-		src/bkl/parser/BakefileQuotedString.tokens
-
-all: parser doc
-
-parser: $(generated_antlr_files)
-
-%Parser.py %Lexer.py %.tokens: %.g
-	cd $(dir $<) && $(ANTLR) $(notdir $<)
-
-# the island-grammar parser emits the same tokens as the main one
-src/bkl/parser/BakefileQuotedString.g: src/bkl/parser/Bakefile.tokens
-src/bkl/parser/BakefileQuotedStringParser.py: src/bkl/parser/Bakefile.tokens
-
-doc: parser
-	$(MAKE) -C docs all
-
-clean:
-	rm -f $(generated_antlr_files)
-	find . -name '*.pyc' -delete
-	$(MAKE) -C docs clean
-
-test: all
-	$(PYTEST)
-
-.PHONY: clean test doc parser
+CONV_CMAP=$(PYTHON) tools/conv_cmap.py
+CMAPSRC=cmaprsrc
+CMAPDST=pdfminer/cmap
+cmap: $(CMAPDST)/to-unicode-Adobe-CNS1.pickle.gz $(CMAPDST)/to-unicode-Adobe-GB1.pickle.gz \
+	$(CMAPDST)/to-unicode-Adobe-Japan1.pickle.gz $(CMAPDST)/to-unicode-Adobe-Korea1.pickle.gz
+cmap_clean:
+	-$(RM) -r $(CMAPDST)
+$(CMAPDST):
+	$(MKDIR) $(CMAPDST)
+$(CMAPDST)/to-unicode-Adobe-CNS1.pickle.gz: $(CMAPDST)
+	$(CONV_CMAP) -c B5=cp950 -c UniCNS-UTF8=utf-8 \
+		$(CMAPDST) Adobe-CNS1 $(CMAPSRC)/cid2code_Adobe_CNS1.txt
+$(CMAPDST)/to-unicode-Adobe-GB1.pickle.gz: $(CMAPDST)
+	$(CONV_CMAP) -c GBK-EUC=cp936 -c UniGB-UTF8=utf-8 \
+		$(CMAPDST) Adobe-GB1 $(CMAPSRC)/cid2code_Adobe_GB1.txt
+$(CMAPDST)/to-unicode-Adobe-Japan1.pickle.gz: $(CMAPDST)
+	$(CONV_CMAP) -c RKSJ=cp932 -c EUC=euc-jp -c UniJIS-UTF8=utf-8 \
+		$(CMAPDST) Adobe-Japan1 $(CMAPSRC)/cid2code_Adobe_Japan1.txt
+$(CMAPDST)/to-unicode-Adobe-Korea1.pickle.gz: $(CMAPDST)
+	$(CONV_CMAP) -c KSC-EUC=euc-kr -c KSC-Johab=johab -c KSCms-UHC=cp949 -c UniKS-UTF8=utf-8 \
+		$(CMAPDST) Adobe-Korea1 $(CMAPSRC)/cid2code_Adobe_Korea1.txt

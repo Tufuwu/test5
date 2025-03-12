@@ -1,6 +1,0 @@
-
-requires 99.0;
-
-program hello {
-    sources { hello.c }
-}

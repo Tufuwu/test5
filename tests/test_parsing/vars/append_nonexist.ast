@@ -1,6 +1,0 @@
-RootNode
-    AppendNode
-        LvalueNode
-            IdNode made_up
-        LiteralNode "foo"
-

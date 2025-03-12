@@ -1,2 +1,0 @@
-ERROR:
-target/duplicate_id.bkl:2:0: target with ID "one" already exists (see target/duplicate_id.bkl:1:0)

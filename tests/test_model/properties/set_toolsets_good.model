@@ -1,7 +1,0 @@
-module {
-  variables {
-    toolsets = [gnu]
-  }
-  targets {
-  }
-}

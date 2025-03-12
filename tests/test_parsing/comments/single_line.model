@@ -1,9 +1,0 @@
-module {
-  variables {
-  }
-  targets {
-    program foo {
-      my_var = 42
-    }
-  }
-}

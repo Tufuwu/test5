@@ -1,4 +1,0 @@
-
-program foo {
-    sources { @top_srcdir/foo.c @invalid/bar.c }
-}

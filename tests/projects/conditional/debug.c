@@ -1,4 +1,0 @@
-
-void debug_func()
-{
-}

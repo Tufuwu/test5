@@ -1,7 +1,0 @@
-toolsets = gnu;
-
-SOURCE_FILES = hello.c;
-
-program hello {
-    sources { $(SRC_FILES).c }
-}

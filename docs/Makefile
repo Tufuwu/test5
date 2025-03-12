@@ -1,59 +1,20 @@
-# Makefile for Sphinx documentation
+# Minimal makefile for Sphinx documentation
 #
 
-# You can set these variables from the command line.
-SPHINXOPTS   :=
-SPHINXBUILD  := sphinx-build
+# You can set these variables from the command line, and also
+# from the environment for the first two.
+SPHINXOPTS    ?=
+SPHINXBUILD   ?= sphinx-build
+SOURCEDIR     = source
+BUILDDIR      = build
 
-# Internal variables.
-ALLSPHINXOPTS   = -d .doctrees $(SPHINXOPTS) .
-
-SPHINX_DOC_FILES := conf.py bkl_lexer.py $(wildcard *.rst)
-
-ALL_DOCS_INPUTS = $(SPHINX_DOC_FILES)
-
-.PHONY: all help clean html htmlhelp changes linkcheck
-
-all: html
-
+# Put it first so that "make" without argument is like "make help".
 help:
-	@echo "Please use \`make <target>' where <target> is one of"
-	@echo "  html      to make standalone HTML files"
-	@echo "  htmlhelp  to make HTML files and a HTML help project"
-	@echo "  changes   to make an overview over all changed/added/deprecated items"
-	@echo "  linkcheck to check all external links for integrity"
+	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
-clean:
-	rm -rf .build .doctrees
-	rm -rf html
-	rm -rf ref
+.PHONY: help Makefile
 
-html: html/.buildinfo
-html/.buildinfo: $(ALL_DOCS_INPUTS)
-	mkdir -p html .doctrees
-	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) html
-	@echo
-	@echo "Build finished. The HTML pages are in ./html."
-
-htmlhelp: $(ALL_DOCS_INPUTS)
-	mkdir -p .build/htmlhelp .doctrees
-	$(SPHINXBUILD) -b htmlhelp $(ALLSPHINXOPTS) .build/htmlhelp
-	@echo
-	@echo "Build finished; now you can run HTML Help Workshop with the" \
-	      ".hhp project file in .build/htmlhelp."
-
-changes: $(ALL_DOCS_INPUTS)
-	mkdir -p .build/changes .doctrees
-	$(SPHINXBUILD) -b changes $(ALLSPHINXOPTS) .build/changes
-	@echo
-	@echo "The overview file is in .build/changes."
-
-linkcheck: $(ALL_DOCS_INPUTS)
-	mkdir -p .build/linkcheck .doctrees
-	$(SPHINXBUILD) -b linkcheck $(ALLSPHINXOPTS) .build/linkcheck
-	@echo
-	@echo "Link check complete; look for any errors in the above output " \
-	      "or in .build/linkcheck/output.txt."
-
-
-.PHONY: all help clean html htmlhelp changes linkcheck
+# Catch-all target: route all unknown targets to Sphinx using the new
+# "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
+%: Makefile
+	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)

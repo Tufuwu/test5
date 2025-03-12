@@ -1,2 +1,0 @@
-ERROR:
-vars/append_nonlist.bkl:2:4: cannot append to non-list variable "id" (type: id)

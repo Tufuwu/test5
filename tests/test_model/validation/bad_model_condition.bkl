@@ -1,5 +1,0 @@
-toolsets = gnu;
-
-if ( foobar ) {
-  program hello {}
-}

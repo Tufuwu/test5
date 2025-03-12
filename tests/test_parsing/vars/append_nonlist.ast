@@ -1,9 +1,0 @@
-RootNode
-    TargetNode
-        IdNode program
-        IdNode test
-        BaseListNode
-        AppendNode
-            LvalueNode
-                IdNode id
-            LiteralNode "FOO"

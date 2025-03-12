@@ -1,9 +1,0 @@
-RootNode
-    TargetNode
-        IdNode program
-        IdNode one
-        BaseListNode
-    TargetNode
-        IdNode program
-        IdNode two
-        BaseListNode

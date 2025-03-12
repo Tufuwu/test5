@@ -1,6 +1,0 @@
-toolsets = gnu;
-
-program test {
-    sources { foo.c }
-    bar.c::generated = true;
-}

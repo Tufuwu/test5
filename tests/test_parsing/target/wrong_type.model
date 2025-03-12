@@ -1,2 +1,0 @@
-ERROR:
-target/wrong_type.bkl:1:0: unknown target type "SillyTargetName"

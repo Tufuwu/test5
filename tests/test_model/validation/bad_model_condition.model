@@ -1,2 +1,0 @@
-ERROR:
-validation/bad_model_condition.bkl:3:5: variable "_condition" (bool): expression "foobar" is not a valid bool value
