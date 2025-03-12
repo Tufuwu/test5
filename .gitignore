@@ -1,10 +1,31 @@
-__pycache__/
-.mypy_cache
-*.egg-info/
-**/*.pyc
+*.py[cod]
 .cache
-examples/data
-.idea
+.ropeproject
+*.sublime-*
+.python-version
+
+# Packages
+*.egg
+*.egg-info
+dist
+build
+eggs
+parts
+bin
+var
+sdist
+develop-eggs
+.installed.cfg
+
+# Installer logs
+pip-log.txt
+
+# Unit test / coverage reports
 .coverage
-dist/*
-build/*
+htmlcov
+
+# Sphinx
+docs/_build
+
+# Django
+*.sqlite3
