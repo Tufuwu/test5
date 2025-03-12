@@ -1,44 +1,55 @@
 [build-system]
-requires = ["setuptools>=69.0", "wheel"]
+requires = ["setuptools>=42", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "pigar"
-authors = [{ name = "damnever", email = "the.xcdong@gmail.com" }]
-description = "A tool to generate requirements.txt for Python project."
-readme = "README.md"
-keywords = ["requirements.txt", "automation", "tool", "module-search"]
-license = { text = "BSD 3-Clause License" }
-classifiers = [
-  "Development Status :: 5 - Production/Stable",
-  "Intended Audience :: Developers",
-  "Topic :: Utilities",
-  "License :: OSI Approved :: BSD License",
-  "Programming Language :: Python :: Implementation :: CPython",
-  "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.8",
-  "Programming Language :: Python :: 3.9",
-  "Programming Language :: Python :: 3.10",
-  "Programming Language :: Python :: 3.11",
-  "Programming Language :: Python :: 3.12",
-]
+name = "td-client"
+version = "1.3.0"
+description = "Treasure Data API library for Python"
+readme = {file = "README.rst", content-type = "text/x-rst; charset=UTF-8"}
 requires-python = ">=3.8"
-dependencies = ["click>=8.1", "nbformat>=5.7", "aiohttp>=3.9", "colorama"]
-dynamic = ["version"]
+license = {text = "Apache Software License"}
+authors = [{name = "Treasure Data, Inc.", email = "support@treasure-data.com"}]
+urls = {homepage = "http://treasuredata.com/"}
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Web Environment",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Topic :: Internet",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+]
 
-[project.scripts]
-pigar = "pigar.__main__:main"
+dependencies = [
+  "python-dateutil",
+  "msgpack>=0.6.2",
+  "urllib3",
+]
 
-[project.urls]
-Documentation = "https://github.com/damnever/pigar"
-Source = "https://github.com/damnever/pigar"
+[project.optional-dependencies]
+dev = ["ruff"]
+docs = ["sphinx", "sphinx_rtd_theme"]
 
 [tool.setuptools]
-include-package-data = true
-license-files = ["LICENSE", "pigar/_vendor/pip/LICENSE.txt"]
+packages = ["tdclient"]
 
-[tool.setuptools.packages.find]
-exclude = ["*.tests", "*.tests.*", "tests.*", "tests"]
+[tool.ruff]
+line-length = 88
 
-[tool.setuptools.dynamic]
-version = { attr = "pigar.version.__version__" }
+[tool.ruff.lint]
+select = [
+  "E",
+  "F",
+]
+exclude = ["tdclient/test/*"]
+ignore = ["E203", "E501"]
+
+[tool.ruff.lint.isort]
+known-third-party = ["dateutil","msgpack","pkg_resources","pytest","setuptools","urllib3"]

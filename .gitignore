@@ -1,9 +1,17 @@
-/.db.sqlite3
-*.py[cod]
-__pycache__/
-*-info/
-count.py
-/build/
-/dist/
-.venv*
-venv*
+*.egg-info
+*.pyc
+*.pyo
+*.swo
+*.swp
+/.cache
+/.coverage
+/.eggs
+/.envrc
+/.tox
+/build
+/dist
+/tmp
+
+# JetBrains IDE
+.idea/
+/docs/_build
