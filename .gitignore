@@ -1,4 +1,4 @@
-.coverage*
-__pycache__/
-dist/
-coverage.json
+*~
+*.py[co]
+*.egg-info
+__pycache__
