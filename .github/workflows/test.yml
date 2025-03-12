@@ -1,59 +1,53 @@
-name: CI
-on: [push]
-
-defaults:
-  run:
-    working-directory: ./src
+name: Test Suite
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
 
 jobs:
-  run-linting:
+  linter:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout the repository
-      uses: actions/checkout@v2
-      with:
-        path: ./src
-    - name: Setup Python 3.6
-      uses: actions/setup-python@v2
-      with:
-         python-version: '3.9'
-    - name: Install all dependencies
-      run: make install
-    - name: Run all linting
-      run: make lint
-    - name: Upload src dir as artefact
-      uses: actions/upload-artifact@v4
-      with:
-        name: src
-        path: ./src
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.9"
+      - uses: pre-commit/action@v2.0.0
+        with:
+          extra_args: --all-files --show-diff-on-failure
 
-  run-tests:
-    needs: run-linting
+  unit-and-integration-tests:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: true
-      matrix:
-        python-version: ["3.9", "3.10"]
-        django-version: [2.2, 3.0, 3.1]
-        oscar-version: [2.1]
     steps:
-      - name: Download src dir
-        uses: actions/download-artifact@v2
-        with:
-          name: src
-          path: ./src
-      - name: Setup Python 3.x
-        uses: actions/setup-python@v2
-        with:
-           python-version: ${{ matrix.python-version }}
-      - name: Install all dependencies
+      - uses: actions/checkout@v2
+      # See https://debian.neo4j.com/
+      - name: Neo4j setup
         run: |
-          pip install "django~=${{ matrix.django-version }}.0"
-          pip install "django-oscar~=${{ matrix.oscar-version }}.0"
-          make install
-      - name: Run the testsuite
-        run: make coverage
-      - name: Upload coverage to codecov
-        uses: codecov/codecov-action@v1
+          wget -O - https://debian.neo4j.com/neotechnology.gpg.key | sudo apt-key add -
+          echo 'deb https://debian.neo4j.com stable 3.5' | sudo tee /etc/apt/sources.list.d/neo4j.list
+          sudo apt-get update
+      - name: Install Neo4j
+        run: sudo apt-get install neo4j
+      - name: Disable auth for neo4j
+        run: |
+          sudo sed -i 's/#dbms.security.auth_enabled=false/dbms.security.auth_enabled=false/g' /etc/neo4j/neo4j.conf
+          sudo service neo4j restart
+      - uses: actions/setup-python@v2
         with:
-          fail_ci_if_error: true
+          python-version: "3.9"
+      # Cache our pip dir for efficiency; see https://medium.com/ai2-blog/python-caching-in-github-actions-e9452698e98d.
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ hashFiles('setup.py') }}-${{ hashFiles('test-requirements.txt') }}
+      - name: Install cartography
+        run: |
+          pip install -e .
+          pip install -r test-requirements.txt
+      - name: make test_unit
+        run: make test_unit
+      - name: make test_integration
+        run: make test_integration
