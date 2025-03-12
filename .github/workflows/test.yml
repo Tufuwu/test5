@@ -1,59 +1,54 @@
-name: Tests
+name: Test
 
-on:
-  pull_request:
-  push:
-    branches:
-      - master
-  schedule:
-    - cron: '0 0 * * 0' # weekly
+on: [push, pull_request]
+
+env:
+  FORCE_COLOR: 1
 
 jobs:
-  tests:
-    timeout-minutes: 30
-    runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres:10
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.9", "3.10"]
+        os: [ubuntu-latest]
         env:
-          POSTGRES_PASSWORD: postgres
+          - TOXENV: libs
+          - TOXENV: sa10
+          - TOXENV: sa11
+          - TOXENV: sa12
+          - TOXENV: sa13
 
     steps:
       - uses: actions/checkout@v2
 
-      - uses: actions/setup-python@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
         with:
-          python-version: 3.3.9
+          python-version: ${{ matrix.python-version }}
 
-#      uses: actions/cache@v4
-#        with:
-#          path: ~/.cache/pip
-#          key: ${{ runner.os }}-pip-${{ hashFiles('requirements/dev.txt') }}
-#          restore-keys: |
-#            ${{ runner.os }}-pip-
-
-      - name: Test
-        env:
-          SALESFORCE_USERNAME: ${{ secrets.SALESFORCE_USERNAME }}
-          SALESFORCE_PWD: ${{ secrets.SALESFORCE_PWD }}
-          SALESFORCE_TOKEN: ${{ secrets.SALESFORCE_TOKEN }}
-          EVENTBRITE_API_KEY: ${{ secrets.EVENTBRITE_KEY }}
-          EVENTBRITE_API_SECRET: ${{ secrets.EVENTBRITE_SECRET }}
-          EVENTBRITE_API_PRIVATE_TOKEN: ${{ secrets.EVENTBRITE_TOKEN }}
-          EVENTBRITE_API_PUBLIC_TOKEN: ${{ secrets.EVENTBRITE_PUBLIC_TOKEN }}
-          SOCIAL_AUTH_OPENSTAX_KEY: ${{ secrets.SOCIAL_AUTH_KEY }}
-          SOCIAL_AUTH_OPENSTAX_SECRET: ${{ secrets.SOCIAL_AUTH_TOKEN }}
-          ACCESS_TOKEN_URL: ${{ secrets.ACCESS_TOKEN_URL }}
-          USERS_QUERY: ${{ secrets.USERS_QUERY }}
-          AUTHORIZATION_URL: ${{ secrets.AUTHORIZATION_URL }}
+      - name: Get pip cache dir
+        id: pip-cache
         run: |
-          pip install --upgrade pip wheel pip-tools
-          pip-sync requirements/dev.txt
-          python manage.py test --verbosity=2 --settings=openstax.settings.test
+          echo "::set-output name=dir::$(pip cache dir)"
+
+      - name: Cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.pip-cache.outputs.dir }}
+          key:
+            ${{ matrix.os }}-${{ matrix.python-version }}-v1-${{
+            hashFiles('**/setup.py') }}
+          restore-keys: |
+            ${{ matrix.os }}-${{ matrix.python-version }}-v1-
+
+      - name: Install dependencies
+        run: |
+          python -m pip install -U pip
+          python -m pip install -U tox tox-venv
+
+      - name: Tox tests
+        run: |
+          tox
+        env: ${{ matrix.env }}

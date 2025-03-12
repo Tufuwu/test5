@@ -1,7 +1,0 @@
-{% extends "wagtailusers/users/edit.html" %}
-
-<li>
-    {% block extra_fields %}
-        {% include "wagtailadmin/shared/field.html" with field=form.is_staff %}
-    {% endblock extra_fields %}
-</li>
