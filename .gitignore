@@ -1,73 +1,62 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
 *.py[cod]
 
 # C extensions
 *.so
 
-# Packages
-*.egg
-*.egg-info
-dist
-build
-eggs
-parts
-bin
-var
-sdist
-develop-eggs
+# Distribution / packaging
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
 .installed.cfg
-lib
-lib64
-__pycache__
+*.egg
+
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
 
 # Installer logs
 pip-log.txt
+pip-delete-this-directory.txt
 
 # Unit test / coverage reports
+htmlcov/
+.tox/
 .coverage
-.tox
+.cache
 nosetests.xml
-unittests.xml
+coverage.xml
 
 # Translations
 *.mo
+*.pot
 
-# Mr Developer
-.mr.developer.cfg
-.project
-.pydevproject
+# Django stuff:
+*.log
 
-# QA
-coverage.xml
-diff_*.html
-*.report
-report
-edx_analytics.log
-venv
+# Sphinx documentation
+docs/_build/
 
-# Override config files
-override.cfg
+# PyBuilder
+target/
 
-# JetBrains
+# PyCharm
 .idea
 
+coverage/
+cover/
 
-.DS_Store
-
-*.trace
-.eggs
-
-*.swp
-catalog_test.json
-course_structure.json
-
-# Sphinx docs
-docs/*
-docs/source/all.rst
-docs/source/toctree.rst
-docs/source/workflow_entry_point.rst
-!docs/source/
-!docs/source/_themes/*
-
-*.java
-TempStatsStore/
-derby.log
+.python-version

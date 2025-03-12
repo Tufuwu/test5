@@ -1,3 +1,5 @@
-include tox.ini
-include requirements/*.txt
-include default.cfg
+include LICENSE
+include CHANGES.txt
+include README.rst
+graft aiohttp_sse
+global-exclude *.pyc *.swp
