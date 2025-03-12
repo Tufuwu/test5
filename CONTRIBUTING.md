@@ -1,74 +1,53 @@
-# Contributing to NiaAML
-:+1::tada: First off, thanks for taking the time to contribute! :tada::+1:
+## Contributing
 
-## Code of Conduct
-This project and everyone participating in it is governed by the [NiaAML Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior to [lukapecnik96@gmail.com](mailto:iztok.fister1@um.si).
+This project welcomes contributions and suggestions. Most contributions
+require you to agree to a Contributor License Agreement (CLA) declaring that
+you have the right to, and actually do, grant us the rights to use your
+contribution. For details, visit https://cla.microsoft.com.
 
-## How Can I Contribute?
+When you submit a pull request, a CLA-bot will automatically determine
+whether you need to provide a CLA and decorate the PR appropriately (e.g.,
+label, comment). Simply follow the instructions provided by the bot. You
+will only need to do this once across all repositories using our CLA.
 
-### Reporting Bugs
-Before creating bug reports, please check existing issues list as you might find out that you don't need to create one. When you are creating a bug report, please include as many details as possible in the issue using the [🐛 bug report issue template](https://github.com/firefly-cpp/NiaAML/blob/master/.github/ISSUE_TEMPLATE/%F0%9F%90%9B%20bug%20report.md).
+This project has adopted the [Microsoft Open Source Code of
+Conduct](https://opensource.microsoft.com/codeofconduct/). For more
+information see the [Code of Conduct
+FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact
+[opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional
+questions or comments.
 
-### Suggesting Enhancements
+### Following our coding conventions
 
-Open new issue using the [🚀 feature request template](https://github.com/firefly-cpp/NiaAML/blob/master/.github/ISSUE_TEMPLATE/%F0%9F%9A%80%20feature%20request.md).
-
-### Pull requests
-
-Fill in the [pull request template](.github/pull_request_template.md) and make sure your code is documented.
-
-## Setup development environment
-
-### Requirements
-
-* Poetry: [https://python-poetry.org/docs/](https://python-poetry.org/docs/)
-
-After installing Poetry and cloning the project from GitHub, you should run the following command from the root of the cloned project:
-
-```sh
-poetry install
+To format the python test files we use [black](https://github.com/psf/black).
+After installing like this you can run the following before committing:
+```bash
+make format
 ```
 
-All of the project's dependencies should be installed and the project ready for further development. **Note that Poetry creates a separate virtual environment for your project.**
+You can also run the following to automatically format all the files that you
+have changed before committing.
 
-### Development dependencies
-
-List of NiaAML's dependencies:
-
-| Package       | Version | Platform |
-|---------------|---------|----------|
-| numpy         | ^1.19.1 | All      |
-| scikit-learn  | ^1.1.2  | All      |
-| niapy         | ^2.0.5  | All      |
-| pandas        | ^2.1.1  | All      |
-
-List of development dependencies:
-
-| Package           | Version | Platform |
-|-------------------|---------|----------|
-| sphinx            | ^3.3.1  | Any      |
-| sphinx-rtd-theme  | ^0.5.0  | Any      |
-| coveralls         | ^2.2.0  | Any      |
-| autoflake         | ^1.4    | Any      |
-| black             | ^21.5b1 | Any      |
-| pre-commit        | ^2.12.1 | Any      |
-| pytest            | ^7.4.2  | Any      |
-| pytest-cov        | ^4.1.0  | Any      |
-
-## Development Tasks
-
-### Testing
-
-Manually run the tests:
-
-```sh
-$ poetry run coverage run --source=niaaml -m unittest discover -b
+```bash
+cat > .git/hooks/pre-commit << __EOF__
+#!/bin/bash
+black --check --quiet . || { black .; exit 1; }
+__EOF__
+chmod +x .git/hooks/pre-commit
 ```
 
-### Documentation
+### Running tests
 
-Build the documentation:
+In one shell start a docker compose citus cluster:
+```bash
+docker-compose --project-name django-multitenant up -d || { docker-compose logs && false ; }
+```
 
-```sh
-$ poetry run sphinx-build ./docs ./docs/_build
+Then in another shell run the tests:
+
+```bash
+export DJANGO_VERSION=4.1
+export CITUS_VERSION=11.2
+make test-dependencies 
+make test
 ```

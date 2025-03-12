@@ -1,61 +1,27 @@
-name: Build Status
-
-
-
 on:
-
   push:
-
-    branches: [ master ]
-
+    branches:
+      - master
   pull_request:
 
-    branches: [ master ]
-
-
-
 jobs:
-
   build:
-
-
-
     runs-on: ubuntu-latest
-
     strategy:
-
+      fail-fast: false
       matrix:
-
-        python-version: ["3.9", "3.10"]
-
-
-
+        prepared_statements: [true, false]
+    name: Python 3.9 / ${{ (matrix.prepared_statements && 'w/ prepared statements') || '' }}
+    env:
+      PREPARED_STATEMENTS: ${{ matrix.prepared_statements }}
     steps:
-
-      - uses: actions/checkout@v2
-
-      - name: Set up Python ${{ matrix.python-version }}
-
-        uses: actions/setup-python@v2
-
-        with:
-
-          python-version: ${{ matrix.python-version }}
-
-      - name: Install dependencies
-
-        run: |
-
-          python -m pip install --upgrade pip
-
-          pip install poetry
-
-          poetry install
-
-      - name: Run tests
-
-        run: |
-
-          poetry run coverage run --source=niaaml -m unittest discover -b
-
-          poetry run coveralls
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+    - run: |
+        docker-compose --version
+        docker-compose --project-name django-multitenant up -d || { docker-compose logs && false ; }
+        docker-compose -f ./single-node-docker-compose.yml --project-name django-multitenant up -d
+        pip install tox
+        tox

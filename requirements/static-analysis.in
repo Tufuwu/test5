@@ -1,0 +1,13 @@
+Django>=3.2.9
+black
+psycopg2-binary
+exam
+pytest
+pytest-cov
+pytest-django
+prospector[with_everything]
+pylint < 2.16
+Sphinx
+sphinxnotes.strike
+sphinx_rtd_theme
+djangorestframework
