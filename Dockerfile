@@ -1,38 +1,39 @@
-# Usage:
-# 	Building
-# 		docker build -t wee-slack .
-# 	Running (no saved state)
-# 		docker run -it \
-# 			-v /etc/localtime:/etc/localtime:ro \ # for your time
-# 			wee-slack
-# 	Running (saved state; note that in this case you need wee_slack.py in the ~/.local/share/weechat/python directory outside docker)
-# 		docker run -it -u $(id -u):$(id -g) \
-# 			-v /etc/localtime:/etc/localtime:ro \ # for your time
-# 			-v "${HOME}/.config/weechat:/home/user/.config/weechat" \
-# 			-v "${HOME}/.local/share/weechat:/home/user/.local/share/weechat" \
-# 			-v "${HOME}/.cache/weechat:/home/user/.cache/weechat" \
-# 			wee-slack
+###############################################################################
+# Copyright (c), The AiiDA-CP2K authors.                                      #
+# SPDX-License-Identifier: MIT                                                #
+# AiiDA-CP2K is hosted on GitHub at https://github.com/aiidateam/aiida-cp2k   #
+# For further information on the license, see the LICENSE.txt file.           #
+###############################################################################
 
-FROM alpine:latest
+ARG AIIDA_VERSION=2.5.2
 
-RUN apk add --no-cache \
-	ca-certificates \
-	python3 \
-	py-pip \
-	weechat \
-	weechat-perl \
-	weechat-python
+FROM aiidateam/aiida-core-with-services:${AIIDA_VERSION}
 
-RUN pip install websocket-client
 
-ENV HOME /home/user
+# To prevent the container to exit prematurely.
+ENV KILL_ALL_RPOCESSES_TIMEOUT=50
 
-COPY wee_slack.py /home/user/.local/share/weechat/python/autoload/wee_slack.py
+USER root
+RUN set -ex ; \
+  apt-get update ; \
+  apt-get install -y --no-install-recommends libsymspg1
 
-RUN adduser -S user -h $HOME \
-	&& chown -R user $HOME
+USER aiida
 
-WORKDIR $HOME
-USER user
+RUN mamba create --yes -c conda-forge -n cp2k cp2k=9.1 && mamba clean --all -f -y
 
-ENTRYPOINT [ "weechat" ]
+# Install aiida-cp2k plugin.
+COPY --chown="${SYSTEM_UID}:${SYSTEM_GID}" . /home/aiida/aiida-cp2k
+
+# Test fix, cause latest aiida-core was not put on Dockerhub.
+RUN pip install aiida-core==2.6.3
+
+RUN pip install ./aiida-cp2k[dev,docs]
+
+# Install coverals.
+RUN pip install coveralls
+
+# Install the cp2k code.
+COPY .docker/init/add-codes.sh /etc/init/
+COPY .docker/s6-rc.d/cp2k-code-setup /etc/s6-overlay/s6-rc.d/cp2k-code-setup
+COPY .docker/user/cp2k-code-setup /etc/s6-overlay/s6-rc.d/user/contents.d/cp2k-code-setup

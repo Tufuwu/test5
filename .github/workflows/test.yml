@@ -1,103 +1,38 @@
-name: wee-slack
-on: [push, pull_request]
+name: Continuous Integration
+
+on:
+  [push, pull_request]
 
 jobs:
-  lint:
-    if: >
-      github.event_name == 'push' || (
-        github.event_name == 'pull_request' &&
-        github.event.pull_request.head.repo.full_name != github.repository
-      )
+
+  test-plugin:
+
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python_version: [2.7, 3.7]
+    timeout-minutes: 30
+
     steps:
+
     - uses: actions/checkout@v2
 
-    - name: Set up Python (${{ matrix.python_version }})
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python_version }}
-
-    - uses: actions/cache@v4
-      env:
-        cache-name: lint-pip
-      with:
-        path: ${{ env.pythonLocation }}
-        key: ${{ runner.os }}-${{ matrix.python_version }}-${{ env.cache-name }}-${{ github.sha }}
-        restore-keys: |
-          ${{ runner.os }}-${{ matrix.python_version }}-${{ env.cache-name }}-
-
-    - name: Install Pipenv
+    - name: Install docker
       run: |
-        pip install --upgrade pipenv
+        sudo apt-get update
+        sudo apt-get install apt-transport-https ca-certificates curl software-properties-common
+        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+        sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu  $(lsb_release -cs)  stable"
+        sudo apt-get update
+        sudo apt-get install docker-ce
 
-    - uses: actions/cache@v4
-      env:
-        cache-name: lint-pipenv
-      with:
-        path: "$GITHUB_WORKSPACE/.venv"
-        key: ${{ runner.os }}-${{ matrix.python_version }}-${{ env.cache-name }}-${{ github.sha }}
-        restore-keys: |
-          ${{ runner.os }}-${{ matrix.python_version }}-${{ env.cache-name }}-
-
-    - name: Install dependencies
+    - name: Build the Docker image
       run: |
-        pipenv install --dev --skip-lock
+        docker build -t aiida_cp2k_test .
 
-    - name: Lint with Flake8
+    - name: Run aiida_cp2k_test image and test the plugin inside the corresponding container.
       run: |
-        # stop the build if there are Python syntax errors or undefined names
-        pipenv run flake8 .
+        export DOCKERID=`docker run -d aiida_cp2k_test`
+        docker exec --tty $DOCKERID wait-for-services
+        docker logs $DOCKERID
+        docker exec --tty --user aiida $DOCKERID /bin/bash -l -c 'cd /opt/aiida-cp2k/ && pre-commit run --all-files || ( git status --short ; git diff ; exit 1 )'
+        docker exec --tty --user aiida $DOCKERID /bin/bash -l -c 'cd /opt/aiida-cp2k/ && py.test --cov aiida_cp2k --cov-append .'
+        docker exec --tty --user aiida $DOCKERID /bin/bash -l -c 'cd /opt/aiida-cp2k/docs && make'
 
-        # exit-zero treats all errors as warnings.
-        pipenv run flake8 . --exit-zero --select=C,E,F,W
-
-  test:
-    if: >
-      github.event_name == 'push' || (
-        github.event_name == 'pull_request' &&
-        github.event.pull_request.head.repo.full_name != github.repository
-      )
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python_version: [2.7, 3.7]
-    steps:
-    - uses: actions/checkout@v2
-
-    - name: Set up Python (${{ matrix.python_version }})
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python_version }}
-
-    - uses: actions/cache@v4
-      env:
-        cache-name: test-pip
-      with:
-        path: ${{ env.pythonLocation }}
-        key: ${{ runner.os }}-${{ matrix.python_version }}-${{ env.cache-name }}-${{ github.sha }}
-        restore-keys: |
-          ${{ runner.os }}-${{ matrix.python_version }}-${{ env.cache-name }}-
-
-    - name: Install Pipenv
-      run: |
-        pip install --upgrade pipenv
-
-    - uses: actions/cache@v4
-      env:
-        cache-name: test-pipenv
-      with:
-        path: "$GITHUB_WORKSPACE/.venv"
-        key: ${{ runner.os }}-${{ matrix.python_version }}-${{ env.cache-name }}-${{ github.sha }}
-        restore-keys: |
-          ${{ runner.os }}-${{ matrix.python_version }}-${{ env.cache-name }}-
-
-    - name: Install dependencies
-      run: |
-        pipenv install --dev --skip-lock
-
-    - name: python/test
-      run: |
-        pipenv run pytest

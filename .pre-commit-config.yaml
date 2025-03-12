@@ -1,0 +1,54 @@
+---
+ci:
+    autoupdate_schedule: quarterly
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+
+        - id: check-json
+        - id: check-yaml
+        - id: end-of-file-fixer
+          exclude:  &exclude_pre_commit_hooks >
+            (?x)^(
+                test/.*(?<!\.py)$|
+                examples/.*(?<!\.py)$|
+            )$
+        - id: trailing-whitespace
+          exclude: *exclude_pre_commit_hooks
+
+  - repo: https://github.com/psf/black
+    rev: 24.10.0
+    hooks:
+        - id: black
+          language_version: python3 # Should be a command that runs python3.6+
+          exclude: aiida_cp2k/workchains/base.py
+
+  - repo: https://github.com/PyCQA/flake8
+    rev: 7.1.1
+    hooks:
+        - id: flake8
+          args: [--count, --show-source, --statistics]
+
+  - repo: https://github.com/pycqa/isort
+    rev: 5.13.2
+    hooks:
+        - id: isort
+          args: [--profile, black, --filter-files]
+
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v3.19.1
+    hooks:
+        - id: pyupgrade
+          args: [--py37-plus]
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.14.1
+    hooks:
+        - id: mypy
+          additional_dependencies:
+              - types-click-spinner
+              - types-requests
+              - types-tabulate
+              - types-toml
