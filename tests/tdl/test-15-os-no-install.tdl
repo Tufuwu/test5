@@ -1,8 +1,0 @@
-<template>
-  <name>f12jeos</name>
-  <os>
-    <name>Fedora</name>
-    <version>12</version>
-    <arch>x86_64</arch>
-  </os>
-</template>

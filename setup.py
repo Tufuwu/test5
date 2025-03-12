@@ -1,75 +1,36 @@
-from distutils.core import setup, Command
-from distutils.command.sdist import sdist as _sdist
-import subprocess
-import time
+import os
 
-VERSION = '0.19.0'
-RELEASE = '0'
+import versioneer
+from setuptools import find_packages, setup
 
-datafiles = [('share/man/man1', ['man/oz-install.1', 'man/oz-generate-icicle.1',
-                                 'man/oz-customize.1',
-                                 'man/oz-cleanup-cache.1']),
-             ('share/man/man5', ['man/oz-examples.5'])
-             ]
+PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 
-class sdist(_sdist):
-    """ custom sdist command, to prep oz.spec file for inclusion """
+DESCRIPTION = "Python module and CLI for hashing of file system directories."
 
-    def run(self):
-        global VERSION
-        global RELEASE
+try:
+    with open(os.path.join(PROJECT_ROOT, "README.md"), encoding="utf-8") as f:
+        long_description = "\n" + f.read()
+except OSError:
+    long_description = DESCRIPTION
 
-        # Create a development release string for later use
-        git_head = subprocess.Popen("git log -1 --pretty=format:%h",
-                                    shell=True,
-                                    stdout=subprocess.PIPE).communicate()[0].strip()
-        date = time.strftime("%Y%m%d%H%M%S", time.gmtime())
-        git_release = "%sgit%s" % (date, git_head.decode())
-
-        # Expand macros in oz.spec.in and create oz.spec
-        spec_in = open('oz.spec.in', 'r')
-        spec = open('oz.spec', 'w')
-        for line in spec_in.readlines():
-            if "@VERSION@" in line:
-                line = line.replace("@VERSION@", VERSION)
-            elif "@RELEASE@" in line:
-                # If development release, include date+githash in %{release}
-                if RELEASE.startswith('0'):
-                    RELEASE += '.' + git_release
-                line = line.replace("@RELEASE@", RELEASE)
-            spec.write(line)
-        spec_in.close()
-        spec.close()
-
-        # Run parent constructor
-        _sdist.run(self)
-
-class pytest(Command):
-    user_options = []
-    def initialize_options(self): pass
-    def finalize_options(self): pass
-    def run(self):
-        try:
-            errno = subprocess.call('py.test-3 tests --verbose --tb=short --junitxml=tests/results.xml'.split())
-        except OSError as e:
-            if e.errno == 2:
-                raise OSError(2, "No such file or directory: py.test")
-            raise
-        raise SystemExit(errno)
-
-setup(name='oz',
-      version=VERSION,
-      description='Oz automated installer',
-      author='Chris Lalancette',
-      author_email='clalancette@gmail.com',
-      license='LGPLv2',
-      url='http://github.com/clalancette/oz',
-      package_dir={'oz': 'oz'},
-      package_data={'oz': ['auto/*', '*.rng']},
-      packages=['oz'],
-      scripts=['oz-install', 'oz-generate-icicle', 'oz-customize',
-               'oz-cleanup-cache'],
-      cmdclass={'sdist': sdist,
-                'test' : pytest },
-      data_files = datafiles,
-      )
+setup(
+    name="dirhash",
+    version=versioneer.get_version(),
+    cmdclass=versioneer.get_cmdclass(),
+    description=DESCRIPTION,
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    url="https://github.com/andhus/dirhash-python",
+    author="Anders Huss",
+    author_email="andhus@kth.se",
+    license="MIT",
+    python_requires=">=3.8",
+    install_requires=["scantree>=0.0.4"],
+    packages=find_packages("src"),
+    package_dir={"": "src"},
+    include_package_data=True,
+    entry_points={
+        "console_scripts": ["dirhash=dirhash.cli:main"],
+    },
+    tests_require=["pre-commit", "pytest", "pytest-cov"],
+)
