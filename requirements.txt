@@ -1,3 +1,2 @@
-numpy
-Pillow
-psutil
+numpy>=1.21
+typing_extensions

@@ -1,45 +1,16 @@
-*.py[cod]
-
-# C extensions
-*.so
-
-# Packages
-*.egg
-*.egg-info
-dist
-build
-eggs
-parts
-bin
-var
-sdist
-develop-eggs
-.installed.cfg
-lib
-lib64
-
-# Installer logs
-pip-log.txt
-
-# Unit test / coverage reports
+*.pyc
+dist/*
+build/*
+*.egg-info/*
+MANIFEST
+.idea/*
 .cache
+
+# Sphinx documentation
+docs/build/
+
+# coverage.py files
 .coverage
-.tox
-nosetests.xml
-htmlcov/
 
-# Translations
-*.mo
-
-# Mr Developer
-.mr.developer.cfg
-.project
-.pydevproject
-
-# Test data
-*.gif
-*.jpg
-*.mp4
-*.png
-*.xml
-testimages.zip
+# Virtual environments
+.venv
