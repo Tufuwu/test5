@@ -1,106 +1,67 @@
-# behave-pandas
+# Mattermost Poll
 
-Utility package for the [Behave](https://github.com/behave/behave) BDD testing framework, to make converting gherkin tables
-to and from [pandas](https://github.com/pandas-dev/pandas) data frames a breeze.
+[![codecov](https://codecov.io/gh/M-Mueller/mattermost-poll/branch/master/graph/badge.svg)](https://codecov.io/gh/M-Mueller/mattermost-poll)
 
-## Build Status
-![Travis CI badge](https://travis-ci.org/clembou/behave-pandas.svg?branch=master)
+Provides a slash command to create polls in Mattermost.
 
-## Installation
+![Example](/doc/example_yes_no.gif)
 
-```bash
-pip install behave-pandas
-```
+By default, a poll will only offer the options *Yes* and *No*. However, users can also specify an arbitrary number of choices:
 
-## Features
+![Example](/doc/example_colours.png)
 
-* Easily convert a Gherkin table into a pandas data frame with explicit dtype information
-* Easily convert a pandas data frame into a behave table that can be parsed by behave-pandas
-* Support converting data frames with multiple index levels either on columns or rows
-* Handle missing data for dtypes that support it.
+Choices are separated by `--`.
 
-## Changelog
+## Additional options
 
-[See the changelog here.](CHANGELOG.md)
+- `--noprogress`: Do not display the number of votes until the poll is ended
+- `--public`: Show who voted for what at the end of the poll
+- `--votes=X`: Allows users to place a total of *X* votes. Default is 1. Each individual option can still only be voted once.
+- `--bars`: Show results as a bar chart at the end of the poll.
+- `--locale=X`: Use a specific locale for the poll. Supported values are en and de. By default it's the users language.
 
-## API
+## Help
 
-The behave-pandas api is extremely simple, and consists in two functions:
+`/poll help` will display full usage options. Only visible to you.
 
-```python
-from behave_pandas import table_to_dataframe, dataframe_to_table
-```
+Set the "Autocomplete Hint" in the Slash Command settings to `See "/poll help" for full usage options`
 
-## Example
+## Requirements
 
-```gherkin
-Feature: Table printer
+- Python >= 3.6
+- Flask
+- A WSGI server (e.g. gunicorn or uWSGI)
 
-  as a tester
-  I want to be able to create gherkin tables from existing data frames
+## Setup
 
-  Scenario: simple index
-    Given a gherkin table as input
-      | str       | float     | str                 |
-      | index_col | float_col | str_col             |
-      | egg       | 3.0       | silly walks         |
-      | spam      | 4.1       | spanish inquisition |
-      | bacon     | 5.2       | dead parrot         |
-    When converted to a data frame using 1 row as column names and 1 column as index
-    And printed using data_frame_to_table
-    Then it prints a valid string copy pasteable into gherkin files
-    """
-    | object    | float64   | object              |
-    | index_col | float_col | str_col             |
-    | egg       | 3.0       | silly walks         |
-    | spam      | 4.1       | spanish inquisition |
-    | bacon     | 5.2       | dead parrot         |
-    """
-```
+1. In Mattermost go to *Main Menu -> Integrations -> Slash Commands* and add a new slash command with the URL of the server including the configured port number, e.g. http://localhost:5000.
+1. Choose POST for the request method.
+1. Copy the generated token.
+1. Copy `settings.py.example` to `settings.py` and customise your settings. Paste the token from the previous step in `MATTERMOST_TOKENS`.
+1. Start the server:
+   ```bash
+   gunicorn --workers 4 --bind :5000 app:app
+   ```
+1. You might need to add the hostname of the poll server (e.g. `localhost`) to "System Settings > Developer > Allow untrusted internal connections to".
 
-Associated steps:
+To resolve usernames in `--public` polls and to provide localization, the server needs access to the
+Mattermost API. For this a [personal access token](https://docs.mattermost.com/developer/personal-access-tokens.html) must be provided in your `settings.py`. Which user provides the token doesn't matter, e.g. you can create a dummy account. If no token is provided `--public` polls will not be available and all texts will be english.
 
-```python
-from behave import *
-from behave_pandas import table_to_dataframe, dataframe_to_table
+## Docker
 
-use_step_matcher("parse")
+To integrate with [mattermost-docker](https://github.com/mattermost/docker):
 
-@given("a gherkin table as input")
-def step_impl(context,):
-    context.input = context.table
+1. Create the integration in mattermost (see above). As URL use `http://poll:5000` and add `poll` to the allowed untrusted connections. Also enable "Image Proxy" (see `BAR_IMG_URL ` in [settings.py.example](settings.py.example) for details)
+1. Copy [docker-compose.poll.yml](docker-compose.poll.yml) to the mattermost docker directory.
+1. Add the following two lines to your `.env`:
+   ```
+   MATTERMOST_POLL_PATH=./volumes/poll
+   MATTERMOST_POLL_TOKENS="['<your-integration-token>']"
+   MATTERMOST_POLL_PA_TOKEN="<your-access-token>"
+   ```
+1. Include the service in the startup, e.g.:
+   ```
+   docker compose -f docker-compose.yml -f docker-compose.without-nginx.yml -f docker-compose.poll.yml up
+   ```
 
-@when('converted to a data frame using {column_levels:d} row as column names and {index_levels:d} column as index')
-def step_impl(context, column_levels, index_levels):
-    context.parsed = table_to_dataframe(context.input, column_levels=column_levels, index_levels=index_levels)
-
-
-@then("it prints a valid string copy pasteable into gherkin files")
-def step_impl(context):
-    assert context.result == context.text
-
-
-@step("printed using data_frame_to_table")
-def step_impl(context):
-    context.result = dataframe_to_table(context.parsed)
-```
-
-Parsed dataframe:
-
-```
->>> context.parsed
-           float_col              str_col
-index_col
-egg              3.0          silly walks
-spam             4.1  spanish inquisition
-bacon            5.2          dead parrot
-
->>> context.parsed.info()
-<class 'pandas.core.frame.DataFrame'>
-Index: 3 entries, egg to bacon
-Data columns (total 2 columns):
-float_col    3 non-null float64
-str_col      3 non-null object
-dtypes: float64(1), object(1)
-memory usage: 72.0+ bytes
-```
+The docker image reads all it's settings from environment variables (or uses a default value). See [settings.py.docker](settings.py.docker) for all available variables.

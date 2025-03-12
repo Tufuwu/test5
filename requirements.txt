@@ -1,6 +1,4 @@
--e .
-
-# dev dependencies
-black; python_version >= '3.6.0'
-wheel
-build
+flask==2.3.3
+Flask-Babel==2.0
+requests
+Pillow
