@@ -1,110 +1,285 @@
-<!--
-Copyright Contributors to the Pyro project.
+ <a id="top"></a>
+ <p align="center">
+     <img src="https://raw.githubusercontent.com/spec-first/connexion/main/docs/images/logo_banner.svg" width="100%"/>
+ </p>
+ <p align="center">
+     <a href="https://pypi.org/project/connexion"><img alt="coveralls" src="https://img.shields.io/pypi/status/connexion.svg?style=flat-square&color=brightgreen"></a>
+     <a href="https://pypi.org/project/connexion"><img alt="PyPI version" src="https://img.shields.io/pypi/v/connexion?color=brightgreen&style=flat-square"></a>
+     <a href="https://pypistats.org/packages/connexion"><img alt="PyPI" src="https://img.shields.io/pypi/dm/connexion?style=flat-square&color=brightgreen"></a>
+     <a href="https://github.com/spec-first/connexion/blob/main/LICENSE"><img alt="License" src="https://img.shields.io/pypi/l/connexion?style=flat-square&color=brightgreen"></a>
+     <a href="https://github.com/spec-first/connexion/actions/workflows/pipeline.yml"><img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/spec-first/connexion/pipeline.yml?style=flat-square"></a>
+     <a href="https://coveralls.io/github/spec-first/connexion?branch=main"><img alt="Coveralls" src="https://img.shields.io/coverallsCoverage/github/spec-first/connexion?style=flat-square"></a>
+     <a href="https://gurubase.io/g/connexion"><img alt="Gurubase" src="https://img.shields.io/badge/Gurubase-Ask%20Connexion%20Guru-brightgreen?style=flat-square"></a>
+     <br>
+     <br>
+     <a href="https://connexion.readthedocs.io/en/stable/"><strong>Explore the docs »</strong></a>
+ </p>
 
-SPDX-License-Identifier: Apache-2.0
--->
+---
 
-<div align="center">
-  <a href="http://pyro.ai"> <img width="220px" height="220px" src="docs/source/_static/img/pyro_logo_with_text.png"></a>
-</div>
+Connexion is a modern Python web framework that makes spec-first and api-first development easy.
+You describe your API in an [OpenAPI][OpenAPI] (or [Swagger][Swagger]) specification with as much 
+detail as you want and Connexion will guarantee that it works as you specified.
 
------------------------------------------
+It works either standalone, or in combination with any ASGI or WSGI-compatible framework!
 
-[![Build Status](https://github.com/pyro-ppl/pyro/workflows/CI/badge.svg)](https://github.com/pyro-ppl/pyro/actions)
-[![Coverage Status](https://coveralls.io/repos/github/pyro-ppl/pyro/badge.svg?branch=dev)](https://coveralls.io/github/pyro-ppl/pyro?branch=dev)
-[![Latest Version](https://badge.fury.io/py/pyro-ppl.svg)](https://pypi.python.org/pypi/pyro-ppl)
-[![Documentation Status](https://readthedocs.org/projects/pyro-ppl/badge/?version=dev)](http://pyro-ppl.readthedocs.io/en/stable/?badge=dev)
-[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/3056/badge)](https://bestpractices.coreinfrastructure.org/projects/3056)
+<p align="center">
+   <br>
+   <a href="https://connexion.readthedocs.io/en/latest/v3.html"><strong>📢 Connexion 3 was recently released! Read about the changes here »</strong></a>
+   <br>
+   <br>
+</p>
 
-[Getting Started](http://pyro.ai/examples) |
-[Documentation](http://docs.pyro.ai/) |
-[Community](http://forum.pyro.ai/) |
-[Contributing](https://github.com/pyro-ppl/pyro/blob/master/CONTRIBUTING.md)
+## ✨ Features
 
-Pyro is a flexible, scalable deep probabilistic programming library built on PyTorch.  Notably, it was designed with these principles in mind:
+Connexion provides the following functionality **based on your specification**:
 
-- **Universal**: Pyro is a universal PPL - it can represent any computable probability distribution.
-- **Scalable**: Pyro scales to large data sets with little overhead compared to hand-written code.
-- **Minimal**: Pyro is agile and maintainable. It is implemented with a small core of powerful, composable abstractions.
-- **Flexible**: Pyro aims for automation when you want it, control when you need it. This is accomplished through high-level abstractions to express generative and inference models, while allowing experts easy-access to customize inference.
+- 🚏 **Automatic route registration**, no ``@route`` decorators needed
+- 🔒 **Authentication**, split from your application logic
+- 🔎 **Request and response validation** of headers, parameters, and body
+- 📬 **Parameter parsing and injection**, no request object needed
+- 📨 **Response serialization**, you can return regular Python objects
+- 📺 **A Swagger UI console** with live documentation and ‘try it out’ feature
+- 🧩 **Pluggability**, in all dimensions
 
-Pyro was originally developed at Uber AI and is now actively maintained by community contributors, including a dedicated team at the [Broad Institute](https://www.broadinstitute.org/).
-In 2019, Pyro [became](https://www.linuxfoundation.org/press-release/2019/02/pyro-probabilistic-programming-language-becomes-newest-lf-deep-learning-project/) a project of the Linux Foundation, a neutral space for collaboration on open source software, open standards, open data, and open hardware.
+Connexion also **helps you write your OpenAPI specification** and develop against it by providing a command line interface which lets you test and mock your specification.
 
-For more information about the high level motivation for Pyro, check out our [launch blog post](http://eng.uber.com/pyro).
-For additional blog posts, check out work on [experimental design](https://eng.uber.com/oed-pyro-release/) and
-[time-to-event modeling](https://eng.uber.com/modeling-censored-time-to-event-data-using-pyro/) in Pyro.
-
-## Installing
-
-### Installing a stable Pyro release
-
-**Install using pip:**
-```sh
-pip install pyro-ppl
+```shell
+   connexion run openapi.yaml
 ```
 
-**Install from source:**
-```sh
-git clone git@github.com:pyro-ppl/pyro.git
-cd pyro
-git checkout master  # master is pinned to the latest release
-pip install .
+ <p align="right">(<a href="#top">back to top</a>)</p>
+
+
+## 🫶 Sponsors
+
+<a href="https://www.ml6.eu"><img src="https://raw.githubusercontent.com/spec-first/connexion/main/docs/images/sponsors/ML6.png" title=ML6 height="100"></a>
+<a href="https://www.devmark.ai/fern/?utm_source=connexion&utm_loc=readme&utm_type=logo"><img src="https://raw.githubusercontent.com/spec-first/connexion/main/docs/images/sponsors/Fern.png" title=Fern height="100"></a>
+
+Sponsors help us dedicate time to maintain Connexion. Want to help?
+
+<a href="https://github.com/sponsors/spec-first"><strong>Explore the options »</strong></a>
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+## 🪤 Why Connexion
+
+With Connexion, you write the spec first. Connexion then calls your Python
+code, handling the mapping from the specification to the code. This
+incentivizes you to write the specification so that all of your
+developers can understand what your API does, even before you write a
+single line of code.
+
+If multiple teams depend on your APIs, you can use Connexion to easily
+send them the documentation of your API. This guarantees that your API will
+follow the specification that you wrote. This is a different process from
+the one offered by most frameworks, which generate a specification
+*after* you've written the code.
+Some disadvantages of generating specifications based on code is that
+they often end up lacking details or mix your documentation with the implementation
+logic of your application.
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+## ⚒️ How to Use
+
+### Installation
+
+You can install connexion using pip:
+
+```shell
+    $ pip install connexion
 ```
 
-**Install with extra packages:**
+Connexion provides 'extras' with optional dependencies to unlock additional features:
 
-To install the dependencies required to run the probabilistic models included in the `examples`/`tutorials` directories, please use the following command:
-```sh
-pip install pyro-ppl[extras] 
-```
-Make sure that the models come from the same release version of the [Pyro source code](https://github.com/pyro-ppl/pyro/releases) as you have installed.
+- `swagger-ui`: Enables a Swagger UI console for your application.
+- `uvicorn`: Enables to run the your application using `app.run()` for
+  development instead of using an external ASGI server.
+- `flask`: Enables the `FlaskApp` to build applications compatible with the Flask
+  ecosystem.
 
-### Installing Pyro dev branch
+You can install them as follows:
 
-For recent features you can install Pyro from source.
-
-**Install Pyro using pip:**
-
-```sh
-pip install git+https://github.com/pyro-ppl/pyro.git
-```
-or, with the `extras` dependency to run the probabilistic models included in the `examples`/`tutorials` directories:
-```sh
-pip install git+https://github.com/pyro-ppl/pyro.git#egg=project[extras]
+```shell
+    $ pip install connexion[swagger-ui]
+    $ pip install connexion[swagger-ui,uvicorn]
 ```
 
-**Install Pyro from source:**
+<p align="right">(<a href="#top">back to top</a>)</p>
 
-```sh
-git clone https://github.com/pyro-ppl/pyro
-cd pyro
-pip install .  # pip install .[extras] for running models in examples/tutorials
+### Creating your application
+
+Connexion can be used either as a standalone application or as a middleware wrapping an existing
+ASGI (or WSGI) application written using a different framework. The standalone application can be
+built using either the `AsyncApp` or `FlaskApp`.
+
+- The `AsyncApp` is a lightweight application with native asynchronous support. Use it if you
+  are starting a new project and have no specific reason to use one of the other options.
+
+  ```Python
+      from connexion import AsyncApp
+
+      app = AsyncApp(__name__)
+  ```
+
+- The `FlaskApp` leverages the `Flask` framework, which is useful if you're migrating from
+  connexion 2.X or you want to leverage the `Flask` ecosystem.
+
+  ```python
+      from connexion import FlaskApp
+
+      app = FlaskApp(__name__)
+  ```
+
+- The `ConnexionMiddleware` can be wrapped around any existing ASGI or WSGI application.
+  Use it if you already have an application written in a different framework and want to add
+  functionality provided by connexion
+
+  ```python
+      from asgi_framework import App
+      from connexion import ConnexionMiddleware
+
+      app = App(__name__)
+      app = ConnexionMiddleware(app)
+  ```
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+### Registering an API
+
+While you can register individual routes on your application, Connexion really shines when you
+register an API defined by an OpenAPI (or Swagger) specification.
+The operation described in your specification is automatically linked to your Python view function via the ``operationId``
+
+**run.py**
+
+```python
+   def post_greeting(name: str, greeting: str):  # Paramaeters are automatically unpacked
+       return f"{greeting} {name}", 200          # Responses are automatically serialized
+
+   app.add_api("openapi.yaml")
 ```
 
-## Running Pyro from a Docker Container
+**openapi.yaml**
 
-Refer to the instructions [here](docker/README.md).
+```yaml
+   ...
+   paths:
+     /greeting/{name}:
+       post:
+         operationId: run.post_greeting
+         responses:
+           '200':
+             content:
+               text/plain:
+                 schema:
+                   type: string
+         parameters:
+           - name: name
+             in: path
+             required: true
+             schema:
+               type: string
+           - name: greeting
+             in: query
+             required: true
+             schema:
+               type: string
+```
 
-## Citation
-If you use Pyro, please consider citing:
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+### Running your application
+
+If you installed connexion using `connexion[uvicorn]`, you can run it using the
+`run` method. This is only recommended for development:
+
+```python
+    app.run()
 ```
-@article{bingham2019pyro,
-  author    = {Eli Bingham and
-               Jonathan P. Chen and
-               Martin Jankowiak and
-               Fritz Obermeyer and
-               Neeraj Pradhan and
-               Theofanis Karaletsos and
-               Rohit Singh and
-               Paul A. Szerlip and
-               Paul Horsfall and
-               Noah D. Goodman},
-  title     = {Pyro: Deep Universal Probabilistic Programming},
-  journal   = {J. Mach. Learn. Res.},
-  volume    = {20},
-  pages     = {28:1--28:6},
-  year      = {2019},
-  url       = {http://jmlr.org/papers/v20/18-403.html}
-}
+
+In production, run your application using an ASGI server such as `uvicorn`. If you defined your
+`app` in a python module called `run.py`, you can run it as follows:
+
+```shell
+    $ uvicorn run:app
 ```
+
+Or with gunicorn:
+
+```shell
+    $ gunicorn -k uvicorn.workers.UvicornWorker run:app
+```
+
+----
+
+Now you're able to run and use Connexion!
+
+See the [examples][examples] folder for more examples.
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+## 📜 Changes
+
+A full changelog is maintained on the [GitHub releases page][Releases].
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+## 🤲 Contributing
+
+We welcome your ideas, issues, and pull requests. Just follow the
+usual/standard GitHub practices.
+
+For easy development, install connexion using poetry with all extras, and
+install the pre-commit hooks to automatically run black formatting and static analysis checks.
+
+```shell
+    pip install poetry
+    poetry install --all-extras
+    pre-commit install
+```
+
+You can find out more about how Connexion works and where to apply your changes by having a look
+at our [architecture][Architecture].
+
+Unless you explicitly state otherwise in advance, any non trivial
+contribution intentionally submitted for inclusion in this project by you
+to the steward of this repository shall be under the
+terms and conditions of Apache License 2.0 written below, without any
+additional copyright information, terms or conditions.
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+## 🙏 Thanks
+
+We'd like to thank all of Connexion's contributors for working on this
+project, Swagger/OpenAPI for their support, and Zalando for originally developing and releasing Connexion.
+
+## 📚 Recommended Resources
+
+About the advantages of working spec-first:
+
+* [Blog Atlassian][Blog Atlassian]
+* [API guidelines Zalando][API guidelines Zalando]
+* [Blog ML6][Blog ML6]
+* [Blog Zalando][Blog Zalando]
+
+Tools to help you work spec-first:
+
+* [Online swagger editor][Online swagger editor]
+* [VS Code plugin][VS Code plugin]
+* [Pycharm plugin][Pycharm plugin]
+
+[OpenAPI]: https://openapis.org/
+[Swagger]: http://swagger.io/open-source-integrations/
+[Blog atlassian]: https://www.atlassian.com/blog/technology/spec-first-api-development
+[Blog ML6]: https://blog.ml6.eu/why-we-decided-to-help-maintain-connexion-c9f449877083
+[Blog Zalando]: https://engineering.zalando.com/posts/2016/12/crafting-effective-microservices-in-python.html
+[API guidelines Zalando]: https://opensource.zalando.com/restful-api-guidelines/#api-first
+[Online swagger editor]: https://editor.swagger.io/
+[VS Code plugin]: https://marketplace.visualstudio.com/items?itemName=42Crunch.vscode-openapi
+[Pycharm plugin]: https://plugins.jetbrains.com/plugin/14837-openapi-swagger-editor
+[examples]: https://github.com/spec-first/connexion/blob/main/examples
+[Releases]: https://github.com/spec-first/connexion/releases
+[Architecture]: https://github.com/spec-first/connexion/blob/main/docs/images/architecture.png
