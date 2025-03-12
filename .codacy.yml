@@ -1,6 +1,3 @@
 ---
 exclude_paths:
-  - "README.md"
-  - "CONTRIBUTING.md"
-  - "tests/**"
-  - ".github/**"
+  - documentation/_themes/**

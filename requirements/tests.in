@@ -1,6 +1,0 @@
-black
-isort
-pylint
-pytest
-pytest-mock
-ruff
