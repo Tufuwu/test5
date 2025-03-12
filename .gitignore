@@ -1,28 +1,23 @@
-.DS_Store
-**/.DS_Store
-*.pyc
-**/*.pyc
-.cache/
-.ipynb_checkpoints/
-.pytest_cache/
 __pycache__/
-.venv
-.idea/
-.vscode/
+*.py[cod]
 
-.eggs/
-aif360.egg-info
+.Python
+env/
 build/
+develop-eggs/
 dist/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+.eggs/
 
-.coverage*
-coverage.txt
+pip-log.txt
+pip-delete-this-directory.txt
 
-docs/build/
-docs/source/modules/generated
-
-aif360/version.py
-aif360/data/raw/**
-!aif360/data/raw/*/*.md
-aif360/sklearn/data/
-.Rproj.user
+.idea
