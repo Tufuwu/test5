@@ -1,8 +1,19 @@
 .. include:: ../README.rst
 
-Bugs and feature requests
--------------------------
 
-    https://github.com/wildfish/django-star-ratings/issues
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
 
-Created by `Wildfish <http://wildfish.com/>`_ and contributors.
+   api
+   testing
+   changelog
+
+
+====================
+ Indices and tables
+====================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`

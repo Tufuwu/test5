@@ -1,300 +1,166 @@
-===================
-django-star-ratings
-===================
+=============
+ perfmetrics
+=============
 
-|Build Status| |codecov.io| |Documentation Status|
+The perfmetrics package provides a simple way to add software performance
+metrics to Python libraries and applications.  Use perfmetrics to find the
+true bottlenecks in a production application.
 
-Python 3 compatible ratings for Django.
+The perfmetrics package is a client of the Statsd daemon by Etsy, which
+is in turn a client of Graphite (specifically, the Carbon daemon).  Because
+the perfmetrics package sends UDP packets to Statsd, perfmetrics adds
+no I/O delays to applications and little CPU overhead.  It can work
+equally well in threaded (synchronous) or event-driven (asynchronous)
+software.
 
-Add ratings to any Django model with a template tag.
+Complete documentation is hosted at https://perfmetrics.readthedocs.io
 
-See full `documentation
-<http://django-star-ratings.readthedocs.io/en/latest/?badge=latest/>`_.
+.. image:: https://img.shields.io/pypi/v/perfmetrics.svg
+   :target: https://pypi.org/project/perfmetrics/
+   :alt: Latest release
 
-Built by Wildfish. https://wildfish.com
+.. image:: https://img.shields.io/pypi/pyversions/perfmetrics.svg
+   :target: https://pypi.org/project/perfmetrics/
+   :alt: Supported Python versions
 
-Requirements
-============
+.. image:: https://github.com/zodb/perfmetrics/workflows/tests/badge.svg
+   :target: https://github.com/zodb/perfmetrics/actions?query=workflow%3Atests
+   :alt: CI Build Status
 
-* Python 3.7+.
-* Django 2.2+
+.. image:: https://coveralls.io/repos/github/zodb/perfmetrics/badge.svg
+   :target: https://coveralls.io/github/zodb/perfmetrics
+   :alt: Code Coverage
 
-
-Installation
-============
-
-Install from PyPI:
-
-::
-
-    pip install django-star-ratings
-
-add ``star_ratings`` to ``INSTALLED_APPS``:
-
-::
-
-    INSTALLED_APPS = (
-        ...
-        'star_ratings'
-    )
-
-sync your database:
-
-::
-
-    python manage.py migrate
-
-add the following to your urls.py:
-
-::
-
-    path('ratings/', include('star_ratings.urls', namespace='ratings')),
-
-Make sure ``'django.core.context_processors.request',`` is in
-``TEMPLATE_CONTEXT_PROCESSORS``.
+.. image:: https://readthedocs.org/projects/perfmetrics/badge/?version=latest
+   :target: https://perfmetrics.readthedocs.io/en/latest/?badge=latest
+   :alt: Documentation Status
 
 Usage
 =====
 
-Add the following javascript and stylesheet to your template
+Use the ``@metric`` and ``@metricmethod`` decorators to wrap functions
+and methods that should send timing and call statistics to Statsd.
+Add the decorators to any function or method that could be a bottleneck,
+including library functions.
 
-::
+.. caution::
 
-    {% load static %}
-    <html>
-    ...
-    <link rel="stylesheet" href="{% static 'star-ratings/css/star-ratings.css' %}">
-    <script type="text/javascript" src="{% static 'star-ratings/js/dist/star-ratings.min.js' %}"></script>
-    ...
-    </html>
+   These decorators are generic and cause the actual function
+   signature to be lost, replaced with ``*args, **kwargs``. This can
+   break certain types of introspection, including `zope.interface
+   validation <https://github.com/zodb/perfmetrics/issues/15>`_. As a
+   workaround, setting the environment variable
+   ``PERFMETRICS_DISABLE_DECORATOR`` *before* importing perfmetrics or
+   code that uses it will cause ``@perfmetrics.metric``, ``@perfmetrics.metricmethod``,
+   ``@perfmetrics.Metric(...)`` and ``@perfmetrics.MetricMod(...)`` to
+   return the original function unchanged.
 
-To enable ratings for a model add the following tag in your template
+Sample::
 
-::
+    from perfmetrics import metric
+    from perfmetrics import metricmethod
 
-    {% load ratings %}
-    <html>
-    ...
-    {% ratings object %}
-    ...
-    </html>
+    @metric
+    def myfunction():
+        """Do something that might be expensive"""
 
-Template tags
-=============
+    class MyClass(object):
+    	@metricmethod
+    	def mymethod(self):
+    	    """Do some other possibly expensive thing"""
 
-The template tag takes four arguments:
+Next, tell perfmetrics how to connect to Statsd.  (Until you do, the
+decorators have no effect.)  Ideally, either your application should read the
+Statsd URI from a configuration file at startup time, or you should set
+the STATSD_URI environment variable.  The example below uses a
+hard-coded URI::
 
--  ``icon_height``: defaults to ``STAR_RATINGS_STAR_HEIGHT``
--  ``icon_width``: defaults to ``STAR_RATINGS_STAR_WIDTH``
--  ``read_only``: overrides the ``editable`` behaviour to make the widget read only
--  ``template_name``: overrides the tempalte to use for the widget
+    from perfmetrics import set_statsd_client
+    set_statsd_client('statsd://localhost:8125')
 
-Settings
-========
+    for i in xrange(1000):
+        myfunction()
+        MyClass().mymethod()
 
-To prohibit users from altering their ratings set
-``STAR_RATINGS_RERATE = False`` in settings.py
+If you run that code, it will fire 2000 UDP packets at port
+8125.  However, unless you have already installed Graphite and Statsd,
+all of those packets will be ignored and dropped.  Dropping is a good thing:
+you don't want your production application to fail or slow down just
+because your performance monitoring system is stopped or not working.
 
-To allow users to delete a rating by selecting the same score again, set
-``STAR_RATINGS_RERATE_SAME_DELETE = True`` in settings.py, note
-that ``STAR_RATINGS_RERATE`` must be True if this is set.
+Install Graphite and Statsd to receive and graph the metrics.  One good way
+to install them is the `graphite_buildout example`_ at github, which
+installs Graphite and Statsd in a custom location without root access.
 
-To allow uses to delete a rating via a clear button, set
-``STAR_RATINGS_CLEARABLE = True``` in settings.py. This can be used
-with or without STAR_RATINGS_RERATE.
+.. _`graphite_buildout example`: https://github.com/hathawsh/graphite_buildout
 
-To change the number of rating stars, set ``STAR_RATINGS_RANGE``
-(defaults to 5)
-
-To enable anonymous rating set ``STAR_RATINGS_ANONYMOUS = True``.
-
-Please note that ``STAR_RATINGS_RERATE``, ``STAR_RATINGS_RERATE_SAME_DELETE`` and  ``STAR_RATINGS_CLEARABLE``
-will have no affect when anonymous rating is enabled.
-
-Anonymous Rating
+Pyramid and WSGI
 ================
 
-If anonymous rating is enabled only the ip address for the rater will be stored (even if the user is logged in).
-When a user rates an object a preexisting object will not be searched for, instead a new rating object will be created
+If you have a Pyramid app, you can set the ``statsd_uri`` for each
+request by including perfmetrics in your configuration::
 
-**If this value is changed your lookups will return different results!**
+    config = Configuration(...)
+    config.include('perfmetrics')
 
-To control the default size of stars in pixels set the values of ``STAR_RATINGS_STAR_HEIGHT`` and
-``STAR_RATINGS_STAR_WIDTH``. By default ``STAR_RATINGS_STAR_WIDTH`` is the same as
-``STAR_RATINGS_STAR_HEIGHT`` and ``STAR_RATINGS_STAR_HEIGHT`` defaults to 32.
+Also add a ``statsd_uri`` setting such as ``statsd://localhost:8125``.
+Once configured, the perfmetrics tween will set up a Statsd client for
+the duration of each request.  This is especially useful if you run
+multiple apps in one Python interpreter and you want a different
+``statsd_uri`` for each app.
 
+Similar functionality exists for WSGI apps.  Add the app to your Paste Deploy
+pipeline::
 
-Changing the star graphics
-==========================
+    [statsd]
+    use = egg:perfmetrics#statsd
+    statsd_uri = statsd://localhost:8125
 
-To change the star graphic, add a sprite sheet to
-``/static/star-ratings/images/stars.png`` with the states aligned
-horizontally. The stars should be laid out in three states: full, empty
-and active.
+    [pipeline:main]
+    pipeline =
+        statsd
+        egg:myapp#myentrypoint
 
-You can also set ``STAR_RATINGS_STAR_SPRITE`` to the location of your sprite sheet.
+Threading
+=========
 
-Customize widget template
-=========================
-
-You can customize ratings widget by creating ``star_ratings/widget.html``. For example :
-
-::
-
-    {% extends "star_ratings/widget_base.html" %}
-    {% block rating_detail %}
-    Whatever you want
-    {% endblock %}
-
-See ``star_ratings/widget_base.html`` for other blocks to be extended.
-
-Ordering by ratings
-===================
-
-The easiest way to order by ratings is to add a ``GenericRelation`` to
-the ``Rating`` model from your model:
-
-::
-
-    from django.contrib.contenttypes.fields import GenericRelation
-    from star_ratings.models import Rating
-
-    class Foo(models.Model):
-        bar = models.CharField(max_length=100)
-        ratings = GenericRelation(Rating, related_query_name='foos')
-
-    Foo.objects.filter(ratings__isnull=False).order_by('ratings__average')
-
-Custom Rating Model
-===================
-
-In some cases you may need to create your own rating model. This is possible
-by setting ``STAR_RATING_RATING_MODEL`` in your settings file. This can be useful
-to add additional fields or methods to the model. This is very similar to the how
-django handles swapping the user model
-(see [https://docs.djangoproject.com/en/1.10/topics/auth/customizing/#substituting-a-custom-user-model]).
-
-For ease ``AbstractBaseRating`` is supplied. For example if you wanted to add the
-field ``foo`` to the rating model you would need to crate your rating model
-extending ``AbstractBaseRating``:
-
-::
-
-   ./myapp/models.py
-
-   class MyRating(AbstractBaseRating):
-      foo = models.TextField()
-
-And add the setting to the setting file:
-
-::
-
-   ./settings.py
-
-   ...
-   STAR_RATINGS_RATING_MODEL = 'myapp.MyRating'
-   ...
-
-**NOTE:** If you are using a custom rating model there is an issue with how django
-migration handles dependency orders. In order to create your initial migration you
-will need to comment out the ``STAR_RATINGS_RATING_MODEL`` setting and run
-``makemigrations``. After this initial migration you will be able to add the setting
-back in and run ``migrate`` and ``makemigrations`` without issue.
-
-Changing the ``pk`` type (Requires django >= 1.10)
-==================================================
-
-One use case for changing the rating model would be to change the pk type of the
-related object. By default we assume the pk of the rated object will be a
-positive integer field which is fine for most uses, if this isn't though you will
-need to override the ``object_id`` field on the rating model as well as set
-STAR_RATINGS_OBJECT_ID_PATTERN to a reasonable value for your new pk field. As
-of django 1.10 you can now hide fields form parent abstract models, so to change
-the ``object_id``to a ``CharField`` you can do something like:
-
-::
-
-   class MyRating(AbstractBaseRating):
-      object_id = models.CharField(max_length=10)
-
-And add the setting to the setting file:
-
-::
-
-   ./settings.py
-
-   ...
-   STAR_RATINGS_OBJECT_ID_PATTERN = '[a-z0-9]{32}'
-   ...
+While most programs send metrics from any thread to a single global
+Statsd server, some programs need to use a different Statsd server
+for each thread.  If you only need a global Statsd server, use the
+``set_statsd_client`` function at application startup.  If you need
+to use a different Statsd server for each thread, use the
+``statsd_client_stack`` object in each thread.  Use the
+``push``, ``pop``, and ``clear`` methods.
 
 
-Events
-======
+Graphite Tips
+=============
 
-Some events are dispatched from the javascript when an object is raised. Each
-event that ias dispatched has a ``details`` property that contains information
-about the object and the rating.
+Graphite stores each metric as a time series with multiple
+resolutions.  The sample graphite_buildout stores 10 second resolution
+for 48 hours, 1 hour resolution for 31 days, and 1 day resolution for 5 years.
+To produce a coarse grained value from a fine grained value, Graphite computes
+the mean value (average) for each time span.
 
-``rate-success``
-----------------
+Because Graphite computes mean values implicitly, the most sensible way to
+treat counters in Graphite is as a "hits per second" value.  That way,
+a graph can produce correct results no matter which resolution level
+it uses.
 
-Dispatched after the user has rated an object and the display has been updated.
+Treating counters as hits per second has unfortunate consequences, however.
+If some metric sees a 1000 hit spike in one second, then falls to zero for
+at least 9 seconds, the Graphite chart for that metric will show a spike
+of 100, not 1000, since Graphite receives metrics every 10 seconds and the
+spike looks to Graphite like 100 hits per second over a 10 second period.
 
-The event details contains
+If you want your graph to show 1000 hits rather than 100 hits per second,
+apply the Graphite ``hitcount()`` function, using a resolution of
+10 seconds or more.  The hitcount function converts per-second
+values to approximate raw hit counts.  Be sure
+to provide a resolution value large enough to be represented by at least
+one pixel width on the resulting graph, otherwise Graphite will compute
+averages of hit counts and produce a confusing graph.
 
-::
-
-    {
-        sender: ... // The star DOM object that was clicked
-        rating: {
-            average: ... // Float giving the updated average of the rating
-            count: ... // Integer giving the total number of ratings
-            percentage: ... // Float giving the percentage rating
-            total: ... // Integer giving the sum of all ratings
-            user_rating: ... // Integer giving the rating by the user
-    }
-
-``rate-failed``
----------------
-
-Dispatched after the user has rated an object but the server responds with an error.
-
-The event details contains
-
-::
-
-    {
-        sender: ... // The star DOM object that was clicked
-        error: ... // String giving the error message from the server
-    }
-
-
-Running tests
--------------
-
-To run the test use:
-
-::
-
-    $> ./runtests.py
-
-.. |Build Status| image:: https://travis-ci.org/wildfish/django-star-ratings.svg?branch=master
-   :target: https://travis-ci.org/wildfish/django-star-ratings
-.. |codecov.io| image:: http://codecov.io/github/wildfish/django-star-ratings/coverage.svg?branch=master
-   :target: http://codecov.io/github/wildfish/django-star-ratings?branch=master
-.. |Documentation Status| image:: https://readthedocs.org/projects/django-star-ratings/badge/?version=latest
-   :target: http://django-star-ratings.readthedocs.io/en/latest/?badge=latest
-   :alt: Documentation Status
-
-
-Releasing
----------
-
-Travis is setup to push releases to pypi automatically on tags, to do a release:
-
-1. Up version number.
-2. Update release notes.
-3. Push dev.
-4. Merge develop into master.
-5. Tag with new version number.
-6. Push tags.
+It usually makes sense to treat null values in Graphite as zero, though
+that is not the default; by default, Graphite draws nothing for null values.
+You can turn on that option for each graph.

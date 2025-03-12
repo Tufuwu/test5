@@ -1,8 +1,31 @@
-recursive-include star_ratings/locale *
-recursive-include star_ratings/static *
-recursive-include star_ratings/templates *
-recursive-exclude star_ratings/static/star_ratings/js/node_modules *
-include README.rst
+include *.in
+include *.rst
+include AUTHORS
+include LICENSE.txt
 include setup.cfg
-recursive-exclude * __pycache__
-recursive-exclude * *.py[co]
+include nose2.cfg
+include tox.ini
+include .travis.yml
+include .coveragerc
+include .isort.cfg
+include .pylintrc
+include *.toml
+include *.yml
+
+recursive-include src *.pxd
+recursive-include src *.py
+recursive-include src *.c
+recursive-exclude src *.html
+recursive-include src *.po
+recursive-include src *.pot
+recursive-include src *.zcml
+include *.txt
+
+recursive-include docs *.py
+recursive-include docs *.rst
+recursive-include docs Makefile
+recursive-include docs *.css
+
+recursive-include scripts/releases *
+recursive-include scripts *.cmd
+recursive-include scripts *.ps1

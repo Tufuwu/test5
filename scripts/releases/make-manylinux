@@ -1,0 +1,47 @@
+#!/bin/bash
+# Initially based on a snippet from the greenlet project.
+# This needs to be run from the root of the project.
+# To update: docker pull quay.io/pypa/manylinux2010_x86_64
+set -e
+export PYTHONUNBUFFERED=1
+export PYTHONDONTWRITEBYTECODE=1
+
+# Don't get warnings about Python 2 support being deprecated. We
+# know. The env var works for pip 20.
+export PIP_NO_PYTHON_VERSION_WARNING=1
+export PIP_NO_WARN_SCRIPT_LOCATION=1
+
+# Build configuration.
+export CFLAGS="-pipe -O3 -DNDEBUG"
+export CXXFLAGS="-pipe -O3 -DNDEBUG"
+
+if [ -d /io -a -d /opt/python ]; then
+    # Running inside docker
+    # 2024-06-11: git started complaining "fatal: detected dubious ownership in repository at '/io/.git'"
+    git config --global --add safe.directory /io/.git
+    cd /io
+    rm -rf wheelhouse
+    mkdir wheelhouse
+    # non-gil won't build, seems like a cython issue.
+    rm -f /opt/python/cp313-cp313t
+    for variant in `ls -d /opt/python/cp{38,39,310,311,312,313}*`; do
+        echo "Building $variant"
+        mkdir /tmp/build
+        cd /tmp/build
+        git clone /io io
+        cd io
+        $variant/bin/pip install -U pip
+        $variant/bin/pip install -U 'cython>=3.0.10' setuptools build wheel
+        PATH=$variant/bin:$PATH $variant/bin/python -m build --wheel
+        auditwheel show dist/perfmetrics*.whl
+        auditwheel repair dist/perfmetrics*.whl
+        cp wheelhouse/perfmetrics*.whl /io/wheelhouse
+        cd /io
+        rm -rf /tmp/build
+    done
+    rm -rf dist build *.egg-info
+    exit 0
+fi
+
+docker run --rm -e GITHUB_ACTIONS -e DOCKER_IMAGE -v "$(pwd):/io" ${DOCKER_IMAGE:-quay.io/pypa/manylinux2010_x86_64} /io/scripts/releases/$(basename $0)
+ls -l wheelhouse
