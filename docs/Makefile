@@ -6,9 +6,6 @@ SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
 PAPER         =
 BUILDDIR      = _build
-APIDIR   	    = api_modules
-CLIENTDIR     = client_modules
-CWD						:= '$(shell pwd)'
 
 # User-friendly check for sphinx-build
 ifeq ($(shell which $(SPHINXBUILD) >/dev/null 2>&1; echo $$?), 1)
@@ -51,18 +48,11 @@ help:
 
 clean:
 	rm -rf $(BUILDDIR)/*
-	rm -rf $(CLIENTDIR)/*
-	rm -rf $(APIDIR)/*
 
 html:
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
-
-modules:
-	python3 $(CWD)/generate_modules.py
-
-docs: clean modules html
 
 dirhtml:
 	$(SPHINXBUILD) -b dirhtml $(ALLSPHINXOPTS) $(BUILDDIR)/dirhtml
@@ -95,17 +85,17 @@ qthelp:
 	@echo
 	@echo "Build finished; now you can run "qcollectiongenerator" with the" \
 	      ".qhcp project file in $(BUILDDIR)/qthelp, like this:"
-	@echo "# qcollectiongenerator $(BUILDDIR)/qthelp/PythonClientforeAPI.qhcp"
+	@echo "# qcollectiongenerator $(BUILDDIR)/qthelp/complexity.qhcp"
 	@echo "To view the help file:"
-	@echo "# assistant -collectionFile $(BUILDDIR)/qthelp/PythonClientforeAPI.qhc"
+	@echo "# assistant -collectionFile $(BUILDDIR)/qthelp/complexity.qhc"
 
 devhelp:
 	$(SPHINXBUILD) -b devhelp $(ALLSPHINXOPTS) $(BUILDDIR)/devhelp
 	@echo
 	@echo "Build finished."
 	@echo "To view the help file:"
-	@echo "# mkdir -p $$HOME/.local/share/devhelp/PythonClientforeAPI"
-	@echo "# ln -s $(BUILDDIR)/devhelp $$HOME/.local/share/devhelp/PythonClientforeAPI"
+	@echo "# mkdir -p $$HOME/.local/share/devhelp/complexity"
+	@echo "# ln -s $(BUILDDIR)/devhelp $$HOME/.local/share/devhelp/complexity"
 	@echo "# devhelp"
 
 epub:

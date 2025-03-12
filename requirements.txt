@@ -1,1 +1,2 @@
-netaddr
+wheel==0.38.1
+persisting_theory==1.0

@@ -1,71 +1,55 @@
-#!/usr/bin/make
-# WARN: gmake syntax
-########################################################
-# Makefile for pyeapi
-#
-# useful targets:
-#	make sdist -- build python source distribution
-#	make pep8 -- pep8 checks
-#	make pyflakes -- pyflakes checks
-#	make flake8 -- flake8 checks
-#	make check -- manifest checks
-#	make tests -- run all of the tests
-#	make unittest -- runs the unit tests
-#	make systest -- runs the system tests
-#	make clean -- clean distutils
-#	make coverage_report -- code coverage report
-#
-########################################################
-# variable section
+.PHONY: clean-pyc clean-build docs
 
-NAME = "pyeapi"
+help:
+	@echo "clean-build - remove build artifacts"
+	@echo "clean-pyc - remove Python file artifacts"
+	@echo "lint - check style with flake8"
+	@echo "test - run tests quickly with the default Python"
+	@echo "testall - run tests on every Python version with tox"
+	@echo "coverage - check code coverage quickly with the default Python"
+	@echo "docs - generate Sphinx HTML documentation, including API docs"
+	@echo "release - package and upload a release"
+	@echo "sdist - package"
 
-PYTHON=python
-COVERAGE=coverage
-SITELIB = $(shell $(PYTHON) -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")
+clean: clean-build clean-pyc
 
-VERSION := $(shell cat VERSION)
+clean-build:
+	rm -fr build/
+	rm -fr dist/
+	rm -fr *.egg-info
 
-########################################################
+clean-pyc:
+	find . -name '*.pyc' -exec rm -f {} +
+	find . -name '*.pyo' -exec rm -f {} +
+	find . -name '*~' -exec rm -f {} +
 
-all: clean check pep8 flake8 tests
+lint:
+	flake8 dynamic_preferences tests
 
-pep8:
-	pycodestyle -r --ignore=E402,E731,E501,E221,W291,W391,E302,E251,E203,W293,E231,E303,E201,E202,E225,E261,E241,E128 pyeapi/ test/
+test:
+	python runtests.py tests
 
-pyflakes:
-	pyflakes pyeapi/ test/
+test-all:
+	tox
 
-flake8:
-	flake8 --ignore=E128,E201,E202,E302,E303,E402,E731,W391 --exit-zero pyeapi/
-	flake8 --ignore=E128,E201,E202,E302,E303,E402,E731,W391,N802 --max-line-length=100 test/
+coverage:
+	coverage run --source dynamic_preferences runtests.py tests
+	coverage report -m
+	coverage html
+	open htmlcov/index.html
 
-check:
-	check-manifest
+docs:
+	rm -f docs/django-dynamic-preferences.rst
+	rm -f docs/modules.rst
+	sphinx-apidoc -o docs/ django-dynamic-preferences
+	$(MAKE) -C docs clean
+	$(MAKE) -C docs html
+	open docs/_build/html/index.html
 
-clean:
-	@echo "Cleaning up distutils stuff"
-	rm -rf build
-	rm -rf dist
-	rm -rf MANIFEST
-	rm -rf *.egg-info
-	@echo "Cleaning up byte compiled python stuff"
-	find . -type f -regex ".*\.py[co]$$" -delete
-	@echo "Cleaning up doc builds"
-	rm -rf docs/_build
-	rm -rf docs/api_modules
-	rm -rf docs/client_modules
+release: clean
+	python setup.py sdist upload
+	python setup.py bdist_wheel upload
 
 sdist: clean
-	$(PYTHON) setup.py sdist
-
-tests: unittest systest
-
-unittest: clean
-	$(COVERAGE) run -m unittest discover test/unit -v
-
-systest: clean
-	$(COVERAGE) run -m unittest discover test/system -v
-
-coverage_report:
-	$(COVERAGE) report --rcfile=".coveragerc"
+	python setup.py sdist
+	ls -l dist

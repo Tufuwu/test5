@@ -1,0 +1,14 @@
+-r requirements.txt
+coverage
+coveralls
+mock>=1.0.1
+flake8>=2.1.0
+tox>=1.7.0
+# Additional test requirements go here
+pytest
+pytest-cov
+pytest-django
+pytest-sugar
+django-nose
+ipdb
+setuptools
