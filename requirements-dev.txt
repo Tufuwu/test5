@@ -1,3 +1,0 @@
-cython >= 0.23.5
-numpy >= 1.10.2
-dataset == 0.8
