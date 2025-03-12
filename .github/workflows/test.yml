@@ -1,47 +1,63 @@
-name: Module tests
-
-on: [push, pull_request]
+name: Build
+on: ["push", "pull_request"]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  test:
+    name: Tox
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        python-version: ["3.9", "3.10"]
-        django-version: ['2.2', '3.0', '3.1']
-        drf-version: ['3.10', '3.11', '3.12']
-        exclude:
-          # DRF 3.10 imports FieldDoesNotExist from django.db.models,
-          # which has been moved to django.core.exceptions as of Django 3.1
-          - django-version: "3.1"
-            drf-version: "3.10"
-          # DRF "3.12" still causes TokenProxy TypeErrors
-          - drf-version: "3.12"
+        include:
+          - os: ubuntu-latest
+            python-version: 3.9
+            env:
+              TOXENV: py37
 
+          - os: ubuntu-latest
+            python-version: 3.9
+            env:
+              TOXENV: py38
+
+          - os: ubuntu-latest
+            python-version: 3.3.9
+            env:
+              TOXENV: py38
+
+          - os: ubuntu-latest
+            python-version: 3.9
+            env:
+              TOXENV: lint
+
+          - os: ubuntu-latest
+            python-version: 3.9
+            env:
+              TOXENV: black
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2
-
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install Django ${{ matrix.django-version }}
-        run: pip install django==${{ matrix.django-version }}
+      - name: Install Tox
+        run: pip install -U tox
 
-      - name: Install Django REST Framework ${{ matrix.drf-version }}
-        run: pip install djangorestframework==${{ matrix.drf-version }}
+      - name: Run Tox
+        env: ${{ matrix.env }}
+        run: tox
 
-      - name: Python, Django and Django REST Framework versions
-        run: |
-          echo "Python ${{ matrix.python-version }} -> Django ${{ matrix.django-version }} -> DRF ${{ matrix.drf-version }}"
-          python --version
-          echo "Django: `django-admin --version`"
-          echo "DRF: `pip show djangorestframework|grep Version|sed s/Version:\ //`"
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
+        if: matrix.env.TOXENV != 'lint' && matrix.env.TOXENV != 'black'
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          parallel: true
 
-      - name: Install Django Rest Multi Token Auth
-        run: pip install .
-
-      - name: Run tests
-        run: cd tests && python manage.py test
+  finish:
+      needs: test
+      runs-on: ubuntu-latest
+      steps:
+        - name: Coveralls Finished
+          uses: coverallsapp/github-action@master
+          with:
+            github-token: ${{ secrets.GITHUB_TOKEN }}
+            parallel-finished: true

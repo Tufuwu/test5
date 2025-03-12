@@ -1,6 +1,0 @@
-# Package and package dependencies
--e .
-
-# Development dependencies
-django>=4.2,<6
-djangorestframework>=3.15,<4
