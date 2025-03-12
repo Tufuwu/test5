@@ -1,55 +1,47 @@
 #!/usr/bin/env python
+from setuptools import setup, find_packages
+from entangled import __version__
 
-import re
-import sys
-from os.path import abspath, dirname, join
-from setuptools import setup
 
-CURDIR = dirname(abspath(__file__))
-REQUIREMENTS = ['robotframework >= 3.0', 'pillow >= 5.2.0']
-with open(join(CURDIR, 'src', 'ScreenCapLibrary', 'version.py')) as f:
-    VERSION = re.search("\nVERSION = '(.*)'", f.read()).group(1)
-with open(join(CURDIR, 'README.rst')) as f:
-    DESCRIPTION = f.read()
-if sys.version_info[0] < 3:
-    REQUIREMENTS.append('imageio == 2.6.1')
-    REQUIREMENTS.append('futures >= 3.2.0')
-    REQUIREMENTS.append('mss == 4.0.3')
-    REQUIREMENTS.append('opencv-python == 4.2.0.32')
-else:
-    REQUIREMENTS.append('imageio >= 2.6.1')
-    REQUIREMENTS.append('mss >= 4.0.3')
-    REQUIREMENTS.append('opencv-python >= 4.2.0.32')
-    REQUIREMENTS.append('pyautogui >= 0.9.52')
-CLASSIFIERS = '''
-Development Status :: 5 - Production/Stable
-License :: OSI Approved :: Apache Software License
-Operating System :: OS Independent
-Programming Language :: Python
-Programming Language :: Python :: 2.7
-Programming Language :: Python :: 3.4
-Programming Language :: Python :: 3.5
-Programming Language :: Python :: 3.6
-Programming Language :: Python :: 3.7
-Programming Language :: Python :: 3.8
-Topic :: Software Development :: Testing
-Framework :: Robot Framework
-Framework :: Robot Framework :: Library
-'''.strip().splitlines()
+with open('README.md') as fh:
+    long_description = fh.read()
+
+
+CLASSIFIERS = [
+    'Development Status :: 5 - Production/Stable',
+    'Environment :: Web Environment',
+    'Framework :: Django',
+    'Intended Audience :: Developers',
+    'License :: OSI Approved :: MIT License',
+    'Operating System :: OS Independent',
+    'Programming Language :: Python',
+    'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
+    'Programming Language :: Python :: 3.9',
+    'Programming Language :: Python :: 3.10',
+    'Programming Language :: Python :: 3.11',
+    'Programming Language :: Python :: 3.12',
+    'Framework :: Django :: 4.2',
+    'Framework :: Django :: 5.0',
+    'Framework :: Django :: 5.1',
+]
 
 setup(
-    name='robotframework-screencaplibrary',
-    version=VERSION,
-    description='Robot Framework test library for taking screenshots',
-    long_description=DESCRIPTION,
-    author=u'Mihai Pârvu',
-    author_email='mihai-catalin.parvu@nokia.com',
-    url='https://github.com/rticau/ScreenCapLibrary',
-    license='Apache License 2.0',
-    keywords='robotframework testing testautomation screenshot screencap',
-    platforms='any',
+    name='django-entangled',
+    version=__version__,
+    description='Edit JSON field using Django Model Form',
+    author='Jacob Rief',
+    author_email='jacob.rief@gmail.com',
+    url='https://github.com/jrief/django-entangled',
+    packages=find_packages(),
+    install_requires=[
+        'django>=2.1',
+    ],
+    license='MIT',
+    platforms=['OS Independent'],
+    keywords=['Django Forms', 'JSON'],
     classifiers=CLASSIFIERS,
-    install_requires=REQUIREMENTS,
-    package_dir={'': 'src'},
-    packages=['ScreenCapLibrary']
+    long_description=long_description,
+    long_description_content_type='text/markdown',
+    include_package_data=True,
+    zip_safe=False
 )

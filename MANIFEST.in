@@ -1,3 +1,5 @@
-exclude MANIFEST.in
-include README.rst COPYRIGHT.txt LICENSE.txt
-include doc/ScreenCapLibrary.html
+include LICENSE
+include README.md
+include setup.py
+recursive-include entangled *.py
+recursive-exclude * *.pyc
