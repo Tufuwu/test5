@@ -1,231 +1,143 @@
-# gutenberg-metadata
+# Fierce
 
-[![Lint](https://github.com/hugovk/gutenberg-metadata/actions/workflows/lint.yml/badge.svg)](https://github.com/hugovk/gutenberg-metadata/actions/workflows/lint.yml)
+[![CI](https://github.com/mschwager/fierce/actions/workflows/ci.yml/badge.svg)](https://github.com/mschwager/fierce/actions/workflows/ci.yml)
+[![Python Versions](https://img.shields.io/pypi/pyversions/fierce.svg)](https://img.shields.io/pypi/pyversions/fierce.svg)
+[![PyPI Version](https://img.shields.io/pypi/v/fierce.svg)](https://img.shields.io/pypi/v/fierce.svg)
 
-Metadata from 68,502 Project Gutenberg ebooks.
+Fierce is a `DNS` reconnaissance tool for locating non-contiguous IP space.
 
-## The data
+Useful links:
 
-Grab the data from [gutenberg-metadata.json](http://hugovk.github.io/gutenberg-metadata/gutenberg-metadata.json).
+* [Domain Name System (DNS)](https://en.wikipedia.org/wiki/Domain_Name_System)
+  * [Domain Names - Concepts and Facilities](https://tools.ietf.org/html/rfc1034)
+  * [Domain Names - Implementation and Specification](https://tools.ietf.org/html/rfc1035)
+  * [Threat Analysis of the Domain Name System (DNS)](https://tools.ietf.org/html/rfc3833)
+* [Name Servers (NS)](https://en.wikipedia.org/wiki/Domain_Name_System#Name_servers)
+* [State of Authority Record (SOA)](https://en.wikipedia.org/wiki/List_of_DNS_record_types#SOA)
+* [Zone Transfer](https://en.wikipedia.org/wiki/DNS_zone_transfer)
+  * [DNS Zone Transfer Protocol (AXFR)](https://tools.ietf.org/html/rfc5936)
+  * [Incremental Zone Transfer in DNS (IXFR)](https://tools.ietf.org/html/rfc1995)
+* [Wildcard DNS Record](https://en.wikipedia.org/wiki/Wildcard_DNS_record)
 
-## To generate
+# Overview
 
-Uses the [Gutenberg](https://github.com/c-w/Gutenberg) library.
+First, credit where credit is due, `fierce` was
+[originally written](https://github.com/mschwager/fierce/blob/master/scripts/fierce.pl)
+by RSnake along with others at http://ha.ckers.org/. This is simply a
+conversion to Python 3 to simplify and modernize the codebase.
 
-Run `gutenberg-metadata.py` to generate `gutenberg-metadata.json`.
+The original description was very apt, so I'll include it here:
 
-## Sample data
+> Fierce is a semi-lightweight scanner that helps locate non-contiguous
+> IP space and hostnames against specified domains. It's really meant
+> as a pre-cursor to nmap, unicornscan, nessus, nikto, etc, since all 
+> of those require that you already know what IP space you are looking 
+> for. This does not perform exploitation and does not scan the whole 
+> internet indiscriminately. It is meant specifically to locate likely 
+> targets both inside and outside a corporate network. Because it uses 
+> DNS primarily you will often find mis-configured networks that leak 
+> internal address space. That's especially useful in targeted malware.
 
-For example:
+# Installing
 
-```json
-"1":{
-"author":[
-"United States President (1801-1809)"
-],
-"formaturi":[
-"http://www.gutenberg.org/ebooks/1.txt.utf-8",
-"http://www.gutenberg.org/files/1/1.txt",
-"http://www.gutenberg.org/ebooks/1.html.images",
-"http://www.gutenberg.org/ebooks/1.html.noimages",
-"http://www.gutenberg.org/files/1/1.zip",
-"http://www.gutenberg.org/ebooks/1.epub.images",
-"http://www.gutenberg.org/ebooks/1.rdf",
-"http://www.gutenberg.org/ebooks/1.kindle.noimages",
-"http://www.gutenberg.org/6/5/2/6527/6527-t/6527-t.tex",
-"http://www.gutenberg.org/ebooks/1.epub.noimages",
-"http://www.gutenberg.org/6/5/2/6527/6527-t.zip",
-"http://www.gutenberg.org/ebooks/1.kindle.images"
-],
-"language":[
-"en"
-],
-"rights":[
-"Public domain in the USA."
-],
-"subject":[
-"E201",
-"United States. Declaration of Independence",
-"United States -- History -- Revolution, 1775-1783 -- Sources",
-"JK"
-],
-"title":[
-"The Declaration of Independence of the United States of America"
-]
-},
-...
-"15":{
-"author":[
-"Melville, Hermann"
-],
-"formaturi":[
-"http://www.gutenberg.org/files/15/text/moby-117.txt",
-"http://www.gutenberg.org/files/15/text/moby-097.txt",
-"http://www.gutenberg.org/files/15/text/moby-054.txt",
-"http://www.gutenberg.org/files/15/text/moby-041.txt",
-"http://www.gutenberg.org/files/15/text/moby-021.txt",
-"http://www.gutenberg.org/files/15/text/moby-062.txt",
-"http://www.gutenberg.org/files/15/text/moby-056.txt",
-"http://www.gutenberg.org/files/15/text/moby-065.txt",
-"http://www.gutenberg.org/files/15/text/moby-077.txt",
-"http://www.gutenberg.org/files/15/text/moby-006.txt",
-"http://www.gutenberg.org/ebooks/15.html.noimages",
-"http://www.gutenberg.org/files/15/text/moby-107.txt",
-"http://www.gutenberg.org/files/15/text/moby-080.txt",
-"http://www.gutenberg.org/files/15/text/moby-119.txt",
-"http://www.gutenberg.org/files/15/text/moby-091.txt",
-"http://www.gutenberg.org/files/15/text/moby-087.txt",
-"http://www.gutenberg.org/files/15/text/moby-001.txt",
-"http://www.gutenberg.org/files/15/text/moby-058.txt",
-"http://www.gutenberg.org/files/15/text/moby-114.txt",
-"http://www.gutenberg.org/files/15/text/moby-003.txt",
-"http://www.gutenberg.org/files/15/text/moby-045.txt",
-"http://www.gutenberg.org/files/15/text/moby-035.txt",
-"http://www.gutenberg.org/ebooks/15.txt.utf-8",
-"http://www.gutenberg.org/files/15/text/moby-068.txt",
-"http://www.gutenberg.org/files/15/text/moby-079.txt",
-"http://www.gutenberg.org/files/15/text/moby-038.txt",
-"http://www.gutenberg.org/files/15/text/moby-102.txt",
-"http://www.gutenberg.org/files/15/text/moby-051.txt",
-"http://www.gutenberg.org/files/15/text/moby-000.txt",
-"http://www.gutenberg.org/files/15/text/moby-074.txt",
-"http://www.gutenberg.org/files/15/text/moby-026.txt",
-"http://www.gutenberg.org/files/15/text/moby-124.txt",
-"http://www.gutenberg.org/ebooks/15.epub.images",
-"http://www.gutenberg.org/files/15/text/moby-067.txt",
-"http://www.gutenberg.org/files/15/text/moby-127.txt",
-"http://www.gutenberg.org/files/15/text/moby-076.txt",
-"http://www.gutenberg.org/files/15/text/moby-008.txt",
-"http://www.gutenberg.org/files/15/text/moby-055.txt",
-"http://www.gutenberg.org/files/15/15.txt",
-"http://www.gutenberg.org/files/15/text/moby-022.txt",
-"http://www.gutenberg.org/files/15/text/moby-095.txt",
-"http://www.gutenberg.org/files/15/text/moby-011.txt",
-"http://www.gutenberg.org/files/15/text/moby-047.txt",
-"http://www.gutenberg.org/files/15/text/moby-090.txt",
-"http://www.gutenberg.org/files/15/text/moby-085.txt",
-"http://www.gutenberg.org/files/15/15-text.zip",
-"http://www.gutenberg.org/files/15/text/moby-092.txt",
-"http://www.gutenberg.org/files/15/text/moby-042.txt",
-"http://www.gutenberg.org/files/15/text/moby-034.txt",
-"http://www.gutenberg.org/files/15/text/moby-075.txt",
-"http://www.gutenberg.org/files/15/text/moby-099.txt",
-"http://www.gutenberg.org/files/15/text/moby-072.txt",
-"http://www.gutenberg.org/files/15/text/moby-100.txt",
-"http://www.gutenberg.org/files/15/text/moby-052.txt",
-"http://www.gutenberg.org/files/15/text/moby-036.txt",
-"http://www.gutenberg.org/files/15/text/moby-071.txt",
-"http://www.gutenberg.org/ebooks/15.epub.noimages",
-"http://www.gutenberg.org/files/15/text/moby-093.txt",
-"http://www.gutenberg.org/files/15/text/moby-049.txt",
-"http://www.gutenberg.org/files/15/text/moby-129.txt",
-"http://www.gutenberg.org/files/15/text/moby-063.txt",
-"http://www.gutenberg.org/files/15/text/moby-112.txt",
-"http://www.gutenberg.org/files/15/text/moby-002.txt",
-"http://www.gutenberg.org/files/15/text/moby-089.txt",
-"http://www.gutenberg.org/files/15/text/moby-059.txt",
-"http://www.gutenberg.org/files/15/text/moby-083.txt",
-"http://www.gutenberg.org/files/15/text/moby-037.txt",
-"http://www.gutenberg.org/files/15/text/moby-109.txt",
-"http://www.gutenberg.org/files/15/text/moby-046.txt",
-"http://www.gutenberg.org/files/15/text/moby-104.txt",
-"http://www.gutenberg.org/files/15/text/moby-094.txt",
-"http://www.gutenberg.org/files/15/text/moby-012.txt",
-"http://www.gutenberg.org/files/15/text/moby-024.txt",
-"http://www.gutenberg.org/files/15/text/moby-018.txt",
-"http://www.gutenberg.org/files/15/text/moby-106.txt",
-"http://www.gutenberg.org/files/15/text/moby-010.txt",
-"http://www.gutenberg.org/files/15/text/moby-118.txt",
-"http://www.gutenberg.org/files/15/text/moby-070.txt",
-"http://www.gutenberg.org/files/15/text/moby-088.txt",
-"http://www.gutenberg.org/files/15/text/moby-132.txt",
-"http://www.gutenberg.org/files/15/text/moby-125.txt",
-"http://www.gutenberg.org/files/15/text/moby-040.txt",
-"http://www.gutenberg.org/files/15/text/moby-020.txt",
-"http://www.gutenberg.org/files/15/text/moby-098.txt",
-"http://www.gutenberg.org/files/15/text/moby-032.txt",
-"http://www.gutenberg.org/files/15/text/moby-064.txt",
-"http://www.gutenberg.org/files/15/text/moby-113.txt",
-"http://www.gutenberg.org/files/15/text/moby-013.txt",
-"http://www.gutenberg.org/files/15/text/moby-048.txt",
-"http://www.gutenberg.org/files/15/text/moby-122.txt",
-"http://www.gutenberg.org/files/15/text/moby-031.txt",
-"http://www.gutenberg.org/files/15/text/moby-014.txt",
-"http://www.gutenberg.org/files/15/text/moby-084.txt",
-"http://www.gutenberg.org/files/15/text/moby-128.txt",
-"http://www.gutenberg.org/files/15/text/moby-078.txt",
-"http://www.gutenberg.org/files/15/text/moby-111.txt",
-"http://www.gutenberg.org/files/15/text/moby-017.txt",
-"http://www.gutenberg.org/files/15/text/moby-120.txt",
-"http://www.gutenberg.org/files/15/text/moby-057.txt",
-"http://www.gutenberg.org/files/15/text/moby-060.txt",
-"http://www.gutenberg.org/files/15/text/moby-009.txt",
-"http://www.gutenberg.org/files/15/text/moby-050.txt",
-"http://www.gutenberg.org/files/15/text/moby-073.txt",
-"http://www.gutenberg.org/ebooks/15.kindle.images",
-"http://www.gutenberg.org/files/15/text/moby-110.txt",
-"http://www.gutenberg.org/files/15/text/moby-096.txt",
-"http://www.gutenberg.org/files/15/text/moby-082.txt",
-"http://www.gutenberg.org/files/15/text/moby-025.txt",
-"http://www.gutenberg.org/files/15/text/moby-123.txt",
-"http://www.gutenberg.org/files/15/text/moby-131.txt",
-"http://www.gutenberg.org/files/15/text/moby-101.txt",
-"http://www.gutenberg.org/files/15/text/moby-007.txt",
-"http://www.gutenberg.org/files/15/text/moby-030.txt",
-"http://www.gutenberg.org/files/15/text/moby-004.txt",
-"http://www.gutenberg.org/files/15/text/moby-133.txt",
-"http://www.gutenberg.org/files/15/text/moby-016.txt",
-"http://www.gutenberg.org/files/15/text/moby-044.txt",
-"http://www.gutenberg.org/files/15/text/moby-019.txt",
-"http://www.gutenberg.org/files/15/text/moby-105.txt",
-"http://www.gutenberg.org/files/15/text/moby-043.txt",
-"http://www.gutenberg.org/files/15/text/moby-066.txt",
-"http://www.gutenberg.org/ebooks/15.kindle.noimages",
-"http://www.gutenberg.org/files/15/text/moby-039.txt",
-"http://www.gutenberg.org/files/15/text/moby-108.txt",
-"http://www.gutenberg.org/files/15/text/moby-115.txt",
-"http://www.gutenberg.org/files/15/text/moby-130.txt",
-"http://www.gutenberg.org/files/15/text/moby-116.txt",
-"http://www.gutenberg.org/files/15/text/moby-033.txt",
-"http://www.gutenberg.org/files/15/text/moby-027.txt",
-"http://www.gutenberg.org/files/15/text/moby-061.txt",
-"http://www.gutenberg.org/files/15/text/moby-126.txt",
-"http://www.gutenberg.org/files/15/text/moby-134.txt",
-"http://www.gutenberg.org/files/15/text/moby-069.txt",
-"http://www.gutenberg.org/files/15/text/moby-028.txt",
-"http://www.gutenberg.org/files/15/text/moby-005.txt",
-"http://www.gutenberg.org/files/15/text/moby-086.txt",
-"http://www.gutenberg.org/files/15/text/moby-121.txt",
-"http://www.gutenberg.org/files/15/text/moby-015.txt",
-"http://www.gutenberg.org/files/15/text/moby-053.txt",
-"http://www.gutenberg.org/files/15/15.zip",
-"http://www.gutenberg.org/files/15/text/moby-029.txt",
-"http://www.gutenberg.org/files/15/text/moby-081.txt",
-"http://www.gutenberg.org/files/15/text/moby-023.txt",
-"http://www.gutenberg.org/ebooks/15.rdf",
-"http://www.gutenberg.org/ebooks/15.html.images",
-"http://www.gutenberg.org/files/15/text/moby-103.txt"
-],
-"language":[
-"en"
-],
-"rights":[
-"Public domain in the USA."
-],
-"subject":[
-"PS",
-"Ahab, Captain (Fictitious character) -- Fiction",
-"Psychological fiction",
-"Ship captains -- Fiction",
-"Whaling -- Fiction",
-"Whales -- Fiction",
-"Mentally ill -- Fiction",
-"Whaling ships -- Fiction",
-"Sea stories",
-"Adventure stories"
-],
-"title":[
-"Moby Dick"
-]
-},
+```
+$ python -m pip install fierce
+$ fierce -h
+```
+
+OR
+
+```
+$ git clone https://github.com/mschwager/fierce.git
+$ cd fierce
+$ python -m pip install dnspython==1.16.0
+$ python fierce/fierce.py -h
+```
+
+# Using
+
+Let's start with something basic:
+
+```
+$ fierce --domain google.com --subdomains accounts admin ads
+```
+
+Traverse IPs near discovered domains to search for contiguous blocks with the
+`--traverse` flag:
+
+```
+$ fierce --domain facebook.com --subdomains admin --traverse 10
+```
+
+Limit nearby IP traversal to certain domains with the `--search` flag:
+
+```
+$ fierce --domain facebook.com --subdomains admin --search fb.com fb.net
+```
+
+Attempt an `HTTP` connection on domains discovered with the `--connect` flag:
+
+```
+$ fierce --domain stackoverflow.com --subdomains mail --connect
+```
+
+Exchange speed for breadth with the `--wide` flag, which looks for nearby
+domains on all IPs of the [/24](https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing#IPv4_CIDR_blocks)
+of a discovered domain:
+
+```
+$ fierce --domain facebook.com --wide
+```
+
+Zone transfers are rare these days, but they give us the keys to the DNS castle.
+[zonetransfer.me](https://digi.ninja/projects/zonetransferme.php) is a very
+useful service for testing for and learning about zone transfers:
+
+```
+$ fierce --domain zonetransfer.me
+```
+
+To save the results to a file for later use we can simply redirect output:
+
+```
+$ fierce --domain zonetransfer.me > output.txt
+```
+
+Internal networks will often have large blocks of contiguous IP space assigned.
+We can scan those as well:
+
+```
+$ fierce --dns-servers 10.0.0.1 --range 10.0.0.0/24
+```
+
+Check out `--help` for further information:
+
+```
+$ fierce --help
+```
+
+# Developing
+
+First, install [`poetry`](https://python-poetry.org/docs/#installation) and development packages:
+
+```
+$ poetry install --with dev
+```
+
+## Testing
+
+```
+$ poetry run pytest
+```
+
+## Linting
+
+```
+$ poetry run flake8
+```
+
+## Coverage
+
+```
+$ poetry run pytest --cov
 ```
