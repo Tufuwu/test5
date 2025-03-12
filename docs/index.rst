@@ -1,41 +1,45 @@
-.. walrus documentation master file, created by
-   sphinx-quickstart on Sun Jan  4 00:39:19 2015.
+.. Scout documentation master file, created by
+   sphinx-quickstart on Sat Mar 28 11:51:29 2015.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-walrus
-======
+scout
+=====
 
-.. image:: http://media.charlesleifer.com/blog/photos/walrus-logo-0.png
+.. image:: http://media.charlesleifer.com/blog/photos/scout-logo.png
 
-.. py:module:: walrus
+**scout** is a RESTful search server written in Python with a focus on using
+lightweight components:
 
-Lightweight Python utilities for working with `Redis <http://redis.io>`_.
+* search powered by `sqlite's full-text search extension <http://sqlite.org/fts3.html>`_
+* database access coordinated using `peewee ORM <http://docs.peewee-orm.com/>`_
+* web application built with `flask <http://flask.pocoo.org>`_ framework
 
-The purpose of `walrus <https://github.com/coleifer/walrus>`_ is to make
-working with Redis in Python a little easier. Rather than ask you to learn a
-new library, walrus subclasses and extends the popular ``redis-py`` client,
-allowing it to be used as a drop-in replacement. In addition to all the
-features in ``redis-py``, walrus adds support for some newer commands,
-including full support for streams and consumer groups.
+Scout aims to be a lightweight, RESTful search server in the spirit of
+[ElasticSearch](https://www.elastic.co), powered by the SQLite full-text search
+extension. In addition to search, Scout can be used as a document database,
+supporting complex filtering operations. Arbitrary files can be attached to
+documents and downloaded through the REST API.
 
-walrus consists of:
+Scout is simple to use, simple to deploy and *just works*.
 
-* pythonic container classes for the Redis data-types.
-* support for stream APIs, plus regular and blocking ``zpop`` variants.
-* autocomplete
-* bloom filter
-* cache
-* full-text search
-* graph store
-* rate limiting
-* locks
-* **experimental** active-record models (secondary indexes, full-text search, composable query filters, etc)
-* more? more!
+Features
+--------
 
-My hope is that walrus saves you time developing your application by providing
-useful Redis-specific components. If you have an idea for a new feature, please
-don't hesitate to `tell me about it <https://github.com/coleifer/walrus/issues/new>`_.
+* multiple search indexes present in a single database.
+* restful design for easy indexing and searching.
+* simple key-based authentication (optional).
+* lightweight, low resource utilization, minimal setup required.
+* store search content and arbitrary metadata.
+* attach files or BLOBs to indexed documents.
+* multiple result ranking algorithms, porter stemmer.
+* besides full-text search, perform complex filtering based on metadata values.
+* comprehensive unit-tests.
+* supports SQLite `FTS4 <http://sqlite.org/fts3.html>`_.
+
+named in honor of the best dog ever,
+
+.. image:: http://media.charlesleifer.com/blog/photos/p1473037171.1.JPG
 
 Table of contents
 -----------------
@@ -47,18 +51,10 @@ Contents:
    :glob:
 
    installation
-   getting-started
-   containers
-   autocomplete
-   cache
-   full-text-search
-   graph
-   rate-limit
-   streams
-   models
-   api
-   alt-backends
-   contributing
+   server
+   client
+   deployment
+   hacks
 
 
 Indices and tables

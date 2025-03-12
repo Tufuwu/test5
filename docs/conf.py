@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
-# walrus documentation build configuration file, created by
-# sphinx-quickstart on Sun Jan  4 00:39:19 2015.
+# Scout documentation build configuration file, created by
+# sphinx-quickstart on Sat Mar 28 11:51:29 2015.
 #
 # This file is execfile()d with the current directory set to its containing dir.
 #
@@ -11,13 +11,13 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
+import datetime
 import sys, os
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-src_dir = os.path.realpath(os.path.dirname(os.path.dirname(__file__)))
-sys.path.insert(0, src_dir)
+#sys.path.insert(0, os.path.abspath('.'))
 
 # -- General configuration -----------------------------------------------------
 
@@ -26,7 +26,7 @@ sys.path.insert(0, src_dir)
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.autodoc']
+extensions = []
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -41,14 +41,17 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'walrus'
-copyright = u'2015, Charles Leifer'
+project = u'Scout'
+copyright = u'%s, Charles Leifer' % datetime.datetime.now().year
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 #
-from walrus import __version__
+# The short X.Y version.
+src_dir = os.path.realpath(os.path.dirname(os.path.dirname(__file__)))
+sys.path.insert(0, src_dir)
+from scout import __version__
 version = __version__
 # The full version, including alpha/beta/rc tags.
 release = __version__
@@ -168,7 +171,7 @@ html_static_path = ['_static']
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'walrusdoc'
+htmlhelp_basename = 'Scoutdoc'
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -187,7 +190,7 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'walrus.tex', u'walrus Documentation',
+  ('index', 'Scout.tex', u'Scout Documentation',
    u'Charles Leifer', 'manual'),
 ]
 
@@ -217,7 +220,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'walrus', u'walrus Documentation',
+    ('index', 'scout', u'Scout Documentation',
      [u'Charles Leifer'], 1)
 ]
 
@@ -231,8 +234,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'walrus', u'walrus Documentation',
-   u'Charles Leifer', 'walrus', 'One line description of project.',
+  ('index', 'Scout', u'Scout Documentation',
+   u'Charles Leifer', 'Scout', 'One line description of project.',
    'Miscellaneous'),
 ]
 

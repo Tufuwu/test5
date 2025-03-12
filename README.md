@@ -1,47 +1,101 @@
-## Walrus
+![](http://media.charlesleifer.com/blog/photos/scout-logo.png)
 
-![](http://media.charlesleifer.com/blog/photos/walrus-logo-0.png)
+[scout](https://scout.readthedocs.io/en/latest/) is a RESTful search server
+written in Python. The search is powered by [SQLite's full-text search extension](http://sqlite.org/fts3.html),
+and the web application utilizes the [Flask](http://flask.pocoo.org) framework.
 
-Lightweight Python utilities for working with [Redis](http://redis.io).
+Scout aims to be a lightweight, RESTful search server in the spirit of
+[ElasticSearch](https://www.elastic.co), powered by the SQLite full-text search
+extension. In addition to search, Scout can be used as a document database,
+supporting complex filtering operations. Arbitrary files can be attached to
+documents and downloaded through the REST API.
 
-The purpose of [walrus](https://github.com/coleifer/walrus) is to make working
-with Redis in Python a little easier. Rather than ask you to learn a new
-library, walrus subclasses and extends the popular `redis-py` client, allowing
-it to be used as a drop-in replacement. In addition to all the features in
-`redis-py`, walrus adds support for some newer commands, including full support
-for streams and consumer groups.
+Scout is simple to use, simple to deploy and *just works*.
 
-walrus consists of:
+Features:
 
-* Pythonic container classes for the Redis data-types:
-    * [Hash](https://walrus.readthedocs.io/en/latest/containers.html#hashes)
-    * [List](https://walrus.readthedocs.io/en/latest/containers.html#lists)
-    * [Set](https://walrus.readthedocs.io/en/latest/containers.html#sets)
-    * [Sorted Set](https://walrus.readthedocs.io/en/latest/containers.html#sorted-sets-zset)
-    * [HyperLogLog](https://walrus.readthedocs.io/en/latest/containers.html#hyperloglog)
-    * [Array](https://walrus.readthedocs.io/en/latest/containers.html#arrays) (custom type)
-    * [BitField](https://walrus.readthedocs.io/en/latest/containers.html#bitfield)
-    * [BloomFilter](https://walrus.readthedocs.io/en/latest/containers.html#bloomfilter)
-    * [**Streams**](https://walrus.readthedocs.io/en/latest/streams.html)
-* [Autocomplete](https://walrus.readthedocs.io/en/latest/autocomplete.html)
-* [Cache](https://walrus.readthedocs.io/en/latest/cache.html) implementation that exposes several decorators for caching function and method calls.
-* [Full-text search](https://walrus.readthedocs.io/en/latest/full-text-search.html) supporting set operations.
-* [Graph store](https://walrus.readthedocs.io/en/latest/graph.html)
-* [Rate-limiting](https://walrus.readthedocs.io/en/latest/rate-limit.html)
-* [Locking](https://walrus.readthedocs.io/en/latest/api.html#walrus.Lock)
-* **Experimental** active-record style [Models](https://walrus.readthedocs.io/en/latest/models.html) that support persisting structured information and performing complex queries using secondary indexes.
-* More? [More!](https://walrus.readthedocs.io)
+* Multiple search indexes present in a single database.
+* RESTful design for easy indexing and searching.
+* Simple key-based authentication (optional).
+* Lightweight, low resource utilization, minimal setup required.
+* Store search content and arbitrary metadata.
+* Multiple result ranking algorithms, porter stemmer.
+* Besides full-text search, perform complex filtering based on metadata values.
+* Comprehensive unit-tests.
+* Supports SQLite [FTS4](http://sqlite.org/fts3.html).
+* [Documentation hosted on ReadTheDocs](https://scout.readthedocs.io/en/latest/).
 
-### Models
+![](https://api.travis-ci.org/coleifer/scout.svg?branch=master)
 
-Persistent structures implemented on top of Hashes. Supports secondary indexes to allow filtering on equality, inequality, ranges, less/greater-than, and a basic full-text search index. The full-text search features a boolean search query parser, porter stemmer, stop-word filtering, and optional double-metaphone implementation.
+## Installation
 
-### Found a bug?
+Scout can be installed from PyPI using `pip` or from source using `git`. Should
+you install from PyPI you will run the latest version, whereas installing from
+`git` ensures you have the latest changes.
 
-![](http://media.charlesleifer.com/blog/photos/p1420743625.21.png)
+Alternatively, you can run `scout` using [docker](https://www.docker.com/) and
+the provided [Dockerfile](https://github.com/coleifer/scout/blob/master/docker/Dockerfile).
 
-Please open a [github issue](https://github.com/coleifer/walrus/issues/new) and I will try my best to fix it!
+Installation using pip:
 
-### Alternative Backends
+```console
+$ pip install scout
+```
 
-Walrus also can integrate with the Redis-like databases [rlite](https://github.com/seppo0010/rlite), [ledis](http://ledisdb.io/), and [vedis](http://vedis.symisc.net). Check the [documentation](https://walrus.readthedocs.io/en/latest/alt-backends.html) for more details.
+You can also install the latest `master` branch using pip:
+
+```console
+$ pip install -e git+https://github.com/coleifer/scout.git#egg=scout
+```
+
+If you wish to install from source, first clone the code and run `setup.py install`:
+
+```console
+$ git clone https://github.com/coleifer/scout.git
+$ cd scout/
+$ python setup.py install
+```
+
+Using either of the above methods will also ensure the project's Python
+dependencies are installed: [flask](http://flask.pocoo.org) and
+[peewee](http://docs.peewee-orm.com).
+
+[Check out the documentation](https://scout.readthedocs.io/en/latest/) for more information about the project.
+
+## Running scout
+
+If you installed using `pip`, you should be able to simply run:
+
+```console
+$ scout /path/to/search-index.db
+```
+
+If you've just got a copy of the source code, you can run:
+
+```console
+$ python scout/ /path/to/search-index.db
+```
+
+## Docker
+
+To run scout using docker, you can use the provided Dockerfile or simply pull
+the `coleifer/scout` image from dockerhub:
+
+```console
+
+$ docker run -it --rm -p 9004:9004 coleifer/scout
+# scout is now running on 0.0.0.0:9004
+```
+
+Build your own image locally and run it:
+
+```console
+
+$ cd scout/docker
+$ docker build -t scout .
+$ docker run -d \
+    --name my-scout-server \
+    -p 9004:9004 \
+    -v scout-data:/data \
+    scout
+```
