@@ -1,12 +1,16 @@
-# -*- coding: utf-8 -*-
-#
-# Copyright (C) 2018-2022 CERN.
-#
-# invenio-app-ils is free software; you can redistribute it and/or modify it
-# under the terms of the MIT License; see LICENSE file for more details.
-
-"""Invenio App ILS."""
-
 from setuptools import setup
+import ast
+import os
 
-setup()
+
+def version():
+    """Return version string."""
+    with open(os.path.join("curtsies", "__init__.py")) as input_file:
+        for line in input_file:
+            if line.startswith("__version__"):
+                return ast.parse(line).body[0].value.s
+
+
+setup(
+    version=version(),
+)

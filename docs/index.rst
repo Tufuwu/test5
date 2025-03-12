@@ -1,44 +1,35 @@
-..
-    Copyright (C) 2018 CERN.
+Curtsies documentation
+^^^^^^^^^^^^^^^^^^^^^^
+.. |shoes| image:: http://ballingt.com/assets/curtsies-tritone-small.png
+.. |curtsiestitle| image:: http://ballingt.com/assets/curtsiestitle.png
 
-    invenio-app-ils is free software; you can redistribute it and/or modify it
-    under the terms of the MIT License; see LICENSE file for more details.
+|curtsiestitle|
 
+Curtsies is a Python 2.6+ & 3.3+ compatible library for interacting with the terminal.
 
-.. include:: ../README.rst
+:py:class:`~curtsies.FmtStr` objects are strings formatted with
+colors and styles displayable in a terminal with `ANSI escape sequences <http://en.wikipedia.org/wiki/ANSI_escape_code>`_.
+:py:class:`~curtsies.FSArray` objects contain multiple such strings
+with each formatted string on its own row, and
+can be superimposed onto each other
+to build complex grids of colored and styled characters.
 
-User's Guide
-------------
-
-This part of the documentation will show you how to get started in using
-invenio-app-ils.
-
-.. toctree::
-   :maxdepth: 2
-
-   installation
-   configuration
-   usage
-
-API Reference
--------------
-
-If you are looking for information on a specific function, class or method,
-this part of the documentation is for you.
+Such grids of characters can be efficiently rendered to the terminal in alternate screen mode
+(no scrollback history, like ``Vim``, ``top`` etc.) by :py:class:`~curtsies.FullscreenWindow` objects
+or to the normal history-preserving screen by :py:class:`~curtsies.CursorAwareWindow` objects.
+User keyboard input events like pressing the up arrow key are detected by an
+:py:class:`~curtsies.Input` object. See the :doc:`quickstart` to get started using
+all of these classes.
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
-Additional Notes
-----------------
+   quickstart
+   FmtStr
+   FSArray
+   window
+   Input
+   gameloop
+   examples
+   about
 
-Notes on how to contribute, legal information and changes are here for the
-interested.
-
-.. toctree::
-   :maxdepth: 1
-
-   contributing
-   changes
-   license
-   authors
