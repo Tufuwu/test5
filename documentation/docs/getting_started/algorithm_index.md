@@ -1,1 +1,0 @@
-{% include 'documentation/docs/algorithms/algorithms_index.md' %}

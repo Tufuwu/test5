@@ -1,117 +1,148 @@
-[![PHOTON LOGO](https://www.photon-ai.com/static/img/photon/photon-logo-github.png)](https://www.photon-ai.com/)
+# django-sendgrid-v5
 
-[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/wwu-mmll/photonai/PHOTONAI%20test%20and%20test%20deploy)](https://github.com/wwu-mmll/photonai/actions)
-[![Coverage Status](https://coveralls.io/repos/github/wwu-mmll/photonai/badge.svg?branch=master)](https://coveralls.io/github/wwu-mmll/photonai?branch=master)
-[![Github Contributors](https://img.shields.io/github/contributors-anon/wwu-mmll/photonai?color=blue)](https://github.com/wwu-mmll/photonai/graphs/contributors)
-[![Github Commits](https://img.shields.io/github/commit-activity/y/wwu-mmll/photonai)](https://github.com/wwu-mmll/photonai/commits/master)
-[![PyPI Version](https://img.shields.io/pypi/v/photonai?color=brightgreen)](https://pypi.org/project/photonai/)
-[![License](https://img.shields.io/github/license/wwu-mmll/photonai)](https://github.com/wwu-mmll/photonai/blob/master/LICENSE)
-[![Twitter URL](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Ftwitter.com%2Fwwu_mmll)](https://twitter.com/wwu_mmll)
+[![Latest Release](https://img.shields.io/pypi/v/django-sendgrid-v5.svg)](https://pypi.python.org/pypi/django-sendgrid-v5/)
 
-#### PHOTONAI is a high level python API for designing and optimizing machine learning pipelines.
+This package implements an email backend for Django that relies on sendgrid's REST API for message delivery.
 
-We've created a system in which you can easily select and combine both pre-processing and learning algorithms from
-state-of-the-art machine learning toolboxes,
- and arrange them in simple or parallel pipeline data streams. 
- 
- In addition, you can parametrize your training and testing
- workflow choosing cross-validation schemes, performance metrics and hyperparameter
- optimization metrics from a list of pre-registered options. 
- 
- Importantly, you can integrate custom solutions into your data processing pipeline, 
- but also for any part of the model training and evaluation process including custom
- hyperparameter optimization strategies.  
+It is under active development, and pull requests are more than welcome\!
 
-For a detailed description, 
-__[visit our website and read the documentation](https://www.photon-ai.com)__
+To use the backend, simply install the package (using pip), set the `EMAIL_BACKEND` setting in Django, and add a `SENDGRID_API_KEY` key (set to the appropriate value) to your Django settings.
 
-or you can read our paper in [PLOS ONE](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0254062)
+## How to Install
 
+1. `pip install django-sendgrid-v5`
+2. In your project's settings.py script:
+    1. Set `EMAIL_BACKEND = "sendgrid_backend.SendgridBackend"`
+    2. Set the SENDGRID\_API\_KEY in settings.py to your api key that was provided to you by sendgrid. `SENDGRID_API_KEY = os.environ["SENDGRID_API_KEY"]`
 
+### Other settings
 
----
-## Getting Started
-In order to use PHOTONAI you only need to have your favourite Python IDE ready.
-Then install the latest stable version simply via pip
-```
-pip install photonai
-# Or try out the latest features if you don't rely on a stable version, using:
-pip install --upgrade git+https://github.com/wwu-mmll/photonai.git@develop
-```
+1. To toggle sandbox mode (when django is running in DEBUG mode), set `SENDGRID_SANDBOX_MODE_IN_DEBUG = True/False`.
+    1. To err on the side of caution, this defaults to True, so emails sent in DEBUG mode will not be delivered, unless this setting is explicitly set to False.
+1. `SENDGRID_ECHO_TO_STDOUT` will echo to stdout or any other file-like
+    object that is passed to the backend via the `stream` kwarg.
+1. `SENDGRID_TRACK_EMAIL_OPENS` - defaults to true and tracks email open events via the Sendgrid service. These events are logged in the Statistics UI, Email Activity interface, and are reported by the Event Webhook.
+1. `SENDGRID_TRACK_CLICKS_HTML` - defaults to true and, if enabled in your Sendgrid account, will tracks click events on links found in the HTML message sent.
+1. `SENDGRID_TRACK_CLICKS_PLAIN` - defaults to true and, if enabled in your Sendgrid account, will tracks click events on links found in the plain text message sent.
+1. `SENDGRID_HOST_URL` - Allows changing the base API URI. Set to `https://api.eu.sendgrid.com` to use the EU region.
 
-You can setup a full stack machine learning pipeline in a few lines of code:
+## Usage
+
+### Simple
 
 ```python
-from sklearn.datasets import load_breast_cancer
-from sklearn.model_selection import KFold
+from django.core.mail import send_mail
 
-from photonai import Hyperpipe, PipelineElement, FloatRange, Categorical, IntegerRange
-
-# DESIGN YOUR PIPELINE
-my_pipe = Hyperpipe('basic_svm_pipe',  # the name of your pipeline
-                    # which optimizer PHOTONAI shall use
-                    optimizer='sk_opt',
-                    optimizer_params={'n_configurations': 25},
-                    # the performance metrics of your interest
-                    metrics=['accuracy', 'precision', 'recall', 'balanced_accuracy'],
-                    # after hyperparameter optimization, this metric declares the winner config
-                    best_config_metric='accuracy',
-                    # repeat hyperparameter optimization three times
-                    outer_cv=KFold(n_splits=3),
-                    # test each configuration five times respectively,
-                    inner_cv=KFold(n_splits=5),
-                    verbosity=1,
-                    project_folder='./tmp/')
-
-
-# first normalize all features
-my_pipe.add(PipelineElement('StandardScaler'))
-
-# then do feature selection using a PCA
-my_pipe += PipelineElement('PCA', 
-                           hyperparameters={'n_components': IntegerRange(5, 20)}, 
-                           test_disabled=True)
-
-# engage and optimize the good old SVM for Classification
-my_pipe += PipelineElement('SVC', 
-                           hyperparameters={'kernel': Categorical(['rbf', 'linear']),
-                                            'C': FloatRange(0.5, 2)}, gamma='scale')
-
-# train pipeline
-X, y = load_breast_cancer(return_X_y=True)
-my_pipe.fit(X, y)
+send_mail(
+    'Subject here',
+    'Here is the message.',
+    'from@example.com',
+    ['to@example.com'],
+    fail_silently=False,
+)
 ```
----
-## Features
 
-#### Easy access to established ML implementations
-We pre-registered diverse preprocessing and learning algorithms from 
-state-of-the-art toolboxes e.g. scikit-learn, keras and imbalanced learn to 
-rapidly build custom pipelines
+### Dynamic Template with JSON Data
 
-#### Hyperparameter Optimization
-With PHOTONAI you can seamlessly switch between diverse hyperparameter 
-optimization strategies, such as (random) grid-search
- or bayesian optimization (scikit-optimize, smac3).
+First, create a [dynamic template](https://mc.sendgrid.com/dynamic-templates) and copy the ID.
 
-#### Extended ML Pipeline
-You can build custom sequences of processing and learning algorithms with a simple syntax. 
-PHOTONAI offers extended pipeline functionality such as parallel sequences, custom callbacks in-between pipeline 
-elements, AND- and OR- Operations, as well as the possibility to flexibly position data augmentation, class balancing
-or learning algorithms anywhere in the pipeline.
+```python
+from django.core.mail import EmailMessage
 
-#### Model Sharing
-PHOTONAI provides a standardized format for sharing and loading optimized pipelines across 
-platforms with only one line of code.
+msg = EmailMessage(
+  from_email='to@example.com',
+  to=['to@example.com'],
+)
+msg.template_id = "your-dynamic-template-id"
+msg.dynamic_template_data = {
+  "title": foo
+}
+msg.send(fail_silently=False)
+```
 
-#### Automation
-While you concentrate on selecting appropriate processing steps, learning algorithms, hyperparameters and
-training parameters, PHOTONAI automates the nested cross-validated optimization and evaluation loop for any custom pipeline.
+### The kitchen sink EmailMessage (all of the supported sendgrid-specific properties)
 
-#### Results Visualization
-PHOTONAI comes with extensive logging of all information in the training, testing and hyperparameter 
-optimization process. In addition, optimum performances and the hyperparameter optimization progress 
-are visualized in the [PHOTONAI Explorer](https://explorer.photon-ai.com).
+```python
+from django.core.mail import EmailMessage
 
-#### For more use cases, examples, contribution guidelines and API details visit our website
-## [www.photon-ai.com](https://www.photon-ai.com)  
+msg = EmailMessage(
+  from_email='to@example.com',
+  to=['to@example.com'],
+  cc=['cc@example.com'],
+  bcc=['bcc@example.com'],
+)
+
+# Personalization custom args
+# https://sendgrid.com/docs/for-developers/sending-email/personalizations/
+msg.custom_args = {'arg1': 'value1', 'arg2': 'value2'}
+
+# Reply to email address (sendgrid only supports 1 reply-to email address)
+msg.reply_to = 'reply-to@example.com'
+
+# Send at (accepts an integer per the sendgrid docs)
+# https://docs.sendgrid.com/for-developers/sending-email/scheduling-parameters#send-at
+msg.send_at = 1600188812
+
+# Transactional templates
+# https://sendgrid.com/docs/ui/sending-email/how-to-send-an-email-with-dynamic-transactional-templates/
+msg.template_id = "your-dynamic-template-id"
+msg.dynamic_template_data = {  # Sendgrid v6+ only
+  "title": foo
+}
+msg.substitutions = {
+  "title": bar
+}
+
+# Unsubscribe groups
+# https://sendgrid.com/docs/ui/sending-email/unsubscribe-groups/
+msg.asm = {'group_id': 123, 'groups_to_display': ['group1', 'group2']}
+
+# Categories
+# https://sendgrid.com/docs/glossary/categories/
+msg.categories = ['category1', 'category2']
+
+# IP Pools
+# https://sendgrid.com/docs/ui/account-and-settings/ip-pools/
+msg.ip_pool_name = 'my-ip-pool'
+
+
+msg.send(fail_silently=False)
+```
+
+
+### FAQ
+**How to change a Sender's Name ?**
+
+
+`from_email="John Smith <john.smith@example.org>"`
+You can just include the name in the from_email field of the _```EmailMessage```_ class 
+
+```
+msg = EmailMessage(
+  from_email='Sender Name <from@example.com>',
+  to=['to@example.com'],
+)
+```
+
+**How to make mails to multiple users private (hide all the email addresses to which the mail is sent) to each person (personalization) ?**
+
+
+Setting the `make_private` attribute to `True` will help us achieve it
+```
+msg = EmailMessage(
+  from_email='Sender Name <from@example.com>',
+  to=['to@example.com','abc@example.com','xyz@example.com'],
+)
+msg.make_private = True
+```
+
+## Examples
+
+- Marcelo Canina [(@marcanuy)](https://github.com/marcanuy) wrote a great article demonstrating how to integrate `django-sendgrid-v5` into your Django application on his site: [https://simpleit.rocks/python/django/adding-email-to-django-the-easiest-way/](https://simpleit.rocks/python/django/adding-email-to-django-the-easiest-way/)
+- RX-36 [(@DevWoody856)](https://github.com/DevWoody856) demonstrates how to use `django-sendgrid-v5` to make a contact form for your web application: https://rx-36.life/create-a-contact-form-using-sendgrid-with-django/
+
+
+## Stargazers over time
+
+[![Stargazers over time](https://starchart.cc/sklarsa/django-sendgrid-v5.svg)](https://starchart.cc/sklarsa/django-sendgrid-v5)
+

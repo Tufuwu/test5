@@ -1,1 +1,0 @@
-{% include 'documentation/docs/algorithms/hpos.md' %}
