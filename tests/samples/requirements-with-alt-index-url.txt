@@ -1,7 +1,0 @@
---index-url=http://pypi.example.com
---trusted-host=pypi.example.com
-
---extra-index-url=https://pypi2.example.com
-
-.
-flask

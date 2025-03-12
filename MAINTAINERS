@@ -1,0 +1,17 @@
+tp-libvirt maintainers
+======================
+
+The intention of this file is not to establish who owns what portions of the
+code base, but to provide a set of names that developers can consult when they
+have a question about a particular subset and also to provide a set of names
+you can look for on github for any pull requests you might want to get approved.
+
+In general, if you have a question, you should send an email to the Virt Test
+development mailing list and not any specific individual privately.
+
+L: Avocado-devel <avocado-devel@redhat.com>
+M: Guannan Wayne Sun <gsun@redhat.com>
+M: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
+M: Balamuruhan S <bala24@linux.vnet.ibm.com>
+M: Kyla Zhang <weizhan@redhat.com>
+M: Chunfu Wen <chwen@redhat.com>

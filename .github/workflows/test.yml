@@ -1,32 +1,38 @@
-name: Tests
+name: CI
+
 on:
-  pull_request:
   push:
-    branches:
-      - master
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
 jobs:
-  tests:
+
+  travis-check:
+
+    name: Python ${{ matrix.python-version }}
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.10"]
+      fail-fast: false
+
     steps:
-      -
-        name: Checkout
+      - run: echo "Job triggered by a ${{ github.event_name }} event on branch is ${{ github.ref }} in repository is ${{ github.repository }}"
+      - name: Check out repository code
         uses: actions/checkout@v2
-      -
+        with:
+          fetch-depth: 0
+      - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
-          python-version: '3.9 - 3.9'
-      -
-        name: Install Dependencies
-        run: pip install -r dev-requirements.txt
-      -
-        name: Unit tests
-        run: nosetests
-      -
-        name: Coverage
-        run: coverage xml
-      -
-        name: Report Coverage
-        uses: codecov/codecov-action@v1
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          flags: unittests
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+         pip install sphinx${SPHINX_VERSION:+==$SPHINX_VERSION}
+         pip install -r requirements-travis.txt
+      - name: Run inspekt
+        run: inspekt checkall --disable-style E501,E265,W601,W605,E402,E722,E741 --no-license-check
+      - run: echo "This job's status is ${{ job.status }}."

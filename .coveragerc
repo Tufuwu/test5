@@ -1,9 +1,0 @@
-[run]
-branch = false
-omit =
-    pur/packages/*
-[report]
-omit =
-    pur/packages/*
-    */python?.?/*
-    */site-packages/nose/*
