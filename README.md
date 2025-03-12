@@ -1,73 +1,104 @@
-# python-georss-ingv-centro-nazionale-terremoti-client
+# Unity YAML Parser #
 
-[![Build Status](https://img.shields.io/github/actions/workflow/status/exxamalte/python-georss-ingv-centro-nazionale-terremoti-client/ci.yaml)](https://github.com/exxamalte/python-georss-ingv-centro-nazionale-terremoti-client/actions/workflows/ci.yaml)
-[![codecov](https://codecov.io/gh/exxamalte/python-georss-ingv-centro-nazionale-terremoti-client/branch/master/graph/badge.svg?token=PHASSFXFVU)](https://codecov.io/gh/exxamalte/python-georss-ingv-centro-nazionale-terremoti-client)
-[![PyPi](https://img.shields.io/pypi/v/georss-ingv-centro-nazionale-terremoti-client.svg)](https://pypi.python.org/pypi/georss-ingv-centro-nazionale-terremoti-client)
-[![Version](https://img.shields.io/pypi/pyversions/georss-ingv-centro-nazionale-terremoti-client.svg)](https://pypi.python.org/pypi/georss-ingv-centro-nazionale-terremoti-client)
+This project aims to provide a python3 API to load and dump [Unity YAML 
+files](https://docs.unity3d.com/Manual/TextSceneFormat.html) (configurations, prefabs, scenes, serialized data, etc) in the exact same 
+format the internal Unity YAML serializer does.
 
-This library provides convenient access to the [INGV Centro Nazionale Terremoti (Earthquakes) Feed](http://cnt.rm.ingv.it/).
+Using this API you will be able to easily manipulate(as python objects) 
+Unity YAML files and save them just the same, keeping the YAML structure
+exactly as Unity does. This has the advantages of, first not having to
+configure PyYAML beforehand to deal with Unity YAMLs, and second as the
+modified file keeps the same structure and formatting that Unity does, 
+when the YAML file is loaded by Unity it won't make formatting changes 
+to it that will make any VCS report unexpected file changes.
 
-## Installation
-`pip install georss-ingv-centro-nazionale-terremoti-client`
+## Installing ##
 
-## Usage
-See below for an example of how this library can be used. After instantiating 
-the feed class and supplying the required parameters, you can call `update` to 
-retrieve the feed data. The return value will be a tuple of a status code and 
-the actual data in the form of a list of specific feed entries.
+Install and update using [pip](https://pip.pypa.io/en/stable/quickstart/):
+````
+pip install -U unityparser
+````
+## A Simple Example ##
+````python
+from unityparser import UnityDocument
 
-**Status Codes**
-* _UPDATE_OK_: Update went fine and data was retrieved. The library may still return empty data, for example because no entries fulfilled the filter criteria.
-* _UPDATE_OK_NO_DATA_: Update went fine but no data was retrieved, for example because the server indicated that there was not update since the last request.
-* _UPDATE_ERROR_: Something went wrong during the update
+# Loading and modifying a config file with a single YAML document
+project_settings_file = 'UnityProject/ProjectSettings/ProjectSettings.asset'
+doc = UnityDocument.load_yaml(project_settings_file)
+ProjectSettings = doc.entry
+ProjectSettings.scriptingDefineSymbols[1] += ';CUSTOM_DEFINE'
+ProjectSettings.scriptingDefineSymbols[7] = ProjectSettings.scriptingDefineSymbols[1]
+doc.dump_yaml()
 
-**Supported Filters**
+# You can also load YAML files with multiple documents and filter for a single or multiple entries
+hero_prefab_file = 'UnityProject/Assets/Prefabs/Hero.prefab'
+doc = UnityDocument.load_yaml(hero_prefab_file)
+# accessing all entries
+doc.entries
+# [<UnityClass>, <UnityClass>, ...]
+# accessing first entry
+doc.entry
+# <UnityClass>
+# get single entry uniquely defined by filters
+entry = doc.get(class_name='MonoBehaviour', attributes=('m_MaxHealth',))
+entry.m_MaxHealth += 10
+# get multiple entries matching a filter
+entries = doc.filter(class_names=('MonoBehaviour',), attributes=('m_Enabled',))
+for entry in entries:
+    entry.m_Enabled = 1
+doc.dump_yaml()
+# calling entry method for a doc with multiple document will return the first one
+print(doc.entry.__class__.__name__)
+# 'Prefab'
 
-| Filter            |                            | Description |
-|-------------------|----------------------------|-------------|
-| Radius            | `filter_radius`            | Radius in kilometers around the home coordinates in which events from feed are included. |
-| Minimum Magnitude | `filter_minimum_magnitude` | Minimum magnitude as float value. Only events with a magnitude equal or above this value are included. |
+# get the object ID number
+# e.g., the first line of an object == '--- !u!1 &42362281700597288'
+print(doc.entry.anchor)  
+# '42362281700597288' 
+````
 
-**Example**
-```python
-from georss_ingv_centro_nazionale_terremoti_client import \
-    IngvCentroNazionaleTerremotiFeed
-# Home Coordinates: Latitude: 40.84, Longitude: 14.25
-# Filter radius: 200 km
-# Filter minimum magnitude: 4.0
-feed = IngvCentroNazionaleTerremotiFeed((40.84, 14.25), 
-                                        filter_radius=200, 
-                                        filter_minimum_magnitude=4.0)
-status, entries = feed.update()
-```
+## Classes ##
 
-## Feed Manager
+### unityparser.UnityDocument ###
 
-The Feed Manager helps managing feed updates over time, by notifying the 
-consumer of the feed about new feed entries, updates and removed entries 
-compared to the last feed update.
+Main class to load and dump files.
 
-* If the current feed update is the first one, then all feed entries will be 
-  reported as new. The feed manager will keep track of all feed entries' 
-  external IDs that it has successfully processed.
-* If the current feed update is not the first one, then the feed manager will 
-  produce three sets:
-  * Feed entries that were not in the previous feed update but are in the 
-    current feed update will be reported as new.
-  * Feed entries that were in the previous feed update and are still in the 
-    current feed update will be reported as to be updated.
-  * Feed entries that were in the previous feed update but are not in the 
-    current feed update will be reported to be removed.
-* If the current update fails, then all feed entries processed in the previous
-  feed update will be reported to be removed.
+#### unityparser.UnityDocument.load_yaml(file_path) ####
 
-After a successful update from the feed, the feed manager will provide two
-different dates:
+_**Classmethod**_: Load the given YAML file_path and return a UnityDocument file
 
-* `last_update` will be the timestamp of the last successful update from the
-  feed. This date may be useful if the consumer of this library wants to
-  treat intermittent errors from feed updates differently.
-* `last_timestamp` will be the latest timestamp extracted from the feed data. 
-  This requires that the underlying feed data actually contains a suitable 
-  date. This date may be useful if the consumer of this library wants to 
-  process feed entries differently if they haven't actually been updated.
+#### unityparser.UnityDocument.dump_yaml(file_path=None) ####
+
+Dump the UnityDocument to the previously loaded file location(overwrite). 
+If *file_path* argument is provided, dump the document to the specified location instead.
+
+This method **keeps line endings** of the original file when it dumps.
+
+#### unityparser.UnityDocument.entries ####
+
+_**Property**_: Return the _list_ of documents found in the YAML. The objects in the _list_ are of _types_ Class named after the serialized Unity class(ie. MonoBehaviour, GameObject, Prefab, CustomName, etc).
+
+#### unityparser.UnityDocument.entry ####
+
+_**Property**_: Return the first document in the YAML, useful if there is only one. Equivalent of doing `UnityDocument.entries[0]`.
+
+#### unityparser.UnityDocument.get(class_name=None, attributes=None) ####
+
+_**Method**_: Return a single entry uniquely matching the given filters. Must exist exactly one.
+
+#### unityparser.UnityDocument.filter(class_names=None, attributes=None) ####
+
+_**Method**_: Return a list of entries matching the given filters. Many or none can be matched.
+
+### unityparser.loader.UnityLoader ###
+
+PyYAML's Loader class, can be used directly with PyYAML to customise loading. 
+
+### unityparser.dumper.UnityDumper ###
+
+PyYAML's Dumper class, can be used directly with PyYAML to customise dumping. 
+
+## Considerations ##
+
+Text scalars which are single or double quoted that span multiple lines are not being dumped exactly as Unity does. There's a difference in the maximum length allowed per line and the logic to wrap them.
+

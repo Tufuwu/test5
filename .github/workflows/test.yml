@@ -4,40 +4,62 @@ on:
   push:
     branches:
       - master
-  pull_request: ~
-  workflow_dispatch:
+  pull_request:
+    branches:
+      - master
 
 jobs:
-  test:
-    name: Python ${{ matrix.python-version }}
+  commitlint:
     runs-on: ubuntu-latest
-    env:
-      USING_COVERAGE: '3.8'
-    strategy:
-      fail-fast: true
-      matrix:
-        python-version: ["3.9", "3.10"]
     steps:
-      - uses: "actions/checkout@v2"
-      - uses: "actions/setup-python@v2"
+      - uses: actions/checkout@v2
         with:
-          python-version: "${{ matrix.python-version }}"
-      - name: "Install dependencies"
+          fetch-depth: 0
+      - uses: wagoid/commitlint-github-action@v4
+
+  tests:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            md5_command: md5sum
+          - os: macos-latest
+            md5_command: md5
+          - os: windows-latest
+            md5_command: md5sum
+    defaults:
+      run:
+        shell: bash -l {0}
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v2
+      - name: Export workspace path
         run: |
-          set -xe
-          python -VV
-          python -m site
-          python -m pip install --upgrade pip setuptools wheel
-          python -m pip install --upgrade coverage[toml] virtualenv tox tox-gh-actions
-      - name: "Run tox targets for ${{ matrix.python-version }}"
-        run: "python -m tox"
-      - name: "Combine coverage"
-        if: "contains(env.USING_COVERAGE, matrix.python-version)"
+          echo $GITHUB_WORKSPACE >> $GITHUB_PATH
+      - name: Compute cache key
+        id: compute-cache-key
         run: |
-          set -xe
-          python -m coverage xml
-      - name: "Upload coverage to Codecov"
-        if: "contains(env.USING_COVERAGE, matrix.python-version)"
-        uses: "codecov/codecov-action@v1"
+           echo "::set-output name=MD5_CACHE_KEY::$(${{ matrix.md5_command }} tox.ini setup.py | ${{ matrix.md5_command }} | head -c 32)"
+      - name: Restore cache
+        uses: actions/cache
+        id: restore-cache
         with:
-          fail_ci_if_error: true
+          path: |
+            .tox
+          key: ${{ runner.os }}-${{ steps.compute-cache-key.outputs.MD5_CACHE_KEY }}
+      - name: Install miniconda
+        uses: conda-incubator/setup-miniconda
+        with:
+          activate-environment: test
+          python-version: 3.9
+          use-only-tar-bz2: true
+          miniconda-version: latest
+      - name: Install tox
+        run: pip install tox
+      - name: Run tests
+        env:
+          TOX_PARALLEL_NO_SPINNER: 1
+        run: |
+          tox --parallel --develop

@@ -1,43 +1,51 @@
-"""Setup of georss_ingv_centro_nazionale_terremoti_client library."""
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+import io
+import os
+import re
 
-from setuptools import find_packages, setup
+from setuptools import setup
 
-from georss_ingv_centro_nazionale_terremoti_client.__version__ import __version__
+with open(os.path.join(os.path.dirname(__file__), 'README.md')) as f:
+    readme = f.read()
 
-NAME = "georss_ingv_centro_nazionale_terremoti_client"
-AUTHOR = "Malte Franken"
-AUTHOR_EMAIL = "coding@subspace.de"
-DESCRIPTION = "A GeoRSS client library for the INGV Centro Nazionale Terremoti (Earthquakes) feed."
-URL = (
-    "https://github.com/exxamalte/python-georss-ingv-centro-nazionale-terremoti-client"
-)
+with io.open('unityparser/__init__.py', 'rt', encoding='utf8') as f:
+    version = re.search(
+        r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]',
+        f.read(),
+        re.MULTILINE
+    ).group(1)
 
-REQUIRES = [
-    "georss_client>=0.17",
-]
+requirements = {'base': None, 'development': None}
+for k in requirements:
+    with open("requirements/{}.in".format(k)) as f:
+        requirements[k] = list(filter(lambda x: bool(x.strip()) and not x.strip().startswith('-r '), f.read().splitlines()))
 
-
-with open("README.md") as fh:
-    long_description = fh.read()
+# allow setup.py to be run from any path
+os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
-    name=NAME,
-    version=__version__,
-    author=AUTHOR,
-    author_email=AUTHOR_EMAIL,
-    description=DESCRIPTION,
-    license="Apache-2.0",
-    long_description=long_description,
-    long_description_content_type="text/markdown",
-    url=URL,
-    packages=find_packages(exclude=("tests*",)),
+    name='unityparser',
+    version=version,
+    description='A python library to parse and dump Unity YAML files',
+    long_description=readme,
+    long_description_content_type='text/markdown',
+    author='Ricard Valverde',
+    author_email='ricard.valverde@socialpoint.es',
+    url='https://github.com/socialpoint-labs/unity-yaml-parser',
+    license='MIT License',
+    python_requires='>=3.7.0',
+    packages=['unityparser'],
+    keywords=['unity', 'yaml', 'parser', 'serializer'],
+    install_requires=requirements.pop('base'),
+    extras_require=requirements,
     classifiers=[
-        "Programming Language :: Python :: 3.9",
-        "Programming Language :: Python :: 3.10",
-        "Programming Language :: Python :: 3.11",
-        "Programming Language :: Python :: 3.12",
-        "License :: OSI Approved :: Apache Software License",
-        "Operating System :: OS Independent",
-    ],
-    install_requires=REQUIRES,
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3 :: Only',
+        'License :: OSI Approved :: MIT License',
+        'Operating System :: OS Independent',
+        'Development Status :: 3 - Alpha',
+        'Intended Audience :: Developers',
+        'Topic :: Software Development :: Libraries :: Python Modules'
+    ]
 )
