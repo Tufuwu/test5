@@ -1,11 +1,6 @@
 include LICENSE
 include README.rst
-include CHANGES.rst
-include requirements.txt
-recursive-include openwisp_users *
-recursive-exclude * *.pyc
-recursive-exclude * *.swp
-recursive-exclude * __pycache__
-recursive-exclude * *.db
-recursive-exclude * local_settings.py
-recursive-exclude tests *
+include changelog
+include markup2html.py
+recursive-include docs *.rst conf.py
+recursive-include tests *.py

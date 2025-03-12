@@ -1,66 +1,62 @@
-openwisp-users
-==============
+.. image:: https://github.com/retext-project/pymarkups/workflows/tests/badge.svg
+   :target: https://github.com/retext-project/pymarkups/actions
+   :alt: GitHub Actions status
+.. image:: https://codecov.io/gh/retext-project/pymarkups/branch/master/graph/badge.svg
+   :target: https://codecov.io/gh/retext-project/pymarkups
+   :alt: Coverage status
+.. image:: https://readthedocs.org/projects/pymarkups/badge/?version=latest
+   :target: https://pymarkups.readthedocs.io/en/latest/
+   :alt: ReadTheDocs status
 
-.. image:: https://github.com/openwisp/openwisp-users/workflows/OpenWISP%20Users%20CI%20Build/badge.svg?branch=master
-    :target: https://github.com/openwisp/openwisp-users/actions?query=workflow%3A%22OpenWISP+Users+CI+Build%22
+This module provides a wrapper around various text markup languages.
 
-.. image:: https://coveralls.io/repos/openwisp/openwisp-users/badge.svg
-    :target: https://coveralls.io/r/openwisp/openwisp-users
+Available by default are Markdown_, reStructuredText_, Textile_ and AsciiDoc_,
+but you can easily add your own markups.
 
-.. image:: https://img.shields.io/librariesio/release/github/openwisp/openwisp-users
-    :target: https://libraries.io/github/openwisp/openwisp-users#repository_dependencies
-    :alt: Dependency monitoring
+Usage example:
 
-.. image:: https://badge.fury.io/py/openwisp-users.svg
-    :target: http://badge.fury.io/py/openwisp-users
+.. code:: python
 
-.. image:: https://pepy.tech/badge/openwisp-users
-    :target: https://pepy.tech/project/openwisp-users
-    :alt: downloads
+  >>> import markups
+  >>> markup = markups.get_markup_for_file_name("myfile.rst")
+  >>> markup.name
+  'reStructuredText'
+  >>> markup.attributes[markups.common.SYNTAX_DOCUMENTATION]
+  'https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html'
+  >>> text = """
+  ... Hello, world!
+  ... =============
+  ...
+  ... This is an example **reStructuredText** document.
+  ... """
+  >>> result = markup.convert(text)
+  >>> result.get_document_title()
+  'Hello, world!'
+  >>> print(result.get_document_body())  # doctest: +NORMALIZE_WHITESPACE
+  <main id="hello-world">
+  <h1 class="title" data-posmap="3">Hello, world!</h1>
+  <p data-posmap="5">This is an example <strong>reStructuredText</strong> document.</p>
+  </main>
 
-.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
-    :target: https://pypi.org/project/black/
-    :alt: code style: black
+.. _Markdown: https://daringfireball.net/projects/markdown/
+.. _reStructuredText: https://docutils.sourceforge.io/rst.html
+.. _Textile: https://en.wikipedia.org/wiki/Textile_(markup_language)
+.. _AsciiDoc: https://asciidoc.org
 
-----
+The release version can be downloaded from PyPI_ or installed using::
 
-Implementation of user management and multi-tenancy for OpenWISP (built
-with python & django).
+  pip install Markups
 
-**Need a quick overview?** `Try the OpenWISP Demo
-<https://openwisp.org/demo.html>`_.
+.. _PyPI: https://pypi.org/project/Markups/
 
-.. image:: https://raw.githubusercontent.com/openwisp/openwisp2-docs/master/assets/design/openwisp-logo-black.svg
-    :target: http://openwisp.org
+The source code is hosted on GitHub_.
 
-----
+.. _GitHub: https://github.com/retext-project/pymarkups
 
-Documentation
--------------
+The documentation is available online_ or can be generated from source by
+installing Sphinx_ and running::
 
-- `Usage documentation <https://openwisp.io/docs/stable/users/>`_
-- `Developer documentation
-  <https://openwisp.io/docs/stable/users/developer/>`_
+  python3 -m sphinx docs build/sphinx/html
 
-Contributing
-------------
-
-Please refer to the `OpenWISP contributing guidelines
-<http://openwisp.io/docs/developer/contributing.html>`_.
-
-Support
--------
-
-See `OpenWISP Support Channels <http://openwisp.org/support.html>`_.
-
-Changelog
----------
-
-See `CHANGES
-<https://github.com/openwisp/openwisp-users/blob/master/CHANGES.rst>`_.
-
-License
--------
-
-See `LICENSE
-<https://github.com/openwisp/openwisp-users/blob/master/LICENSE>`_.
+.. _online: https://pymarkups.readthedocs.io/en/latest/
+.. _Sphinx: https://www.sphinx-doc.org/en/master/
