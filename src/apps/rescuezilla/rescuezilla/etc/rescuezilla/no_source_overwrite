@@ -1,3 +1,0 @@
-This file prevents a partition image being restored to the source device it resides on.
-
-Delete it allows this behavior with a confirmation dialog. It is recommended end-users do not delete this file.

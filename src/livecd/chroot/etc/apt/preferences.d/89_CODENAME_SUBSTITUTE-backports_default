@@ -1,3 +1,0 @@
-Package: *
-Pin: release n=CODENAME_SUBSTITUTE-backports
-Pin-Priority: 500
