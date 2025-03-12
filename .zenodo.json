@@ -1,0 +1,58 @@
+{
+    "title": "pyndl: Naïve Discriminative Learning in Python",
+    "license": {
+      "id": "MIT"
+    },
+    "creators": [
+        {
+            "affiliation": "University of Tuebingen, Quantitative Linguistics",
+            "name": "Konstantin Sering"
+        },
+        {
+            "name": "Marc Weitz"
+        },
+        {
+            "name": "David-Elias K\u00fcnstle"
+        },
+        {
+            "name": "Lennart Schneider"
+        },
+        {
+            "name": "Elnaz Shafaei-Bajestan"
+        }
+    ],
+    "grants": [
+      {
+        "funder": {
+          "name": "Humboldt Foundation"
+        },
+        "program": "Alexander von Humboldt Professorship",
+        "title": "Alexander von Humboldt Professorship awarded to R. H. Baayen"
+      },
+      {
+        "code": "742545",
+        "links": {
+          "self": "https://zenodo.org/api/grants/10.13039/501100000780::742545"
+        },
+        "title": "Wide Incremental learning with Discrimination nEtworks",
+        "acronym": "WIDE",
+        "program": "H2020",
+        "funder": {
+          "doi": "10.13039/501100000780",
+          "acronyms": [],
+          "name": "European Commission",
+          "links": {
+            "self": "https://zenodo.org/api/funders/10.13039/501100000780"
+          }
+        }
+      }
+    ],
+    "keywords": [
+      "naive discriminative learning",
+      "linguistics",
+      "python",
+      "cognitive science",
+      "machine learning"
+    ],
+    "language": "eng"
+}
