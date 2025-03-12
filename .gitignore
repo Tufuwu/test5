@@ -1,9 +1,9 @@
-venv*
-.DS_Store
-
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+
+# Idea software family
+.idea/
 
 # C extensions
 *.so
@@ -16,6 +16,7 @@ develop-eggs/
 dist/
 downloads/
 eggs/
+.eggs/
 lib/
 lib64/
 parts/
@@ -39,10 +40,11 @@ pip-delete-this-directory.txt
 htmlcov/
 .tox/
 .coverage
+.coverage.*
 .cache
 nosetests.xml
 coverage.xml
-.mypy_cache
+*,cover
 
 # Translations
 *.mo
@@ -57,20 +59,14 @@ docs/_build/
 # PyBuilder
 target/
 
-# Front end dependencies
-node_modules
-npm-debug.log
-app/assets/scss/govuk
-app/templates/govuk
-app/templates/toolkit
-app/assets/scss/toolkit
-app/content
+# Vim swapfiles
+.*.sw?
 
-# Front end generated assets
-app/static
+# Example app
+examples/instance/
 
-# local environment customizations
-local.nix
-
-.idea/
-.snyk
+# Test DB
+test.db
+tests/test.db
+.vscode
+**.DS_Store

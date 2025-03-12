@@ -1,11 +1,15 @@
 .git
-*
+*.gitignore
 
-!app/
-!application.py
-!config.py
-!gulpfile.js
-!package.json
-!requirements.txt
-!scripts/build.sh
-!package-lock.json
+*.mo
+*.pyc
+*.swp
+*.swo
+*.~
+
+.dockerignore
+Dockerfile
+docker-compose.yml
+docker-compose-dev.yml
+
+Procfile*
