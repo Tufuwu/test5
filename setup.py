@@ -1,83 +1,44 @@
-# -*- coding: utf-8 -*-
-from __future__ import absolute_import, print_function
 from setuptools import setup, find_packages
+from codecs import open
+from os import path
 
-import sys
-import warnings
+__version__ = '2.0.2'
 
-VERSION = 'undefined'
-install_requires = ['six', 'pyprind']
-extra = {}
+here = path.abspath(path.dirname(__file__))
 
-with open('solvebio/version.py') as f:
-    for row in f.readlines():
-        if row.startswith('VERSION'):
-            exec(row)
-
-if sys.version_info < (2, 6):
-    warnings.warn(
-        'Python 2.5 is no longer officially supported by SolveBio. '
-        'If you have any questions, please file an issue on GitHub or '
-        'contact us at support@solvebio.com.',
-        DeprecationWarning)
-    install_requires.append('requests >= 0.8.8, < 0.10.1')
-    install_requires.append('ssl')
-elif sys.version_info < (2, 7):
-    install_requires.append('ordereddict')
-else:
-    install_requires.append('requests>=2.0.0')
-
-
-# solvebio-recipes requires additional packages
-recipes_requires = [
-    'pyyaml==5.3.1',
-    'click==7.1.2',
-    'ruamel.yaml==0.16.12'
-]
-extras_requires = {
-    "recipes": recipes_requires
-}
-
-# Adjustments for Python 2 vs 3
-if sys.version_info < (3, 0):
-    # Get simplejson if we don't already have json
-    try:
-        import json  # noqa
-    except ImportError:
-        install_requires.append('simplejson')
-
-    # solvebio-recipes only available in python3
-    extras_requires = {}
-
-with open('README.md') as f:
+# Get the long description from the README file
+with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
+# get the dependencies and installs
+with open(path.join(here, 'requirements.txt'), encoding='utf-8') as f:
+    all_reqs = f.read().split('\n')
+
+install_requires = [x.strip() for x in all_reqs if 'git+' not in x]
+dependency_links = [x.strip().replace('git+', '') for x in all_reqs if x.startswith('git+')]
+
 setup(
-    name='solvebio',
-    version=VERSION,
-    description='The SolveBio Python client',
-    long_description=long_description,
-    long_description_content_type='text/markdown',
-    author='Solve, Inc.',
-    author_email='contact@solvebio.com',
-    url='https://github.com/solvebio/solvebio-python',
-    packages=find_packages(),
-    package_dir={'solvebio': 'solvebio', 'recipes': 'recipes'},
-    test_suite='solvebio.test',
+    author='Pusher',
+    author_email='support@pusher.com',
+    classifiers=[
+      'Intended Audience :: Developers',
+      'Programming Language :: Python',
+      'Programming Language :: Python :: 2',
+      'Programming Language :: Python :: 2.7',
+      'Programming Language :: Python :: 3',
+      'Programming Language :: Python :: 3.4',
+      'Programming Language :: Python :: 3.5',
+      'Programming Language :: Python :: 3.6',
+      'Programming Language :: Python :: 3.7',
+      'Programming Language :: Python :: Implementation :: CPython',
+    ],
+    dependency_links=dependency_links,
+    description='Pusher Push Notifications Python server SDK',
     include_package_data=True,
     install_requires=install_requires,
-    platforms='any',
-    extras_require=extras_requires,
-    entry_points={
-        'console_scripts': ['solvebio = solvebio.cli.main:main',
-                            'solvebio-recipes = recipes.sync_recipes:sync_recipes']
-    },
-    classifiers=[
-        'Intended Audience :: Science/Research',
-        'Operating System :: OS Independent',
-        'Programming Language :: Python',
-        'Topic :: Software Development :: Libraries :: Python Modules',
-        'Topic :: Scientific/Engineering :: Bio-Informatics'
-    ],
-    **extra
+    python_requires=">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*",
+    long_description=long_description,
+    name='pusher_push_notifications',
+    packages=find_packages(exclude=['tests']),
+    version=__version__,
 )

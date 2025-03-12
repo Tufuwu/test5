@@ -1,22 +1,30 @@
+*.py[cod]
+
+# C extensions
+*.so
+
+# Packages
+*.egg
 *.egg-info
-*.py[co]
-*#*
-*~
-*.swp
-*.cache
-ChangeLog
-MANIFEST
-Makefile
+build
+eggs
+parts
+bin
+var
+sdist
+develop-eggs
+.installed.cfg
+lib
+lib64
 dist/
-tmp/
-build/
-docs/_build/
-docs/locale/
-tests/coverage_html/
-tests/.coverage
-*.DS_Store
-.idea
+
+# Installer logs
+pip-log.txt
+
+# Unit test / coverage reports
+.coverage
 .tox
-.eggs/
-venv*
-settings.json
+nosetests.xml
+
+# Venv
+venv/

@@ -1,3 +1,0 @@
-machine api.solvebio.com
-	login testing@solvebio.com
-	password badcafebabe0feeddeadbeef1ee0012345678900
