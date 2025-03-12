@@ -1,26 +1,47 @@
-name: Python package
+# Config file for automatic testing using github actions
+#
 
-on: [push]
+name: Unit_Tests
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
 jobs:
-  build:
-
+  test:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.9", "3.10"]
-
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
       with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
+        submodules: recursive
+    - name: Dependencies
       run: |
-        python -m pip install --upgrade pip
-        pip install pytest
-        pip install -e .
-    - name: Test with pytest
+        sudo apt-get install python-dev
+        sudo apt-get install python-pip
+        sudo apt-get install cmake
+        sudo apt-get install libffi-dev
+        sudo apt-get install python3-dev
+        sudo apt-get install python3-pip
+        sudo apt-get install ethtool
+        sudo apt-get remove python-scapy
+        git clone https://github.com/p4lang/scapy-vxlan.git && cd scapy-vxlan && sudo python setup.py install && cd ..
+        bash CI/travis/install-nanomsg.sh
+        sudo ldconfig
+        bash CI/travis/install-nnpy.sh
+        sudo pip3 install nose2
+
+    - name: Install
       run: |
-        pytest tests/
+        sudo python setup.py install
+
+    - name: Before_script
+      run: |
+        cd ptf_nn/; sudo ./veth_setup.sh; cd ..
+
+    - name: Script
+      run: |
+        python CI/travis/check-nnpy.py
+        ./CI/travis/run_tests.sh
+        sudo python3 /usr/local/bin/nose2 utests.tests
