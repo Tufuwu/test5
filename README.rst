@@ -1,188 +1,74 @@
-.. image:: https://results.pre-commit.ci/badge/github/nose-devs/nose2/main.svg
-   :target: https://results.pre-commit.ci/latest/github/nose-devs/nose2/main
-   :alt: pre-commit.ci status
+=======
+udiskie
+=======
 
-.. image:: https://github.com/nose-devs/nose2/workflows/build/badge.svg?event=push
-    :alt: build status
-    :target: https://github.com/nose-devs/nose2/actions?query=workflow%3Abuild
+|Version| |License| |Translations|
 
-.. image:: https://readthedocs.org/projects/nose2/badge/
-    :target: https://nose2.io/
-    :alt: Documentation
+*udiskie* is a udisks2_ front-end that allows to manage removable media such
+as CDs or flash drives from userspace.
 
-.. image:: https://img.shields.io/pypi/v/nose2.svg
-    :target: https://pypi.org/project/nose2/
-    :alt: Latest PyPI version
+|Screenshot|
 
-.. image:: https://img.shields.io/pypi/pyversions/nose2.svg
-    :alt: Supported Python Versions
-    :target: https://pypi.org/project/nose2/
+Its features include:
 
-.. image:: https://img.shields.io/badge/Mailing%20list-discuss%40nose2.io-blue.svg
-    :target: https://groups.google.com/a/nose2.io/forum/#!forum/discuss
-    :alt: Join discuss@nose2.io
+- automount removable media
+- notifications
+- tray icon
+- command line tools for manual un-/mounting
+- LUKS encrypted devices
+- unlocking with keyfiles (requires udisks 2.6.4)
+- loop devices (mounting iso archives)
+- password caching (requires python keyutils 0.3)
 
-Welcome to nose2
-================
+All features can be individually enabled or disabled.
 
-nose2's extends ``unittest`` to make testing nicer.
+**NOTE:** support for python2 and udisks1 have been removed. If you need a
+version of udiskie that supports python2, please check out the ``1.7.X``
+releases or the ``maint-1.7`` branch.
 
-nose2 vs nose
--------------
+.. _udisks2: https://www.freedesktop.org/wiki/Software/udisks
 
-``nose2`` originated as the successor to ``nose``.
+- `Documentation`_
 
-``nose2`` is a distinct project and does not support all of the behaviors of ``nose``.
-See `differences`_ for a thorough rundown.
+  - Usage_
+  - Installation_
+  - `Debug Info`_
+  - Troubleshooting_
+  - FAQ_
 
-nose2 vs pytest
----------------
+- `Man page`_
+- `Source Code`_
+- `Latest Release`_
+- `Issue Tracker`_
 
-`pytest`_ is an excellent test framework and we encourage users to consider
-it for new projects.
+.. _Documentation:      https://github.com/coldfix/udiskie/wiki
+.. _Usage:              https://github.com/coldfix/udiskie/wiki/Usage
+.. _Installation:       https://github.com/coldfix/udiskie/wiki/Installation
+.. _Debug Info:         https://github.com/coldfix/udiskie/wiki/Debug-Info
+.. _Troubleshooting:    https://github.com/coldfix/udiskie/wiki/Troubleshooting
+.. _FAQ:                https://github.com/coldfix/udiskie/wiki/FAQ
 
-It has a bigger team of maintainers and a larger community of users.
+.. _Man Page:       https://raw.githubusercontent.com/coldfix/udiskie/master/doc/udiskie.8.txt
+.. _Source Code:    https://github.com/coldfix/udiskie
+.. _Latest Release: https://pypi.python.org/pypi/udiskie/
+.. _Issue Tracker:  https://github.com/coldfix/udiskie/issues
+.. _Roadmap:        https://github.com/coldfix/udiskie/blob/master/HACKING.rst#roadmap
 
-Quickstart
-----------
 
-Because ``nose2`` is based on unittest, you can start from the Python Standard
-Library's `documentation for unittest <https://docs.python.org/library/unittest.html>`_
-and then use nose2 to add value on top of that.
+.. Badges:
 
-``nose2`` looks for tests in Python files whose names start with ``test`` and
-runs every test function it discovers.
+.. |Version| image::   https://img.shields.io/pypi/v/udiskie.svg
+   :target:            https://pypi.python.org/pypi/udiskie
+   :alt:               Version
 
-Here's an example of a simple test, written in typical unittest style:
+.. |License| image::   https://img.shields.io/pypi/l/udiskie.svg
+   :target:            https://github.com/coldfix/udiskie/blob/master/COPYING
+   :alt:               License: MIT
 
-.. code-block:: python
+.. |Translations| image:: http://weblate.coldfix.de/widgets/udiskie/-/udiskie/svg-badge.svg
+   :target:               http://weblate.coldfix.de/engage/udiskie/
+   :alt:                  Translations
 
-    # in test_simple.py
-    import unittest
-
-    class TestStrings(unittest.TestCase):
-        def test_upper(self):
-            self.assertEqual("spam".upper(), "SPAM")
-
-You can then run this test like so::
-
-    $ nose2 -v
-    test_upper (test_simple.TestStrings) ... ok
-
-    ----------------------------------------------------------------------
-    Ran 1 test in 0.000s
-
-    OK
-
-However, ``nose2`` supports more testing configuration and provides more tools
-than ``unittest`` on its own.
-
-For example, this test exercises just a few of ``nose2``'s features:
-
-.. code-block:: python
-
-    # in test_fancy.py
-    from nose2.tools import params
-
-    @params("Sir Bedevere", "Miss Islington", "Duck")
-    def test_is_knight(value):
-        assert value.startswith('Sir')
-
-and then run this like so::
-
-    $ nose2 -v --pretty-assert
-    test_fancy.test_is_knight:1
-    'Sir Bedevere' ... ok
-    test_fancy.test_is_knight:2
-    'Miss Islington' ... FAIL
-    test_fancy.test_is_knight:3
-    'Duck' ... FAIL
-
-    ======================================================================
-    FAIL: test_fancy.test_is_knight:2
-    'Miss Islington'
-    ----------------------------------------------------------------------
-    Traceback (most recent call last):
-      File "/mnt/ebs/home/sirosen/tmp/test_fancy.py", line 6, in test_is_knight
-        assert value.startswith('Sir')
-    AssertionError
-
-    >>> assert value.startswith('Sir')
-
-    values:
-        value = 'Miss Islington'
-        value.startswith = <built-in method startswith of str object at 0x7f3c3172f430>
-    ======================================================================
-    FAIL: test_fancy.test_is_knight:3
-    'Duck'
-    ----------------------------------------------------------------------
-    Traceback (most recent call last):
-      File "/mnt/ebs/home/sirosen/tmp/test_fancy.py", line 6, in test_is_knight
-        assert value.startswith('Sir')
-    AssertionError
-
-    >>> assert value.startswith('Sir')
-
-    values:
-        value = 'Duck'
-        value.startswith = <built-in method startswith of str object at 0x7f3c3172d490>
-    ----------------------------------------------------------------------
-    Ran 3 tests in 0.001s
-
-    FAILED (failures=2)
-
-Full Docs
----------
-
-Full documentation for ``nose2`` is available at `docs.nose2.io`_
-
-Versions and Support
---------------------
-
-Changelog and Version Scheme
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-nose2 versions are numbered ``0.MAJOR.MINOR``. Minor releases contain bugfixes or
-smaller features. Major features or backwards incompatible changes are done in
-major releases.
-
-For a full description of all past versions and changes, see the `changelog`_.
-
-Python Versions
-~~~~~~~~~~~~~~~
-
-nose2 requires Python 3.
-
-It supports all versions currently supported by the CPython team, and also aims
-to support PyPy and cpython betas.
-
-Python 2
-********
-
-Python 2 is no longer supported. The `0.12.x line of releases <py2line>`_
-contains the last versions which supported Python 2.
-
-Users of Python 2 should understand that Python 2 is EOL and the Python 2
-support line for ``nose2`` is similarly considered EOL.
-
-.. note::
-
-    Fixes to 0.12.x may still be accepted on an as-needed basis for a short
-    while as the python3-only line of releases gets started.
-
-Contributing
-------------
-
-If you want to make contributions, please read the `contributing`_ guide.
-
-.. _py2line: https://github.com/nose-devs/nose2/tree/0.12.x-line
-
-.. _differences: https://docs.nose2.io/en/latest/differences.html
-
-.. _changelog: https://docs.nose2.io/en/latest/changelog.html
-
-.. _pytest: http://pytest.readthedocs.io/en/latest/
-
-.. _contributing: https://github.com/nose-devs/nose2/blob/main/contributing.rst
-
-.. _docs.nose2.io: https://docs.nose2.io/en/latest/
+.. |Screenshot| image:: https://raw.githubusercontent.com/coldfix/udiskie/master/screenshot.png
+   :target:             https://raw.githubusercontent.com/coldfix/udiskie/master/screenshot.png
+   :alt:                Screenshot

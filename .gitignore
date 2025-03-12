@@ -1,28 +1,35 @@
-*~
-*.pyc
-*.pyo
-.DS_Store
-.nose
+# Python binaries
+*.py[cod]
+CHANGES
+
+# C extensions
+*.so
+
+# Packages
+*.egg
 *.egg-info
-*.bak
-*.rej
-*$py.class
-*.orig
-example.cfg
-.coverage*
-.idea
-nosetests.xml
-xunit.xml
-nose2-junit.xml
-_env
-docs/_build
-htmlcov
-cover/*
 dist
 build
-.noseids
+eggs
+parts
+bin
+var
+sdist
+develop-eggs
+.installed.cfg
+lib
+lib64
+__pycache__
+MANIFEST
+
+# Installer logs
+pip-log.txt
+
+# Unit test / coverage reports
+.coverage
 .tox
-.*.sw[nop]
-.dir-locals.el
-six-*.egg
-.venv-*
+nosetests.xml
+
+# translations
+lang/*~
+lang/**/*.mo
