@@ -1,25 +1,50 @@
-BundleWrap is a decentralized configuration management system that is designed to be powerful, easy to extend and extremely versatile.
+# <img alt="BackPACK" src="./logo/backpack_logo_torch.svg" height="90"> BackPACK: Packing more into backprop
 
-For more information, have a look at [bundlewrap.org](https://bundlewrap.org) and [docs.bundlewrap.org](https://docs.bundlewrap.org).
+[![Travis](https://travis-ci.org/f-dangel/backpack.svg?branch=master)](https://travis-ci.org/f-dangel/backpack)
+[![Coveralls](https://coveralls.io/repos/github/f-dangel/backpack/badge.svg?branch=master)](https://coveralls.io/github/f-dangel/backpack)
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/release/python-370/)
 
-------------------------------------------------------------------------
+BackPACK is built on top of [PyTorch](https://github.com/pytorch/pytorch). It efficiently computes quantities other than the gradient.
 
-<a href="https://pypi.python.org/pypi/bundlewrap/">
-    <img src="http://img.shields.io/pypi/v/bundlewrap.svg" alt="Latest Version">
-</a>
-&nbsp;
-<a href="https://github.com/bundlewrap/bundlewrap/actions">
-    <img src="https://github.com/bundlewrap/bundlewrap/workflows/Tests/badge.svg" alt="Build status">
-</a>
-&nbsp;
-<a href="https://pypi.python.org/pypi/bundlewrap/">
-    <img src="http://img.shields.io/pypi/pyversions/bundlewrap.svg" alt="Python compatibility">
-</a>
-&nbsp;
-<a href="https://deepsource.io/gh/bundlewrap/bundlewrap/">
-    <img src="https://deepsource.io/gh/bundlewrap/bundlewrap.svg/?label=DeepSource&show_trend=true" alt="DeepSource">
-</a>
+- **Website:** https://backpack.pt
+- **Documentation:** https://docs.backpack.pt/en/master/
+- **Bug reports & feature requests:** https://github.com/f-dangel/backpack/issues
 
-------------------------------------------------------------------------
+Provided quantities include:
+- Individual gradients from a mini-batch
+- Estimates of the gradient variance or second moment
+- Approximate second-order information (diagonal and Kronecker approximations)
 
-BundleWrap is © 2013 - 2024 [Torsten Rehn](mailto:torsten@rehn.email)
+**Motivation:** Computation of most quantities is not necessarily expensive (often just a small modification of the existing backward pass where backpropagated information can be reused). But it is difficult to do in the current software environment.
+
+
+## Installation
+```bash
+pip install backpack-for-pytorch
+```
+
+## Examples
+- [Basic usage](https://docs.backpack.pt/en/master/basic_usage/example_all_in_one.html)
+- [Some use cases](https://docs.backpack.pt/en/master/use_cases/index.html)
+
+#
+## Contributing
+BackPACK is actively being developed. 
+We are appreciating any help.
+If you are considering to contribute, do not hesitate to contact us.
+An overview of the development procedure is provided in the [developer `README`](https://github.com/f-dangel/backpack/blob/master/README-dev.md).
+
+## How to cite
+If you are using BackPACK, consider citing the [paper](https://openreview.net/forum?id=BJlrF24twB) 
+```
+@inproceedings{dangel2020backpack,
+    title     = {Back{PACK}: Packing more into Backprop},
+    author    = {Felix Dangel and Frederik Kunstner and Philipp Hennig},
+    booktitle = {International Conference on Learning Representations},
+    year      = {2020},
+    url       = {https://openreview.net/forum?id=BJlrF24twB}
+}
+```
+
+###### _BackPACK is not endorsed by or affiliated with Facebook, Inc. PyTorch, the PyTorch logo and any related marks are trademarks of Facebook, Inc._
+
