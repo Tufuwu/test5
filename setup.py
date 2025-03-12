@@ -1,53 +1,35 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
+from setuptools import setup, find_packages
 
-from setuptools import setup
+install_requires = ["Django>=3.2", "psycopg2-binary"]
 
-import os
-import re
-import sys
-
-with open(os.path.join('lib', 'urlwatch', '__init__.py')) as f:
-    main_py = f.read()
-m = dict(re.findall("\n__([a-z]+)__ = '([^']+)'", main_py))
-docs = re.findall('"""(.*?)"""', main_py, re.DOTALL)
-
-if sys.version_info < (3, 9):
-    sys.exit('urlwatch requires Python 3.9 or newer')
-
-m['name'] = 'urlwatch'
-m['author'], m['author_email'] = re.match(r'(.*) <(.*)>', m['author']).groups()
-m['description'], m['long_description'] = docs[0].strip().split('\n\n', 1)
-m['install_requires'] = ['minidb>=2.0.8', 'PyYAML', 'requests', 'keyring', 'platformdirs', 'lxml', 'cssselect']
-if sys.platform == 'win32':
-    m['install_requires'].extend(['colorama'])
-m['entry_points'] = {"console_scripts": ["urlwatch=urlwatch.cli:main"]}
-m['package_dir'] = {'': 'lib'}
-m['packages'] = ['urlwatch']
-m['python_requires'] = '>=3.6'
-m['data_files'] = [
-    ('share/man/man1', [
-        'share/man/man1/urlwatch.1',
-    ]),
-    ('share/man/man5', [
-        'share/man/man5/urlwatch-config.5',
-        'share/man/man5/urlwatch-filters.5',
-        'share/man/man5/urlwatch-jobs.5',
-        'share/man/man5/urlwatch-reporters.5',
-    ]),
-    ('share/man/man7', [
-        'share/man/man7/urlwatch-cookbook.7',
-        'share/man/man7/urlwatch-deprecated.7',
-        'share/man/man7/urlwatch-intro.7',
-    ]),
-    ('share/urlwatch/examples', [
-        'share/urlwatch/examples/hooks.py.example',
-        'share/urlwatch/examples/urls.yaml.example',
-    ]),
-]
-m['project_urls'] = {
-    'Source': 'https://github.com/thp/urlwatch',
-    'Tracker': 'https://github.com/thp/urlwatch/issues',
+extras_require = {
+    "dev": ["pytest>=3.6", "pytest-cov", "pytest-django", "coveralls==3.2.0", "flake8"]
 }
 
-del m['copyright']
-setup(**m)
+setup(
+    name="opencivicdata",
+    version="3.4.0",
+    author="James Turk",
+    author_email="james@openstates.org",
+    license="BSD",
+    description="python opencivicdata library",
+    long_description="",
+    url="",
+    packages=find_packages(),
+    include_package_data=True,
+    install_requires=install_requires,
+    extras_require=extras_require,
+    platforms=["any"],
+    classifiers=[
+        "Development Status :: 5 - Production/Stable",
+        "Intended Audience :: Developers",
+        "License :: OSI Approved :: BSD License",
+        "Natural Language :: English",
+        "Operating System :: OS Independent",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+    ],
+)

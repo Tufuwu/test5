@@ -1,24 +1,15 @@
-[![Unit Tests](https://github.com/thp/urlwatch/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/thp/urlwatch/actions/workflows/unit-tests.yml)
-[![Packaging status](https://repology.org/badge/tiny-repos/urlwatch.svg)](https://repology.org/metapackage/urlwatch/versions)
-[![PyPI version](https://badge.fury.io/py/urlwatch.svg)](https://badge.fury.io/py/urlwatch)
-[![Documentation](https://readthedocs.org/projects/urlwatch/badge/?version=latest&style=flat)](https://urlwatch.readthedocs.io/en/latest/)
+python-opencivicdata
+====================
 
+[![Build Status](https://travis-ci.com/opencivicdata/python-opencivicdata.svg?branch=master)](https://travis-ci.com/opencivicdata/python-opencivicdata)
+[![Coverage Status](https://coveralls.io/repos/opencivicdata/python-opencivicdata/badge.png?branch=master)](https://coveralls.io/r/opencivicdata/python-opencivicdata?branch=master)
+[![PyPI](https://img.shields.io/pypi/v/opencivicdata.svg)](https://pypi.python.org/pypi/opencivicdata)
 
-```
-                         _               _       _       ____
-              _   _ _ __| |_      ____ _| |_ ___| |__   |___ \
-             | | | | '__| \ \ /\ / / _` | __/ __| '_ \    __) |
-             | |_| | |  | |\ V  V / (_| | || (__| | | |  / __/
-              \__,_|_|  |_| \_/\_/ \__,_|\__\___|_| |_| |_____|
+Python utilities (including Django models) for implementing the
+Open Civic Data specification.
 
-                                  ... monitors webpages for you
-```
+**Requires Django >=2.2 and Python >= 3.6, pin to <3.0 for older versions**
 
-urlwatch is intended to help you watch changes in webpages and get notified
-(via e-mail, in your terminal or through various third party services) of any
-changes. The change notification will include the URL that has changed and
-a unified diff of what has changed.
+The Organization, Person, Membership, Post, and VoteEvent models and related models are based on the [Popolo specification](http://popoloproject.com/).
 
-* Documentation: https://urlwatch.readthedocs.io/
-* Website: https://thp.io/2008/urlwatch/
-* E-Mail: m@thp.io
+To run tests on this project: ./run-tests.sh
