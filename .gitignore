@@ -1,13 +1,19 @@
-/.benchmarks
-/.cache
-/.coverage
-/.tox
-/.pytest_cache
-/.python-version
-/benchmark*.svg
-/build
-/dist
-/*.egg-info
-/htmlcov
-__pycache__
-/.idea
+*.pyc
+__pycache__/
+*.sw*
+db.sqlite
+.idea/
+
+# Distributions.
+.eggs/
+build/
+dist/
+django_allauth_2fa.egg-info/
+
+# Testing
+.coverage
+htmlcov
+.tox
+
+# Docs
+_build

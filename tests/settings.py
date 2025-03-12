@@ -1,53 +1,22 @@
-import os
+import django
 
-from dramatiq.middleware import TimeLimit
-
-
-def path_to(*paths):
-    return os.path.join(
-        os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-        *paths,
-    )
-
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "a"
-
-# SECURITY WARNING: don"t run with debug turned on in production!
 DEBUG = True
+SECRET_KEY = "not_empty"
+SITE_ID = 1
+ALLOWED_HOSTS = ["*"]
 
-ALLOWED_HOSTS = []
-
-
-# Application definition
-INSTALLED_APPS = [
-    "django.contrib.admin",
-    "django.contrib.auth",
-    "django.contrib.contenttypes",
-    "django.contrib.sessions",
-    "django.contrib.messages",
-    "django.contrib.staticfiles",
-
-    "django_dramatiq",
-    "tests.testapp1",
-    "tests.testapp2",
-    "tests.testapp3",
-]
-
-MIDDLEWARE = [
-    "django.middleware.security.SecurityMiddleware",
-    "django.contrib.sessions.middleware.SessionMiddleware",
-    "django.middleware.common.CommonMiddleware",
-    "django.middleware.csrf.CsrfViewMiddleware",
-    "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "django.contrib.messages.middleware.MessageMiddleware",
-    "django.middleware.clickjacking.XFrameOptionsMiddleware",
-]
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": "db.sqlite",
+        "TEST": {
+            "NAME": ":memory:",
+        },
+    },
+}
 
 ROOT_URLCONF = "tests.urls"
+LOGIN_REDIRECT_URL = "/accounts/password/change/"
 
 TEMPLATES = [
     {
@@ -60,62 +29,62 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                "common.context_processors.settings",
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = "django_dramatiq.wsgi.application"
+EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"
 
+INSTALLED_APPS = (
+    # Required by allauth.
+    "django.contrib.sites",
+    # Configure Django auth package.
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    # Enable allauth.
+    "allauth",
+    "allauth.account",
+    "allauth.mfa",  # For testing the migration.
+    # Required to render the default template for 'account_login'.
+    "allauth.socialaccount",
+    # Configure the django-otp package.
+    "django_otp",
+    "django_otp.plugins.otp_totp",
+    "django_otp.plugins.otp_static",
+    # Enable two-factor auth.
+    "allauth_2fa",
+    # Test app.
+    "tests",
+)
 
-# Database
-# ========
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "TEST": {
-            "NAME": "testdb.sqlite3",
-        },
-    }
-}
+try:
+    import django_extensions  # noqa: F401
 
+    INSTALLED_APPS += ("django_extensions",)
+except ImportError:
+    pass
 
-# Queue
-# =====
-DRAMATIQ_BROKER = {
-    "BROKER": "dramatiq.brokers.stub.StubBroker",
-    "OPTIONS": {},
-    "MIDDLEWARE": [
-        "dramatiq.middleware.AgeLimit",
-        TimeLimit(time_limit=36000000),
-        "dramatiq.middleware.Retries",
-        "django_dramatiq.middleware.AdminMiddleware",
-        "django_dramatiq.middleware.DbConnectionsMiddleware",
-    ]
-}
+MIDDLEWARE = (
+    # Configure Django auth package.
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    # Configure the django-otp package.
+    "django_otp.middleware.OTPMiddleware",
+    # Reset login flow middleware.
+    "allauth_2fa.middleware.AllauthTwoFactorMiddleware",
+    # Allauth account middleware.
+    "allauth.account.middleware.AccountMiddleware",
+)
 
+if django.VERSION < (2,):
+    MIDDLEWARE += ("django.contrib.auth.middleware.SessionAuthenticationMiddleware",)
 
-# Auth
-# ====
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
-    },
-]
+AUTHENTICATION_BACKENDS = ("django.contrib.auth.backends.ModelBackend",)
+PASSWORD_HASHERS = ("django.contrib.auth.hashers.MD5PasswordHasher",)
 
+# Enable two-factor auth.
+ACCOUNT_ADAPTER = "allauth_2fa.adapter.OTPAdapter"
 
-LANGUAGE_CODE = "en-us"
-TIME_ZONE = "UTC"
-USE_I18N = True
-USE_L10N = True
-USE_TZ = True
+STATIC_URL = "/static/"
