@@ -1,2 +1,0 @@
-dbname: sdb
-user: alex

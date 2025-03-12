@@ -3,9 +3,13 @@ updates:
 - package-ecosystem: pip
   directory: "/"
   schedule:
-    interval: daily
-  open-pull-requests-limit: 10
-- package-ecosystem: "github-actions"
-  directory: "/"
-  schedule:
-    interval: daily
+    interval: monthly
+  groups:
+    minor-and-patch-version-updates:
+      update-types:
+        - minor
+        - patch
+  ignore:
+  - dependency-name: jsonpickle
+    versions:
+    - 2.0.0

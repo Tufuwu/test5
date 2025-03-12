@@ -1,5 +1,0 @@
-dbname: sdb
-user: postgres
-pass: blah
-
-user: alex
