@@ -1,63 +1,21 @@
-name: Build
-on: ["push", "pull_request"]
+name: Tests
+
+on: [push, pull_request]
 
 jobs:
+
   test:
-    name: Tox
-    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        include:
-          - os: ubuntu-latest
-            python-version: 3.9
-            env:
-              TOXENV: py37
-
-          - os: ubuntu-latest
-            python-version: 3.9
-            env:
-              TOXENV: py38
-
-          - os: ubuntu-latest
-            python-version: 3.3.9
-            env:
-              TOXENV: py38
-
-          - os: ubuntu-latest
-            python-version: 3.9
-            env:
-              TOXENV: lint
-
-          - os: ubuntu-latest
-            python-version: 3.9
-            env:
-              TOXENV: black
+        python-version: ["3.9", "3.10"]
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - uses: actions/checkout@v1
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v1
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install Tox
-        run: pip install -U tox
-
-      - name: Run Tox
-        env: ${{ matrix.env }}
-        run: tox
-
-      - name: Coveralls
-        uses: coverallsapp/github-action@master
-        if: matrix.env.TOXENV != 'lint' && matrix.env.TOXENV != 'black'
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          parallel: true
-
-  finish:
-      needs: test
-      runs-on: ubuntu-latest
-      steps:
-        - name: Coveralls Finished
-          uses: coverallsapp/github-action@master
-          with:
-            github-token: ${{ secrets.GITHUB_TOKEN }}
-            parallel-finished: true
+      - name: Run tests
+        run: python test.py

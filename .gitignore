@@ -24,6 +24,7 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+.idea/
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -41,13 +42,25 @@ htmlcov/
 .coverage
 .coverage.*
 .cache
+nosetests.xml
 coverage.xml
-*,cover
-.pytest_cache/
+*.cover
+.hypothesis/
 
 # Translations
 *.mo
 *.pot
+
+# Django stuff:
+*.log
+local_settings.py
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
 
 # Sphinx documentation
 docs/_build/
@@ -55,27 +68,35 @@ docs/_build/
 # PyBuilder
 target/
 
+# Jupyter Notebook
+.ipynb_checkpoints
+
 # pyenv
 .python-version
+
+# celery beat schedule file
+celerybeat-schedule
+
+# SageMath parsed files
+*.sage.py
 
 # dotenv
 .env
 
 # virtualenv
-.venv/
-.venv*/
+.venv
 venv/
 ENV/
 
-# Editor temp files
-.*.swp
+# Spyder project settings
+.spyderproject
+.spyproject
 
-# Visual Studio Code
-.vscode
+# Rope project settings
+.ropeproject
 
-.DS_Store
+# mkdocs documentation
+/site
+
+# mypy
 .mypy_cache/
-
-TI Z-Stack/
-
-zigpy-znp-*.*.*/
