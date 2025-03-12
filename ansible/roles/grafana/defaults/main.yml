@@ -1,0 +1,19 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+grafana_rpm: grafana-7.2.1-1.x86_64.rpm
+grafana_checksum: "sha512:1b6fec0464ac2cd2b9e1ea600ec24f6bfa81d8ce309eb90741a6563cc6bbb6ff4f083412928e3ca5516f23ee9920a8afeea90bcbcd0fc214611ae8429d524329"

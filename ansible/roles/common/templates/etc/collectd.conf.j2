@@ -1,0 +1,41 @@
+#Hostname    "localhost"
+#FQDNLookup   true
+#BaseDir     "/var/lib/collectd"
+#PIDFile     "/var/run/collectd.pid"
+#PluginDir   "/usr/lib64/collectd"
+#TypesDB     "/usr/share/collectd/types.db"
+
+Interval     60
+
+#Timeout      2
+#ReadThreads  5
+#WriteThreads 5
+
+LoadPlugin syslog
+LoadPlugin cpu
+LoadPlugin df
+LoadPlugin load
+LoadPlugin memory
+LoadPlugin network
+LoadPlugin disk
+
+<Plugin cpu>
+  ReportByState false
+  ReportByCpu false
+</Plugin>
+
+<Plugin df>
+  MountPoint "/^{{ mount_root }}/"
+</Plugin>
+
+{% if 'metrics' in groups %}
+<Plugin network>
+  Server "{{ groups['metrics'][0] }}" "8096"
+</Plugin>
+{% endif %}
+
+<Plugin disk>
+  IgnoreSelected true
+</Plugin>
+
+Include "/etc/collectd.d"

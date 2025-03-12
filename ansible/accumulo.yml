@@ -1,0 +1,90 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+- hosts: proxy
+  tasks:
+    - import_tasks: roles/accumulo/tasks/download.yml
+      when: download_software
+- hosts: all:!{{ azure_proxy_host|default("") }}
+  roles:
+    - accumulo
+- hosts: accumulomaster[0]
+  tasks:
+    - import_tasks: roles/accumulo/tasks/init-accumulo.yml
+  handlers:
+    - import_tasks: roles/accumulo/handlers/init-accumulo.yml
+- hosts: all:!{{ azure_proxy_host|default("") }}
+  tasks:
+    - import_tasks: roles/accumulo/tasks/add-adlsgen2.yml
+      when: cluster_type == 'azure' and accumulo_version is version('2.0.0','>=') and accumulo_version is version('2.1.0','<') and use_adlsg2
+- hosts: accumulomaster[0]
+  tasks:
+    - import_tasks: roles/accumulo/tasks/init-adlsgen2.yml
+      when: cluster_type == 'azure' and accumulo_version is version('2.0.0','>=') and accumulo_version is version('2.1.0','<') and use_adlsg2
+  handlers:
+    - import_tasks: roles/accumulo/handlers/init-adlsgen2.yml
+- hosts: accumulo
+  tasks:
+    - name: "start accumulo 1.0"
+      command: "{{ accumulo_home }}/bin/start-here.sh"
+      register: start_result
+      changed_when: "'Starting' in start_result.stdout"
+      when: accumulo_major_version == '1' and not use_systemd
+- hosts: workers
+  tasks:
+    - name: "start accumulo 2.0 tablet servers"
+      command: "nohup {{ accumulo_home }}/bin/accumulo-service tserver start"
+      register: start_result
+      changed_when: "'Starting' in start_result.stdout"
+      when: accumulo_major_version == '2' and not use_systemd
+- hosts: accumulomaster
+  tasks:
+    - name: "start accumulo 2.x master, monitor, and gc"
+      command: "nohup {{ accumulo_home }}/bin/accumulo-service {{ item }} start"
+      register: start_result
+      changed_when: "'Starting' in start_result.stdout"
+      with_items:
+        - master
+        - monitor
+        - gc
+      when: accumulo_major_version == '2' and not use_systemd
+    - name: "start accumulo 2.0 tracer"
+      command: "nohup {{ accumulo_home }}/bin/accumulo-service tracer start"
+      register: start_tracer_result
+      changed_when: "'Starting' in start_tracer_result.stdout"
+      when: accumulo_version is version('2.0.0','>=') and accumulo_version is version('2.1.0','<') and not use_systemd
+- hosts: accumulomaster
+  tasks:
+    - name: "install and start all the accumulo services using systemd"
+      when: use_systemd
+      become: yes
+      block:
+        - import_tasks: roles/accumulo/tasks/start-master.yml
+        - import_tasks: roles/accumulo/tasks/start-gc.yml
+        - import_tasks: roles/accumulo/tasks/start-monitor.yml
+    - name: "install and start all the accumulo tracer service using systemd"
+      when: accumulo_version is version('2.0.0','>=') and use_systemd and accumulo_version is version('2.1.0','<')
+      become: yes
+      block:
+        - import_tasks: roles/accumulo/tasks/start-tracer.yml
+
+- hosts: workers
+  gather_facts: false
+  tasks:
+    - import_tasks: roles/accumulo/tasks/start-tserver.yml
+      when: use_systemd
+      become: yes

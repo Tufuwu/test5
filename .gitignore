@@ -1,14 +1,4 @@
-.DS_Store
 *.pyc
-.cache/
-temp_files/
+/.idea/
+/pom.xml
 .vscode/
-test.zip
-tests/data/test_download.jpg
-.coverage
-.idea
-.venv
-
-docs/build/*
-
-venv

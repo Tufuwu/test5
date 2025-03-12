@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -e
+echo "Running nose2 tests..."
+cd lib
+nose2 -v -B
+echo "SUCCESS: All nose2 tests completed."
+echo "Running Ansible-lint..."
+cd ..
+ansible-lint -x no-changed-when,risky-file-permissions,unnamed-task,var-naming,fqcn[action],fqcn[action-core],name[missing],name[casing],name[play],yaml[line-length],no-free-form,jinja[spacing],yaml[truthy]  ansible/ --exclude ansible/roles/azure/files/cloud-init*.yml
+echo "SUCCESS: Ansible-lint completed."
+echo "Running flake8 to check Python code..."
+flake8
+echo "SUCCESS: flake8 completed."
+echo "Checking for files which have no newline at end of file..."
+git ls-files | tr '\n' '\0' | xargs -0 -L1 -n1 "$(dirname "$0")/checkMissingEOF"
+echo "SUCCESS: All files have newline at the end."
+echo "All tests passed!"

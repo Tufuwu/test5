@@ -1,0 +1,60 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+- hosts: all:!{{ azure_proxy_host|default("") }}
+  become: yes
+  roles:
+    - docker
+
+- hosts: swarmmanager
+  become: yes
+  tasks:
+    - name: get swarm status
+      shell: >
+        set -o pipefail && docker info | grep 'Swarm:' | sed 's/\s*Swarm\:\s*//'
+      args:
+        executable: bash
+      register: swarm_status
+      changed_when: "'active' not in swarm_status.stdout_lines"
+    - name: initialize swarm
+      shell: |
+        docker swarm leave --force || echo "leaving swarm for multiple setups"
+        docker swarm init --advertise-addr={{ ansible_default_ipv4.address }}:2377
+      when: "'active' not in swarm_status.stdout_lines"
+    - name: get swarm token
+      command: docker swarm join-token -q worker
+      register: swarm_token
+      changed_when: "'active' not in swarm_status.stdout_lines"
+
+- hosts: workers:!swarmmanager
+  become: yes
+  vars:
+    swarm_token_stdout: "{{ hostvars[groups['swarmmanager'][0]]['swarm_token']['stdout'] }}"
+    manager_ip: "{{ hostvars[groups['swarmmanager'][0]]['ansible_default_ipv4']['address'] }}"
+  tasks:
+    - name: get swarm status
+      shell: >
+        set -o pipefail && docker info | grep 'Swarm:' | sed 's/\s*Swarm\:\s*//'
+      args:
+        executable: bash
+      register: swarm_status
+      changed_when: "'active' not in swarm_status.stdout_lines"
+    - name: join worker to swarm
+      shell: |
+        docker swarm leave || echo "Not part of a swarm."
+        docker swarm join --token={{ swarm_token_stdout }} {{ manager_ip }}:2377
+      when: "'active' not in swarm_status.stdout_lines"

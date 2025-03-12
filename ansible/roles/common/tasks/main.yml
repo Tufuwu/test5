@@ -1,0 +1,112 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+- name: "enable epel yum repo"
+  yum: name=epel-release state=present
+  register: epelresult
+  retries: 10
+  delay: 15
+  until: epelresult is not failed
+  when: ansible_facts['distribution'] in ["CentOS", "AlmaLinux", "Rocky"]
+- name: "install packages"
+  yum:
+    name:
+      - vim
+      - bash-completion
+      - git
+      - wget
+      - gcc-c++
+      - collectd
+      - screen
+      - patch
+      - "{{ java_package }}"
+      - collectd-zookeeper
+    state: present
+  register: yumresult
+  retries: 10
+  delay: 15
+  until: yumresult is not failed
+- name: "Install package specific to CentOS 7"
+  yum:
+    name:
+      - policycoreutils-python
+    state: present
+  register: yumresult_centos7
+  retries: 10
+  delay: 15
+  until: yumresult_centos7 is not failed
+  when: (ansible_facts['distribution'] == "CentOS") and (ansible_facts['distribution_major_version'] == "7")
+- name: "Install packages specific to AlmaLinux 8 / 9, Rocky Linux 8 / 9"
+  yum:
+    name:
+      - python3-policycoreutils
+      - collectd-disk
+      - collectd-write_http
+      - make
+    state: present
+  register: yumresult_os89
+  retries: 10
+  delay: 15
+  until: yumresult_os89 is not failed
+  when: (ansible_facts['distribution'] in ["AlmaLinux", "Rocky"]) and (ansible_facts['distribution_major_version'] in ["8", "9"])
+- name: "Install packages specific to Fedora"
+  yum:
+    name:
+      - python3-policycoreutils
+      - collectd-disk
+      - collectd-write_http
+      - make
+    state: present
+  register: yumresult_fedora
+  retries: 10
+  delay: 15
+  until: yumresult_fedora is not failed
+  when: ansible_facts['distribution'] == "Fedora"
+- name: "get exact jdk folder path"
+  find:
+    file_type: directory
+    paths: /usr/lib/jvm/
+    patterns: "{{ jdk_folder_pattern }}"
+  register: actual_jdk_folder
+- name: "ensure correct version of jdk is selected"
+  alternatives:
+    link: /usr/lib/jvm/java
+    name: java-openjdk
+    path: "{{ actual_jdk_folder.files[0].path }}"
+- name: "configure node shutdown"
+  shell: shutdown +{{ shutdown_delay_minutes }} &> {{ user_home }}/.shutdown creates={{ user_home }}/.shutdown
+  when: shutdown_delay_minutes > 0
+- name: "create install directory on all hosts"
+  file: path={{ install_dir }} state=directory owner={{ cluster_user }} group={{ cluster_group }}
+- name: "install maven"
+  unarchive: src={{ tarballs_dir }}/{{ maven_tarball }} dest={{ install_dir }} creates={{ maven_home }}
+- name: "chown maven home"
+  file: path={{ maven_home }} recurse=yes owner={{ cluster_user }} group={{ cluster_group }}
+- name: "install hub"
+  unarchive: src={{ tarballs_dir }}/{{ hub_tarball }} dest={{ install_dir }} creates={{ hub_home }}
+  when: install_hub
+- name: "chown hub home"
+  file: path={{ hub_home }} recurse=yes owner={{ cluster_user }} group={{ cluster_group }}
+  when: install_hub
+- name: "configure collectd"
+  template: src=etc/collectd.conf.j2 dest=/etc/collectd.conf
+  when: ('metrics' in groups) or (cluster_type == 'azure')
+  notify:
+    - restart collectd
+- name: "ensure collectd is running (and enable it at boot)"
+  service: name=collectd state=started enabled=yes
+  when: ('metrics' in groups) or (cluster_type == 'azure')

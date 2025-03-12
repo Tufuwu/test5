@@ -1,0 +1,19 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+influxdb_rpm_url: https://repos.influxdata.com/centos/7/x86_64/stable/influxdb-1.8.3.x86_64.rpm
+influxdb_checksum: "sha512:60abf31c70beb8a391ded82569532a255384516da0b3c287d20065fe7047be343c50b37bbe31d5dd8df4bcb31144ef696b90e21d6739ce375b7e4fc33bae4f03"
