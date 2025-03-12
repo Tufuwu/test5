@@ -1,2 +1,21 @@
-# Contains the same dependencies as requirements/prod.txt
--r requirements/prod.txt
+Mezzanine==6.*
+babel
+mysqlclient
+django-clearcache
+django-compressor
+django-extensions
+django-link-shortener
+django-log-request-id
+mezzanine-pagedown
+mezzanine-sync-pages
+packaging
+pygments
+pylibmc
+python-logstash-async
+pymdown-extensions
+pytz
+uwsgi
+
+
+# for development
+django-debug-toolbar

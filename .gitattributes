@@ -1,5 +1,0 @@
-# Auto detect text files and perform LF normalization
-* text=auto
-
-# Do not count FullCalendar in the Github statistics
-activity_calendar/static/fullcalendar/* linguist-vendored

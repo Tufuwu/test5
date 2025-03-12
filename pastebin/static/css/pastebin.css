@@ -1,0 +1,161 @@
+.badge {
+    font-weight: 200;
+}
+
+
+/*
+ * Tabs
+ */
+
+.nav-tabs > li > a {
+    /* inactive tab */
+    background-color: rgb(220, 220, 220);
+}
+
+.nav > li > a:hover, .nav > li > a:focus {
+    background-color: rgb(225, 225, 225);
+}
+/*
+ * Tabs
+ */
+
+
+/*
+ * Snippet form
+ */
+form.new-snippet-form {
+    margin-bottom: 30px;
+}
+
+.new-snippet-form label {
+    font-weight: 200;
+}
+
+.new-snippet-form .form-group div input[type="radio"] {
+  margin-top: 0;
+}
+
+.new-snippet-form .form-group input[type="text"],
+.new-snippet-form .form-group select {
+    max-width: 40em;
+}
+
+.new-snippet-form-no-padding-left {
+    padding-left: 0;
+}
+/*
+ * Snippet form
+ */
+
+
+/*
+ * Snippet
+ */
+div.snippet-options {
+    float: right;
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
+div.snippet_list {
+    padding: 3px;
+}
+
+textarea.snippet-plain {
+    font-family: monospace;
+    font-size: 12px;
+    height: 300px;
+    width: 100%;
+}
+/*
+ * Snippet
+ */
+
+
+/*
+ * Embedded snippet list
+ */
+div #snippet_list {
+    margin-top: 25px;
+}
+
+div #snippet_list ul {
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+div #snippet_list li {
+    display: inline-block;
+    list-style: none;
+    white-space: nowrap;
+    padding: 3px;
+    width: 31%;
+}
+
+div #snippet_list a {
+    text-decoration: none;
+    width: 100%;
+    white-space: normal;
+}
+/*
+ * Embedded snippet list
+ */
+
+
+/*
+ * Code
+ */
+div.snippet {
+    margin-left: 25px;
+}
+
+div.tab-pane {
+    border-left: 1px solid rgb(220, 220, 220);
+    border-right: 1px solid rgb(220, 220, 220);
+    border-bottom: 1px solid rgb(220, 220, 220);
+    background-color: rgb(250, 250, 250);
+}
+
+div.snippet-plain {
+    padding: 5px;
+}
+
+div.snippet ol {
+    padding: 1px;
+    margin-bottom: 5px;
+    border-left: 1px solid rgb(220, 220, 220);
+    border-bottom: 1px solid rgb(220, 220, 220);
+    border-top: 1px solid rgb(220, 220, 220);
+    -webkit-border-radius:  5px;
+    -moz-border-radius:     5px;
+    border-radius:          5px;
+}
+
+div.snippet pre.wrapped {
+    white-space: pre-wrap;
+}
+
+pre {
+    background-color: rgb(250, 250, 250);
+}
+
+pre.highlight {
+    font-family: "Bitstream Vera Sans Mono", monospace;
+    font-size: 12px;
+    line-height: 15px;
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+
+div.line:hover pre.highlight {
+    background-color: #FFFFA6;
+}
+
+pre.highlight div.line.marked,
+pre.highlight div.line.marked * {
+    background-color: #BAE688 !important;
+}
+/*
+ * Code
+ */

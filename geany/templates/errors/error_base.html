@@ -1,0 +1,22 @@
+{% extends "skel.html" %}
+{% load static %}
+
+{% block top_menu %}
+<div class="navbar navbar-inverse navbar-fixed-top">
+	<div class="container">
+		<img src="{% static "img/geany-36x36.png" %}" class="navbar-brand">
+		<a class="navbar-brand" href="{% url "home" %}">Geany</a>
+	</div>
+</div>
+{% endblock %}
+
+
+{% block main %}
+<div class="well">
+	<h3>Error:</h3>
+	<p class="alert alert-danger">
+		{% block error_message %}
+		{% endblock %}
+	</p>
+</div>
+{% endblock %}

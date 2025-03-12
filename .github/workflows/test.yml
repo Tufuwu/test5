@@ -1,39 +1,53 @@
-name: Test Squire
+# LICENCE: This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-on: [push, pull_request]
+name: CI Linting
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
-  test:
-    name: Test Code
-    runs-on: ${{ matrix.ubuntu }}
+  build:
+    name: Python ${{ matrix.python }}
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         python: ["3.9", "3.10"]
-        ubuntu: ["ubuntu-latest"]
+      fail-fast: false
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Cache dependencies # caching dependency will make our build faster.
-        uses: actions/cache@v4 # for more info checkout pip section documentation at https://github.com/actions/cache
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements/*.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-      - name: Setup Python Environment
+      - uses: actions/checkout@v2
+
+      - name: Setup Python
         uses: actions/setup-python@v2
         with:
-          python-version: '${{ matrix.python }}'
-      - name: Install requirements
-        run: pip install -r requirements/ci.txt
-      - name: Run Tests
-        run: coverage run manage.py test
-      - name: Output Coverage
-        run: coverage report && coverage xml
-      - name: Upload coverage to CodeCov
-        uses: codecov/codecov-action@v2 # https://github.com/codecov/codecov-action
-        with:
-          env_vars: OS,PYTHON
-          fail_ci_if_error: true
-          files: ./coverage/coverage.xml
-          flags: unittests
+          python-version: ${{ matrix.python }}
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install --assume-yes --no-install-recommends \
+            default-libmysqlclient-dev \
+            libmemcached-dev
+          pip install --upgrade pip setuptools
+
+      - name: Install Tox
+        run: pip install tox
+
+      - name: Lint
+        run: tox -e py

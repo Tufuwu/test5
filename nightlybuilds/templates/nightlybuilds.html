@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load nightlybuilds_tags static %}
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static "css/nightlybuilds.css" %}"/>
+{% endblock %}
+
+{% block meta_title %}Geany Nightly Builds{% endblock %}
+
+{% block main %}
+<div class="well">
+
+<h2>Geany Nightly Builds</h2>
+
+<p>Here you can find information about the nightly builds of Geany.</p>
+<p>Currently we create Debian packages and a cross-compiled Windows build.
+The results, build logs and the corresponding binary packages can be found below.</p>
+
+<table class="table table-bordered nightlybuilds">
+<thead>
+    <tr>
+        <th></th>
+        <th>Project</th>
+        <th>Revision</th>
+        <th>Target</th>
+        <th>Platform</th>
+        <th>Compiler</th>
+        <th>Glib / GTK Version</th>
+        <th>Logs</th>
+        <th>Build Date (UTC)</th>
+        <th>Download</th>
+    </tr>
+</thead>
+<tbody>
+    {# First iterate Geany core builds, then iterate Geany plugins builds #}
+    {% with 'geany plugins' as projects %}
+    {% for project in projects.split %}
+        {% for build in nightlybuilds %}
+            {% if project == build.nightly_build_target.project %}
+            <tr class="{% if build.get_status %}success{% else %}danger{% endif %}">
+                <td class="centered_column">{% if build.get_status %}
+                        <img src="{% static "img/icon-yes.gif" %}" alt="{{ build.get_status_text }}" title="{{ build.get_status_text }}" />
+                    {% else %}
+                        <img src="{% static "img/icon-no.gif" %}" alt="{{ build.get_status_text }}" title="{{ build.get_status_text }}" />
+                    {% endif %}
+                </td>
+                <td>{{ build.nightly_build_target.project|capfirst }}</td>
+                <td>{{ build.revision }}</td>
+                <td>{{ build.nightly_build_target.name }}</td>
+                <td><span title="Build host: {{ build.build_host }}">{{ build.nightly_build_target.arch }}</span></td>
+                <td>gcc {{ build.compiler_version }}</td>
+                <td>{{ build.glib_version }} / {{ build.gtk_version }}</td>
+                <td>{% get_build_log build "Stdout" %} {% get_build_log build "Stderr" %}
+                </td>
+                <td>{{ build.build_date|date:"Y-m-d H:i" }}</td>
+                <td>{% get_details build %}</td>
+            </tr>
+            {% endif %}
+        {% endfor %}
+        {% if not forloop.last %}
+            <tr>
+                <td>{# Empty row on purpose as visual seperator betwenn core and plugin builds #}</td>
+            </tr>
+        {% endif %}
+    {% endfor %}
+    {% endwith %}
+</tbody>
+</table>
+
+</div>
+{% endblock %}

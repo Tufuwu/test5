@@ -1,8 +1,0 @@
-# Libraries to be used during continuous integration
-# We want to keep this as similar to production as possible, however we need
-# a few things that we don't need in production, like coverage
-
--r prod.txt
-
-coverage~=7.6.4 # Code Coverage
-django-test-migrations~=1.4.0 # Testing migrations
