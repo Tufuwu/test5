@@ -1,60 +1,29 @@
-name: plone.rest CI
-on: [push]
+name: ci
+
+on: [push, pull_request]
+
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: false
       matrix:
-        python-version: ["3.9", "3.10"]
-        plone-version: [5.2, 5.1, 4.3]
-        exclude:
-          - python-version: 3.9
-            plone-version: 4.3
-          - python-version: 3.9
-            plone-version: 5.1
-
+        python: ["3.9", "3.10"]
+    name: python-${{ matrix.python }}
     steps:
-
-      # git checkout
-      - uses: actions/checkout@v2
-
-      # python setup
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v1
+      - name: Checkout
+        uses: actions/checkout@master
+      - name: Setup python-${{ matrix.python }}
+        uses: actions/setup-python@master
         with:
-          python-version: ${{ matrix.python-version }}
-
-      # python cache
-      - uses: actions/cache@v4
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-
-      # python install
-      - run: pip install virtualenv
-      - run: pip install wheel
-      - name: pip install
-        run: pip install -r requirements.txt
-      - name: choose Plone version
-        run: sed -ie "s#plone-x.x.x.cfg#plone-${{ matrix.plone-version }}.x.cfg#" ci.cfg
-
-      # buildout
-      - name: buildout
-        run: buildout -t 10 -c ci.cfg
-        env:
-          CI: true
-
-      # black
-      - name: black
-        run: if [ "${{ matrix.plone-version }}" == "5.2" ] && [ ${{ matrix.python-version }} == '3.7' ]; then pip install black && black src/ --check; fi
-
-      # code analysis
-      - name: black
-        run: bin/code-analysis
-
-      # test
-      - name: test
-        run: bin/test
+          python-version: ${{ matrix.python }}
+      - name: Install Tools
+        run: |
+          python3 -m pip install pylint
+          python3 -m pip install mypy
+          python3 -m pip install .
+      - name: Test
+        run: |
+          find undictify -iname "*.py" | grep -v -e "__init__.py" | xargs -L 1 pylint
+          find undictify -iname "*.py" | grep -v -e "__init__.py" | xargs -L 1 mypy --strict
+          find undictify -iname "*.py" | grep -v -e "__init__.py" | xargs -L 1 python3 -m unittest
+          python3 examples/readme_examples.py
