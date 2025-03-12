@@ -1,0 +1,10 @@
+-r requirements.txt
+
+flake8
+coveralls
+factory_boy
+pylint-django==2.6.1
+textdistance
+kiwitcms-django-plugin
+Werkzeug
+django-extensions

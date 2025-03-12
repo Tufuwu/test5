@@ -1,2 +1,0 @@
-* TODO generate sql schema and auto create table
-* TODO migrate schema
