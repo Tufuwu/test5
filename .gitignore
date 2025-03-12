@@ -1,61 +1,36 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
+# python
+*.pyc
 
-# C extensions
-*.so
+# setuptools
+/dist
+/*.egg-info
+/share
 
-# Distribution / packaging
-.Python
-/env/
-/bin/
-/build/
-/develop-eggs/
-/dist/
-/eggs/
-/lib/
-/lib64/
-/parts/
-/sdist/
-/var/
-/*.egg-info/
-.installed.cfg
-*.egg
-src/*.egg-info/
+# virtualenv
+/venv
+/pip-selfcheck.json
+.python-version
 
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
+# Node
+node_modules
+package-lock.json
 
-# Unit test / coverage reports
-/htmlcov/
-/.tox/
-.coverage
-.cache
-nosetests.xml
-coverage.xml
+# dev
+.idea/
+.vscode/
 
-# Translations
-*.mo
+# tests
+/.coverage
+/htmlcov
+/media
+/.cache
+.pytest_cache
+coverage/
 
-# Mr Developer
-.mr.developer.cfg
-.project
-.pydevproject
+# SQlite DBs
+*.sqlite3*
 
-# Rope
-.ropeproject
+# Local instance specific settings
+/tests/project/local.py
 
-# Django stuff:
-*.log
-*.pot
-
-# Sphinx documentation
-/docs/_build/
-
-*.iml
-
-*COMMIT_MSG
-
-# QuickBuild
-.qbcache/
+build/

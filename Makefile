@@ -1,92 +1,104 @@
-# Copyright 2015-2021 Nir Cohen
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-# http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+all: help
 
-# Name of this package
-PACKAGENAME = distro
+VIRTUAL_ENV ?= venv
+SOURCE_DIRS = adhocracy4 tests
+NODE_BIN = node_modules/.bin
+ARGUMENTS=$(filter-out $(firstword $(MAKECMDGOALS)), $(MAKECMDGOALS))
 
-# You can set these variables from the command line, and also
-# from the environment for the first two.
-SPHINXOPTS ?= -n -v
-SPHINXBUILD ?= sphinx-build
-SPHINXSOURCEDIR = docs
-SPHINXBUILDDIR = docs/_build
-
-.PHONY: help
 help:
-	@echo 'Please use "make <target>" where <target> is one of'
-	@echo "  release   - build a release and publish it"
-	@echo "  dev       - prepare a development environment (includes tests)"
-	@echo "  instdev   - prepare a development environment (no tests)"
-	@echo "  install   - install into current Python environment"
-	@echo "  clobber   - remove any build products"
-	@echo "  build     - build the package"
-	@echo "  test      - test from this directory using tox, including test coverage"
-	@echo "  publish   - upload to PyPI"
-	@echo "  clean     - remove any temporary build products"
-	@echo "  dry-run   - perform all action required for a release without actually releasing"
-	@$(SPHINXBUILD) -M help "$(SPHINXSOURCEDIR)" "$(SPHINXBUILDDIR)" $(SPHINXOPTS) $(O)
+	@echo Adhocracy4 development tools
+	@echo
+	@echo It will either use a exisiting virtualenv if it was entered
+	@echo before or create a new one in the same directory.
+	@echo
+	@echo usage:
+	@echo 	make clean   	 			-- delete node modules and venv
+	@echo   make lint	 				-- lint javascript and python
+	@echo   make lint-quick     		-- lint all files staged in git
+	@echo   make lint-python-files	 	-- lint python
+	@echo   make lint-fix      			-- fix linting for js files staged in git
+	@echo   make test     				-- run all tests front and backend
+	@echo   make pytest					-- run all test cases with pytest
+	@echo   make pytest-lastfailed		-- run test that failed last
+	@echo   make pytest-clean			-- test on new database
+	@echo   make jstest    				-- run js tests with coverage
+	@echo   make jstest-nocov    	 	-- run js tests without coverage
+	@echo   make jstest-debug    		-- run changed tests only, no coverage
+	@echo   make jstest-updateSnapshots -- update jest snapshots
 
-.PHONY: release
-release: test clean build publish
-	@echo "$@ done."
-
-.PHONY: test
-test:
-	pip install 'tox>=1.9.0'
-	tox
-	@echo "$@ done."
-
-.PHONY: clean
-clean:
-	rm -rf dist build $(PACKAGENAME).egg-info
-	@echo "$@ done."
-
-.PHONY: build
-build:
-	python -m build
-
-.PHONY: publish
-publish:
-	twine upload -r pypi dist/$(PACKAGENAME)-*
-	@echo "$@ done."
-
-.PHONY: dry-run
-dry-run: test clean build
-	@echo "$@ done."
-
-.PHONY: dev
-dev: instdev test
-	@echo "$@ done."
-
-.PHONY: instdev
-instdev:
-	pip install -r dev-requirements.txt
-	pip install -e .
-	@echo "$@ done."
 
 .PHONY: install
 install:
-	pip install .
-	@echo "$@ done."
+	npm install
+	if [ ! -f $(VIRTUAL_ENV)/bin/python3 ]; then python3 -m venv $(VIRTUAL_ENV); fi
+	$(VIRTUAL_ENV)/bin/pip install -r requirements/dev.txt
 
-.PHONY: clobber
-clobber: clean
-	rm -rf $(SPHINXBUILDDIR)
-	@echo "$@ done."
+.PHONY: clean
+clean:
+	if [ -f package-lock.json ]; then rm package-lock.json; fi
+	if [ -d node_modules ]; then rm -rf node_modules; fi
+	if [ -d venv ]; then rm -rf venv; fi
 
-# Catch-all target: route all unknown targets to Sphinx using the new
-# "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
-.PHONY: Makefile
-%: Makefile
-	@$(SPHINXBUILD) -M $@ "$(SPHINXSOURCEDIR)" "$(SPHINXBUILDDIR)" $(SPHINXOPTS) $(O)
+.PHONY: lint
+lint:
+	EXIT_STATUS=0; \
+	$(VIRTUAL_ENV)/bin/isort --diff -c $(SOURCE_DIRS) ||  EXIT_STATUS=$$?; \
+	$(VIRTUAL_ENV)/bin/flake8 $(SOURCE_DIRS) --exclude migrations,settings ||  EXIT_STATUS=$$?; \
+	npm run lint ||  EXIT_STATUS=$$?; \
+	$(VIRTUAL_ENV)/bin/python manage.py makemigrations --dry-run --check --noinput || EXIT_STATUS=$$?; \
+	exit $${EXIT_STATUS}
+
+.PHONY: lint-quick
+lint-quick:
+	EXIT_STATUS=0; \
+	npm run lint-staged || EXIT_STATUS=$$?; \
+	$(VIRTUAL_ENV)/bin/python manage.py makemigrations --dry-run --check --noinput || EXIT_STATUS=$$?; \
+	exit $${EXIT_STATUS}
+
+.PHONY: lint-python-files
+lint-python-files:
+	EXIT_STATUS=0; \
+	$(VIRTUAL_ENV)/bin/black $(ARGUMENTS) || EXIT_STATUS=$$?; \
+	$(VIRTUAL_ENV)/bin/isort --diff -c $(ARGUMENTS) --filter-files || EXIT_STATUS=$$?; \
+	$(VIRTUAL_ENV)/bin/flake8 $(ARGUMENTS) || EXIT_STATUS=$$?; \
+	exit $${EXIT_STATUS}
+
+.PHONY: lint-fix
+lint-fix:
+	EXIT_STATUS=0; \
+	npm run lint-fix ||  EXIT_STATUS=$$?; \
+	exit $${EXIT_STATUS}
+
+.PHONY: test
+test:
+	$(VIRTUAL_ENV)/bin/pytest --reuse-db
+	npm run testNoCov
+
+.PHONY: pytest
+pytest:
+	$(VIRTUAL_ENV)/bin/py.test --reuse-db
+
+.PHONY: pytest-lastfailed
+pytest-lastfailed:
+	$(VIRTUAL_ENV)/bin/py.test --reuse-db --last-failed
+
+.PHONY: pytest-clean
+pytest-clean:
+	if [ -f test_db.sqlite3 ]; then rm test_db.sqlite3; fi
+	$(VIRTUAL_ENV)/bin/py.test
+
+.PHONY: jstest
+jstest:
+	npm run test
+
+.PHONY: jstest-nocov
+jstest-nocov:
+	npm run testNoCov
+
+.PHONY: jstest-debug
+jstest-debug:
+	npm run testDebug
+
+.PHONY: jstest-updateSnapshots
+jstest-updateSnapshots:
+	npm run updateSnapshots

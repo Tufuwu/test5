@@ -1,0 +1,28 @@
+{% extends "a4dashboard/base_dashboard.html" %}
+{% load i18n static %}
+
+{% block title %}{% translate "New Project" %} &mdash; {{ block.super }}{% endblock%}
+
+{% block dashboard_content %}
+    <h1>{% translate "New Project" %}</h1>
+
+    <ul>
+        {% for blueprint_slug, blueprint in view.blueprints %}
+        <li>
+            <div>{{ blueprint.title }}</div>
+            <img alt="" src="{% static blueprint.image %}">
+            <div>{{ blueprint.description | linebreaks }}</div>
+            <ul>
+                {% for phase_content in blueprint.content %}
+                    <li><strong>{% translate 'Phase' %} {{ forloop.counter }}</strong>: {{ phase_content.description }}</li>
+                {% endfor %}
+            </ul>
+
+            <a href="{% url 'a4dashboard:project-create' organisation_slug=view.organisation.slug blueprint_slug=blueprint_slug %}"
+               class="btn">
+                {% translate 'Select'%}
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
