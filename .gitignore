@@ -1,8 +1,4 @@
-.venv
 *.pyc
-*.egg-info
-*.eggs
-dist
-build
-MANIFEST
-__pycache__
+*.swp
+db.sqlite3
+vagrant/.vagrant/

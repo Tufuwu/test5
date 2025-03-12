@@ -1,0 +1,45 @@
+{% extends "job_board/_base.html" %}
+
+{% block content %}
+{% include "job_board/_header.html" %}
+{% if jobs %}
+{% include "job_board/_mlist.html" %}
+<table class="table">
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Title</th>
+      <th>Country</th>
+      <th>Category</th>
+    </tr>
+  </thead>
+  {% for job in jobs %}
+  <tr>
+    <td>{{ job.paid_at|date:'Y-m-d' }}</td>
+    <td>
+      <a href="{% url 'jobs_show_slug' job.id job.slug %}">{{ job.title }}</a> <small><strong>@&nbsp;{{ job.company.name }}</strong></small>
+    </td>
+    <td>
+      {% if job.site.siteconfig.remote %}
+        {{ job.format_country }}
+      {% else %}
+        {{ job.format_country }}
+        {% if job.remote %}
+          {% if job.country %}
+            <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+          {% else %}
+            <span class="glyphicon glyphicon-globe" aria-hidden="true"></span>
+          {% endif %}
+        {% endif %}
+      {% endif %}
+    </td>
+    <td>
+      <a href="{% url 'categories_show' job.category.id %}"><span class="label label-primary">{{ job.category.name }}</span></a>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+  <p>No jobs found.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,23 @@
+.panel-body {
+  word-break: break-word;
+}
+
+#markdown {
+  font-size: 75%;
+}
+
+#centered {
+  text-align: center;
+}
+
+#twitter-button {
+  margin-top:15px;
+  margin-left:10px;
+  margin-right:10px;
+}
+
+#payment-form {
+  display: inline;
+}
+
+body { padding-top: 70px; }

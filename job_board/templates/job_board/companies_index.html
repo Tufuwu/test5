@@ -1,0 +1,33 @@
+{% extends "job_board/_base.html" %}
+
+{% block content %}
+{% include "job_board/_header.html" %}
+{% if companies %}
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th class="hidden-xs hidden-sm">URL</th>
+      <th class="hidden-xs hidden-sm">Twitter</th>
+      <th>Total Jobs</th>
+      <th>Active Jobs</th>
+    </tr>
+  </thead>
+  {% for company in companies %}
+  <tr>
+    <td><a href="{% url 'companies_show_slug' company.id company.slug %}">{{ company.name }}</a></td>
+    <td class="hidden-xs hidden-sm"><a href="{{ company.url }}">{{ company.url }}</a></td>
+    <td class="hidden-xs hidden-sm"><a href="https://www.twitter.com/{{ company.twitter }}">{{ company.twitter }}</a></td>
+    <td>{{ company.paid_jobs.count }}</td>
+    <td>{{ company.active_jobs.count }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+{% include "job_board/pagination.html" with pagination_list=companies %}
+
+{% else %}
+<p>No companies found.</p>
+{% endif %}
+
+{% endblock %}
