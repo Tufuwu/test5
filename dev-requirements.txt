@@ -1,0 +1,5 @@
+parameterized
+pytest
+pytest-cov
+torchsnapshot-nightly
+pyre-check

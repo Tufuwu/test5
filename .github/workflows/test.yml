@@ -1,13 +1,25 @@
-name: CI
-
-on: [push, pull_request]
-
+name: Test
+on:
+  - push
+  - pull_request_target
 jobs:
-  tue-ci:
-    name: TUe CI - ${{ github.event_name }}
+  lint:
     runs-on: ubuntu-latest
     steps:
-      - name: TUe CI
-        uses: tue-robotics/tue-env/ci/main@master
+      - uses: actions/setup-python@v2
+      - uses: actions/checkout@v2
+      - run: pip install flake8
+      - run: flake8
+  unit-test:
+    needs: lint
+    strategy:
+      matrix:
+        python: ["3.9", "3.10"]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-python@v2
         with:
-          package: ${{ github.event.repository.name }}
+          python-version: ${{ matrix.python }}
+      - uses: actions/checkout@v2
+      - run: pip install -e .[test]
+      - run: ./test/run_test.sh

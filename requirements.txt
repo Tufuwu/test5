@@ -1,0 +1,11 @@
+torch>=2.3.0
+numpy==1.24.4
+fsspec
+tensorboard
+packaging
+psutil
+pyre_extensions
+typing_extensions
+setuptools
+tqdm
+tabulate
