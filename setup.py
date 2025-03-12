@@ -1,45 +1,59 @@
-import os
-from setuptools import setup
+import re
 
-with open(os.path.join(os.path.dirname(__file__), 'README.rst')) as readme:
-    README = readme.read()
+try:
+    from setuptools import setup
+except ImportError:
+    from distutils.core import setup
 
-# allow setup.py to be run from any path
-os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
+with open("src/win32_setctime/__init__.py", "r") as file:
+    regex_version = r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]'
+    version = re.search(regex_version, file.read(), re.MULTILINE).group(1)
 
-
-def local_scheme(version):
-    return ""
-
+with open("README.md", "rb") as file:
+    readme = file.read().decode("utf-8")
 
 setup(
-    name='django-db-logger',
-    version='0.1.13',
-    # use_scm_version={"local_scheme": local_scheme} if os.getenv('TestPypi') == 'yes' else False,  # using `setuptools_scm` when publish to test.pypi
-    setup_requires=['setuptools_scm'],
-    packages=['django_db_logger', 'django_db_logger.migrations'],
-    include_package_data=True,
-    license='MIT License',
-    description='Django logging in database',
-    long_description=README,
-    url='https://github.com/CiCiUi/django-db-logger',
-    author='zhangshine',
-    author_email='zhangshine0125@gmail.com',
-    install_requires=['django>=3.2', 'six'],
+    name="win32_setctime",
+    version=version,
+    packages=["win32_setctime"],
+    package_dir={"": "src"},
+    package_data={"win32_setctime": ["py.typed"]},
+    description="A small Python utility to set file creation time on Windows",
+    long_description=readme,
+    long_description_content_type="text/markdown",
+    author="Delgan",
+    author_email="delgan.py@gmail.com",
+    url="https://github.com/Delgan/win32-setctime",
+    download_url="https://github.com/Delgan/win32-setctime/archive/{}.tar.gz".format(version),
+    keywords=["win32", "windows", "filesystem", "filetime"],
+    license="MIT license",
     classifiers=[
-        'Environment :: Web Environment',
-        'Framework :: Django',
-        'Intended Audience :: Developers',
-        'License :: OSI Approved :: MIT License',
-        'Operating System :: OS Independent',
-        'Programming Language :: Python',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.8',
-        'Programming Language :: Python :: 3.9',
-        'Programming Language :: Python :: 3.10',
-        'Programming Language :: Python :: 3.11',
-        'Programming Language :: Python :: 3.12',
-        'Topic :: Internet :: WWW/HTTP',
-        'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
+        "Development Status :: 5 - Production/Stable",
+        "Topic :: System :: Filesystems",
+        "Intended Audience :: Developers",
+        "Environment :: Win32 (MS Windows)",
+        "Natural Language :: English",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: Microsoft",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
+        "Programming Language :: Python :: 3 :: Only",
+        "Programming Language :: Python :: Implementation :: CPython",
     ],
+    extras_require={
+        "dev": [
+            "black>=19.3b0 ; python_version>='3.6'",
+            "pytest>=4.6.2",
+        ]
+    },
+    python_requires=">=3.5",
 )

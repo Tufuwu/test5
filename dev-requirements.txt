@@ -1,5 +1,0 @@
-django
-six
-twine
-wheel
-setuptools_scm
