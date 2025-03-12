@@ -1,0 +1,88 @@
+<div metal:use-macro="layout">
+  <div metal:fill-slot="title" tal:omit-tag="1">Home</div>
+
+  <div metal:fill-slot="head" tal:omit-tag="1">
+    <meta name="description" content="A repository of Python wheels compiled
+      specifically for the Raspberry Pi OS, derived from the packages at the
+      Python Package Index (PyPI)" />
+  </div>
+
+  <div metal:fill-slot="scripts" tal:omit-tag="1">
+    <script src="/blogposts.js"></script>
+  </div>
+
+  <section metal:fill-slot="content">
+    <div class="content">
+      <h2>Python Wheels for the Raspberry Pi</h2>
+
+      <p>piwheels is a <a href="https://python.org">Python</a> package
+      repository providing Arm platform <a href="https://pythonwheels.com/">wheels</a>
+      (pre-compiled binary Python packages) specifically for the
+      <a href="https://www.raspberrypi.com/">Raspberry Pi</a>, making pip
+      installations much faster. Packages are natively compiled on Raspberry
+      Pi 3 and 4 hardware using the <a href="https://www.mythic-beasts.com/order/rpi">Mythic
+      Beasts Pi cloud</a>.</p>
+
+      <h2 id="configuration">Configuration</h2>
+
+      <p><a href="https://www.raspberrypi.com/software/operating-systems/">Raspberry Pi OS</a>
+      includes configuration for <code>pip</code>
+      to use piwheels by default, which lives at <code>/etc/pip.conf</code>:</p>
+
+      <pre>[global]
+extra-index-url=https://www.piwheels.org/simple</pre>
+
+      <p>With this simple configuration change, <code>pip</code>
+      should now search piwheels for built distributions of packages and use
+      them in preference to building from source. You can test this out by
+      creating a virtual environment and attempting to install <a
+      href="/project/scipy/">scipy</a> which usually involves a fairly
+      lengthy compilation:</p>
+
+      <pre>$ sudo apt install virtualenv python3-virtualenv -y
+$ virtualenv -p /usr/bin/python3 testpip
+$ source testpip/bin/activate
+(testpip) $ pip install scipy
+...
+(testpip) $ deactivate
+$ rm -rf testpip/</pre>
+
+      <h2 id="support">Support</h2>
+
+      <p>Wheels provided support all Raspberry Pi models (as of October 2023). Our wheels are only
+      supported under 32-bit (<code>armhf</code>) Raspberry Pi OS, and only for the version of
+      Python provided by each OS release:
+
+      <table class="box">
+        <tr><th>Raspberry Pi OS version</th><th>Python version</th><th>Status</th></tr>
+        <tr><td>Jessie</td><td>Python 3.4</td><td class="skip" title="Inactive (end of life)"></td></tr>
+        <tr><td>Stretch</td><td>Python 3.5</td><td class="skip" title="Inactive (end of life)"></td></tr>
+        <tr><td>Buster</td><td>Python 3.7</td><td class="skip" title="Inactive (end of life)"></td></tr>
+        <tr><td>Bullseye</td><td>Python 3.9</td><td class="success" title="Active"></td></tr>
+        <tr><td>Bookworm</td><td>Python 3.11</td><td class="success" title="Active"></td></tr>
+      </table>
+
+      <p>See each package's <a href="/packages.html">project page</a> for
+      information on available wheels, and see the <a href="/faq.html">FAQ</a>
+      for more technical details.</p>
+    </div>
+
+    <div class="sidebar">
+      <div class="stats highlight">
+        <dl><dt>Packages</dt><dd>${'{:,}'.format(stats.packages_built)}</dd></dl>
+        <dl><dt>Wheels</dt><dd>${'{:,}'.format(stats.files_count)}</dd></dl>
+        <dl><dt>Downloads (all time)</dt><dd>${'{:,}'.format(stats.downloads_all)}</dd></dl>
+        <dl><dt>Downloads (last 30 days)</dt><dd>${'{:,}'.format(stats.downloads_last_month)}</dd></dl>
+      </div>
+
+      <h3>Latest blog posts</h3>
+      <ul id="latest-blog-posts"><li>loading...</li></ul>
+    </div>
+  </section>
+
+  <section>
+    <div class="content no-sidebar">
+      <p id="timestamp"><small>Page last updated ${timestamp}</p>
+    </div>
+  </section>
+</div>

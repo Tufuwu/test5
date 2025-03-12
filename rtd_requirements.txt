@@ -1,0 +1,12 @@
+sphinx>=3
+sphinx-rtd-theme
+configargparse
+pyzmq
+voluptuous
+cbor2
+python-dateutil
+requests
+sqlalchemy
+psycopg2
+chameleon
+simplejson

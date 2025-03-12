@@ -1,0 +1,18 @@
+[Unit]
+Description=The piwheels slave service
+After=local-fs.target network.target
+
+[Service]
+Type=notify
+WatchdogSec=2min
+StartLimitInterval=5min
+StartLimitBurst=4
+StartLimitAction=reboot-force
+Restart=on-failure
+User=piwheels
+PrivateTmp=true
+NoNewPrivileges=true
+ExecStart=/usr/local/bin/piw-slave -v
+
+[Install]
+WantedBy=multi-user.target
