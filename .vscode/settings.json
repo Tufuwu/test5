@@ -1,10 +1,4 @@
 {
-    "python.testing.pytestEnabled": true,
-    "python.testing.cwd": "${workspaceFolder}",
-    "python.testing.pytestPath": "${workspaceFolder}/run-pytest",
-    "python.testing.pytestArgs": [
-        "-vv",
-        // Uncomment --create-db to refresh test database (after model changes)
-        // "--create-db",
-    ],
+  "editor.formatOnType": true,
+  "editor.formatOnSave": true,
 }
