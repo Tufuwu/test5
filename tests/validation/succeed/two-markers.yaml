@@ -1,5 +1,0 @@
-markers:
-  - coordinates: [0, 1]
-    popup contents: First marker
-  - coordinates: [2, 3]
-    popup contents: Second marker
