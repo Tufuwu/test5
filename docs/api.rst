@@ -1,42 +1,60 @@
-.. _api:
+API Reference
+=============
 
-PyTeal Package
-==============
+SwarmRequest
+------------
 
-.. automodule:: pyteal
-   :members:
-   :undoc-members:
-   :imported-members:
-   :special-members: __getitem__
-   :show-inheritance:
+.. autoclass:: viresclient.SwarmRequest
+    :members:
+    :undoc-members:
+    :show-inheritance:
+    :inherited-members:
+    :exclude-members: AUXILIARY_VARIABLES, COLLECTIONS, COLLECTION_SAMPLING_STEPS, MAGNETIC_MODELS, MAGNETIC_MODEL_VARIABLES, OBS_COLLECTIONS, PRODUCT_VARIABLES, CONJUNCTION_MISSION_SPACECRAFT_PAIRS, MISSION_SPACECRAFTS
 
-   .. data:: Txn
-      :annotation: = <pyteal.TxnObject object>
+AeolusRequest
+-------------
 
-      The current transaction being evaluated. This is an instance of :any:`TxnObject`.
+.. autoclass:: viresclient.AeolusRequest
+    :members:
+    :undoc-members:
+    :show-inheritance:
+    :inherited-members:
 
-   .. data:: Gtxn
-      :annotation: = <pyteal.TxnGroup object>
+ReturnedData
+------------
 
-      The current group of transactions being evaluated. This is an instance of :any:`TxnGroup`.
+.. autoclass:: viresclient.ReturnedData
+    :members:
+    :undoc-members:
+    :show-inheritance:
+    :inherited-members:
 
-   .. data:: InnerTxn
-      :annotation: = <pyteal.TxnObject object>
+.. autoclass:: viresclient.ReturnedDataFile
+    :members:
+    :undoc-members:
+    :show-inheritance:
+    :inherited-members:
 
-      The most recently submitted inner transaction. This is an instance of :any:`TxnObject`.
 
-      If a transaction group was submitted most recently, then this will be the last transaction in that group.
+ClientConfig
+------------
 
-   .. data:: Gitxn
-      :annotation: = <pyteal.InnerTxnGroup object>
+.. autoclass:: viresclient.ClientConfig
+    :members:
+    :undoc-members:
+    :show-inheritance:
+    :inherited-members:
 
-      The most recently submitted inner transaction group. This is an instance of :any:`InnerTxnGroup`.
+set_token
+---------
 
-      If a single transaction was submitted most recently, then this will be a group of size 1.
+.. autofunction:: viresclient.set_token
 
-.. automodule:: pyteal.abi
-   :members:
-   :undoc-members:
-   :imported-members:
-   :special-members: __getitem__
-   :show-inheritance:
+DataUpload
+----------
+
+.. autoclass:: viresclient.DataUpload
+    :members:
+    :undoc-members:
+    :show-inheritance:
+    :inherited-members:
