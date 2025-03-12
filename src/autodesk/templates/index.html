@@ -1,0 +1,35 @@
+<!DOCTYPE>
+<html>
+  <head>
+    <title>AutoDesk</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      body {
+        font-family: sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+    </style>
+    <script>
+      function desk(state) {
+        var oReq = new XMLHttpRequest();
+        oReq.open("PUT", "/api/desk");
+        oReq.send(state);
+      }
+
+      function session(state) {
+        var oReq = new XMLHttpRequest();
+        oReq.open("PUT", "/api/session");
+        oReq.send(state);
+      }
+    </script>
+  </head>
+  <body>
+    <h1>AutoDesk</h1>
+    <p>Currently <b>{{session}}</b> with desk <b>{{desk}}</b> for <b>{{active_time}}</b>.</p>
+    <p>Change desk state: <a href="#" onclick="desk('down');">Down</a> / <a href="#" onclick="desk('up');">Up</a></p>
+    <p>Change active state: <a href="#" onclick="session('inactive');">Inactive</a> / <a href="#" onclick="session('active');">Active</a></p>
+    <h2>Statistics</h2>
+    <img src='data:image/png;charset=utf-8;base64, {{statistics}}' />
+  </body>
+</html>
