@@ -1,67 +1,36 @@
-name: update-translations
+name: Tests
 
 on:
   push:
-    branches:
-      - master
-
-# on:
-#   schedule:
-#     - cron: "0 0 * * *" #runs at 00:00 UTC everyday
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
 jobs:
-  ubuntu:
+  test:
     runs-on: ubuntu-latest
-    env:
-      SPHINXINTL_TRANSIFEX_PROJECT_NAME: sphinx-doc
-      SPHINXINTL_TRANSIFEX_USERNAME: sphinxjp
-      # SPHINXINTL_TRANSIFEX_PASSWORD: from GitHub secrets
-
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.10"]
     steps:
     - uses: actions/checkout@v2
-    - name: Get date
-      id: get-date
-      run: |
-        echo "::set-output name=date::$(/bin/date -u "+%Y%m%d")"
-        echo "::set-output name=yyyymm::$(/bin/date -u "+%Y%m")"
-      shell: bash
-    - name: cache pip
-      id: cache-pip
-      uses: actions/cache@v4
+    - uses: actions/setup-python@v2
       with:
-        path: |
-          ~/.cache/pip
-          ~/.local/
-        key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}-${{ steps.get-date.outputs.yyyymm }}
-    - name: Setup Python
-      uses: actions/setup-python@v2
+        python-version: ${{ matrix.python-version }}
+    - run: pip install -r requirements.txt coveralls
+    - run: docker-compose up -d
+    - run: pytest
+    - run: coveralls --service=github
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        COVERALLS_FLAG_NAME: ${{ matrix.python-version }}
+        COVERALLS_PARALLEL: true
+
+  finalize:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+    - uses: coverallsapp/github-action@master
       with:
-        python-version: 3.9
-    - name: Check Python version
-      run: python --version
-    - name: Install graphviz
-      run: sudo apt-get install graphviz
-    - name: Install dependencies
-      run: |
-        git branch -a
-        git checkout master  # attach this repo
-        git submodule init
-        git submodule update
-        (cd sphinx; git fetch origin; git checkout master; git reset --hard origin/master; git branch -a)
-        pip install -U pip setuptools
-        pip install -r ./requirements.txt
-    - name: Update translations
-      run: sh ./locale/update.sh
-    - name: After success
-      run: |
-        git branch -a
-        git checkout master  # attach this repo
-        git config --global user.email "sphinx-auto-update"
-        git config --global user.name "sphinx-auto-update"
-        git add .
-        git commit -m "[skip ci] by GHA (JOB ${{ GITHUB_ACTION }}) https://github.com/${{ github.repository }}/actions/runs/${{ github.run_number }}"
-    - name: GitHub Push
-      uses: ad-m/github-push-action@v0.6.0
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: ${{ github.ref }}
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        parallel-finished: true
