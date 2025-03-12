@@ -1,197 +1,117 @@
-Protontricks
-============
+<p align="center">
+  <img src="static/img/ade_scheduler_icon.png" width="200" height="200"> </img>
+</p>
+<p align="center">
+    <img alt="Website" src="https://img.shields.io/website?down_color=red&down_message=offline&label=Status%20&style=for-the-badge&up_color=green&up_message=online&url=https%3A%2F%2Fmonhoraire.uclouvain.be">
+</p>
+<p align="center">
+<img src="https://img.shields.io/endpoint?url=https://monhoraire.uclouvain.be/api/shield/user">
+<img src="https://img.shields.io/endpoint?url=https://monhoraire.uclouvain.be/api/shield/schedule">
+</p>
 
-[![image](https://img.shields.io/pypi/v/protontricks.svg)](https://pypi.org/project/protontricks/)
-[![Coverage Status](https://coveralls.io/repos/github/Matoking/protontricks/badge.svg?branch=master)](https://coveralls.io/github/Matoking/protontricks?branch=master)
-[![Test Status](https://github.com/Matoking/protontricks/actions/workflows/tests.yml/badge.svg)](https://github.com/Matoking/protontricks/actions/workflows/tests.yml)
+# ADE Scheduler: a scheduling tool made for humans
 
-[<img width="240" src="https://flathub.org/assets/badges/flathub-badge-en.png">](https://flathub.org/apps/details/com.github.Matoking.protontricks)
+[ADE-Scheduler](https://ade-scheduler.info.ucl.ac.be/) is a web-application made by (former) students which is destined to be used by UCLouvain members (students, academics,...).
 
-Run Winetricks commands for Steam Play/Proton games among other common Wine features, such as launching external Windows executables.
+### Project creators
 
-This is a fork of the original project created by sirmentio. The original repository is available at [Sirmentio/protontricks](https://github.com/Sirmentio/protontricks).
+- [Eertmans Jérome](https://www.linkedin.com/in/j%C3%A9rome-eertmans-130ab1130/) (active maintainer)
+- [Navarre Louis](https://www.linkedin.com/in/louis-navarre-36b78b143/) (maintainer until ~2021)
+- [Poncelet Gilles](https://www.linkedin.com/in/gilles-poncelet-020442195/) (active maintainer)
 
-# What is it?
+We are three former students from the Ecole Polytechnique de Louvain (EPL) and were starting our first master year at the start of the project.
 
-This is a wrapper script that allows you to easily run Winetricks commands for Steam Play/Proton games among other common Wine features, such as launching external Windows executables. This is often useful when a game requires closed-source runtime libraries or applications that are not included with Proton.
+### Project maintainers
 
-# Requirements
+- Laurent Dubois ([@lauren-d](https://github.com/lauren-d))
 
-* Python 3.6 or newer
-* Winetricks
-* Steam
-* YAD (recommended) **or** Zenity. Required for GUI.
+### Why such a tool ?
 
-# Usage
+Until our tool became the official tool used by UCLouvain, the previously used scheduling tool, [ADE](http://horaire.uclouvain.be/direct/), lacked an intuitive interface and general usability. Therefore, we decided to create ADE-Scheduler as a "wrapper" around this tool to make it more intuitive, nice and complete.
 
-**Protontricks can be launched from desktop or using the `protontricks` command.**
+Before that, we were using the excellent [ADE2ICS](https://github.com/cdamman/UCL2ICS) made by Corentin Damman which allowed to create subscription links where one could select its events (TPs, CMs, etc). ADE-Scheduler is therefore an improvement of this tool.
 
-## Command-line
+### Key dates
 
-The basic command-line usage is as follows:
+- **2019 - August**: start of the project
+- **2019 - September**: access to the API of ADE and release of the first version of the tool
+- **2020 - Summer**: complete overhaul of the tool to make it more attractive, intuitive and mobile-friendly.
+- **2020 - September**: release of the second version of the tool
+- **2021 - September**: 2 years of service, Python 3.9 upgrade and 3500+ users
+- **2021 - December**: 7000+ users
+- **2022 - January**: moving auth. system to UCLouvain OAuth, thereby resetting the number of users to 0 on January 29nth, 2022
+- **2022 - Summer**: first major contribution from students to the ADE Scheduler repository
+- **2024 - September**: ADE Scheduler became the **official UCLouvain scheduling tool** and changed its name to "Mon Horaire"!
 
-```
-# Find your game's App ID by searching for it
-protontricks -s <GAME NAME>
+### How does it work ?
 
-# or by listing all games
-protontricks -l
+#### Back-end <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/1024px-Python-logo-notext.svg.png" alt="python" width="20" height="20"></img>
 
-# Run winetricks for the game.
-# Any parameters in <ACTIONS> are passed directly to Winetricks.
-# Parameters specific to Protontricks need to be placed *before* <APPID>.
-protontricks <APPID> <ACTIONS>
+##### Data source
 
-# Run a custom command for selected game
-protontricks -c <COMMAND> <APPID>
+Thanks to the access to the API of ADE, we obtain all the information in a `XML` format. Those are up-to-date with the infos you will find on the ADE website. We are mainly interested in two type of informations:
 
-# Run the Protontricks GUI
-protontricks --gui
+- Event list sorted by course
+- Location of every UCLouvain classroom, auditorium, etc.
 
-# Launch a Windows executable using Protontricks
-protontricks-launch <EXE>
+#### Data treatment
 
-# Launch a Windows executable for a specific Steam app using Protontricks
-protontricks-launch --appid <APPID> <EXE>
+The backend of ADE-Scheduler is written in Python using the [Flask](https://flask.palletsprojects.com/en/1.1.x/) micro-framework. Other packages are also used to supply many useful functions to enhance the overall user experience.\
+Among those, we use [pandas](https://pandas.pydata.org/) pandas to optimise the performances, [ics](https://pypi.org/project/ics/) to convert the schedules in the iCal format - and many more.
 
-# Print the Protontricks help message
-protontricks --help
-```
+We also use a [Redis](https://redis.io) server to store user sessions and buffer data, as well as a [PostgreSQL](https://www.postgresql.org/) database to store user accounts and schedules.
 
-Since this is a wrapper, all commands that work for Winetricks will likely work for Protontricks as well.
+### Front-end <img src="https://www.w3.org/html/logo/downloads/HTML5_Badge_512.png" alt="html" width="20" height="20"></img> <img src="https://i1.wp.com/www.thekitchencrew.com/wp-content/uploads/2016/03/js-logo.png?fit=500%2C500" alt="js" width="20" height="20"></img>
 
-If you have a different Steam directory, you can export ``$STEAM_DIR`` to the directory where Steam is.
+Client-side logic is handled using [Vue](https://vuejs.org/), a JavaScript reactive framework. Moreover, the events are displayed on a calendar generated with the help of the [FullCalendar](https://fullcalendar.io) package.
 
-If you'd like to use a local version of Winetricks, you can set ``$WINETRICKS`` to the location of your local winetricks installation.
+The UI is made mainly with the help of [Bootstrap](https://getbootstrap.com/), which handles all the CSS and makes the website enjoyable and mobile-friendly.
 
-You can also set ``$PROTON_VERSION`` to a specific Proton version manually. This is usually the name of the Proton installation without the revision version number. For example, if Steam displays the name as `Proton 5.0-3`, use `Proton 5.0` as the value for `$PROTON_VERSION`.
+### Functionalities and comparison with ADE
 
-[Wanna see Protontricks in action?](https://asciinema.org/a/229323)
+In short, ADE Scheduler offers the same information as ADE, but in a much
+more elegant manner. A side by side comparison of the two sites just
+speaks for itself:
 
-## Desktop
+![](static/img/ade_official_side_by_side.png)
 
-Protontricks comes with desktop integration, adding the Protontricks app shortcut and the ability to launch external Windows executables for Proton apps. To run an executable for a Proton app, select **Protontricks Launcher** when opening a Windows executable (eg. **EXE**) in a file manager.
+![](static/img/ade_scheduler_side_by_side.png)
 
-The **Protontricks** app shortcut should be available automatically after installation. If not, you may need to run `protontricks-desktop-install` in a terminal to enable this functionality.
+But an intuitive design is not the only advantage of ADE Scheduler, it also
+comes with several useful tools which ADE does not have:
 
-# Troubleshooting
+- [x] automatically load courses based on classes in your enrolled in;
+- [x] black-listing some events in order to have a clean schedule
+- [x] easily viewing multiple courses
+- [x] handling multiple schedules
+- [x] computing your optimized schedule which minimizes conflicts
+- [x] adding private events
+- [x] no connection required
+- [x] caching of you data so you don't lose everything each time you leave
+- [x] detailed map of classrooms and events associated
+- [x] possibility to download schedule to iCal file or create subscription link
+- [x] you can share you calendar with anyone you would like
 
-For common issues and solutions, see [TROUBLESHOOTING.md](TROUBLESHOOTING.md).
+... and many more !
 
-# Installation
+### Documentation
 
-You can install Protontricks using a community package, Flatpak or **pipx**. **pip** can also be used, but it is not recommended due to possible problems.
+The website's documentation is available on the [help page](monhoraire.uclouvain.be/help).
 
-**If you're using a Steam Deck**, Flatpak is the recommended option. Open the **Discover** application store in desktop mode and search for **Protontricks**. 
+### Future improvements
 
-**If you're using the Flatpak version of Steam**, follow the [Flatpak-specific installation instructions](https://github.com/flathub/com.github.Matoking.protontricks) instead.
+Here are listed a series of issues we would like to implement in the future:
 
-## Community packages (recommended)
+- Implement a complete testing suite to enable easy and robust CI
+- Complete the help section with more videos, tips, etc.
 
-Community packages allow easier installation and updates using distro-specific package managers. They also take care of installing dependencies and desktop features out of the box, making them **the recommended option if available for your distribution**.
+We are open to any suggestions !
 
-Community packages are maintained by community members and might be out-of-date compared to releases on PyPI.
-Note that some distros such as **Debian** / **Ubuntu** often have outdated packages for either Protontricks **or** Winetricks.
-If so, install the Flatpak version instead as outdated releases may fail to work properly.
+## Contributing
 
-[![Packaging status](https://repology.org/badge/vertical-allrepos/protontricks.svg)](https://repology.org/project/protontricks/versions)
+This application being open source, everyone is more than welcome to contribute in any way !
+To see more details about our contributing guidelines, please refer to [contributing](/CONTRIBUTING.md).
 
-## Flatpak (recommended)
-
-Protontricks is available on the Flathub app store:
-
-[<img width="180" src="https://flathub.org/assets/badges/flathub-badge-en.png">](https://flathub.org/apps/details/com.github.Matoking.protontricks)
-
-To use Protontricks as a command-line application, add shell aliases by running the following commands:
-
-```
-echo "alias protontricks='flatpak run com.github.Matoking.protontricks'" >> ~/.bashrc
-echo "alias protontricks-launch='flatpak run --command=protontricks-launch com.github.Matoking.protontricks'" >> ~/.bashrc
-```
-
-You will need to restart your terminal emulator for the aliases to take effect.
-
-The Flatpak installation is sandboxed and only has access to the Steam
-installation directory by default. **You will need to add filesystem permissions when
-using additional Steam library locations or running external Windows
-applications.** See
-[here](https://github.com/flathub/com.github.Matoking.protontricks#configuration)
-for instructions on changing the Flatpak permissions.
-
-## pipx
-
-You can use pipx to install the latest version on PyPI or the git repository for the current user. Installing Protontricks using pipx is recommended if a community package doesn't exist for your Linux distro.
-
-**pipx does not install Winetricks and other dependencies out of the box.** You can install Winetricks using the [installation instructions](https://github.com/Winetricks/winetricks#installing) provided by the Winetricks project. 
-
-**pipx requires Python 3.6 or newer.**
-
-**You will need to install pip, setuptools and virtualenv first.** Install the correct packages depending on your distribution:
-
-* Arch Linux: `sudo pacman -S python-pip python-pipx python-setuptools python-virtualenv`
-* Debian-based (Ubuntu, Linux Mint): `sudo apt install python3-pip python3-setuptools python3-venv pipx`
-* Fedora: `sudo dnf install python3-pip python3-setuptools python3-libs pipx`
-* Gentoo:
-
-  ```sh
-  sudo emerge -av dev-python/pip dev-python/virtualenv dev-python/setuptools
-  python3 -m pip install --user pipx
-  ~/.local/bin/pipx ensurepath
-  ```
-
-Close and reopen your terminal. After that, you can install Protontricks.
-
-```sh
-pipx install protontricks
-```
-
-To enable desktop integration as well, run the following command *after* installing Protontricks
-
-```sh
-protontricks-desktop-install
-```
-
-To upgrade to the latest release:
-```sh
-pipx upgrade protontricks
-```
-
-To install the latest development version (requires `git`):
-```sh
-pipx install git+https://github.com/Matoking/protontricks.git
-# '--spec' is required for older versions of pipx
-pipx install --spec git+https://github.com/Matoking/protontricks.git protontricks
-```
-
-## pip (not recommended)
-
-You can use pip to install the latest version on PyPI or the git repository. This method should work in any system where Python 3 is available.
-
-**Note that this installation method might cause conflicts with your distro's package manager. To prevent this, consider using the pipx method or a community package instead.**
-
-**You will need to install pip and setuptools first.** Install the correct packages depending on your distribution:
-
-* Arch Linux: `sudo pacman -S python-pip python-setuptools`
-* Debian-based (Ubuntu, Linux Mint): `sudo apt install python3-pip python3-setuptools`
-* Fedora: `sudo dnf install python3-pip python3-setuptools`
-* Gentoo: `sudo emerge -av dev-python/pip dev-python/setuptools`
-
-To install the latest release using `pip`:
-```sh
-sudo python3 -m pip install protontricks
-```
-
-To upgrade to the latest release:
-```sh
-sudo python3 -m pip install --upgrade protontricks
-```
-
-To install Protontricks only for the current user:
-```sh
-python3 -m pip install --user protontricks
-```
-
-To install the latest development version (requires `git`):
-```sh
-sudo python3 -m pip install git+https://github.com/Matoking/protontricks.git
-```
+Any suggestion, idea or bugs are much appreciated,
+and you can contact us at all times via the
+[discussions](https://github.com/ADE-Scheduler/ADE-Scheduler/discussions) page.

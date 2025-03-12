@@ -1,21 +1,23 @@
-# How can I contribute?
-Well, you can...
-* Report bugs
-* Add improvements
-* Fix bugs
+# Contributing
 
-# Reporting bugs
-The best means of reporting bugs is by following these basic guidelines:
+Any contribution is welcome. If you would like to fix a bug or add a feature, you can
+do it ! However, it is important to follow some guidelines so that everything can go
+smoothly.
 
-* First describe in the title of the issue tracker what's gone wrong.
-* In the body, explain a basic synopsis of what exactly happens, explain how you got the bug one step at a time. If you're including script output, make sure you run the script with the verbose flag `-v`.
-* Explain what you had expected to occur, and what really occured.
-* Optionally, if you want, if you're a programmer, you can try to issue a pull request yourself that fixes the issue.
+If you have an idea or a bug, please report it first in the [Issues](https://github.com/SnaKyEyeS/ADE-Scheduler/issues) tab of the repository so we can discuss it and decide of the best strategy to bring your idea to life. Directly issuing a pull request is generally a bad idea: you might end up coding something that has already been done or is being done.
 
-# Adding improvements
-The way to go here is to ask yourself if the improvement would be useful for more than just a singular person, if it's for a certain use case then sure!
+## Setup your working environment
 
-* In any pull request, explain thoroughly what changes you made
-* Explain why you think these changes could be useful
-* If it fixes a bug, be sure to link to the issue itself.
-* Follow the [PEP 8](https://www.python.org/dev/peps/pep-0008/) code style to keep the code consistent.
+In order to be able to play with this project, you need to setup quite a few things.
+A very comprehensive and complete tutorial is available [here](https://ade-scheduler.readthedocs.io/en/latest/tutorials/setup.html)
+
+## Learning more about how to contribute
+
+Once your have setup the project, you can have a look at the
+[Contribution tutorials](https://ade-scheduler.readthedocs.io/en/latest/tutorials/contribute.html)
+
+## Reading the documentation
+
+An updated version of the documentation is hosted
+[here](https://ade-scheduler.readthedocs.io/en/latest/). This contains
+details about of each function should work and how to use them properly.

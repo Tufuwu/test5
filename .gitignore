@@ -1,9 +1,3 @@
-# Created by https://www.gitignore.io/api/python,virtualenv
-
-# Don't track setuptools-scm generated _version.py
-src/protontricks/_version.py
-
-### Python ###
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -20,7 +14,6 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
 lib64/
 parts/
 sdist/
@@ -29,6 +22,7 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+MANIFEST
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -46,15 +40,19 @@ htmlcov/
 .coverage
 .coverage.*
 .cache
-.pytest_cache/
 nosetests.xml
 coverage.xml
 *.cover
 .hypothesis/
+.pytest_cache/
 
 # Translations
-*.mo
 *.pot
+
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
 
 # Flask stuff:
 instance/
@@ -76,7 +74,7 @@ target/
 .python-version
 
 # celery beat schedule file
-celerybeat-schedule.*
+celerybeat-schedule
 
 # SageMath parsed files
 *.sage.py
@@ -103,18 +101,52 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-### VirtualEnv ###
-# Virtualenv
-# http://iamzed.com/2009/05/07/a-primer-on-virtualenv/
-[Bb]in
-[Ii]nclude
-[Ll]ib
-[Ll]ib64
-[Ll]ocal
-[Mm]an
-[Tt]cl
-pyvenv.cfg
-pip-selfcheck.json
+# PyCharm
+.idea
+
+# VS Code
+.vscode
+python/my.ics
+my.ics
+*.ics
+webapp/static/.DS_Store
+webapp/dump.rdb
+
+# For Redis
+personnal_data.py
 
 
-# End of https://www.gitignore.io/api/python,virtualenv
+# Private data
+database.db
+hidden.py
+test.py
+
+webapp/templates/map_bis.html
+
+static/gen/
+
+node_modules/
+
+dump.rdb
+
+cache/
+
+.flaskenv
+.botenv
+geo_locations.json
+
+plots/
+
+*.swp
+
+static/img/GitHub-Logos/.DS_Store
+
+fake_api.json
+
+FAKE_API_README.md
+
+ade_fake_api_January_2021.zip
+
+fake_api/
+
+profile/
