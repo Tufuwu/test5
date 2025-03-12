@@ -1,40 +1,70 @@
-#!/usr/bin/env make -f
+help:
+	@echo "help  -- print this help"
+	@echo "bootstrap -- rarely used: only first time project is cloned, or when infrastructure dependencies change"
+	@echo "test  -- run all the tests"
+	@echo "run  -- normally used to run the service locally"
+	@echo "stop  -- normally used to turn the services off"
+	@echo "clean -- rarely used: only when we want to stop and remove everything created by bootstrapping"
+	@echo "ps    -- show status"
+	@echo "dockershell -- run bash inside docker"
+	@echo "shell_plus -- run django shell_plus inside docker"
+	@echo "load_members_testdata -- populate the DB with members"
+	@echo "load_providers_test_data -- populate the DB with providers"
 
-PYPY_DIR ?= pypy
-RPYTHON  ?= $(PYPY_DIR)/rpython/bin/rpython
+RUN=docker-compose exec web
+MANAGE=${RUN} ./manage.py
 
-.PHONY: compile som-interp som-jit som-ast-jit som-bc-jit som-bc-interp som-ast-interp
+# rarely used: only first time project is cloned, or when infrastructure dependencies change
+bootstrap:
+	docker-compose up -d
+	${RUN} pip install -r /code/config/requirements-dev.txt
 
-all: compile
+# run all the tests; to avoid migrations everytime and run only some of them, do for example:
+# 	make test ARGS="-k members.tests.ReportCompleteTests"
+test:
+	docker-compose start
+	${MANAGE} test -v2 --noinput $(ARGS)
 
-compile: som-ast-jit
+# normally used to run the service locally
+run:
+	docker-compose start
+	${MANAGE} migrate
+	${MANAGE} runserver 0.0.0.0:8127
 
-som-ast-jit: core-lib/.git
-	SOM_INTERP=AST PYTHONPATH=$(PYTHONPATH):$(PYPY_DIR) $(RPYTHON) --batch -Ojit src/main_rpython.py
+# normally used to turn the services off
+stop:
+	docker-compose stop
 
-som-bc-jit:	core-lib/.git
-	SOM_INTERP=BC  PYTHONPATH=$(PYTHONPATH):$(PYPY_DIR) $(RPYTHON) --batch -Ojit src/main_rpython.py
-
-som-ast-interp: core-lib/.git
-	SOM_INTERP=AST PYTHONPATH=$(PYTHONPATH):$(PYPY_DIR) $(RPYTHON) --batch src/main_rpython.py
-
-som-bc-interp: core-lib/.git
-	SOM_INTERP=BC  PYTHONPATH=$(PYTHONPATH):$(PYPY_DIR) $(RPYTHON) --batch src/main_rpython.py
-
-som-interp: som-ast-interp som-bc-interp
-	
-som-jit: som-ast-jit som-bc-jit
-
-test: compile
-	PYTHONPATH=$(PYTHONPATH):$(PYPY_DIR) nosetests
-	if [ -e ./som-ast-jit    ]; then ./som-ast-jit    -cp Smalltalk TestSuite/TestHarness.som; fi
-	if [ -e ./som-bc-jit     ]; then ./som-bc-jit     -cp Smalltalk TestSuite/TestHarness.som; fi
-	if [ -e ./som-ast-interp ]; then ./som-ast-interp -cp Smalltalk TestSuite/TestHarness.som; fi
-	if [ -e ./som-bc-interp  ]; then ./som-bc-interp  -cp Smalltalk TestSuite/TestHarness.som; fi
-
+# rarely used: only when we want to stop and remove everything created by bootstrapping
 clean:
-	@-rm som-ast-jit som-ast-interp
-	@-rm som-bc-jit  som-bc-interp
+	docker-compose stop
+	docker-compose down --rmi local
 
-core-lib/.git:
-	git submodule update --init
+ps:
+	docker-compose ps
+
+createsuperuser:
+	${MANAGE} createsuperuser
+
+dockershell:
+	${RUN} /bin/bash
+
+migrations:
+	${MANAGE} makemigrations
+
+migrate:
+	${MANAGE} migrate
+
+collectstatic:
+	${MANAGE} collectstatic
+
+shell_plus:
+	${MANAGE} shell_plus
+
+load_members_testdata:
+	${MANAGE} load_data_test 20
+
+load_providers_test_data:
+	${MANAGE} load_providers_data 20
+
+.PHONY: help start stop ps clean test dockershell shell_plus only_test pep8
