@@ -1,149 +1,92 @@
-MediaWiki
-=========
+`luma.core <https://github.com/rm-hull/luma.core>`__ **|**
+`luma.docs <https://github.com/rm-hull/luma.docs>`__ **|**
+`luma.emulator <https://github.com/rm-hull/luma.emulator>`__ **|**
+`luma.examples <https://github.com/rm-hull/luma.examples>`__ **|**
+luma.lcd **|**
+`luma.led_matrix <https://github.com/rm-hull/luma.led_matrix>`__ **|**
+`luma.oled <https://github.com/rm-hull/luma.oled>`__
 
-.. image:: https://img.shields.io/badge/license-MIT-blue.svg
-    :target: https://opensource.org/licenses/MIT/
-    :alt: License
-.. image:: https://img.shields.io/github/release/barrust/mediawiki.svg
-    :target: https://github.com/barrust/mediawiki/releases
-    :alt: GitHub release
-.. image:: https://github.com/barrust/mediawiki/workflows/Python%20package/badge.svg
-    :target: https://github.com/barrust/mediawiki/actions?query=workflow%3A%22Python+package%22
-    :alt: Build Status
-.. image:: https://codecov.io/gh/barrust/mediawiki/branch/master/graph/badge.svg?token=OdETiNgz9k
-    :target: https://codecov.io/gh/barrust/mediawiki
-    :alt: Test Coverage
-.. image:: https://app.codacy.com/project/badge/Grade/34162198611f4aa0bde630d1dab72ce8
-    :target: https://www.codacy.com/gh/barrust/mediawiki/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=barrust/mediawiki&amp;utm_campaign=Badge_Grade
-    :alt: Codacy Review
-.. image:: https://badge.fury.io/py/pymediawiki.svg
-    :target: https://badge.fury.io/py/pymediawiki
-    :alt: PyPi Release
-.. image:: http://pepy.tech/badge/pymediawiki
-    :target: https://pepy.tech/project/pymediawiki
-    :alt: Downloads
+luma.lcd
+========
+**HD44780, PCD8544, ST7735, ST7789, ST7567, HT1621, UC1701X, ILI9341, ILI9486, ILI9488 Display Drivers**
 
-***mediawiki*** is a python wrapper and parser for the MediaWiki API. The goal
-is to allow users to quickly and efficiently pull data from the MediaWiki site
-of their choice instead of worrying about dealing directly with the API. As
-such, it does not force the use of a particular MediaWiki site. It defaults to
-`Wikipedia <http://www.wikipedia.org>`__ but other MediaWiki sites can
-also be used.
+.. image:: https://github.com/rm-hull/luma.lcd/workflows/luma.lcd/badge.svg?branch=master
+   :target: https://github.com/rm-hull/luma.lcd/actions?workflow=luma.lcd
 
-MediaWiki wraps the `MediaWiki API <https://www.mediawiki.org/wiki/API>`_
-so you can focus on *leveraging* your favorite MediaWiki site's data,
-not getting it. Please check out the code on
-`github <https://www.github.com/barrust/mediawiki>`_!
+.. image:: https://coveralls.io/repos/github/rm-hull/luma.lcd/badge.svg?branch=master
+   :target: https://coveralls.io/github/rm-hull/luma.lcd?branch=master
 
-**Note:** this library was designed for ease of use and simplicity. If you plan
-on doing serious scraping, automated requests, or editing, please look into
-`Pywikibot <https://www.mediawiki.org/wiki/Manual:Pywikibot>`__
-which has a larger API, advanced rate limiting, and other features so we may
-be considerate of the MediaWiki infrastructure. Pywikibot has also other extra
-features such as support for Wikibase (that runs Wikidata).
+.. image:: https://readthedocs.org/projects/luma-lcd/badge/?version=latest
+   :target: http://luma-lcd.readthedocs.io/en/latest/?badge=latest
+   :alt: Documentation Status
 
+.. image:: https://img.shields.io/pypi/pyversions/luma.lcd.svg
+   :target: https://pypi.python.org/pypi/luma.lcd
 
-Installation
-------------------
+.. image:: https://img.shields.io/pypi/v/luma.lcd.svg
+   :target: https://pypi.python.org/pypi/luma.lcd
 
-Pip Installation:
+.. image:: https://img.shields.io/pypi/dm/luma.lcd
+   :target: https://pypi.python.org/project/luma.lcd
 
-::
+luma.lcd provides a Python 3 interface to small LCD displays connected to
+Raspberry Pi and other Linux-based single-board computers (SBC).  It provides a
+Pillow-compatible drawing canvas, and other functionality to support:
 
-    $ pip install pymediawiki
+* scrolling/panning capability,
+* terminal-style printing,
+* state management,
+* color/greyscale (where supported),
+* dithering to monochrome
 
-To install from source:
+It currently supports devices using the HD44780, PCD8544, ST7735, ST7567, ST7789, ILI9341,
+ILI9486, ILI9488 and UC1701X controllers.
 
-To install ``mediawiki``, simply clone the `repository on GitHub
-<https://github.com/barrust/mediawiki>`__, then run from the folder:
+All modules can be picked up on ebay with a breakout board for a few pounds.
 
-::
+.. image:: https://raw.github.com/rm-hull/luma.lcd/master/doc/images/hd44780_20x4.jpg
 
-    $ python setup.py install
+.. image:: https://raw.github.com/rm-hull/luma.lcd/master/doc/images/pcd8544.png
 
-``mediawiki`` supports python versions 3.7 - 3.13
+.. image:: https://raw.github.com/rm-hull/luma.lcd/master/doc/images/st7735.jpg
 
-For *python 2.7* support, install `release 0.6.7 <https://github.com/barrust/mediawiki/releases/tag/v0.6.7>`__
+.. image:: https://raw.github.com/rm-hull/luma.lcd/master/doc/images/ht1621.jpg
 
-::
+.. image:: https://raw.github.com/rm-hull/luma.lcd/master/doc/images/uc1701x.png
 
-    $ pip install pymediawiki==0.6.7
+.. image:: https://raw.github.com/rm-hull/luma.lcd/master/doc/images/ili9341.jpg
 
 Documentation
 -------------
+Full documentation with installation instructions and examples can be found on
+https://luma-lcd.readthedocs.io.
 
-Documentation of the latest release is hosted on
-`readthedocs.io <http://pymediawiki.readthedocs.io/en/latest/?>`__
-
-To build the documentation yourself run:
-
-::
-
-    $ pip install sphinx
-    $ cd docs/
-    $ make html
-
-Automated Tests
-------------------
-
-To run automated tests, one must simply run the following command from the
-downloaded folder:
-
-::
-
-  $ python setup.py test
-
-
-Quickstart
-------------------
-
-Import mediawiki and run a standard search against Wikipedia:
-
-.. code:: python
-
-    >>> from mediawiki import MediaWiki
-    >>> wikipedia = MediaWiki()
-    >>> wikipedia.search('washington')
-
-Run more advanced searches:
-
-.. code:: python
-
-    >>> wikipedia.opensearch('washington')
-    >>> wikipedia.allpages('a')
-    >>> wikipedia.geosearch(title='washington, d.c.')
-    >>> wikipedia.geosearch(latitude='0.0', longitude='0.0')
-    >>> wikipedia.prefixsearch('arm')
-    >>> wikipedia.random(pages=10)
-
-Pull a MediaWiki page and some of the page properties:
-
-.. code:: python
-
-    >>> p = wikipedia.page('Chess')
-    >>> p.title
-    >>> p.summary
-    >>> p.categories
-    >>> p.images
-    >>> p.links
-    >>> p.langlinks
-
-See the `documentation for more examples!
-<http://pymediawiki.readthedocs.io/en/latest/quickstart.html#quickstart>`_
-
-
-
-Changelog
-------------------
-
-Please see the `changelog
-<https://github.com/barrust/mediawiki/blob/master/CHANGELOG.md>`__ for a list
-of all changes.
-
+Upgrade
+-------
+Version 2.0.0 was released on 2 June 2019: this came with the removal of the
+``luma.lcd.aux.backlight`` class. The equivalent functionality has now
+been subsumed into the device classes that have a backlight capability.
 
 License
 -------
+The MIT License (MIT)
 
-MIT licensed. See the `LICENSE file
-<https://github.com/barrust/Wikipedia/blob/master/LICENSE>`__
-for full details.
+Copyright (c) 2013-2023 Richard Hull & Contributors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

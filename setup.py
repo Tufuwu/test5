@@ -1,3 +1,7 @@
-from setuptools import setup  # type: ignore
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
-setup()
+import setuptools
+
+if __name__ == "__main__":
+    setuptools.setup()
