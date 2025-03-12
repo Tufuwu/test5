@@ -1,19 +1,12 @@
 *.pyc
-__pycache__/
-*.sw*
-db.sqlite
-.idea/
+# Don't commit Cython generated c files
+# (setup.py will now use Cython to autogenerate them)
+*.c
+.cache
+.pytest_cache
+.ipynb_checkpoints
 
-# Distributions.
-.eggs/
-build/
-dist/
-django_allauth_2fa.egg-info/
-
-# Testing
-.coverage
-htmlcov
-.tox
-
-# Docs
-_build
+build
+docs/_build
+hatchet/cython_modules/libs/graphframe_modules.*.so
+hatchet/cython_modules/libs/reader_modules.*.so
