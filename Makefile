@@ -1,62 +1,39 @@
-# simple makefile to simplify repetetive build env management tasks under posix
+UNAME := $(shell uname -m)
 
-# caution: testing won't work on windows, see README
+clean:
+	rm -rf coverage .coverage build dist
 
-PYTHON ?= python
-CYTHON ?= cython
-NOSETESTS ?= nosetests
-CTAGS ?= ctags
+clean-py:
+	find . -type f -name *.pyc -delete
+	find . -type f -name *.pyo -delete
 
-all: clean inplace test
+doc:
+	sphinx-build -b html doc doc-build
 
-clean-pyc:
-	find tract_querier -name "*.pyc" | xargs rm -f
+style-check:
+	pydocstyle eelbrain
 
-clean-so:
-	find tract_querier -name "*.so" | xargs rm -f
-	find tract_querier -name "*.pyd" | xargs rm -f
+flake:
+	flake8 --count eelbrain examples scripts
 
-clean-build:
-	rm -rf build
+test: style-check
+	pytest eelbrain
 
-clean-ctags:
-	rm -f tags
+testw:
+	pythonw $(shell which pytest) eelbrain
 
-clean-doc:
-	rm -rf doc/_build
+test-no-gui:
+	pytest eelbrain --no-gui
 
-clean: clean-build clean-pyc clean-so clean-ctags clean-doc
+test-only-gui:
+	pythonw $(shell which pytest) eelbrain/_wxgui eelbrain/plot eelbrain/tests/test_examples.py eelbrain/tests/test_fmtxt.py eelbrain/tests/test_report.py
 
-in: inplace # just a shortcut
-inplace:
-	$(PYTHON) setup.py build_ext -i
+test-gui-nomayavi:
+	pythonw $(shell which pytest) --no-mayavi eelbrain/_wxgui eelbrain/plot eelbrain/tests/test_examples.py eelbrain/tests/test_fmtxt.py eelbrain/tests/test_report.py
 
-test-code: in
-	$(NOSETESTS) -s tract_querier
-test-doc:
-	$(NOSETESTS) -s --with-doctest --doctest-tests --doctest-extension=rst \
-	--doctest-extension=inc --doctest-fixtures=_fixture doc/ 
+pypi:
+	rm -rf build dist
+	python setup.py sdist bdist_wheel
+	twine upload dist/*
 
-test-coverage:
-	rm -rf coverage .coverage
-	$(NOSETESTS) -s --with-coverage --cover-html --cover-html-dir=coverage \
-	--cover-package=tract_querier tract_querier
-
-test: test-code
-
-trailing-spaces:
-	find tract_querier -name "*.py" | xargs perl -pi -e 's/[ \t]*$$//'
-
-cython:
-	find tract_querier -name "*.pyx" | xargs $(CYTHON)
-
-ctags:
-	# make tags for symbol based navigation in emacs and vim
-	# Install with: sudo apt-get install exuberant-ctags
-	$(CTAGS) -R *
-
-doc: inplace
-	make -C doc html
-
-doc-noplot: inplace
-	make -C doc html-noplot
+.PHONY: clean clean-py doc testw pypi

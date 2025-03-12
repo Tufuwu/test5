@@ -1,11 +1,16 @@
-Welcome to WMQL's source code!
-=========================================
+# Eelbrain
 
-[![test, package](https://github.com/demianw/tract_querier/actions/workflows/test_package.yaml/badge.svg)](https://github.com/demianw/tract_querier/actions/workflows/test_package.yaml)
-[![Build docs](https://github.com/demianw/tract_querier/actions/workflows/doc_build.yaml/badge.svg)](https://github.com/demianw/tract_querier/actions/workflows/doc_build.yaml)
+[![DOI](https://zenodo.org/badge/3651023.svg)](https://zenodo.org/badge/latestdoi/3651023)
 
-The White Matter Query Language (WMQL) is a technique to formally describe white matter tracts and to automatically extract them from diffusion MRI volumes. This query language allows us to construct a dictionary of anatomical definitions describing white matter tracts. The definitions include adjacent gray and white matter regions, and rules for spatial relations. This enables the encoding of anatomical knowledge of the human brain white matter as well as the automated coherent labeling of white matter anatomy across subjects.
+## Latest version
 
-This is an implementation of the WMQL language presented in ["The white matter query language: a novel approach for describing human white matter anatomy", Wassermann et al. Brain Structure and Function 2016](http://link.springer.com/article/10.1007%2Fs00429-015-1179-4)
+| Stable | Pre-release |
+| ------ | ----------- |
+| [![Conda Version](https://img.shields.io/conda/vn/conda-forge/eelbrain)](https://anaconda.org/conda-forge/eelbrain) | [![Anaconda-Server Badge](https://anaconda.org/conda-forge/eelbrain/badges/version.svg)](https://anaconda.org/conda-forge/eelbrain/labels) |
 
- [WMQL Documentation](http://demianw.github.io/tract_querier "WMQL Documentation")
+## Resources
+
+- Documentation: http://eelbrain.readthedocs.io
+- Wiki: https://github.com/christianbrodbeck/Eelbrain/wiki
+- GitHub: https://github.com/christianbrodbeck/Eelbrain
+- Conda-forge feedstock: https://github.com/conda-forge/eelbrain-feedstock
