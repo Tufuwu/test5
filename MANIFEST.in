@@ -1,5 +1,12 @@
-include README.md
+include MANIFEST.in
+include LICENSE.txt
 include README.rst
-include nautilus_terminal/schemas/org.flozz.nautilus-terminal.gschema.xml
-include nautilus_terminal/schemas/gschemas.compiled
-include nautilus_terminal/images/nautilus-terminal-logo.svg
+include setup.py
+
+recursive-exclude tests *
+exclude .gitignore
+exclude readthedocs.yml
+exclude tox.ini
+prune .circleci
+prune benchmarks
+prune ci

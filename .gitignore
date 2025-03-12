@@ -1,16 +1,129 @@
-__env__
-*.bak
-*.pyc
-dist
-build
-*.egg-info
-nautilus_terminal/schemas/gschemas.compiled
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
 
-.pybuild
-debian/tmp*
-debian/*debhelper*
-debian/*.substvars
-debian/files
-debian/nautilus-terminal/
-debian/python-nautilus-terminal/
-debian/python3-nautilus-terminal/
+# C extensions
+*.so
+*.c
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+pip-wheel-metadata/
+
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+test-output.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+local_settings.py
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+docs/source/**generated/
+
+# PyBuilder
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# celery beat schedule file
+celerybeat-schedule
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# VS Code
+*.code-workspace
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+
+# docs
+docs/build
+
+# datasets
+docs/day_1
+*.parquet
+*.gz
+docs/source/examples/susy
+.DS_Store
+/benchmarks/k_means.csv
+/benchmarks/k_means.png
+/docs/source/modules/generated
+/docs/generate_deprecated.sh
+/docs/source/generated/
+source/auto_examples/
+docs/source/auto_examples/
+docs/source/examples/mydask.png
+
+dask-worker-space
+.direnv
+dask_ml/_version.py

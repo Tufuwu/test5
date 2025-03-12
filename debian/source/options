@@ -1,1 +1,0 @@
-extend-diff-ignore = "^([^/]*[.]egg-info/|dist/|tools/|__env__/|.+[.]png|requirements.txt|.flake8|.travis.yml|COPYING)"
