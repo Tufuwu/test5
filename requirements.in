@@ -1,0 +1,4 @@
+aiobotocore
+aiohttp
+gunicorn
+packaging
