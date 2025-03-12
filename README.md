@@ -1,91 +1,143 @@
-[![Documentation Status](https://readthedocs.org/projects/curtsies/badge/?version=latest)](https://readthedocs.org/projects/curtsies/?badge=latest)
-![Curtsies Logo](http://ballingt.com/assets/curtsiestitle.png)
+python-fitparse
+===============
 
-Curtsies is a Python 3.6+ compatible library for interacting with the terminal.
-This is what using (nearly every feature of) curtsies looks like:
+> :warning: **NOTE:** *I have **limited to no time** to work on this package
+> these days!*
+> 
+> I am looking for a maintainer to help with issues and updating/releasing the package.
+> Please reach out via email at <david@dtcooper.com> if you have interest in helping.
+>
+> If you're having trouble using this package for whatever reason, might we suggest using
+> an alternative library: [fitdecode](https://github.com/polyvertex/fitdecode) by
+> [polyvertex](https://github.com/polyvertex).
+>
+> Cheers,
+>
+> David
 
-```python
-import random
-import sys
+Here's a Python library to parse ANT/Garmin `.FIT` files.
+[![Build Status](https://github.com/dtcooper/python-fitparse/workflows/test/badge.svg)](https://github.com/dtcooper/python-fitparse/actions?query=workflow%3Atest)
 
-from curtsies import FullscreenWindow, Input, FSArray
-from curtsies.fmtfuncs import red, bold, green, on_blue, yellow
 
-print(yellow('this prints normally, not to the alternate screen'))
-
-with FullscreenWindow() as window:
-    a = FSArray(window.height, window.width)
-    msg = red(on_blue(bold('Press escape to exit, space to clear.')))
-    a[0:1, 0:msg.width] = [msg]
-    window.render_to_terminal(a)
-    with Input() as input_generator:
-        for c in input_generator:
-            if c == '<ESC>':
-                break
-            elif c == '<SPACE>':
-                a = FSArray(window.height, window.width)
-            else:
-                s = repr(c)
-                row = random.choice(range(window.height))
-                column = random.choice(range(window.width-len(s)))
-                color = random.choice([red, green, on_blue, yellow])
-                a[row, column:column+len(s)] = [color(s)]
-            window.render_to_terminal(a)
+Install from [![PyPI](https://img.shields.io/pypi/v/fitparse.svg)](https://pypi.python.org/pypi/fitparse/):
+```
+pip install fitparse
 ```
 
-Paste it in a `something.py` file and try it out!
+FIT files
+------------
+- FIT files contain data stored in a binary file format.
+- The FIT (Flexible and Interoperable Data Transfer) file protocol is specified
+  by [ANT](http://www.thisisant.com/).
+- The SDK, code examples, and detailed documentation can be found in the
+  [ANT FIT SDK](http://www.thisisant.com/resources/fit).
 
-Installation: `pip install curtsies`
 
-[Documentation](http://curtsies.readthedocs.org/en/latest/)
-
-Primer
-------
-
-[FmtStr](http://curtsies.readthedocs.org/en/latest/FmtStr.html) objects are strings formatted with
-colors and styles displayable in a terminal with [ANSI escape sequences](http://en.wikipedia.org/wiki/ANSI_escape_code>`_).
-
-![](https://i.imgur.com/bRLI134.png)
-
-[FSArray](http://curtsies.readthedocs.org/en/latest/FSArray.html) objects contain multiple such strings
-with each formatted string on its own row, and FSArray
-objects can be superimposed on each other
-to build complex grids of colored and styled characters through composition.
-
-(the import statement shown below is outdated)
-
-![](http://i.imgur.com/rvTRPv1.png)
-
-Such grids of characters can be rendered to the terminal in alternate screen mode
-(no history, like `Vim`, `top` etc.) by [FullscreenWindow](http://curtsies.readthedocs.org/en/latest/window.html#curtsies.window.FullscreenWindow) objects
-or normal history-preserving screen by [CursorAwareWindow](http://curtsies.readthedocs.org/en/latest/window.html#curtsies.window.CursorAwareWindow) objects.
-User keyboard input events like pressing the up arrow key are detected by an
-[Input](http://curtsies.readthedocs.org/en/latest/input.html) object.
-
-Examples
---------
-
-* [Tic-Tac-Toe](/examples/tictactoeexample.py)
-
-![](http://i.imgur.com/AucB55B.png)
-
-* [Avoid the X's game](/examples/gameexample.py)
-
-![](http://i.imgur.com/nv1RQd3.png)
-
-* [Bpython-curtsies uses curtsies](http://ballingt.com/2013/12/21/bpython-curtsies.html)
-
-[![](http://i.imgur.com/r7rZiBS.png)](http://www.youtube.com/watch?v=lwbpC4IJlyA)
-
-* [More examples](/examples)
-
-About
+Usage
 -----
+A simple example of printing records from a fit file:
 
-* [Curtsies Documentation](http://curtsies.readthedocs.org/en/latest/)
-* Curtsies was written to for [bpython-curtsies](http://ballingt.com/2013/12/21/bpython-curtsies.html)
-* `#bpython` on irc is a good place to talk about Curtsies, but feel free
-  to open an issue if you're having a problem!
-* Thanks to the many contributors!
-* If all you need are colored strings, consider one of these [other
-  libraries](http://curtsies.readthedocs.io/en/latest/FmtStr.html#fmtstr-rationale)!
+```python
+import fitparse
+
+# Load the FIT file
+fitfile = fitparse.FitFile("my_activity.fit")
+
+# Iterate over all messages of type "record"
+# (other types include "device_info", "file_creator", "event", etc)
+for record in fitfile.get_messages("record"):
+
+    # Records can contain multiple pieces of data (ex: timestamp, latitude, longitude, etc)
+    for data in record:
+
+        # Print the name and value of the data (and the units if it has any)
+        if data.units:
+            print(" * {}: {} ({})".format(data.name, data.value, data.units))
+        else:
+            print(" * {}: {}".format(data.name, data.value))
+
+    print("---")
+```
+
+The library also provides a `fitdump` script for command line usage:
+```
+$ fitdump --help
+usage: fitdump [-h] [-v] [-o OUTPUT] [-t {readable,json}] [-n NAME] [--ignore-crc] FITFILE
+
+Dump .FIT files to various formats
+
+positional arguments:
+  FITFILE               Input .FIT file (Use - for stdin)
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -v, --verbose
+  -o OUTPUT, --output OUTPUT
+                        File to output data into (defaults to stdout)
+  -t {readable,json}, --type {readable,json}
+                        File type to output. (DEFAULT: readable)
+  -n NAME, --name NAME  Message name (or number) to filter
+  --ignore-crc          Some devices can write invalid crc's, ignore these.
+```
+
+See the documentation for more: http://dtcooper.github.io/python-fitparse
+
+
+Major Changes From Original Version
+-----------------------------------
+
+After a few years of laying dormant we are back to active development!
+The old version is archived as
+[`v1-archive`](https://github.com/dtcooper/python-fitparse/releases/tag/v1-archive).
+
+  * New, hopefully cleaner public API with a clear division between accessible
+    and internal parts. (Still unstable and partially complete.)
+
+  * Proper documentation!
+    [Available here](https://dtcooper.github.io/python-fitparse/).
+
+  * Unit tests and example programs.
+
+  * **(WIP)** Command line tools (eg a `.FIT` to `.CSV` converter).
+
+  * Component fields and compressed timestamp headers now supported and not
+    just an afterthought. Closes issues #6 and #7.
+
+  * FIT file parsing is generic enough to support all types. Going to have
+    specific `FitFile` subclasses for more popular file types like activities.
+
+  * **(WIP)** Converting field types to normalized values (for example,
+    `bool`, `date_time`, etc) done in a consistent way, that's easy to
+    customize by subclassing the converter class. I'm going to use something
+    like the Django form-style `convert_<field name>` idiom on this class.
+
+  * The FIT profile is its own complete python module, rather than using
+    `profile.def`.
+
+    * Bonus! The profile generation script is _less_ ugly (but still an
+      atrocity) and supports every
+      [ANT FIT SDK](http://www.thisisant.com/resources/fit) from version 1.00
+      up to 5.10.
+
+  * A working `setup.py` module. Closes issue #2, finally! I'll upload the
+    package to [PyPI](http://pypi.python.org/) when it's done.
+
+  * Support for parsing one record at a time. This can be done using
+    `<FitFile>.parse_one()` for now, but I'm not sure of the exact
+    implementation yet.
+
+
+Updating to new FIT SDK versions
+--------------------------------
+- Download the latest [ANT FIT SDK](http://www.thisisant.com/resources/fit).
+- Update the profile:
+```
+python3 scripts/generate_profile.py /path/to/fit_sdk.zip fitparse/profile.py
+```
+
+
+License
+-------
+
+This project is licensed under the MIT License - see the [`LICENSE`](LICENSE)
+file for details.
