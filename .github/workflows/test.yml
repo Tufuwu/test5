@@ -1,35 +1,38 @@
-name: tests
+name: CI
 
 on:
   push:
-    branches: ["master"]
+    branches: [ master ]
   pull_request:
-    branches: ["master"]
+    branches: [ master ]
   workflow_dispatch:
 
 jobs:
-  tests:
-    name: "Python ${{ matrix.python-version }}"
-    runs-on: "ubuntu-latest"
+
+  travis-check:
+
+    name: Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
 
     strategy:
       matrix:
         python-version: ["3.9", "3.10"]
+      fail-fast: false
 
     steps:
-      - uses: "actions/checkout@v2"
-      - uses: "actions/setup-python@v2"
+      - run: echo "Job triggered by a ${{ github.event_name }} event on branch is ${{ github.ref }} in repository is ${{ github.repository }}"
+      - name: Check out repository code
+        uses: actions/checkout@v2
         with:
-          python-version: "${{ matrix.python-version }}"
-      - name: "Install dependencies"
+          fetch-depth: 0
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
         run: |
-          set -xe
-          python -VV
-          python -m pip install -e .[dev]
-      - name: "Run tests for ${{ matrix.python-version }}"
-        run: python -m pytest
-
-      - name: Upload coverage to Codecov
-        uses: "codecov/codecov-action@v1"
-        with:
-          fail_ci_if_error: true
+         pip install sphinx
+         pip install -r requirements-travis.txt
+      - name: Run inspekt
+        run: inspekt checkall --disable-style E501,E265,W601,E402,E722,E741 --enable-lint W0611,W1201 --no-license-check
+      - run: echo "This job's status is ${{ job.status }}."
