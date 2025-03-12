@@ -1,0 +1,39 @@
+toolsets = gnu gnu-osx vs2010 vs2008;
+
+vs2008.solutionfile = conditional_2008.sln;
+
+build_something = true;
+
+if ( $(build_something) ) {
+
+    if ( $(toolset) == gnu || $(toolset) == vs2010 ) {
+
+        program hello {
+            sources { hello.c }
+            defines = PRINT_DETAILS;
+            if ($(toolset) == gnu)
+                defines += PLATFORM_UNIX;
+            if ($(toolset) == vs2010)
+                defines += PLATFORM_WINDOWS;
+        }
+
+    } // toolset is gnu/vs2010
+
+
+    if ( $(toolset) == gnu || $(toolset) == gnu-osx ) {
+        program hello_gnu {
+            sources { hello.c }
+            if ( $(toolset) == gnu-osx )
+                sources { hello_osx.c }
+        }
+    }
+
+    if ( $(toolset) == vs2010 || $(toolset) == vs2008 ) {
+        program hello_windows {
+            sources { hello.c }
+            if ( $config == Debug )
+                sources { debug.c }
+        }
+    }
+
+} // build_something

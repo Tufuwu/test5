@@ -1,46 +1,25 @@
-Introduction
-============
 
-.. include:: ../README.rst
+Bakefile Documentation
+======================
 
-.. toctree::
-  :hidden:
-  :caption: Virtual Research Environments
-
-  VirES for Swarm <https://vires.services>
-  Swarm Notebooks <https://notebooks.vires.services>
-  VirES for Aeolus <https://aeolus.services>
-  Aeolus Notebooks <https://notebooks.aeolus.services>
-
+Contents:
 
 .. toctree::
-  :hidden:
-  :maxdepth: 2
-  :caption: Information on viresclient
+   :maxdepth: 2
+   :numbered:
 
-  self
-  installation
-  config_details
-  access_token
-  capabilities
-  available_parameters
-  available_parameters_aeolus
-  geomagnetic_models
-  notebook_intro
-  release_notes
+   intro
+   tutorial
+   language
+   ref
+   devel
+   glossary
 
-.. toctree::
-  :hidden:
-  :maxdepth: 2
-  :caption: API & CLI
 
-  api
-  cli
+Indices and tables
+==================
 
-.. toctree::
-  :hidden:
-  :maxdepth: 2
-  :caption: External Links
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
 
-  GitHub: viresclient <https://github.com/ESA-VirES/VirES-Python-Client/>
-  GitHub: Swarm-DISC <https://github.com/Swarm-DISC/>

@@ -1,0 +1,14 @@
+module {
+  variables {
+    toolsets = [gnu]
+  }
+  targets {
+    program hello {
+      name = hello
+      src = hello
+      sources {
+        file @top_srcdir/hello.c
+      }
+    }
+  }
+}

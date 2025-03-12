@@ -1,60 +1,67 @@
-API Reference
-=============
-
-SwarmRequest
-------------
-
-.. autoclass:: viresclient.SwarmRequest
-    :members:
-    :undoc-members:
-    :show-inheritance:
-    :inherited-members:
-    :exclude-members: AUXILIARY_VARIABLES, COLLECTIONS, COLLECTION_SAMPLING_STEPS, MAGNETIC_MODELS, MAGNETIC_MODEL_VARIABLES, OBS_COLLECTIONS, PRODUCT_VARIABLES, CONJUNCTION_MISSION_SPACECRAFT_PAIRS, MISSION_SPACECRAFTS
-
-AeolusRequest
--------------
-
-.. autoclass:: viresclient.AeolusRequest
-    :members:
-    :undoc-members:
-    :show-inheritance:
-    :inherited-members:
-
-ReturnedData
-------------
-
-.. autoclass:: viresclient.ReturnedData
-    :members:
-    :undoc-members:
-    :show-inheritance:
-    :inherited-members:
-
-.. autoclass:: viresclient.ReturnedDataFile
-    :members:
-    :undoc-members:
-    :show-inheritance:
-    :inherited-members:
 
 
-ClientConfig
-------------
+API reference documentation
+===========================
 
-.. autoclass:: viresclient.ClientConfig
-    :members:
-    :undoc-members:
-    :show-inheritance:
-    :inherited-members:
+:mod:`bkl.model` -- project model
+---------------------------------
 
-set_token
----------
+.. automodule:: bkl.model
+        :members:
+        :show-inheritance:
 
-.. autofunction:: viresclient.set_token
 
-DataUpload
-----------
+:mod:`bkl.expr` -- representation of expressions
+------------------------------------------------
 
-.. autoclass:: viresclient.DataUpload
-    :members:
-    :undoc-members:
-    :show-inheritance:
-    :inherited-members:
+.. automodule:: bkl.expr
+        :members:
+        :show-inheritance:
+
+
+:mod:`bkl.vartypes` -- variables types
+--------------------------------------
+
+.. automodule:: bkl.vartypes
+        :members:
+        :show-inheritance:
+
+
+:mod:`bkl.api` -- public extensions API
+---------------------------------------
+
+.. automodule:: bkl.api
+        :members:
+        :show-inheritance:
+
+
+:mod:`bkl.error` -- exceptions and errors handling
+--------------------------------------------------
+
+.. automodule:: bkl.error
+        :members:
+        :show-inheritance:
+
+
+:mod:`bkl.io` -- I/O helpers
+----------------------------
+
+.. automodule:: bkl.io
+        :members:
+        :show-inheritance:
+
+
+:mod:`bkl.makefile` -- support for implementing makefiles toolsets
+------------------------------------------------------------------
+
+.. automodule:: bkl.makefile
+        :members:
+        :show-inheritance:
+
+
+:mod:`bkl.compilers` -- FileCompiler helpers
+--------------------------------------------
+
+.. automodule:: bkl.compilers
+        :members:
+        :show-inheritance:

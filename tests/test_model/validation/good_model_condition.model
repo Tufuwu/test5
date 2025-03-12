@@ -1,0 +1,10 @@
+module {
+  variables {
+    toolsets = [gnu, vs2010]
+  }
+  targets {
+    program hello {
+      _condition = ($(toolset) == gnu)
+    }
+  }
+}

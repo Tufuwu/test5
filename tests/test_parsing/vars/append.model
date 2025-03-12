@@ -1,0 +1,11 @@
+module {
+  variables {
+    toolsets = [gnu]
+  }
+  targets {
+    program dummy {
+      xxx = [one.c, two.c, three.c]
+    }
+  }
+}
+

@@ -1,0 +1,69 @@
+RootNode
+    TemplateNode
+        IdNode t_foo
+        BaseListNode
+        AppendNode
+            LvalueNode
+                IdNode defines
+            ConcatNode
+                LiteralNode "COMPONENT=""
+                VarReferenceNode
+                    IdNode id
+                LiteralNode """
+    TemplateNode
+        IdNode t_second
+        BaseListNode
+        AppendNode
+            LvalueNode
+                IdNode defines
+            LiteralNode "SECOND_TEMPLATE"
+        FilesListNode
+            IdNode sources
+            LiteralNode "second_file.c"
+    TemplateNode
+        IdNode t_combined
+        BaseListNode
+            IdNode t_foo
+            IdNode t_second
+    TargetNode
+        IdNode program
+        IdNode normal
+        BaseListNode
+        FilesListNode
+            IdNode sources
+            LiteralNode "test.c"
+    TargetNode
+        IdNode program
+        IdNode from_templ
+        BaseListNode
+            IdNode t_foo
+        FilesListNode
+            IdNode sources
+            LiteralNode "test.c"
+    TargetNode
+        IdNode program
+        IdNode from_two_templs
+        BaseListNode
+            IdNode t_foo
+            IdNode t_second
+        FilesListNode
+            IdNode sources
+            LiteralNode "test.c"
+    TargetNode
+        IdNode program
+        IdNode from_combined
+        BaseListNode
+            IdNode t_combined
+        FilesListNode
+            IdNode sources
+            LiteralNode "test.c"
+    TargetNode
+        IdNode program
+        IdNode from_combined_dupl
+        BaseListNode
+            IdNode t_combined
+            IdNode t_foo
+            IdNode t_second
+        FilesListNode
+            IdNode sources
+            LiteralNode "test.c"

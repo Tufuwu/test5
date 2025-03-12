@@ -1,0 +1,5 @@
+toolsets = gnu;
+
+program hello {
+    sources { $(id).c }
+}

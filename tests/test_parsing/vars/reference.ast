@@ -1,0 +1,23 @@
+RootNode
+    AssignmentNode
+        LvalueNode
+            IdNode one
+        LiteralNode "1"
+    AssignmentNode
+        LvalueNode
+            IdNode two
+        LiteralNode "2"
+    AssignmentNode
+        LvalueNode
+            IdNode three
+        LiteralNode "3"
+    AssignmentNode
+        LvalueNode
+            IdNode all
+        ListNode
+            VarReferenceNode
+                IdNode one
+            VarReferenceNode
+                IdNode two
+            VarReferenceNode
+                IdNode three

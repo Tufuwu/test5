@@ -1,0 +1,10 @@
+module {
+  variables {
+  }
+  targets {
+    program one {
+    }
+    program two {
+    }
+  }
+}

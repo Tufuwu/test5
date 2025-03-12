@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?if $(sys.BUILDARCH)="x86"?>
+    <?define Minimum_Version="100"?>
+    <?define Program_Files="ProgramFilesFolder"?>
+<?elseif $(sys.BUILDARCH)="x64"?>
+    <?define Minimum_Version="200"?>
+    <?define Program_Files="ProgramFiles64Folder"?>
+<?else?>
+    <?error Unsupported value of sys.BUILDARCH=$(sys.BUILDARCH)?>
+<?endif?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Product
+        Id="*"
+        Name="Bakefile"
+        Language="1033"
+        Version="1.2.3.0"
+        Manufacturer="Bakefile Developers"
+        UpgradeCode="3333163D-CC42-4920-B26E-E4B58611ABCF">
+
+        <Package InstallerVersion="$(var.Minimum_Version)" Compressed="yes"/>
+        <MajorUpgrade DowngradeErrorMessage='A more recent version of [ProductName] is already installed.'/>
+        <Media Id="1" Cabinet="main.cab" EmbedCab="yes"/>
+
+        <Directory Id="TARGETDIR" Name="SourceDir">
+            <Directory Id="$(var.Program_Files)">
+                <Directory Id="INSTALLDIR" Name="Bakefile">
+                    <Directory Id="DOCSDIR" Name="docs"/>
+                </Directory>
+            </Directory>
+            <Directory Id="ProgramMenuFolder">
+                <Directory Id="ApplicationProgramsFolder" Name="Bakefile"/>
+            </Directory>
+        </Directory>
+
+        <DirectoryRef Id="INSTALLDIR">
+            <Component Id="cmpbkl" Guid="*">
+                <File Id="File_Bkl" Source="../pyinstaller/dist/bkl.exe" KeyPath="yes"/>
+            </Component>
+            <Component Id="cmpreadme" Guid="*">
+                <File Id="File_Readme" Source="../../Readme" KeyPath="yes"/>
+            </Component>
+            <Component Id="cmpenvpath" Guid="F834E56E-B074-4C8E-B3C9-638640BC6397">
+                <CreateFolder/>
+                <Environment Id="envpath" Name="PATH" Value="[INSTALLDIR]"
+                             Action="set" Part="last" Permanent="no" System="yes"/>
+            </Component>
+        </DirectoryRef>
+
+        <DirectoryRef Id="ApplicationProgramsFolder">
+            <Component Id="ApplicationShortcut" Guid="1C34A3D7-2ACB-4544-B70E-80B039E2AF30">
+                <Shortcut Id="DocsShortcut"
+                          Name="Bakefile Documentation"
+                          Description="View Bakefile documentation"
+                          Target="[DOCSDIR]intro.html"/>
+                <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall"/>
+                <RegistryValue Root="HKCU" Key="Software\Bakefile" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+            </Component>
+        </DirectoryRef>
+
+
+        <Feature Id="Feat_Main" Title="Main program" Level="1">
+            <ComponentRef Id="cmpbkl"/>
+            <ComponentRef Id="cmpenvpath"/>
+        </Feature>
+        <Feature Id="Feat_Doc" Title="Documentation" Level="1">
+            <ComponentRef Id="cmpreadme"/>
+            <ComponentRef Id="ApplicationShortcut"/>
+            <ComponentGroupRef Id="docs"/>
+        </Feature>
+
+        <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR"/>
+        <WixVariable Id="WixUILicenseRtf" Value="Copying.rtf" />
+        <!-- TODO: customize WixUIBannerBmp, WixUIUpIco &c too -->
+        <UIRef Id="WixUI_InstallDir"/>
+    </Product>
+</Wix>

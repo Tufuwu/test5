@@ -1,0 +1,17 @@
+RootNode
+    AssignmentNode
+        LvalueNode
+            IdNode one
+        BoolvalNode True
+    AssignmentNode
+        LvalueNode
+            IdNode two
+        BoolvalNode False
+    AssignmentNode
+        LvalueNode
+            IdNode three
+        LiteralNode "true"
+    AssignmentNode
+        LvalueNode
+            IdNode four
+        LiteralNode "false"

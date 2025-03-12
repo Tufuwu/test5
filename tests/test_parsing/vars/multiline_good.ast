@@ -1,0 +1,15 @@
+RootNode
+    AssignmentNode
+        LvalueNode
+            IdNode foo
+        ListNode
+            LiteralNode "one"
+            LiteralNode "two"
+            LiteralNode "three"
+    AssignmentNode
+        LvalueNode
+            IdNode bar
+        ListNode
+            LiteralNode "one"
+            LiteralNode "two"
+            LiteralNode "three"

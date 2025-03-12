@@ -1,25 +1,26 @@
+# CI workflow running the unit tests.
 name: CI
 
-on:
-  push:
-    branches: [ staging ]
-  pull_request:
-    branches: [ staging ]
-  workflow_dispatch:
+on: [ push, pull_request ]
 
 jobs:
-  run-tests:
-    runs-on: ${{ matrix.operating-system }}
-    strategy:
-      matrix:
-        operating-system:
-          - ubuntu-latest
-          - windows-latest
-          - macOS-latest
+  build:
+    runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup Nox
-        uses: excitedleigh/setup-nox@v2.0.0
-      - name: Run Nox
-        run: nox
+    - name: Check out
+      uses: actions/checkout@v2
+
+    - name: Set up Python 2.7
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+
+    - name: Install dependencies
+      run: |
+        pip install Sphinx
+        pip install pytest
+        pip install clint
+
+    - name: Run tests
+      run: make test

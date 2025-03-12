@@ -1,0 +1,18 @@
+module {
+  variables {
+    toolsets = [gnu, gnu-osx]
+  }
+  targets {
+    action hello {
+      commands = [echo Hello, cwd is:, pwd]
+    }
+    action build-external-lib {
+      commands = [make -C external-dir]
+      inputs = [@top_srcdir/external-dir/Makefile]
+      outputs = [@top_srcdir/external-dir/libexternal.so]
+    }
+    program main {
+      deps = [build-external-lib, hello]
+    }
+  }
+}
