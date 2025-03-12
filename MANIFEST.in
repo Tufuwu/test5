@@ -1,11 +1,26 @@
-include Makefile CHANGES.rst LICENSE AUTHORS
-include conftest.py tox.ini
-include babel/global.dat
-include babel/locale-data/*.dat
-include babel/locale-data/LICENSE*
-recursive-include docs *
-recursive-exclude docs/_build *
-include scripts/*
-recursive-include tests *
-recursive-exclude tests *.pyc
-recursive-exclude tests *.pyo
+include *.md
+include *.rst
+include *.txt
+include CONTRIBUTORS
+include CITATION.cff
+include Makefile
+include changelog.d/*
+graft docs/**
+include tests/*.py
+include tox.ini
+include .pytest.ini
+include .ruff.toml
+include uv.lock
+
+# The dot files:
+include .coveragerc
+include .editorconfig
+include .gitignore
+include .readthedocs.yaml
+
+
+prune docs/_build
+recursive-exclude .github  *
+prune docs/**/__pycache__
+
+global-exclude __pycache__

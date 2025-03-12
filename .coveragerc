@@ -1,6 +1,13 @@
+# https://pytest-cov.readthedocs.io/
+
+[run]
+source = semver
+branch = True
+
 [report]
+show_missing = true
+precision = 1
 exclude_lines =
-    NotImplemented
     pragma: no cover
-    warnings.warn
-    if TYPE_CHECKING:
+    if __name__ == .__main__.:
+    if not hasattr\(__builtins__, .cmp.\):

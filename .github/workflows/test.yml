@@ -1,4 +1,5 @@
-name: Test
+---
+name: Python
 
 on:
   push:
@@ -7,32 +8,49 @@ on:
     branches: [ master ]
 
 jobs:
-  test:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-2019, macos-10.15]
-        python-version: ["3.9", "3.10"]
-        exclude:
-          - os: windows-2019
-            python-version: pypy3
-            # TODO: Remove this; see:
-            #       https://github.com/actions/setup-python/issues/151
-            #       https://github.com/tox-dev/tox/issues/1704
-            #       https://foss.heptapod.net/pypy/pypy/-/issues/3331
-    env:
-      BABEL_CLDR_NO_DOWNLOAD_PROGRESS: "1"
-      BABEL_CLDR_QUIET: "1"
+  check:
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip setuptools wheel
-        python -m pip install tox tox-gh-actions==2.1.0
-    - name: Run test via Tox
-      run: tox --skip-missing-interpreters
-    - uses: codecov/codecov-action@v1
+      - uses: actions/checkout@v1
+      - name: Output env variables
+        run: |
+           echo "Default branch=${default-branch}"
+           echo "GITHUB_WORKFLOW=${GITHUB_WORKFLOW}"
+           echo "GITHUB_ACTION=$GITHUB_ACTION"
+           echo "GITHUB_ACTIONS=$GITHUB_ACTIONS"
+           cat $GITHUB_EVENT_PATH
+           echo "\n"
+           echo "::debug::---end"
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Install dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install tox tox-gh-actions
+      - name: Check
+        run: |
+          tox -e checks
+
+  tests:
+    needs: check
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 5
+      matrix:
+        python-version: ["3.9", "3.10"]
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install tox tox-gh-actions
+      - name: Test with tox
+        run: |
+          tox

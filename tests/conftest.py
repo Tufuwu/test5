@@ -1,39 +1,31 @@
+import sys
+
 import pytest
 
-try:
-    import zoneinfo
-except ModuleNotFoundError:
-    try:
-        from backports import zoneinfo
-    except ImportError:
-        zoneinfo = None
+import semver
 
-try:
-    import pytz
-except ModuleNotFoundError:
-    pytz = None
+from coerce import coerce  # noqa:E402
+from semverwithvprefix import SemVerWithVPrefix  # noqa:E402
+import packaging.version
 
 
-def pytest_generate_tests(metafunc):
-    if hasattr(metafunc.function, "pytestmark"):
-        for mark in metafunc.function.pytestmark:
-            if mark.name == "all_locales":
-                from babel.localedata import locale_identifiers
-                metafunc.parametrize("locale", list(locale_identifiers()))
-                break
+@pytest.fixture(autouse=True)
+def add_semver(doctest_namespace):
+    doctest_namespace["Version"] = semver.version.Version
+    doctest_namespace["semver"] = semver
+    doctest_namespace["coerce"] = coerce
+    doctest_namespace["SemVerWithVPrefix"] = SemVerWithVPrefix
+    doctest_namespace["PyPIVersion"] = packaging.version.Version
 
 
-@pytest.fixture(params=["pytz.timezone", "zoneinfo.ZoneInfo"], scope="package")
-def timezone_getter(request):
-    if request.param == "pytz.timezone":
-        if pytz:
-            return pytz.timezone
-        else:
-            pytest.skip("pytz not available")
-    elif request.param == "zoneinfo.ZoneInfo":
-        if zoneinfo:
-            return zoneinfo.ZoneInfo
-        else:
-            pytest.skip("zoneinfo not available")
-    else:
-        raise NotImplementedError
+@pytest.fixture
+def version():
+    """
+    Creates a version
+
+    :return: a version type
+    :rtype: Version
+    """
+    return semver.Version(
+        major=1, minor=2, patch=3, prerelease="alpha.1.2", build="build.11.e0f985a"
+    )

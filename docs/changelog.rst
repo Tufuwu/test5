@@ -1,1 +1,3 @@
-.. include:: ../CHANGES.rst
+.. _change-log:
+
+.. include:: ../CHANGELOG.rst
