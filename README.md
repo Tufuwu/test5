@@ -1,247 +1,215 @@
-# django-prometheus
+# pynytimes
 
-Export Django monitoring metrics for Prometheus.io
+[<img src="https://raw.githubusercontent.com/michadenheijer/pynytimes/main/.github/poweredby_nytimes.png" height="20px">](https://developer.nytimes.com/) [![Run full tests](https://github.com/michadenheijer/pynytimes/actions/workflows/python-full-tests.yaml/badge.svg)](https://github.com/michadenheijer/pynytimes/actions/workflows/python-full-tests.yaml)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pynytimes)](https://pypi.org/project/pynytimes/) [![PyPI](https://img.shields.io/pypi/v/pynytimes)](https://pypi.org/project/pynytimes/) [![Downloads](https://pepy.tech/badge/pynytimes)](https://pepy.tech/project/pynytimes) [![DOI](https://zenodo.org/badge/216087297.svg)](https://zenodo.org/badge/latestdoi/216087297)
 
-[![Join the chat at https://gitter.im/django-prometheus/community](https://badges.gitter.im/django-prometheus/community.svg)](https://gitter.im/django-prometheus/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+Use all (actually most) New York Times APIs, get all the data you need from the Times!
 
-[![PyPI version](https://badge.fury.io/py/django-prometheus.svg)](http://badge.fury.io/py/django-prometheus)
-[![Build Status](https://github.com/korfuri/django-prometheus/actions/workflows/ci.yml/badge.svg)](https://github.com/korfuri/django-prometheus/actions/workflows/ci.yml)
-[![Coverage Status](https://coveralls.io/repos/github/korfuri/django-prometheus/badge.svg?branch=master)](https://coveralls.io/github/korfuri/django-prometheus?branch=master)
-[![PyPi page link -- Python versions](https://img.shields.io/pypi/pyversions/django-prometheus.svg)](https://pypi.python.org/pypi/django-prometheus)
+## Documentation
 
+Extensive documentation is available at: https://pynytimes.michadenheijer.com/.
 
-## Features
+## Installation
 
-This library provides Prometheus metrics for Django related operations:
+There are multiple options to install and upgrade pynytimes, but the easiest is by just installing it using ```pip``` (or ```pip3```).
+### Linux and Mac
 
-* Requests & Responses
-* Database access done via [Django ORM](https://docs.djangoproject.com/en/3.2/topics/db/)
-* Cache access done via [Django Cache framework](https://docs.djangoproject.com/en/3.2/topics/cache/)
+```bash
+pip install --upgrade pynytimes
+```
+
+### Windows
+
+```shell
+python -m pip install --upgrade pynytimes
+```
 
 ## Usage
 
-### Requirements
-
-* Django >= 4.2
-* Python 3.8 and above.
-
-### Installation
-
-Install with:
-
-```shell
-pip install django-prometheus
-```
-
-Or, if you're using a development version cloned from this repository:
-
-```shell
-python path-to-where-you-cloned-django-prometheus/setup.py install
-```
-
-This will install [prometheus_client](https://github.com/prometheus/client_python) as a dependency.
-
-### Quickstart
-
-In your settings.py:
+You can easily import this library using:
 
 ```python
-INSTALLED_APPS = [
-   ...
-   'django_prometheus',
-   ...
-]
-
-MIDDLEWARE = [
-    'django_prometheus.middleware.PrometheusBeforeMiddleware',
-    # All your other middlewares go here, including the default
-    # middlewares like SessionMiddleware, CommonMiddleware,
-    # CsrfViewmiddleware, SecurityMiddleware, etc.
-    'django_prometheus.middleware.PrometheusAfterMiddleware',
-]
+from pynytimes import NYTAPI
 ```
 
-In your urls.py:
+Then you can simply add your API key (get your API key from [The New York Times Dev Portal](https://developer.nytimes.com/)):
 
 ```python
-urlpatterns = [
-    ...
-    path('', include('django_prometheus.urls')),
-]
+nyt = NYTAPI("Your API key", parse_dates=True)
 ```
 
-### Configuration
+**Make sure that if you commit your code to GitHub you [don't accidentially commit your API key](https://towardsdatascience.com/how-to-hide-your-api-keys-in-python-fb2e1a61b0a0).**
 
-Prometheus uses Histogram based grouping for monitoring latencies. The default
-buckets are:
+## Supported APIs
+
+When you have imported this library you can use the following features from the New York Times API.
+
+**Search**
+- [Article search](https://pynytimes.michadenheijer.com/search/article-search)
+- [Book reviews](https://pynytimes.michadenheijer.com/search/book-reviews)
+- [Movie reviews](https://pynytimes.michadenheijer.com/search/movie-reviews)
+
+**Popular**
+- [Top stories](https://pynytimes.michadenheijer.com/popular/top-stories)
+- [Most viewed articles](https://pynytimes.michadenheijer.com/popular/most-viewed)
+- [Most shared articles](https://pynytimes.michadenheijer.com/popular/most-shared)
+- [Best sellers lists](https://pynytimes.michadenheijer.com/popular/best-sellers-lists)
+
+**Metadata**
+- [Article metadata](https://pynytimes.michadenheijer.com/metadata/article-metadata)
+- [Archive metadata](https://pynytimes.michadenheijer.com/metadata/archive-metadata)
+- [Load latest articles](https://pynytimes.michadenheijer.com/metadata/latest-articles)
+
+**Other**
+- [Tag query (TimesTags)](https://pynytimes.michadenheijer.com/other/tags)
+
+### Top stories
+
+To get the current top stories use:
 
 ```python
-PROMETHEUS_LATENCY_BUCKETS = (0.01, 0.025, 0.05, 0.075, 0.1, 0.25, 0.5, 0.75, 1.0, 2.5, 5.0, 7.5, 10.0, 25.0, 50.0, 75.0, float("inf"),)
+top_stories = nyt.top_stories()
 ```
+Read [the documentation](https://pynytimes.michadenheijer.com/popular/top-stories) to find the top stories per section.
 
-You can define custom buckets for latency, adding more buckets decreases performance but
-increases accuracy: <https://prometheus.io/docs/practices/histograms/>
+### Most viewed articles
+
+You can also get todays most viewed articles:
 
 ```python
-PROMETHEUS_LATENCY_BUCKETS = (.1, .2, .5, .6, .8, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.5, 9.0, 12.0, 15.0, 20.0, 30.0, float("inf"))
+most_viewed = nyt.most_viewed()
 ```
+Read [the documentation](https://pynytimes.michadenheijer.com/popular/most-viewed) to get the most viewed articles per week or month.
 
----
+### Most shared articles
 
-You can have a custom namespace for your metrics:
+To get the most shared articles (shared over email) use:
 
 ```python
-PROMETHEUS_METRIC_NAMESPACE = "project"
+most_shared = nyt.most_shared()
 ```
 
-This will prefix all metrics with `project_` word like this:
+Read [the documentation](https://pynytimes.michadenheijer.com/popular/most-shared) to get the most shared articles using facebook.
 
-```text
-project_django_http_requests_total_by_method_total{method="GET"} 1.0
-```
 
-### Monitoring your databases
+### Article search
 
-SQLite, MySQL, and PostgreSQL databases can be monitored. Just
-replace the `ENGINE` property of your database, replacing
-`django.db.backends` with `django_prometheus.db.backends`.
+Search articles using a query using:
 
 ```python
-DATABASES = {
-    'default': {
-        'ENGINE': 'django_prometheus.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    },
+articles = nyt.article_search(query="Obama")
+```
+In this example we have just defined the content of the search query (Obama), but we can add many more search parameters. Read [the documentation](https://pynytimes.michadenheijer.com/search/article-search) to see how.
+
+
+### Book reviews
+
+You can easily find book reviews for every book you've read. You can find those reviews by searching for the author, ISBN or title of the book.
+
+```python
+# Get reviews by author (first and last name)
+reviews = nyt.book_reviews(author="George Orwell")
+
+# Get reviews by ISBN
+reviews = nyt.book_reviews(isbn="9780062963673")
+
+# Get book reviews by title
+reviews = nyt.book_reviews(title="Becoming")
+```
+
+Read [the documentation](https://pynytimes.michadenheijer.com/search/book-reviews) to find more information about additional parameters.
+
+### Movie reviews
+
+You can not only get the book reviews, but the movie reviews too.
+
+```python
+reviews = nyt.movie_reviews(keyword="Green Book")
+```
+
+Read [the documentation](https://pynytimes.michadenheijer.com/search/movie-reviews) to find more information about additional parameters.
+
+### Best sellers lists
+
+The New York Times has multiple best sellers lists. To get from the fiction best seller list:
+
+```python
+# Get fiction best sellers list
+books = nyt.best_sellers_list()
+```
+
+Read how to get the other best seller lists in [the documentation](https://pynytimes.michadenheijer.com/popular/best-sellers-lists).
+
+### Article metadata
+
+With an URL from a New York Times article you can easily get all the metadata you need from it.
+
+```python
+metadata = nyt.article_metadata(
+    url = "https://www.nytimes.com/2019/10/20/world/middleeast/erdogan-turkey-nuclear-weapons-trump.html"
+)
+```
+Read additional parameters in [the documentation](https://pynytimes.michadenheijer.com/metadata/article-metadata).
+
+### Load latest articles
+
+You can easily load the latest articles published by the New York Times.
+
+```python
+latest = nyt.latest_articles(
+    source = "nyt",
+    section = "books"
+)
+```
+
+Additional parameters can be found in [the documentation](https://pynytimes.michadenheijer.com/metadata/latest-articles).
+
+### Tag query
+
+The New York Times has their own tags library. You can query this library with this API.
+
+```python
+tags = nyt.tag_query(
+    "pentagon",
+    max_results = 20
+)
+```
+
+Additional parameters can be found in [the documentation](https://pynytimes.michadenheijer.com/other/tags).
+
+### Archive metadata
+
+If you want to load all the metadata from a specific month, then this API makes that possible. Be aware you'll download a big JSON file (about 20 Mb), so it can take a while.
+
+```python
+import datetime
+
+data = nyt.archive_metadata(
+    date = datetime.datetime(2019, 1, 1)
+)
+```
+
+[Read more in the documentation](https://pynytimes.michadenheijer.com/metadata/archive-metadata).
+
+## Citing this Repository
+If you use ```pynytimes```, a citation would be very much appriciated. If you're using BibTeX you can use the following citation:
+
+```bib
+@software{Den_Heijer_pynytimes_2023,
+    author = {Den Heijer, Micha},
+    license = {MIT},
+    title = {{pynytimes}},
+    url = {https://github.com/michadenheijer/pynytimes},
+    version = {0.10.1},
+    year = {2023},
+    doi = {10.5281/zenodo.7821090}
 }
 ```
 
-### Monitoring your caches
+If you're not using BibTeX, you can [retrieve the preferred citation from Zenodo](https://doi.org/10.5281/zenodo.7821090).
 
-Filebased, memcached, redis caches can be monitored. Just replace
-the cache backend to use the one provided by django_prometheus
-`django.core.cache.backends` with `django_prometheus.cache.backends`.
+## License
 
-```python
-CACHES = {
-    'default': {
-        'BACKEND': 'django_prometheus.cache.backends.filebased.FileBasedCache',
-        'LOCATION': '/var/tmp/django_cache',
-    }
-}
-```
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-### Monitoring your models
-
-You may want to monitor the creation/deletion/update rate for your
-model. This can be done by adding a mixin to them. This is safe to do
-on existing models (it does not require a migration).
-
-If your model is:
-
-```python
-class Dog(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-    breed = models.CharField(max_length=100, blank=True, null=True)
-    age = models.PositiveIntegerField(blank=True, null=True)
-```
-
-Just add the `ExportModelOperationsMixin` as such:
-
-```python
-from django_prometheus.models import ExportModelOperationsMixin
-
-class Dog(ExportModelOperationsMixin('dog'), models.Model):
-    name = models.CharField(max_length=100, unique=True)
-    breed = models.CharField(max_length=100, blank=True, null=True)
-    age = models.PositiveIntegerField(blank=True, null=True)
-```
-
-This will export 3 metrics, `django_model_inserts_total{model="dog"}`,
-`django_model_updates_total{model="dog"}` and
-`django_model_deletes_total{model="dog"}`.
-
-Note that the exported metrics are counters of creations,
-modifications and deletions done in the current process. They are not
-gauges of the number of objects in the model.
-
-Starting with Django 1.7, migrations are also monitored. Two gauges
-are exported, `django_migrations_applied_by_connection` and
-`django_migrations_unapplied_by_connection`. You may want to alert if
-there are unapplied migrations.
-
-If you want to disable the Django migration metrics, set the
-`PROMETHEUS_EXPORT_MIGRATIONS` setting to False.
-
-### Monitoring and aggregating the metrics
-
-Prometheus is quite easy to set up. An example prometheus.conf to
-scrape `127.0.0.1:8001` can be found in `examples/prometheus`.
-
-Here's an example of a PromDash displaying some of the metrics
-collected by django-prometheus:
-
-![Example dashboard](https://raw.githubusercontent.com/korfuri/django-prometheus/master/examples/django-promdash.png)
-
-## Adding your own metrics
-
-You can add application-level metrics in your code by using
-[prometheus_client](https://github.com/prometheus/client_python)
-directly. The exporter is global and will pick up your metrics.
-
-To add metrics to the Django internals, the easiest way is to extend
-django-prometheus' classes. Please consider contributing your metrics,
-pull requests are welcome. Make sure to read the Prometheus best
-practices on
-[instrumentation](http://prometheus.io/docs/practices/instrumentation/)
-and [naming](http://prometheus.io/docs/practices/naming/).
-
-## Importing Django Prometheus using only local settings
-
-If you wish to use Django Prometheus but are not able to change
-the code base, it's possible to have all the default metrics by
-modifying only the settings.
-
-First step is to inject prometheus' middlewares and to add
-django_prometheus in INSTALLED_APPS
-
-```python
-MIDDLEWARE = \
-    ['django_prometheus.middleware.PrometheusBeforeMiddleware'] + \
-    MIDDLEWARE + \
-    ['django_prometheus.middleware.PrometheusAfterMiddleware']
-
-INSTALLED_APPS += ['django_prometheus']
-```
-
-Second step is to create the /metrics end point, for that we need
-another file (called urls_prometheus_wrapper.py in this example) that
-will wraps the apps URLs and add one on top:
-
-```python
-from django.urls import include, path
-
-
-urlpatterns = []
-
-urlpatterns.append(path('prometheus/', include('django_prometheus.urls')))
-urlpatterns.append(path('', include('myapp.urls')))
-```
-
-This file will add a "/prometheus/metrics" end point to the URLs of django
-that will export the metrics (replace myapp by your project name).
-
-Then we inject the wrapper in settings:
-
-```python
-ROOT_URLCONF = "graphite.urls_prometheus_wrapper"
-```
-
-## Adding custom labels to middleware (request/response) metrics
-
-You can add application specific labels to metrics reported by the django-prometheus middleware.
-This involves extending the classes defined in middleware.py.
-
-* Extend the Metrics class and override the `register_metric` method to add the application specific labels.
-* Extend middleware classes, set the metrics_cls class attribute to the the extended metric class and override the label_metric method to attach custom metrics.
-
-See implementation example in [the test app](django_prometheus/tests/end2end/testapp/test_middleware_custom_labels.py#L19-L46)
+**Disclaimer**: *This project is not made by anyone from the New York Times, nor is it affiliated with The New York Times Company.*
