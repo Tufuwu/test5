@@ -1,0 +1,774 @@
+#!/usr/bin/env python3
+#
+# Ice Shelf for Glacier is a incremental backup tool which will upload any
+# changes to glacier. It can both encrypt and/or provide extra parity data
+# to make sure that the data is secure and has some measure of protection
+# against data corruption.
+#
+# Each backup can therefore be restored individually at the expense of
+# extra storage in Glacier.
+#
+# Copyright (C) 2015 Henric Andersson (henric@sensenet.nu)
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#
+#################################################################################
+
+import logging
+import argparse
+import sys
+import os.path
+import json
+from datetime import datetime
+import time
+import shutil
+import tarfile
+import gnupg
+from subprocess import Popen, PIPE
+
+import modules.configuration as configuration
+import modules.fileutils as fileutils
+import modules.helper as helper
+import modules.glacier as glacier
+import modules.aws as aws
+
+lastBackup = None
+oldMoves = {}
+oldFiles = {}
+newFiles = {}
+shaFiles = {}
+movedFiles = {}
+deletedFiles = {}
+backupSets = {}
+currentOp = {"filecount": 0, "filesize": 0, "compressable" : 0}
+oldVault = None
+
+incompressable = [
+  "jpg", "gif", "mkv", "avi", "mov", "mp4",
+  "mp3", "flac", "zip", "bz2", "gz", "tgz",
+  "7z", "aac", "rar", "vob", "m2ts", "ts",
+  "jpeg", "psd", "png", "m4v", "m4a", "3gp",
+  "tif", "tiff", "mts"
+  ]
+
+""" Parse command line """
+parser = argparse.ArgumentParser(description="IceShelf - An Amazon Galcier Incremental backup tool", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+parser.add_argument('--logfile', metavar="FILE", help="Log to file instead of stdout")
+parser.add_argument('--debug', action='store_true', default=False, help='Adds more details to the log output')
+parser.add_argument('--changes', action='store_true', default=False, help="Show changes to backup set but don't do anything")
+parser.add_argument('--find', metavar='STRING', help='Searches the backup archive for files which contain string in name (case-insensitive)')
+parser.add_argument('--show', metavar='ARCHIVE', help='Shows members of a certain archive')
+parser.add_argument('--modified', action='store_true', default=False, help='Show all files which exists multiple times due to modifications')
+parser.add_argument('--full', action='store_true', default=False, help='Full backup, regardless of changes to files')
+parser.add_argument('--list', type=str.lower, choices=['files', 'members', 'sets'], help='List currently backed up structure')
+parser.add_argument('config', metavar="CONFIG", help="Which config file to load")
+cmdline = parser.parse_args()
+
+""" Setup logging first """
+logging.getLogger('').handlers = []
+loglevel=logging.INFO
+if cmdline.logfile:
+  logformat=u'%(asctime)s - %(levelname)s - %(message)s'
+else:
+  logformat=u'%(message)s'
+if cmdline.debug:
+  loglevel=logging.DEBUG
+  logformat=u'%(asctime)s - %(filename)s@%(lineno)d - %(levelname)s - %(message)s'
+
+# Create a logger
+logger = logging.getLogger()
+logger.setLevel(loglevel)
+
+# Create a handler for stdout
+stream_handler = logging.StreamHandler(sys.stdout)
+stream_handler.setLevel(loglevel)
+stream_handler.setFormatter(logging.Formatter(logformat))
+logger.addHandler(stream_handler)
+
+# Create a handler for the file
+if cmdline.logfile:
+  file_handler = logging.FileHandler(cmdline.logfile)
+  file_handler.setLevel(loglevel)
+  file_handler.setFormatter(logging.Formatter(logformat))
+  logger.addHandler(file_handler)
+
+logging.getLogger("gnupg").setLevel(logging.WARNING)
+logging.getLogger("shutil").setLevel(logging.WARNING)
+
+# Make sure we have the correct gnupg module
+if not "encrypt_file" in dir(gnupg.GPG()):
+  logging.error("Current GnuPG python module does not support file encryption, please check FAQ section in documentation")
+  sys.exit(255)
+
+#######################
+
+def executeCommand(config, cmd):
+  logging.debug("Executing command: " + repr(cmd))
+
+  p = Popen(cmd, stdout=PIPE, stderr=PIPE, cwd=config["prepdir"])
+  out, err = p.communicate()
+  logging.debug("Output: " + repr(out))
+  logging.debug("Error : " + repr(err))
+  return p.returncode
+
+def checkNewVersion():
+  # First, see if there's a .git folder where we stand
+  if not os.path.exists('.git'):
+    return
+  try:
+    p = Popen(['git', 'fetch', 'origin' ], stdout=PIPE, stderr=PIPE)
+    out, err = p.communicate()
+    if p.returncode == 0:
+      p = Popen(['git', 'log', '--oneline', 'master..origin/master' ], stdout=PIPE, stderr=PIPE)
+      out, err = p.communicate()
+      if len(out) > 0:
+        logging.info("New version available:")
+        for line in out.split('\n'):
+          line = line.strip()
+          if line != "":
+            logging.info("+++ " + line)
+  except:
+    pass
+
+def shouldCompress():
+  if currentOp["filesize"] == 0:
+    return 0
+  chance = int((currentOp["compressable"] * 100) / currentOp["filesize"])
+  return chance >= 20
+
+def willCompress(filename):
+  (ignore, ext) = os.path.splitext(filename)
+  return ext[1:].lower() not in incompressable
+
+def collectFile(filename):
+  chksum = ""
+  info = os.stat(filename)
+  maxsize = config["maxsize"]
+
+  if maxsize > 0 and info.st_size > maxsize:
+    logging.warn("File \"%s\" is too big (%s) to ever fit inside defined max size of %s", filename, helper.formatSize(info.st_size), helper.formatSize(config["maxsize"]))
+    return False
+
+  if maxsize > 0 and (currentOp["filesize"] + info.st_size) > maxsize and not cmdline.changes:
+    return False
+
+  chksum = fileutils.hashFile(filename, config["sha-type"], True)
+
+  # Remove files from the deleted index (so we catch files which are deleted, they are the ones left behind)
+  deletedFiles.pop(filename, None)
+  # Store SHA for quick lookup
+  item = shaFiles.get(chksum)
+  if item is None:
+    shaFiles[chksum] = [filename]
+  else:
+    item.append(filename)
+
+  item = oldFiles.get(filename)
+  if item is None or item["checksum"] == '' or fileutils.hashChanged(filename, item["checksum"], chksum) or cmdline.full:
+    currentOp["filecount"] += 1
+    currentOp["filesize"] += info.st_size
+    if willCompress(filename):
+      currentOp["compressable"] += info.st_size
+    newFiles[filename] = {"checksum" : chksum, "memberof" : [config["unique"]], "deleted": []}
+  return True
+
+def collectSources(sources):
+  # Time to start building a list of files
+  result = {'files':[], 'size':0}
+  for name,path in sources.items():
+    logging.info("Processing \"%s\" (%s)", name, path)
+    if os.path.isfile(path):
+      if not configuration.isExcluded(path):
+        if not collectFile(path):
+          result['files'].append(path)
+          result['size'] += os.path.getsize(path)
+          if not config["persuasive"] and not cmdline.changes:
+            return result
+    else:
+      for root, dirs, files in os.walk(path):
+        for f in files:
+          if not configuration.isExcluded(os.path.join(root, f)):
+            filename = os.path.join(root, f)
+
+            if filename is not None:
+              if not collectFile(filename):
+                result['files'].append(filename)
+                result['size'] += os.path.getsize(path)
+                if not config["persuasive"] and not cmdline.changes:
+                  logging.debug("Not persuasive")
+                  return result
+
+  # Make this easier to test by the caller if we have zero files we skipped
+  if len(result['files']) == 0:
+    result = None
+  return result
+
+
+def gatherData():
+  mode = "w"
+  file_archive = os.path.join(config["prepdir"], config["prefix"] + config["unique"]) + ".tar"
+  file_manifest = os.path.join(config["prepdir"], config["prefix"] + config["unique"]) + ".json"
+  gpg = gnupg.GPG(options=['-z', '0']) # Do not use GPG compression since we use bzip2
+
+  havearchive = False
+  if (len(newFiles) - len(movedFiles)):
+    # Don't bother compressing if we have no data
+    if config["compress"] and currentOp["filesize"] > 0:
+      if config["compress-force"] or shouldCompress():
+        mode = "w|bz2"
+        file_archive += ".bz2"
+      else:
+        logging.info("Content is not likely to compress (%d%% chance), skipping compression.", shouldCompress())
+
+    # Copy the files...
+    logging.info("Preparing content for archving, may take quite a while depending on size")
+    with tarfile.open(file_archive, "w") as tar:
+      tar.dereference = True
+      for k in newFiles:
+        if k not in movedFiles:
+          try:
+            tar.add(k, recursive=False)
+            logging.debug('''File "%s" added''' % k);
+          except IOError as e:
+            if e.errno == 2:
+              logging.warning("File \"%s\" was removed after initial scan", k)
+            else:
+              logging.exception("Error copying file \"%s\"", k)
+              raise
+    havearchive = True
+  else:
+    if len(movedFiles):
+      logging.info("No files to save, only metadata changes, skipping archive")
+    else:
+      logging.info("No files to save, skipping archive")
+
+  # Produce the manifest
+  if config["manifest"]:
+    tmp1 = {}
+    tmp2 = []
+
+    for k,v in newFiles.items():
+      if k not in movedFiles:
+        tmp1[k] = v
+    for k in deletedFiles:
+      if k not in movedFiles.values():
+        tmp2.append(k)
+
+    manifest = {"modified" : tmp1, "deleted" : tmp2, "moved" : movedFiles, "previousbackup" : lastBackup}
+    with open(file_manifest, "w", encoding="utf-8") as fp:
+      fp.write(json.dumps(manifest, ensure_ascii=False))
+
+  # Security for the archive
+  if config["encrypt"] and havearchive:
+    logging.info("Encrypting archive")
+    with open(file_archive, 'rb') as fp:
+      gpg.encrypt_file(
+        fp,
+        config["encrypt"],
+        passphrase=config["encrypt-pw"],
+        armor=False,
+        output=file_archive+".gpg"
+      )
+    if not os.path.exists(file_archive + ".gpg"):
+      logging.error("GnuPG didn't produce an encrypted file. Please make sure GnuPG is installed and running properly")
+      return None
+    # Remove old content
+    os.remove(file_archive)
+    file_archive += ".gpg"
+  if config["sign"] and havearchive:
+    logging.info("Signing archive")
+    with open(file_archive, 'rb') as fp:
+      gpg.sign_file(
+        fp,
+        keyid=config["sign"],
+        passphrase=config["sign-pw"],
+        binary=True,
+        clearsign=False,
+        output=file_archive+".sig"
+      )
+    if not os.path.exists(file_archive + ".sig"):
+      logging.error("GnuPG didn't produce a signed file. Please make sure GnuPG is installed and running properly")
+      return None
+    # Remove old content
+    os.remove(file_archive)
+    file_archive += ".sig"
+
+  # Add parity if requested
+  if havearchive:
+    if config["parity"] > 0:
+      logging.info("Generating %d%% parity information", config['parity'])
+      if not fileutils.generateParity(file_archive, config["parity"]):
+        logging.error("Unable to create PAR2 file for this archive")
+        return None
+
+  # Security for all companion files...
+  if config["encrypt"] and config["encrypt-manifest"] and config["manifest"]:
+    # User wants manifest encrypted too
+    logging.info("Encrypting manifest")
+    with open(file_manifest, 'rb') as fp:
+      gpg.encrypt_file(
+        fp,
+        config["encrypt"],
+        passphrase=config["encrypt-pw"],
+        armor=True,
+        output=file_manifest+".gpg"
+      )
+    if not os.path.exists(file_manifest + ".gpg"):
+      logging.error("GnuPG didn't produce an encrypted file. Please make sure GnuPG is installed and running properly")
+      return None
+    # Remove old content
+    os.remove(file_manifest)
+    file_manifest += ".gpg"
+
+  if config["sign"]:
+    if config["manifest"]:
+      logging.info("Signing manifest")
+      with open(file_manifest, 'rb') as fp:
+        gpg.sign_file(
+          fp,
+          keyid=config["sign"],
+          passphrase=config["sign-pw"],
+          clearsign=False,
+          output=file_manifest+".asc"
+        )
+      if not os.path.exists(file_manifest + ".asc"):
+        logging.error("GnuPG didn't produce a signed file. Please make sure GnuPG is installed and running properly")
+        return None
+      # Remove old content
+      os.remove(file_manifest)
+      file_manifest += ".asc"
+    if config["parity"] > 0:
+      logging.info("Signing parity")
+      for f in os.listdir(config["prepdir"]):
+        if f.endswith('.par2'):
+          f = os.path.join(config["prepdir"], f)
+          with open(f, 'rb') as fp:
+            data = gpg.sign_file(
+              fp,
+              keyid=config["sign"],
+              passphrase=config["sign-pw"],
+              binary=True,
+              clearsign=False,
+              output=f+".sig"
+            )
+          if not os.path.exists(f + ".sig"):
+            logging.error("GnuPG didn't produce a signed file. Please make sure GnuPG is installed and running properly")
+            return None
+          # Remove old content
+          os.remove(f)
+  if config["create-filelist"]:
+    file_list = os.path.join(config["prepdir"], config["prefix"] + config["unique"]) + ".lst"
+    fileutils.generateFilelist(config["prepdir"], file_list)
+    if config["sign"]:
+      logging.info("Signing filelist")
+      with open(file_list, 'rb') as fp:
+        gpg.sign_file(
+          fp,
+          keyid=config["sign"],
+          passphrase=config["sign-pw"],
+          clearsign=False,
+          output=file_list+".asc"
+        )
+      if not os.path.exists(file_list + ".asc"):
+        logging.error("GnuPG didn't produce a signed file. Please make sure GnuPG is installed and running properly")
+        return None
+      # Remove old content
+      os.remove(file_list)
+      file_list += ".asc"
+
+  return os.listdir(config["prepdir"])
+
+#####################
+
+config = configuration.parse(cmdline.config)
+if config is None:
+  logging.error("Configuration is broken, please check %s" % cmdline.config)
+  sys.exit(1)
+
+if cmdline.debug:
+  logging.debug('Active config:')
+  for k in config:
+    logging.debug('"%s" = "%s"', k, config[k])
+
+# Check version
+if config["checkupdate"]:
+  checkNewVersion()
+
+# Also make sure any GnuPG key is available and valid
+if config["encrypt"] or config["sign"]:
+  gpg = gnupg.GPG(options=['-z', '0']) # Do not use GPG compression since we use bzip2
+  if config["encrypt"]:
+    test = gpg.encrypt("test", config["encrypt"], passphrase=config["encrypt-pw"], armor=True)
+    if len(str(test)) == 0:
+      logging.error("Can't find encryption key \"%s\"" % config["encrypt"])
+      sys.exit(1)
+  if config["sign"]:
+    test = gpg.sign("test", keyid=config["sign"], passphrase=config["sign-pw"], binary=False)
+    if len(str(test)) == 0:
+      logging.error("Can't find sign key \"%s\"" % config["sign"])
+      sys.exit(1)
+
+# Add more extensions (if provided)
+if config["extra-ext"] is not None:
+  incompressable += config["extra-ext"]
+
+# Prep some needed config items which we generate
+config["file-checksum"] = os.path.join(config["datadir"], "checksum.json")
+tm = datetime.utcnow()
+config["unique"] = "%d%02d%02d-%02d%02d%02d-%05x" % (tm.year, tm.month, tm.day, tm.hour, tm.minute, tm.second, tm.microsecond)
+config["archivedir"] = os.path.join(config["prepdir"], config["unique"])
+
+"""
+Load the old data, containing checksums and backup sets
+"""
+if os.path.exists(config["file-checksum"]):
+  with open(config["file-checksum"], "rb") as fp:
+    oldSave = json.load(fp)
+    if configuration.isCompatible(oldSave["version"]):
+      oldFiles = oldSave["dataset"]
+      #deletedFiles = oldFiles.copy()
+      for k in oldFiles:
+        if oldFiles[k]["checksum"] != '':
+          deletedFiles[k] = oldFiles[k]
+
+      backupSets = oldSave["backups"]
+      oldVault = oldSave["vault"]
+      if 'moved' in oldSave:
+        oldMoves = oldSave["moved"]
+      if 'lastbackup' in oldSave:
+        lastBackup = oldSave["lastbackup"]
+  logging.info(
+    "State loaded, last run was %s using version %s",
+    datetime.fromtimestamp(oldSave["timestamp"]).strftime("%c"),
+    oldSave["version"]
+  )
+else:
+  logging.info("First run, no previous checksums")
+
+if cmdline.list:
+  if cmdline.list == "files":
+    logging.info("Files in current backup:")
+  elif cmdline.list == "members":
+    logging.info("Backups containing files in current backup:")
+  elif cmdline.list == "sets":
+    logging.info("Needed backup sets to restore complete backup (in this order):")
+
+  # Find out which was the latest backup
+  # Build a tree so we can sort it
+  backuptree = []
+  for k,v in backupSets.items():
+    backuptree.append(k)
+  backuptree.sort()
+
+  filetree = []
+  for k,v in oldFiles.items():
+    if v["checksum"] != "":
+      if cmdline.list == "members":
+        last = sorted(v["memberof"])
+        if k in oldMoves:
+          filetree.append(oldMoves[k]['reference'] + ' "' + oldMoves[k]['original'] + '" moved to "' + k + '"')
+        else:
+          filetree.append(last[len(last)-1] + ' "' + k + '"')
+      elif cmdline.list == "sets":
+        if k in oldMoves:
+          item = oldMoves[k]['reference'] + ' "' + oldMoves[k]['original'] + '" moved to "' + k + '"'
+        else:
+          last = sorted(v["memberof"])
+          item = last[len(last)-1]
+        if not item in filetree:
+          filetree.append(item)
+      else:
+        filetree.append('"' + k + '"')
+
+  filetree.sort()
+  for b in filetree:
+    logging.info(b)
+  sys.exit(0)
+
+if cmdline.modified:
+  found = 0
+  logging.info("Searching for modified files:")
+  for k,v in oldFiles.items():
+    if len(v["memberof"]) > 1:
+      found += 1
+      logging.info("\"%s\" modified %d times", k, len(v["memberof"]))
+  logging.info("Found %d files (of %d) which have been modified", found, len(oldFiles))
+  if found:
+    sys.exit(0)
+  else:
+    sys.exit(1)
+
+if cmdline.show:
+  archive = cmdline.show.lower()
+  if archive in backupSets:
+    logging.info("Members of \"%s\":", archive)
+    for f in backupSets[archive]:
+      logging.info("  %s", f)
+  else:
+    logging.error("No such backup, \"%s\"", cmdline.show)
+  sys.exit(0)
+
+if cmdline.find:
+  logging.info("Searching for \"%s\"", cmdline.find.decode('utf-8'))
+  found = 0
+  for k,v in oldFiles.items():
+    if k.lower().find(cmdline.find.decode('utf-8').lower()) != -1:
+      logging.info("  \"%s\", exists in:", k)
+      found += 1
+      v["memberof"].sort()
+      for x in v["memberof"]:
+        logging.info("    %s", x)
+  logging.info("Found %d instances", found)
+  if found:
+    sys.exit(0)
+  else:
+    sys.exit(1)
+
+
+logging.info("Setting up the prep directory")
+try:
+  os.makedirs(config["prepdir"])
+except OSError as e:
+  if e.errno != 17:
+    logging.exception("Error creating prep directory")
+    raise
+
+fileutils.deleteTree(config["prepdir"])
+
+logging.info("Checking sources for changes")
+missedFiles = collectSources(config['sources'])
+
+logging.debug("Processing file structure changes")
+
+"""
+Figure out if any file was renamed, this is easily detected since a deleted file
+will have a new file with the same checksum.
+"""
+if config["detect-move"]:
+  tmpRemove = []
+  for k,v in deletedFiles.items():
+    item = shaFiles.get(v["checksum"])
+    if item:
+      for f in item:
+        if f in newFiles:
+          # Moved! From k to f
+          movedFiles[f] = k
+          tmpRemove.append(k)
+          logging.debug('''File "%s" moved to "%s"''' % (k, f))
+          break
+  for k in tmpRemove:
+    deletedFiles.pop(k, None)
+
+# When looking for changes, only provide a list of changes + summary
+if cmdline.changes:
+  logging.info("Detected changes:")
+  for k in deletedFiles:
+    logging.info(u"\"%s\" was deleted", k)
+
+  for k in newFiles:
+    if k in movedFiles:
+      logging.info(u"\"%s\" was renamed/moved from \"%s\"", k, movedFiles[k])
+    elif k not in oldFiles:
+      logging.info(u"\"%s\" is new", k)
+    else:
+      logging.info(u"\"%s\" changed", k)
+
+  if currentOp["filecount"] > 0 or len(deletedFiles):
+    logging.info("===============")
+    if len(oldFiles) == 0:
+      logging.info("%d files (%s) to be backed up", currentOp["filecount"], helper.formatSize(currentOp["filesize"]))
+    else:
+      logging.info("%d files (%s) has changed or been added since last backup, %d has been deleted", currentOp["filecount"], helper.formatSize(currentOp["filesize"]), len(deletedFiles))
+    sys.exit(1)
+  else:
+    logging.info("No file(s) changed or added since last backup")
+    sys.exit(0)
+
+if len(newFiles) == 0 and missedFiles is not None:
+  logging.info("Done. There were files which didn't fit the maxsize limit (%d files, %s)", len(missedFiles['files']), helper.formatSize(missedFiles['size']))
+  if cmdline.debug:
+    for f in missedFiles['files']:
+      logging.debug('Ignored: "%s"', f)
+  if config["ignore-overlimit"]:
+    logging.info('Since ignore overlimit was set, this is still considered a success')
+    sys.exit(0)
+  else:
+    logging.error("Cannot continue since there are files bigger than maxsize")
+    sys.exit(3)
+
+# Time to compress
+files = gatherData()
+if files is None:
+  logging.error("Failed to gather all data and compress it.")
+  sys.exit(2)
+
+if currentOp["filecount"] == 0 and len(deletedFiles) == 0 and config["skip-empty"]:
+  logging.info("No changes detected, skipping backup")
+  sys.exit(0)
+
+msg = "%d files (%s) gathered" % (currentOp["filecount"], helper.formatSize(currentOp["filesize"]))
+if config["compress"] and (shouldCompress() or config["compress-force"]):
+  msg += ", compressed"
+if config["encrypt"]:
+  msg += ", encrypted"
+if config["sign"]:
+  msg += ", signed"
+totalbytes = fileutils.sumSize(config["prepdir"], files)
+msg += " and ready to upload as %d files, total %s" % (len(files), helper.formatSize(totalbytes))
+logging.info(msg)
+
+##############################################################################
+#
+
+# We want to avoid wasting requests, so only try to
+# create vaults if we need to.
+backup = False
+if config["glacier-vault"] is not None:
+  if config["glacier-vault"] != oldVault:
+    logging.info("Glacier vault most likely not in cloud, let's create it")
+    if aws.createVault(config):
+      backup = aws.uploadFiles(config, files, totalbytes)
+  else:
+    backup = aws.uploadFiles(config, files, totalbytes)
+else:
+  logging.info("Not uploading to Glacier since config is missing")
+  backup = True
+
+if not backup:
+  logging.error("Amazon Glacier upload failed, aborting")
+  sys.exit(1)
+
+#
+##############################################################################
+
+# merge new files, checksums and memberships
+for k,v in newFiles.items():
+  if k in oldFiles: # Don't forget any old memberships
+    newFiles[k]["memberof"] += oldFiles[k]["memberof"]
+    if "deleted" in oldFiles[k]:
+      newFiles[k]["deleted"] += oldFiles[k]["deleted"]
+  oldFiles[k] = newFiles[k]
+
+  # Get rid of this file from the moves database since we now have a fresh copy
+  if k in oldMoves:
+    logging.info("Removing " + k + " since it's marked as new")
+    oldMoves.pop(k)
+
+"""
+Deal with deleted files. We must store all deletes as an array since user can
+restore the file. We also must wipe the checksum so a restored file gets backed
+up again.
+"""
+for f in deletedFiles:
+  logging.debug('''File "%s" deleted''' % f)
+  if "deleted" in oldFiles[f]:
+    oldFiles[f]["deleted"].append(config["unique"])
+  else:
+    oldFiles[f]["deleted"] = [config["unique"]]
+  oldFiles[f]["checksum"] = "" # Wipe checksum to make sure new copy is backed up
+
+# We also need to handle the moved files properly to avoid marking a moved file as deleted
+# on the next run.
+
+for _new,_old in movedFiles.items():
+  # Note where we got this copy from
+  if _old in oldMoves:
+    # Just readjust this entry
+    movedFiles[_new] = oldMoves[_old]
+    oldMoves.pop(_old)
+  else:
+    # Create a new moved entry
+    lst = sorted(oldFiles[_old]['memberof'])
+    movedFiles[_new] = {'reference' : lst[len(lst)-1], 'original' : _old}
+
+  # Clear other fields
+  if "deleted" in oldFiles[_old]:
+    oldFiles[_old]["deleted"].append(config["unique"])
+  else:
+    oldFiles[_old]["deleted"] = [config["unique"]]
+  oldFiles[_old]["checksum"] = ""
+
+# Finally, append any previously moved files
+movedFiles.update(oldMoves)
+
+# Add the backup to our sets...
+backupSets[config["unique"]] = files
+
+logging.info("Saving the new checksum")
+saveData = {
+  "version" : configuration.getVersion(),
+  "timestamp" : time.time(),
+  "dataset" : oldFiles,
+  "backups" : backupSets,
+  "vault" : config["glacier-vault"],
+  "moved" : movedFiles,
+  "lastbackup" : config["prefix"] + config["unique"]
+}
+with open(config["file-checksum"] + "_tmp", "wb") as fp:
+  fp.write(json.dumps(saveData, ensure_ascii=False).encode("utf-8"))
+
+# Copy the new file into place and then delete the temp file
+try:
+  shutil.copy(config["file-checksum"] + "_tmp", config["file-checksum"])
+except OSError as e:
+  if e.errno == 1:
+    logging.debug("Unable to change permissons on copied file: %s" % config["file-checksum"])
+  else:
+    logging.exception("Error copying file")
+    raise
+
+try:
+  os.remove(config["file-checksum"] + "_tmp")
+except OSError as e:
+  logging.exception("Error removing temporary database")
+  raise
+
+if config["donedir"] is not None:
+  logging.info("Moving backed up archive into done directory")
+  dest = os.path.join(config["donedir"], config["unique"])
+  os.mkdir(dest)
+  for f in files:
+    try:
+      shutil.copy(
+        os.path.join(config["prepdir"], f),
+        os.path.join(dest, f)
+      )
+    except OSError as e:
+      if e.errno == 1:
+        logging.debug("Unable to change permissons on copied file: %s" % dest)
+      else:
+        logging.exception("Error copying file")
+        raise
+    os.remove(os.path.join(config["prepdir"], f))
+  os.rmdir(config["prepdir"])
+
+  # Finally, we count the number of stored archives and delete the
+  # older ones exceeding the defined limit.
+  if config["maxkeep"] > 0:
+    archives = os.listdir(config["donedir"])
+    archives.sort()
+    logging.info("Told to keep %d archive(s), we have %d", config["maxkeep"], len(archives))
+    while len(archives) > config["maxkeep"]:
+      folder = archives.pop(0)
+      logging.info("Deleting \"%s\"", folder)
+      shutil.rmtree(os.path.join(config["donedir"], folder))
+
+if missedFiles is not None:
+  logging.warn("Reached size limit, recommend running again after this session (skipped %d files, %s)", len(missedFiles['files']), helper.formatSize(missedFiles['size']))
+  if cmdline.debug:
+    for f in missedFiles['files']:
+      logging.debug('Skipped: "%s"', f)
+  sys.exit(10)
+sys.exit(0)
