@@ -1,7 +1,30 @@
-*.pyo
+## Ignored stuff
+
+# temp files
+*.swo
+*.swp
+*$
 *.pyc
-__pycache__
-*.egg-info
-build
-dist
-.idea
+*.pyo
+.ropeproject/
+
+# testing
+.tox/
+
+# coverage
+.coverage
+cover/*
+*,cover
+htmlcov/
+
+# packaging
+build/
+dist/
+docs/_build
+nbproject/
+*.egg-info/
+.directory
+
+# packaging: Debian
+debian/python-argh
+debian/python-module-stampdir

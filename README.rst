@@ -1,132 +1,178 @@
-Topy
-====
-.. image:: https://badge.fury.io/py/topy.svg
-   :target: https://badge.fury.io/py/topy
+Argh: The Effortless CLI
+========================
 
-.. |Tests status| image:: https://github.com/intgr/topy/workflows/Tests/badge.svg?branch=master
-   :target: https://github.com/intgr/topy/actions?query=workflow:Tests
+.. image:: https://github.com/neithere/argh/actions/workflows/lint-and-test.yml/badge.svg
+    :target: https://github.com/neithere/argh/actions/workflows/lint-and-test.yml
 
-Topy (anagram of "typo") is a Python script to fix typos in text, using rulesets developed by the RegExTypoFix_ project
-from Wikipedia. The English ruleset is included with Topy and is used by default. Other rulesets can be manually
-downloaded.
+.. image:: https://img.shields.io/pypi/format/argh.svg
+    :target: https://pypi.python.org/pypi/argh
 
-.. _RegExTypoFix: https://en.wikipedia.org/wiki/Wikipedia:AutoWikiBrowser/Typos
+.. image:: https://img.shields.io/pypi/status/argh.svg
+    :target: https://pypi.python.org/pypi/argh
 
-Topy works with Python 3.7-3.11.
+.. image:: https://img.shields.io/pypi/v/argh.svg
+    :target: https://pypi.python.org/pypi/argh
 
-The easiest way to install it is using pip::
+.. image:: https://img.shields.io/pypi/pyversions/argh.svg
+    :target: https://pypi.python.org/pypi/argh
 
-    pip install topy
+.. image:: https://img.shields.io/pypi/dd/argh.svg
+    :target: https://pypi.python.org/pypi/argh
 
-Usage::
+.. image:: https://readthedocs.org/projects/argh/badge/?version=stable
+    :target: http://argh.readthedocs.org/en/stable/
 
-    Usage: topy [options] FILES/DIRS...
+.. image:: https://readthedocs.org/projects/argh/badge/?version=latest
+    :target: http://argh.readthedocs.org/en/latest/
 
-    Options:
-      -h, --help            show this help message and exit
-      -q, --quiet           silence information messages
-      -a, --apply           overwrite files in place
-      -r FILE, --rules=FILE
-                            specify custom ruleset file to use
-      -d RULE, --disable=RULE
-                            disable rules by name
-      --color=WHEN, --colour=WHEN
-                            colorize the output; WHEN can be 'never', 'always', or
-                            'auto'
+**The power of Argparse with plain Python functions!**
 
-For example, if you want to integrate topy in your CI pipeline, you can do something like::
+Building a command-line interface?  Found yourself uttering "argh!" while
+struggling with the API of `argparse`?  Don't like the complexity but need
+the power?
 
-    sh -c "git ls-files | xargs topy --quiet --apply --; git --no-pager diff --exit-code"
+`Argh` builds on the power of `argparse` (which comes with Python) and makes it
+really easy to use.  It eliminates the complex API and lets you "dispatch"
+ordinary Python functions as CLI commands.
 
-The line above will check all files tracked by git, apply fixes to them and fail if any changes are applied.
-If no changes are to be applied, the command returns success.
-
-Resources
----------
-
-* https://en.wikipedia.org/wiki/Wikipedia:AutoWikiBrowser/Typos
-* https://github.com/intgr/topy
-* https://pypi.python.org/pypi/topy
-* Rulesets for other languages: https://www.wikidata.org/wiki/Q6585066
-
-Changelog
----------
-
-1.1.0 (2021-02-03)
-
-* Added colors to output. Thanks to Brian de Buiteach (@debuiteb) (#25)
-* Python 3.5 support is removed to allow newer syntax (#25)
-
-1.0.1 (2021-01-30)
-
-* Updated bundled ruleset from Wikipedia (#29)
-* Python 3.9 is now officially supported and tested in CI (#27)
-* Migrated tests from travis-ci.org to travis-ci.com (#28)
-
-1.0.0 (2020-09-08)
-
-* Updated bundled ruleset from Wikipedia (#23)
-* Removed Python 2.x and <3.5 compatibility code (#22)
-* Fixed Travis CI configuration (#21)
-
-0.3.0 (2020-06-02)
-
-Note: This was the last release to support Python 2.7.
-
-* Updated bundled ruleset (thanks to Oscar Caballero)
-* Added --disable option to disable individual rules (thanks to Oscar Caballero)
-* Fixed behavior when replacement string contains $ symbol (thanks to Oscar Caballero)
-* Prefer the faster lxml parser when it is installed. lxml is now an optional dependency
-  (thanks to Oscar Caballero)
-* Added Python 3.7 support, deprecated Python 3.3 and 3.4.
-
-0.2.2 (2016-12-16)
-
-* Update bundled ruleset
-* Officially add Python 3.6 support
-
-0.2.1 (2016-07-15)
-
-* Update bundled ruleset
-* Update regex dependency version to avoid `regex issue #216`_
-* Officially add Python 3.5 support
-
-.. _`regex issue #216`: https://bitbucket.org/mrabarnett/mrab-regex/issues/216/invalid-match-when-using-negative
-
-0.2.0 (2015-09-09)
-
-* Several fixes with Unicode on Python 2
-* Can safely deal with filenames that are invalid Unicode
-* Update bundled ruleset
-* Fix a few warnings from used libraries
-
-0.1.0 (2014-08-24)
-
-* Initial public release
-
-Contributing
+Installation
 ------------
 
-Code style:
+::
 
-* In general follow the Python PEP-8_ coding style, except line length can go up to 120 chars.
-* Strings that have meaning for humans use double quotes (``"``), otherwise single quotes (``'``). When in doubt, don't
-  worry about it.
-* Code should be compatible with both Python 2 and 3, preferably without version-specific conditionals.
+    $ pip install argh
 
-Run the test suite using ``python setup.py test``.
-
-Submit your changes as pull requests on GitHub.
-
-.. _PEP-8: https://www.python.org/dev/peps/pep-0008/
-
-License
+Example
 -------
 
-The Topy software is licensed under the MIT license (see LICENSE.txt)
+.. code-block:: python
 
-The bundled ``retf.txt`` file, copied from `Wikipedia AutoWikiBrowser/Typos`_ by Wikipedia contributors is licensed
-under CC-BY-SA_. See the page on Wikipedia for authorship information.
+    import argh
 
-.. _`Wikipedia AutoWikiBrowser/Typos`: https://en.wikipedia.org/wiki/Wikipedia:AutoWikiBrowser/Typos
-.. _CC-BY-SA: https://creativecommons.org/licenses/by-sa/3.0/
+    def verify_paths(paths: list[str], *, verbose: bool = False):
+        """
+        Verify that all given paths exist.
+        """
+        for path in paths:
+            if verbose:
+                print(f"Checking {path}...")
+            assert os.path.exists(path)
+
+    argh.dispatch_command(verify_paths)
+
+Now you can run the script like this:
+
+.. code-block:: bash
+
+    $ python app.py foo.txt bar/quux.txt
+
+    $ python app.py foo.txt bar/quux.txt --verbose
+    Checking foo.txt...
+    Checking bar/quux.txt...
+
+    $ python app.py -h
+    usage: app.py [-h] [-v] [paths ...]
+
+    Verify that all given paths exist.
+
+    positional arguments:
+      paths          -
+
+    options:
+      -h, --help     show this help message and exit
+      -v, --verbose  False
+
+Please check the documentation for examples of multiple commands, modularity,
+help generation, advanced type annotations inspection, decorators and more:
+
+* `Quick Start <https://argh.readthedocs.io/en/latest/quickstart.html>`_
+* `Tutorial <https://argh.readthedocs.io/en/latest/tutorial.html>`_
+
+Why Argh?
+---------
+
+`Argh`-powered applications are *simple* but *flexible*:
+
+:Pythonic, KISS:
+    Commands are plain Python functions.  Almost no CLI-specific API to learn.
+
+:Reusable:
+    Endpoint functions can be used directly outside of CLI context.
+
+:Static typing friendly:
+    100% of the code including endpoint functions can be type-checked.
+    Argh is driven primarily by type annotations.
+
+:DRY:
+    Don't Repeat Yourself.  The amount of boilerplate code is minimal.
+    Among other things, `Argh` will:
+
+    * infer command name from function name;
+    * infer arguments from function signature;
+    * infer argument types, actions and much more from annotations.
+
+:Modular:
+    Declaration of commands can be decoupled from assembling and dispatching.
+
+:Layered:
+    The complexity of code raises with requirements.
+
+:Transparent:
+    You can directly access `argparse.ArgumentParser` if needed.
+
+:Subcommands:
+    Easily nested commands.  Argh isolates the complexity of subparsers.
+
+:NIH free:
+    `Argh` supports *completion*, *progress bars* and everything else by being
+    friendly to excellent 3rd-party libraries.  No need to reinvent the wheel.
+
+:Compact:
+    No dependencies apart from Python's standard library.
+
+Links
+-----
+
+See also the `project page on GitHub`_, `documentation`_ and `PyPI page`_.
+
+.. _project page on GitHub: http://github.com/neithere/argh/
+.. _documentation: http://argh.readthedocs.org
+.. _PyPI page: http://pypi.python.org/pypi/argh
+
+Author
+------
+
+Developed by Andrey Mikhaylenko since 2010.
+
+See `contributors <https://argh.readthedocs.io/en/latest/contributors.html>`_
+for a list of contributors to this library.
+
+Contribute
+----------
+
+The fastest way to improve this project is to submit tested and documented
+patches or detailed bug reports.
+
+Donate
+------
+
+You can `donate via Liberapay`_.  This may speed up development or simply
+make the original author happy :)
+
+.. _donate via Liberapay: https://liberapay.com/neithere/donate
+
+Licensing
+---------
+
+Argh is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published
+by the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Argh is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with Argh.  If not, see <http://gnu.org/licenses/>.

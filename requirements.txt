@@ -1,2 +1,0 @@
-beautifulsoup4
-regex>=2016.07.14
