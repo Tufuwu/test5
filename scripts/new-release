@@ -1,0 +1,38 @@
+#!/bin/sh
+# Update version information.
+
+set -e
+set -u
+
+# Version information.
+VERSION="$(date +%Y.%-m.%-d)"
+YEAR="$(date +%Y)"
+
+update_docs() {
+  local conffile="docs/conf.py"
+
+  # Version and year
+  sed -i -E "/^version = /s/\".*\"/\"${VERSION}\"/" "${conffile}"
+  sed -i -E "/^release = /s/\".*\"/\"${VERSION}\"/" "${conffile}"
+  sed -i -E "/^copyright = /s/[0-9]{4}/${YEAR}/" "${conffile}"
+}
+
+update_setup() {
+  local conffile="setup.py"
+
+  sed -i -E "/version=/s/\".*\"/\"${VERSION}\"/" "${conffile}"
+}
+
+update_init() {
+  local conffile="feeds/__init__.py"
+
+  sed -i -E "/^__version__ = /s/\".*\"/\"${VERSION}\"/" "${conffile}"
+}
+
+main() {
+  update_docs
+  update_setup
+  update_init
+}
+
+main

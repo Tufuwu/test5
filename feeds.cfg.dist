@@ -1,0 +1,182 @@
+# Feeds configuration.
+
+[feeds]
+# Useragent to use for crawling.
+useragent = feeds (+https://github.com/pyfeeds/pyfeeds)
+
+## List of spiders to run by default, one per line.
+# spiders =
+#     tvthek.orf.at
+#     oe1.orf.at
+
+## Target directory where the feeds will be saved.
+# output_path = output
+
+## URL of target directory from which the feeds can be accessed.
+## Optional; used to generate atom:link element with rel="self" attribute.
+## See also: https://validator.w3.org/feed/docs/warning/MissingSelf.html
+# output_url = https://example.com/feeds
+
+## Truncate content to 10 words instead of including the full text.
+## This can be useful if generated feeds should be made publicly available.
+# truncate_words = 10
+## Remove images from output.
+# remove_images = 1
+
+## Enable caching of responses
+# cache_enabled = 1
+## Path to the cache.
+# cache_dir = ~/.cache/feeds
+## Expire (remove) entries from cache after 90 days
+# cache_expires = 90
+
+#[generic]
+## A list of URLs to RSS/Atom feeds.
+# urls =
+## A list of URLs to RSS/Atom feeds that provide the full content in the "encoded" or
+## "content" tag.
+# fulltext_urls =
+
+#[falter.at]
+## falter.at has a paywall for certain articles.
+## If you want to crawl paid articles, please provide abonr (subscription
+## number) and password.
+# abonr =
+# password =
+# blogs =
+#     lingens
+#     thinktank
+
+#[konsument.at]
+## KONSUMENT.AT has a paywall for certain articles.
+## If you want to crawl paid articles, please provide username and password.
+# username =
+# password =
+
+#[biblioweb.at]
+## Location of your library that uses biblioweb.at.
+# location =
+
+#[lwn.net]
+## LWN.net has paywalled articles.
+## If you want to crawl them, please provide username and password.
+# username =
+# password =
+
+#[vice.com]
+#locales =
+#    de_at
+#    de
+
+#[nachrichten.at]
+## Nachrichten.at has paywalled articles.
+## If you want to crawl them, please provide username and password.
+#username =
+#password =
+#ressorts =
+#    wels
+#    linz
+#    nachrichten
+
+#[uebermedien.de]
+## uebermedien.de has a paywall for certain articles.
+## If you want to crawl paid articles, please provide your Steady username
+## and password.
+# username =
+# password =
+
+#[orf.at]
+#channels =
+#    news
+#    fm4
+#    science
+#    help
+#    sport
+#    oe3
+#    oesterreich
+#    burgenland
+#    wien
+#    noe
+#    ooe
+#    salzburg
+#    steiermark
+#    kaernten
+#    vorarlberg
+#    tirol
+#    religion
+#authors =
+#    Erich Moechel
+
+#[derstandard.at]
+#ressorts =
+#    diskurs/kolumnen/rauscher
+#    inland/serienundblogs/standardabweichung
+#    etat
+#    immobilien
+#users =
+#    571924
+
+#[arstechnica.com]
+#channels =
+#  index
+#  features
+#  technology-lab
+#  gadgets
+#  business
+#  security
+#  tech-policy
+#  apple
+#  gaming
+#  science
+#  multiverse
+#  cars
+#  staff-blogs
+#  cardboard
+#  open-source
+#  microsoft
+#  software
+#  telecom
+#  web
+
+#[momoxfashion.com]
+#links =
+#   /de/herren?sortiertnach=neueste
+
+#[kurier.at]
+#channels =
+#    /chronik/wien
+#articles =
+#    /meinung/pammesberger-2018-die-karikatur-zum-tag/309.629.015/slideshow
+#authors =
+#    niki.glattauer
+#    guido.tartarotti
+#    florian.holzer
+#    barbara.kaufmann
+
+#[spotify.com]
+#market = AT
+#shows =
+#    6u7pI0o0CUBQq0T1fwPgbj
+
+#[wienerzeitung.at]
+#ressorts =
+#    nachrichten/politik/wien
+#    nachrichten/politik
+#    nachrichten/wirtschaft
+#    meinung
+
+#[ft.com]
+#ressorts =
+#    homepage
+#    the-big-read
+
+#[economist.com]
+#ressorts =
+#    finance-and-economics
+#    special-report
+#    leaders
+
+#[gem2go]
+#urls =
+#    http://yourlocalcommunity.tld/News
+#    https://mytown.tld/BUeRGERSERVICE/Neuigkeiten
