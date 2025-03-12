@@ -1,3 +1,0 @@
-[submodule "snap-http"]
-	path = snap-http
-	url = https://github.com/canonical/snap-http
