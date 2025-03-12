@@ -1,30 +1,60 @@
-from platform import python_version
+# -*- coding: utf-8 -*-
+"""Build script for setuptools, used to create PyPi package."""
+import os
+
 from setuptools import setup
+from setuptools import find_packages
+
+from prometheus_speedtest import version
 
 
-def readme():
-    with open('README.md') as readme_file:
-        return readme_file.read()
+def read_file(rel_path):
+    """Reads a relative file, returns contents as a string.
+
+    Args:
+      rel_path: relative file path, string.
+    """
+    here = os.path.abspath(os.path.dirname(__file__))
+    with open(os.path.join(here, rel_path), 'r', encoding='utf-8') as rel_file:
+        return rel_file.read().strip()
 
 
 setup(
-    name='comment_parser',
-    version='1.2.5',
-    description='Parse comments from various source files.',
-    classifiers=[
-        'Development Status :: 5 - Production/Stable',
-        'Programming Language :: Python :: 3',
-        'Topic :: Software Development :: Documentation',
-        'License :: OSI Approved :: MIT License'
-    ],
-    url='http://github.com/jeanralphaviles/comment_parser',
+    name='prometheus_speedtest',
     author='Jean-Ralph Aviles',
     author_email='jeanralph.aviles+pypi@gmail.com',
-    license='MIT',
-    long_description=readme(),
+    classifiers=[
+        'Development Status :: 5 - Production/Stable',
+        'Environment :: Console',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: Apache Software License',
+        'Operating System :: OS Independent',
+        'Topic :: System :: Monitoring',
+        'Topic :: System :: Networking :: Monitoring',
+        'Programming Language :: Python :: 3.13',
+        'Programming Language :: Python',
+    ],
+    description=('Performs speedtest-cli tests and pushes metrics to '
+                 'Prometheus Pushgateway'),
+    entry_points={
+        'console_scripts': [
+            ('prometheus_speedtest='
+             'prometheus_speedtest.prometheus_speedtest:init'),
+        ],
+    },
+    include_package_data=True,
+    packages=find_packages(),
+    install_requires=[
+        'absl-py==2.1.0',
+        'prometheus_client==0.21.1',
+        'speedtest-cli==2.1.3',
+    ],
+    keywords=['prometheus', 'monitoring', 'speedtest', 'speedtest.net'],
+    license='Apache License, Version 2.0',
+    long_description=read_file('README.md'),
     long_description_content_type='text/markdown',
-    packages=['comment_parser', 'comment_parser.parsers'],
-    install_requires=['python-magic>=0.4.27'],
-    zip_safe=False,
-    python_requires='>=3.13',
+    py_modules=['prometheus_speedtest'],
+    setup_requires=['setuptools==75.6.0'],
+    url='https://github.com/jeanralphaviles/prometheus_speedtest',
+    version=version.VERSION,
 )
