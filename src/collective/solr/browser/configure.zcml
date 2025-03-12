@@ -1,0 +1,76 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:zcml="http://namespaces.zope.org/zcml"
+    i18n_domain="solr">
+
+  <browser:resourceDirectory
+      name="collective.solr.images"
+      directory="images" />
+
+  <browser:resourceDirectory
+      name="collective.solr.resources"
+      directory="resources" />
+
+  <browser:page
+      name="solr-controlpanel"
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      class=".controlpanel.SolrControlPanel"
+      permission="cmf.ManagePortal" />
+
+  <adapter
+    factory=".controlpanel.SolrControlpanelAdapter"
+    name="solr-controlpanel" />
+
+  <browser:page
+      for="*"
+      name="solr-maintenance"
+      class=".maintenance.SolrMaintenanceView"
+      allowed_interface="..interfaces.ISolrMaintenanceView"
+      permission="cmf.ManagePortal" />
+
+  <browser:page
+      name="index.html"
+      for="socket.error"
+      template="errors.pt"
+      class=".errors.ErrorView"
+      permission="zope2.Public" />
+
+  <browser:viewlet
+      name="plone.searchbox"
+      manager="plone.app.layout.viewlets.interfaces.IPortalHeader"
+      class=".facets.SearchBox"
+      layer=".interfaces.IThemeSpecific"
+      permission="zope2.View" />
+
+  <browser:page
+      for="OFS.interfaces.IFolder"
+      name="search-facets"
+      template="facets.pt"
+      class=".facets.SearchFacetsView"
+      permission="zope2.View" />
+
+  <browser:page
+      for="*"
+      name="suggest-terms"
+      class=".suggest.SuggestView"
+      permission="zope2.View"/>
+
+  <browser:page
+      for="*"
+      name="solr-autocomplete"
+      class=".suggest.AutocompleteView"
+      permission="zope2.View"/>
+
+  <!-- Plone 5 -->
+  <browser:page
+      name="search"
+      class="Products.CMFPlone.browser.search.Search"
+      permission="zope2.View"
+      for="plone.app.layout.navigation.interfaces.INavigationRoot"
+      template="search.pt"
+      layer=".interfaces.IThemeSpecific"
+      zcml:condition="have plone-5"
+      />
+
+</configure>
