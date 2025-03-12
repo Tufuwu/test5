@@ -1,69 +1,79 @@
-# scanpy-scripts [![Anaconda-Server Badge](https://anaconda.org/bioconda/scanpy-scripts/badges/installer/conda.svg)](https://anaconda.org/bioconda/scanpy-scripts) 
+# Supysonic
 
-A command-line interface for functions of the Scanpy suite, to facilitate flexible constrution of workflows, for example in Galaxy, Nextflow, Snakemake etc.
+Supysonic is a Python implementation of the [Subsonic][] server API.
 
-## Install
+![Build Status](https://github.com/spl0k/supysonic/workflows/Tests/badge.svg)
+[![codecov](https://codecov.io/gh/spl0k/supysonic/branch/master/graph/badge.svg)](https://codecov.io/gh/spl0k/supysonic)
+![Python](https://img.shields.io/badge/python-3.7+-blue.svg)
 
-The recommended way of using this package is through the latest container produced by Bioconda [here](https://quay.io/repository/biocontainers/scanpy-scripts?tab=tags). If you must, one can install scanpy-scripts via conda:
+Current supported features are:
+* browsing (by folders or tags)
+* streaming of various audio file formats
+* transcoding
+* user or random playlists
+* cover art
+* starred tracks/albums and ratings
+* [Last.fm][lastfm] scrobbling
+* [ListenBrainz][listenbrainz] scrobbling
+* Jukebox mode
 
-```bash
-conda install scanpy-scripts
-```
+Supysonic currently targets the version 1.12.0 of the Subsonic API. For more
+details, go check the [API implementation status][docs-api].
 
-pip installation is also possible, however the version of mnnpy is not patched as in the conda version, and so the `integrate` command will not work.
+[subsonic]: http://www.subsonic.org/
+[lastfm]: https://www.last.fm/
+[listenbrainz]: https://listenbrainz.org/
+[docs-api]: https://supysonic.readthedocs.io/en/latest/api.html
 
-```bash
-pip install scanpy-scripts
-```
+## Documentation
 
-For development installation, we suggest following the github actions python-package.yml file.
+Full documentation is available at https://supysonic.readthedocs.io/
 
-Currently, tests run on python 3.9, so those are the recommended versions if not installing via conda. BKNN doesn't currently install on Python 3.10 due to a skip in Bioconda.
+## Quickstart
 
-## Test installation
+Use the following commands to install Supysonic, create an admin user, define a
+library folder, scan it and start serving on port 5722 using [Gunicorn][].
 
-There is an example script included:
+    $ pip install supysonic
+    $ pip install gunicorn
+    $ supysonic-cli user add MyUserName
+    $ supysonic-cli user setroles --admin MyUserName
+    $ supysonic-cli folder add MyLibrary /home/username/Music
+    $ supysonic-cli folder scan MyLibrary
+    $ supysonic-server
 
-```bash
-scanpy-scripts-tests.bats
-```
+You should now be able to enjoy your music with the client of your choice!
 
-This requires the [bats](https://github.com/sstephenson/bats) testing framework to run. The script downloads [a well-known test 10X dataset]('https://s3-us-west-2.amazonaws.com/10x.files/samples/cell/pbmc3k/pbmc3k_filtered_gene_bc_matrices.tar.gz) and executes all of the commands described below.
+But using only the above commands will use a default configuration and
+especially storing the database in a temporary directory. Head over to the
+documentaiton for [full setup instructions][docs-setup], plus other options if
+you don't want to use Gunicorn.
 
-## Commands
+Note that there's also an optional [daemon][docs-daemon] that watches for
+library changes and provides support for other features such as the
+jukebox mode.
 
-Available commands are described below. Each has usage instructions available via `--help`, consult function documentation in scanpy for further details.
+[gunicorn]: https://gunicorn.org/
+[docs-setup]: https://supysonic.readthedocs.io/en/latest/setup/index.html
+[docs-daemon]: https://supysonic.readthedocs.io/en/latest/setup/daemon.html
 
-```
-Usage: scanpy-cli [OPTIONS] COMMAND [ARGS]...
+## Development stuff
 
-  Command line interface to [scanpy](https://github.com/theislab/scanpy)
+For those wishing to collaborate on the project, since Supysonic uses [Flask][]
+you can use its development server which provides automatic reloading and
+in-browser debugging among other things. To start said server:
 
-Options:
-  --debug              Print debug information
-  --verbosity INTEGER  Set scanpy verbosity
-  --version            Show the version and exit.
-  --help               Show this message and exit.
+    $ export FLASK_APP="supysonic.web:create_application()"
+    $ export FLASK_ENV=development
+    $ flask run
 
-Commands:
-  read       Read 10x data and save in specified format.
-  filter     Filter data based on specified conditions.
-  norm       Normalise data per cell.
-  hvg        Find highly variable genes.
-  scale      Scale data per gene.
-  regress    Regress-out observation variables.
-  pca        Dimensionality reduction by PCA.
-  neighbor   Compute a neighbourhood graph of observations.
-  embed      Embed cells into two-dimensional space.
-  cluster    Cluster cells into sub-populations.
-  diffexp    Find markers for each clusters.
-  paga       Trajectory inference by abstract graph analysis.
-  dpt        Calculate diffusion pseudotime relative to the root cells.
-  integrate  Integrate cells from different experimental batches.
-  multiplet  Execute methods for multiplet removal.
-  plot       Visualise data.
-  ```
+And there's also the tests (which require `lxml` to run):
 
-  ## Versioning
+    $ pip install lxml
+    $ python -m unittest
+    $ python -m unittest tests.net.suite
 
-  Major and major versions will follow the scanpy versions. The first digit of the patch should follow the scanpy patch version as well, subsequent digits in the patch are reserved for changes in this repository.
+The last command runs a few tests that make HTTP requests to remote third-party
+services (namely Last.fm, ListenBrainz and ChartLyrics).
+
+[flask]: https://flask.palletsprojects.com/

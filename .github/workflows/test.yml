@@ -1,46 +1,31 @@
-name: Python package
+# Inspired by python-package
 
-on: [pull_request]
-
+name: Package
+on:
+  - push
+  - pull_request
 jobs:
   build:
-
+    name: Build
     runs-on: ubuntu-latest
     strategy:
       matrix:
         python-version: ["3.9", "3.10"]
-
     steps:
-    - uses: actions/checkout@v2
-    
-    - name: Setup BATS
-      uses: mig4/setup-bats@v1
-      with:
-        bats-version: 1.2.1
-    
+    - name: Checkout
+      uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
-    
     - name: Install dependencies
       run: |
-        pip install -U setuptools>=40.1
-        pip install .
-    
-    - name: Test with bats
+        python -m pip install --upgrade pip
+        pip install -r ci-requirements.txt
+    - name: Run tests
       run: |
-        ./scanpy-scripts-tests.bats
- 
-    - name: Build dists
-      if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
-      run: |
-        pip install wheel
-        python setup.py sdist bdist_wheel
-    
-    - name: Publish to PyPI
-      if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
-      uses: pypa/gh-action-pypi-publish@master
-      with:
-        user: __token__
-        password: ${{ secrets.pypi_password }}
+        coverage run setup.py test
+        coverage run -a setup.py test --test-suite tests.with_net
+    - name: Upload coverage
+      uses: codecov/codecov-action@v1.0.15
+      if: ${{ always() }}
