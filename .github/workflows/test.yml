@@ -1,58 +1,66 @@
+# Python unit tests
+name: Python
+
 on:
   push:
-    branches:
-      - master
+    branches: ['master']
   pull_request:
-    branches:
-      - master
+    branches: ['master']
 
-name: Unit Testing
 jobs:
-  chore:
-    name: Unit Tests
+  lint:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        toxenv: [py36, py37, py38, py39, flake8]
-        include:
-          - toxenv: py36
-            python-version: "3.9"
-          - toxenv: py37
-            python-version: "3.9"
-          - toxenv: py38
-            python-version: "3.9"
-          - toxenv: flake8
-            python-version: "3.9"
-          - toxenv: py39
-            python-version: "3.9"
-
+        python-version: ["3.9", "3.10"]
     steps:
-      - uses: actions/checkout@v2
-        with:
-          # Fetch the latest commit, only
-          fetch-depth: 1
-
-      - uses: actions/setup-python@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
-
-      - name: Install virtualenv
-        run: |
-          pip install virtualenv
-          virtualenv --python=python3 .venv
-      - name: Print environment
-        run: |
-          source .venv/bin/activate
-          python --version
-          pip --version
       - name: Install dependencies
         run: |
-          source .venv/bin/activate
-          pip install tox
-      - name: Cleanup boto
+          sudo apt-get update
+          sudo apt-get install -y python-dev
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+      - name: black
+        run: black --check setup.py es
+      - name: flake8
+        run: flake8 es
+
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.10"]
+    services:
+      postgres:
+        image: elasticsearch:7.3.2
+        env:
+          discovery.type: single-node
+        ports:
+          - 9200:9200
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
         run: |
-          rm -fr /etc/boto.cfg
-      - name: Tox
+          sudo apt-get update
+          sudo apt-get install -y python-dev
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+          pip install -e .
+      - name: Run tests
         run: |
-          source .venv/bin/activate
-          tox -e ${{ matrix.toxenv }}
+          nosetests -v --with-coverage --cover-package=es es.tests
+      - name: Upload code coverage
+        run: |
+          bash <(curl -s https://codecov.io/bash) -cF python
