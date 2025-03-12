@@ -1,73 +1,121 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+"""A setuptools module for PH5.
+See:
+https://packaging.python.org/en/latest/distributing.html
+https://github.com/pypa/sampleproject
+"""
 
-# Copyright (c) 2015 IAS / CNRS / Univ. Paris-Sud
-# BSD License - see attached LICENSE file
-# Author: Alexandre Boucaud <alexandre.boucaud@ias.u-psud.fr>
-from setuptools import setup, find_packages
+from __future__ import (print_function)
+
+# install C dependencies
+from ph5.core.c_dependencies import subcd_py
+from ph5.core.c_dependencies import sufirfilt_py
+from ph5.core.c_dependencies import suibm2ieee_py
+from ph5.core.c_dependencies import surt_125a_py
+from ph5.core.c_dependencies import surt_130_py
+
+# Always prefer setuptools over distutils
+from setuptools import setup, Extension
+
+# Importing setuptools monkeypatches some of distutils commands so things like
+# 'python setup.py develop' work. Wrap in try/except so it is not an actual
+# dependency. Inplace installation with pip works also without importing
+# setuptools.
+try:
+    import setuptools  # @UnusedImport # NOQA
+except ImportError:
+    pass
+
+try:
+    import numpy  # @UnusedImport # NOQA
+except ImportError:
+    msg = ("No module named numpy. "
+           "Please install numpy first, it is needed before installing PH5.")
+    raise ImportError(msg)
 
 
-def find_version(filepath):
-    """
-    Find project version in a given file
+from ph5.entry_points import CommandList
 
-    The syntax for the file version need to be in the form
-    __version__ = 'a.b.c'
-    which follows the semantic versioning http://semver.org/
-    * a : major version
-    * b : minor version
-    * c : patch version
 
-    Parameters
-    ----------
-    filepath: str
-        Path to the file containing a version number
-
-    Returns
-    -------
-    version: str
-        The program version in the form 'a.b.c' as described above
-
-    """
-    with open(filepath) as pfile:
-        for line in pfile.readlines():
-            if line.startswith('__version__'):
-                version = line.strip()[-6:-1]
-    return version
+command_list = CommandList()
 
 setup(
-    name='pypher',
-    author='Alexandre Boucaud',
-    author_email='alexandre.boucaud@apc.in2p3.fr',
-    description='Python-based PSF Homogenization kERnels production',
-    license='New BSD',
-    url='http://pypher.readthedocs.org/en/latest/',
-    download_url='https://github.com/aboucaud/pypher',
-    version=find_version('pypher/pypher.py'),
-    long_description=open('README.rst').read(),
-    long_description_content_type='text/x-rst',
-    zip_safe=False,
-    packages=find_packages(),
-    include_package_data=True,
-    entry_points={
-        'console_scripts': [
-            'pypher = pypher.pypher:main',
-            'addpixscl = pypher.addpixscl:main',
-        ],
-    },
+    name="ph5",
+    version="4.1.2_2",
+    # metadata for upload to PyPI
+    author="IRIS PASSCAL Instrument Center",
+    author_email="dhess@passcal.nmt.edu",
+    description="A library of PH5 APIs",
+    license="MIT",
+    keywords="ph5 IRIS miniSEED sac segy seg-y segd seg-d",
+    url="https://github.com/PIC-IRIS/PH5/",   # project home page, if any
     install_requires=[
-        'numpy>=1.7.2',
-        'scipy>=0.9',
-        'astropy>=2.0'
-    ],
+                      'six',
+                      'Cython',
+                      'nose',
+                      'numpy',
+                      'numexpr',
+                      'pyproj',
+                      'psutil',
+                      'obspy',
+                      'lxml',
+                      'construct==2.5.1',
+                      'simplekml',
+                      'tables',
+                      'matplotlib<2',
+                      'subprocess32'
+                     ],
     classifiers=[
-        'Programming Language :: Python',
-        'Development Status :: 4 - Beta',
-        'License :: OSI Approved :: BSD License',
+        # How mature is this project? Common values are
+        #   3 - Alpha
+        #   4 - Beta
+        #   5 - Production/Stable
+        "Development Status :: 4 - Beta",
+
+        # Indicate who your project is intended for
+        'Environment :: Console',
         'Intended Audience :: Science/Research',
-        'Topic :: Scientific/Engineering :: Astronomy',
-        'Operating System :: OS Independent',
+        'Intended Audience :: Information Technology',
+        'Intended Audience :: System Administrators',
+        'Topic :: Scientific/Engineering :: Physics',
+
+        # Pick your license as you wish (should match "license" above)
+        'License :: OSI Approved :: MIT License',
+
+        # Specify the Python versions you support here. In particular, ensure
+        # that you indicate whether you support Python 2, Python 3 or both.
         'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3',
     ],
+    entry_points={group: [ep.get_entry_point_str() for ep in eps]
+                  for group, eps in command_list.entrypoints.items()},
+    packages=['ph5',
+              'ph5/clients',
+              'ph5/clients/ph5view',
+              'ph5/core',
+              'ph5/core/c_dependencies',
+              'ph5/utilities'],
+    # If there are data files included in your packages that need to be
+    # installed, specify them here.  If using Python 2.6 or less, then these
+    # have to be included in MANIFEST.in as well.
+    package_data={
+        'utilities': ['Event.cfg', 'Receiver.cfg'],
+        'clients': ['PH5Viewer.cfg'],
+        'ph5/core/c_dependencies':
+            ['bcd_py.cd', 'bcdwrapper_py.c',
+             'firfilt_py.c', 'firfiltwrapper_py.c', 'fir.h',
+             'ibm2ieee_py.c', 'ibm2ieeewrapper_py.c',
+             'rt_125a_py.c', 'rt_125awrapper_py.c',
+             'rt_130_py.c', 'rt_130wrapper_py.c', 'rt_130_py.h'
+             ]
+    },
+    # install c-dependencies
+    ext_modules=[Extension(*subcd_py.get_extension_options(),
+                           include_dirs=[numpy.get_include()]),
+                 Extension(*sufirfilt_py.get_extension_options(),
+                           include_dirs=[numpy.get_include()]),
+                 Extension(*suibm2ieee_py.get_extension_options(),
+                           include_dirs=[numpy.get_include()]),
+                 Extension(*surt_125a_py.get_extension_options(),
+                           include_dirs=[numpy.get_include()]),
+                 Extension(*surt_130_py.get_extension_options(),
+                           include_dirs=[numpy.get_include()])]
 )
