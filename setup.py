@@ -1,30 +1,43 @@
-from setuptools import setup
+import sys
+from setuptools import setup, find_packages
 
+requirements = ['Flask', 'werkzeug', 'jinja2', 'peewee>=3.0.0', 'wtforms', 'wtf-peewee']
+if sys.version_info[:2] < (2, 6):
+    requirements.append('simplejson')
 
 setup(
-    name='wtf-peewee',
+    name='flask-peewee',
     version='3.0.6',
-    url='https://github.com/coleifer/wtf-peewee/',
+    url='http://github.com/coleifer/flask-peewee/',
     license='MIT',
     author='Charles Leifer',
     author_email='coleifer@gmail.com',
-    description='WTForms integration for peewee models',
-    packages=['wtfpeewee'],
+    description='Peewee integration for flask',
+    packages=find_packages(),
+    package_data = {
+        'flask_peewee': [
+            'static/*/*.css',
+            'static/*/*.js',
+            'static/*/*.gif',
+            'static/*/*.png',
+            'templates/*.html',
+            'templates/*/*.html',
+            'templates/*/*/*.html',
+            'tests/*.html',
+            'tests/*/*.html',
+        ],
+    },
     zip_safe=False,
     platforms='any',
-    install_requires=[
-        'peewee>=3.0.0', 'wtforms',
-    ],
+    install_requires=requirements,
     classifiers=[
         'Environment :: Web Environment',
         'Intended Audience :: Developers',
-        'License :: OSI Approved :: MIT License',
+        'License :: OSI Approved :: BSD License',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 3',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
         'Topic :: Software Development :: Libraries :: Python Modules'
     ],
-    test_suite='runtests.runtests'
+    test_suite='runtests.runtests',
 )
