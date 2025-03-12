@@ -1,26 +1,38 @@
+name: Test
 on:
-  push: {}
-  pull_request:
-    types: [opened, reopened, synchronize]
-name: CI
+  push:
+    branches:
+      - master
+  pull_request: ~
+
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Install deps
+        run: pip install isort flake8
+      - name: Lint
+        run: flake8
+      - name: Isort
+        run: isort --diff --check-only
+
   test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.9", "3.10"]
+        python: ["3.9", "3.10"]
     steps:
-    - name: Check out source code
-      uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
-      run: |
-        pip install -e .
-    - name: Run tests
-      run: |
-        python -m unittest discover
+      - uses: actions/checkout@v2
+      - name: Install Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install deps
+        run: pip install requests-oauthlib
+      - name: Run tests...
+        run: python setup.py test

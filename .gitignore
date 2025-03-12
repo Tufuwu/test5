@@ -1,18 +1,16 @@
-# Python
+# Byte-compiled / optimized / DLL files
 __pycache__/
-*.egg-info
-/dist
+*.py[cod]
 
-# pdm
-/.pdm-plugins
-/.pdm-python
-/.venv
-/pdm.lock
+# Distribution / packaging
+build/
+dist/
 
-# coverage
-/.coverage
-/htmlcov
+# Lint tools
+.mypy_cache
 
-# tests
-*.vcd
-*.gtkw
+# Envs
+.venv
+
+# Editors
+.idea
