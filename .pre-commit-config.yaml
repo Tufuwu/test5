@@ -1,6 +1,87 @@
 repos:
--   repo: https://github.com/ambv/black
-    rev: stable
-    hooks:
-    - id: black
-language_version: python3
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v5.0.0
+  hooks:
+    - id: check-added-large-files
+      args: ["--maxkb=500"]
+    - id: check-ast
+    - id: fix-byte-order-marker
+    - id: check-builtin-literals
+    - id: check-case-conflict
+    - id: check-docstring-first
+    - id: check-executables-have-shebangs
+    - id: check-json
+    - id: check-shebang-scripts-are-executable
+    - id: pretty-format-json
+      args: ["--autofix"]
+    - id: check-merge-conflict
+    - id: check-symlinks
+    - id: check-toml
+    - id: check-vcs-permalinks
+    - id: check-xml
+    - id: check-yaml
+    - id: debug-statements
+    - id: destroyed-symlinks
+    - id: detect-private-key
+    - id: end-of-file-fixer
+    - id: file-contents-sorter
+    - id: fix-byte-order-marker
+    - id: forbid-new-submodules
+    - id: mixed-line-ending
+      args: ["--fix=lf"]
+    - id: requirements-txt-fixer
+    - id: sort-simple-yaml
+    - id: trailing-whitespace
+- repo: https://github.com/astral-sh/ruff-pre-commit
+  rev: v0.9.7
+  hooks:
+    - id: ruff
+      args: [ --fix ]
+    - id: ruff-format
+- repo: https://github.com/codespell-project/codespell
+  rev: v2.4.1
+  hooks:
+  - id: codespell
+    args: [
+      --ignore-words=.codespellignore
+    ]
+- repo: https://github.com/markdownlint/markdownlint
+  rev: v0.12.0
+  hooks:
+  - id: markdownlint
+    exclude: ^\.github/(ISSUE_TEMPLATE/.*|pull_request_template)\.md$
+- repo: https://github.com/Holzhaus/sourceheaders
+  rev: v0.0.4
+  hooks:
+  - id: sourceheaders
+- repo: https://github.com/PyCQA/bandit
+  rev: "1.8.3"
+  hooks:
+  - id: bandit
+    args: ["-c", "pyproject.toml", "--"]
+    additional_dependencies: ["bandit[toml]"]
+- repo: https://github.com/gitleaks/gitleaks
+  rev: v8.24.0
+  hooks:
+    - id: gitleaks
+- repo: local
+  hooks:
+  - id: version-check
+    name: version-check
+    description: "Check if version is consistent in all source files"
+    entry: .pre-commit/version_check.py
+    pass_filenames: false
+    language: python
+    files: ^(\.pre-commit/version_check\.py|setup\.py|sphinx_multiversion/__init__\.py|docs/conf\.py|docs/changelog\.rst)$
+    additional_dependencies:
+    - sphinx
+  - id: unittest
+    name: unittest
+    description: "Run unittests"
+    entry: python -m unittest discover
+    pass_filenames: false
+    language: python
+    types:
+    - python
+    additional_dependencies:
+    - sphinx

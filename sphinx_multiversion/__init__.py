@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright (c) 2025 Jan Holthuis <jan.holthuis@rub.de>
 #
 # Redistribution and use in source and binary forms, with or without
@@ -23,3 +24,13 @@
 # POSSIBILITY OF SUCH DAMAGE.
 #
 # SPDX-License-Identifier: BSD-2-Clause
+
+from .sphinx import setup
+from .main import main
+
+__version__ = "0.2.5"
+
+__all__ = [
+    "setup",
+    "main",
+]

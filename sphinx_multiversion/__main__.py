@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 # Copyright (c) 2025 Jan Holthuis <jan.holthuis@rub.de>
 #
 # Redistribution and use in source and binary forms, with or without
@@ -23,3 +25,8 @@
 # POSSIBILITY OF SUCH DAMAGE.
 #
 # SPDX-License-Identifier: BSD-2-Clause
+
+import sys
+from .main import main
+
+sys.exit(main())

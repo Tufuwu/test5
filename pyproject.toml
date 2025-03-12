@@ -1,48 +1,54 @@
-[tool.poetry]
-name = "foxpuppet"
-version = "1.0.6"
-description = ""
-authors = ["Benjamin Forehand Jr <bforehand@mozilla.com>", "Temidayo Azeez <temidayoazeez032@gmail.com>"]
-license = "Mozilla Public License 2.0 (MPL 2.0)"
-readme = "README.md"
-
-[tool.poetry.dependencies]
-python = "^3.12"
-selenium = "^4.29.0"
-
-[tool.poetry.group.dev.dependencies]
-flake8 = "^7.1.1"
-flake8-docstrings = "^1.7.0"
-flake8-isort = "^6.1.1"
-pytest = "^8.3.3"
-pytest-cov = "^5.0.0"
-pytest-selenium = "^4.1.0"
-black = "^24.10.0"
-mypy = "^1.15.0"
-
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling", "hatch-requirements-txt"]
+build-backend = "hatchling.build"
 
-[tool.black]
-line-length = 99
+[project]
+name = "sphinx-multiversion"
+dynamic = ["version", "dependencies"]
+description = "Add support for multiple versions to sphinx"
+readme = "README.md"
+license = "BSD-2-Clause"
+authors = [
+    { name = "Jan Holthuis", email = "holthuis.jan@googlemail.com" },
+]
+classifiers = [
+    "License :: OSI Approved :: BSD License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
 
-[tool.isort]
-profile = "black"
-skip_gitignore = true
+[project.scripts]
+sphinx-multiversion = "sphinx_multiversion:main"
 
-[tool.mypy]
-python_version = "3.12"
-disable_error_code = "attr-defined"
-disallow_untyped_calls = false
-follow_imports = "normal"
-ignore_missing_imports = true
-pretty = true
-show_error_codes = true
-strict_optional = true
-warn_no_return = true
-warn_redundant_casts = true
-warn_return_any = true
-warn_unused_ignores = true
-warn_unreachable = true
-exclude = "docs/.*"
+[project.urls]
+Homepage = "https://holzhaus.github.io/sphinx-multiversion/"
+
+[tool.hatch.version]
+path = "sphinx_multiversion/__init__.py"
+
+[tool.hatch.metadata.hooks.requirements_txt]
+files = ["requirements.txt"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/sphinx_multiversion",
+]
+
+[tool.bandit]
+skips = [
+    # Asserts are actually fine for checking the developer's assumptions, we
+    # "just" mustn't rely these assert in production code.
+    "B101",
+    # We need `subprocess` module.
+    "B404",
+    # As long as we don't use `shell=True` when spawning a subprocess, this
+    # should be fine.
+    "B603",
+]
+
+[tool.ruff]
+line-length = 79

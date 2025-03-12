@@ -1,14 +1,28 @@
+=============================
+sphinx-multiversion |release|
+=============================
 
-FoxPuppet
-=========
+A Sphinx extension for building self-hosted versioned documentation.
 
-FoxPuppet is a library for automating user interactions in `Firefox <https://www.mozilla.org/en-US/firefox/products/>`_ using `Selenium <http://seleniumhq.org/>`_.
+Project Links
+=============
+
+* Source code: https://github.com/sphinx-contrib/multiversion
 
 .. toctree::
-   :maxdepth: 2
+    :maxdepth: 3
+    :caption: General
 
-   installing
-   user_guide
-   development
-   news
-   api
+    install
+    quickstart
+    configuration
+    templates
+    context
+
+.. toctree::
+    :maxdepth: 1
+    :caption: Appendix
+
+    github_pages
+    faq
+    changelog
