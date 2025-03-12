@@ -1,2 +1,0 @@
-Cython>=0.26.1
-sphinx-rtd-theme
