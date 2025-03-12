@@ -1,4 +1,0 @@
-SparseTable
-===========
-
-.. autoclass:: pydatastructs.SparseTable

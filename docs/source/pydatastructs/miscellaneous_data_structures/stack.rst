@@ -1,4 +1,0 @@
-Stack
-=====
-
-.. autoclass:: pydatastructs.Stack

@@ -1,59 +1,65 @@
-name: PyDataStructs Continuous Integration Tests
+name: CI
 
 on:
-  push:
-    branches: [master]
   pull_request:
-    branches: [master]
+  push:
 
 jobs:
   test:
-    runs-on: ${{matrix.os}}
-    timeout-minutes: 5
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
-        python-version: ["3.9", "3.10"]
-
+        versions:
+          - python: "3.9"
+            toxenv: "django20-py36"
+          - python: "3.9"
+            toxenv: "django20-py37"
+          - python: "3.9"
+            toxenv: "django21-py36"
+          - python: "3.9"
+            toxenv: "django21-py37"
+          - python: "3.9"
+            toxenv: "django22-py36"
+          - python: "3.9"
+            toxenv: "django22-py37"
+          - python: "3.9"
+            toxenv: "django30-py36"
+          - python: "3.9"
+            toxenv: "django30-py37"
+          - python: "3.9"
+            toxenv: "django30-py38"
+          - python: "3.9"
+            toxenv: "django31-py36"
+          - python: "3.9"
+            toxenv: "django31-py37"
+          - python: "3.9"
+            toxenv: "django31-py38"
+          - python: "3.9"
+            toxenv: "django32-py38"
+    
+    name: "Python ${{ matrix.versions.python }} - ${{ matrix.versions.toxenv }}"
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-
-      - name: Set up Python ${{ matrix.python-version }}
+      - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: ${{ matrix.versions.python }}
+      - name: Install Dependencies
+        run: pip install tox
+      - name: Run Tests
+        run: tox -e ${{ matrix.versions.toxenv }}
 
-      - name: Upgrade pip version
-        run: |
-          python -m pip install --upgrade pip
-
-      - name: Install requirements
-        run: |
-          pip install -r requirements.txt
-          pip install -r docs/requirements.txt
-
-      - name: Build package
-        run: |
-          python -m pip install .
-
-      - name: Run tests
-        run: |
-          python -m pytest --doctest-modules --cov=./ --cov-report=xml -s
-
-      - name: Upload Coverage
-        uses: codecov/codecov-action@v2
+  lint:
+    name: "Black"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          directory: ./coverage/reports/
-          env_vars: OS,PYTHON
-          fail_ci_if_error: false
-          files: ./coverage.xml
-          flags: unittests
-          name: codecov-umbrella
-          path_to_write_report: ./coverage/codecov_report.txt
-          verbose: true
-
-      - name: Build Documentation
-        run: |
-          sphinx-build -b html docs/source/ docs/build/html
+          python-version: "3.9"
+      - name: Install Black
+        run: pip install black
+      - name: Run Black
+        run: black --check .

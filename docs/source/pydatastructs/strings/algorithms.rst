@@ -1,4 +1,0 @@
-Algorithms
-==========
-
-.. autofunction:: pydatastructs.find
