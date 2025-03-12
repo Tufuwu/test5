@@ -1,62 +1,82 @@
-name: Python CI
+name: django-cas-server
+run-name: ${{ github.actor }} is running django-cas-server CI tests
 
-on:
-  push:
-    branches: [ master ]
-    tags:
-    - '*'
-  pull_request:
-    branches: [ master ]
+on: [push]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 jobs:
-  build:
+  flake8:
+    runs-on: ubuntu-latest
+    container:
+      image: python:bookworm
+    steps:
+      - uses: actions/checkout@v3
+      - run: pip install tox
+      - run: tox -e flake8
+  check_rst:
+    runs-on: ubuntu-latest
+    container:
+      image: python:bookworm
+    steps:
+      - uses: actions/checkout@v3
+      - run: pip install tox
+      - run: tox -e check_rst
+  coverage:
+    runs-on: ubuntu-latest
+    container:
+      image: python:bookworm
+    steps:
+      - uses: actions/checkout@v3
+      - run: pip install tox
+      - run: tox -e coverage
+        env:
+          COVERAGE_TOKEN: ${{ secrets.COVERAGE_TOKEN }}
+  tests:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        python-version: ["3.9", "3.10"]
-
+        arch: ["amd64", "ppc64le"]
+        tox:
+          # REHL 7 support and Ubuntu bionic
+          - python: "3.9"
+            env: "py36-django111"
+          # RHEL 8 support
+          - python: "3.9"
+            env: "py36-django22"
+          # Debian buster support
+          - python: "3.9"
+            env: "py37-django111"
+          # Ubuntu focal support
+          - python: "3.9"
+            env: "py38-django22"
+          # Debian bullseye
+          - python: "3.9"
+            env: py39-django22
+          # Ubuntu jammy
+          - python: "3.9"
+            env: "py310-django32"
+          # Debian bookworm
+          - python: "3.9"
+            env: py311-django32
+          # Django additional supported version
+          - python: "3.9"
+            env: py39-django42
+          - python: "3.9"
+            env: py310-django42
+          - python: "3.9"
+            env: py311-django42
     steps:
-    - uses: actions/checkout@v2
-    
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-        
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install -r tests/requirements.txt
-        pip install -e .
-        
-    - name: Run tests with nosetests
-      run: pytest --cov=btcde tests/
-    
-    - name: Upload coverage to Codecov
-      if: success()
-      uses: codecov/codecov-action@v2
-      with:
-        token: ${{ secrets.CODECOV_TOKEN }}
-  deploy-test-release:
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && !startsWith(github.ref, 'refs/tags/') && github.ref == 'refs/heads/master'
-    steps:
-    - name: Deploy to Test PyPI
-      uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        user: __token__
-        password: ${{ secrets.TEST_PYPI_API_TOKEN }}
-        repository_url: https://test.pypi.org/legacy/
-        
-  deploy-release:
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/') && github.ref == 'refs/heads/master'
-    steps:
-    - name: Deploy to PyPI
-      uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        user: __token__
-        password: ${{ secrets.PYPI_API_TOKEN }}
+      - uses: actions/checkout@v3
+      - if: matrix.arch != 'amd64'
+        name: "Install docker multiarch support"
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y qemu qemu-user-static
+          sudo docker run --rm --privileged multiarch/qemu-user-static --reset -p yes --credential yes
+      - name: "Check docker arch ${{ matrix.arch }} support"
+        run: sudo docker run --platform linux/${{ matrix.arch }} --rm ${{ matrix.arch }}/python:${{ matrix.tox.python }} /bin/bash -c "echo -n \"Running with arch \"; uname -m;"
+      - name: "Run tests on arch ${{ matrix.arch }}"
+        run: sudo docker run --platform linux/${{ matrix.arch }} --rm -v $(pwd):$(pwd) ${{ matrix.arch }}/python:${{ matrix.tox.python }} /bin/bash -c "cd $(pwd); uname -m; pip install tox; tox -e ${{ matrix.tox.env }}"
