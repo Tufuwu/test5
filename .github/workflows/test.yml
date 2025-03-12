@@ -1,11 +1,16 @@
-name: CI
+name: Run tests
 
-on: [push]
+on:
+  push:
+    branches:
+      - master
+  pull_request:
 
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         python-version: ["3.9", "3.10"]
 
@@ -18,11 +23,6 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements-test.txt
-      - name: flake8
-        run: |
-          make flake8
-        continue-on-error: true
-      - name: pylint
-        run: |
-          make pylint
+          python -m pip install tox tox-gh-actions
+      - name: Test with tox
+        run: tox
