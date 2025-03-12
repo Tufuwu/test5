@@ -1,0 +1,261 @@
+==============================
+ CHANGELOG for GromacsWrapper
+==============================
+
+2024-09-18      0.9.1
+orbeckst, hsk17
+
+* templates in `config.templates` are now stored as
+  `importlib.resources.abc.Traversable` (PosixPath-like) objects instead of
+  strings of paths to files in the file system because we switched from
+  pkg_resources to importlib.resources for managing access to included files
+  (#282)
+* fixed reporting of failures of GromacsCommand and DeprecationWarnings for use
+  of \s in regular expression strings (#285)
+* fixed use of outdated numpy.NAN | INF by using nan | inf (#290)
+* added automatic deployment workflow (using action MDAnalysis/pypi-deployment)
+  (#295)
+
+
+2024-06-15      0.9.0
+orbeckst, jandom, njzjz
+
+* officially support Python 3.12 (PR #271, issue #263)
+* supports GROMACS 2024.2 (PR #280)
+* removed support for legacy Python (<= 3.8) (#259)
+* fixed GROMACS TOP reader not reading angle parameters from topology
+  file (#261)
+* fixed Python 3.12: No module named ('pkg_resources' #263)
+* fixed AttributeDict does not support hasattr (#214)
+* fixed handle KeyboardInterrupts when using MDRunner.run() (#252)
+* internally switched to pyproject.toml (#278)
+* Pending Deprecation for the gw-*.py scripts:
+
+  The gw-*.py scripts are NOT anymore installed (it's technically
+  messy with the new system #278 and requires code refactoring). They
+  will likely be DEPRECATED. See issue #279 for more details and voice
+  your opinion if you really need these scripts.
+  
+
+
+2023-09-16      0.8.5
+orbeckst
+
+* added testing for GROMACS 2023.1 (#251)
+* use black for uniformly formatted code (#246)
+* minor doc/installation updates
+* NOTE: GROMACS 2023 replaced `gmx do_dssp` with `gmx dssp` which is
+  not directly argument-compatible so GromacsWrapper does NOT alias
+  it. Therefore, scripts relying on `gromacs.do_dssp` will
+  break. (#249)
+* fixed unclosed file in config.py (#244)
+
+
+2023-03-13      0.8.4
+orbeckst
+
+* fix supported Python metadata in setup.py (#238)
+
+
+2023-03-09      0.8.3
+orbeckst
+
+* confirmed support for GROMACS 4.6.5, 2018, 2019, 2020, 2021, 2022 on
+  Python 2.7 and 3.6--3.11 on Linux and macOS  
+* replaced deprecated logger.warn() with logger.warning() (#229)
+* replaced deprecated numpy.bool with bool in a test (#234)
+* fixed use of moved collections.Iterable in test (#235)
+
+NOTE: since 0.8.3, the conda package is available from conda-forge
+      (thanks to @njzjz)
+
+2021-09-09     0.8.2
+orbeckst, simonbray
+
+* conda package (created by @simonbray for bioconda) (#109)
+* fixed stop_logging() fails with NameError (#211)
+
+
+2021-07-23     0.8.1
+orbeckst, PolyachenkoYA, whitead 
+
+* confirmed support for GROMACS 4.6.5, 2018, 2019, 2020, 2021 on Python 2.7 and
+  3.6--3.9 on Linux and macOS (#200, #202, #203)
+* fixed: core._run_command capture_output_file argument fixed to us python-3.0 
+  file open (#181)
+* fixed: xvg._decimate used python-2.0-specific func_name() (issue #183)
+* fixed: make parsing gmx output more robust to avoid failure on 
+  'import gromacs' (PR #186)
+* fixed: xpm.to_df() used outdated convert_objects()
+* fixed: gw-forcefield.py use print() function for Py 2/3 compatibility
+* fixed: xvg.plot() and xvg.plot_coarsened() failed with Py 3 matplotlib
+  due to incompatible colors (issue #194)
+
+2019-04-30     0.8.0
+richardjgowers, theavey, andrejberg, orbeckst
+
+* allow ignoring of gmx executable suffix (such as '_mpi' or '_d' by adding an
+  option to the configuration file (Issue #124)
+* allow reading of compressed XPM files (PR #169)
+* fixed MDP round trip writing, string fields no longer mangled
+  (Issue #149)
+* fixed NDX writing (#152)
+* fixed Python 3 compatibility of XPM reader (PR #169)
+* fixed bug in calling logger in fileformats.top (issue #173)
+* add gromacs.release() to get release of loaded Gromacs (issue #161) 
+* tested with Gromacs 2019.1, 2018.4, 4.6.5 (#172)
+
+2018-08-08      0.7.0
+orbeckst, dldotson, kain88-de, ianmkenney
+
+* support Python 3 (#44)
+* support Gromacs 2018 (and likely also Gromacs 2016) (#96)
+* moved numkit to own package now at
+  https://github.com/Becksteinlab/numkit (#111)
+* removed gromacs.analysis legacy code, can now be found
+  in its own repository
+  https://github.com/Becksteinlab/gromacswrapper.analysis (#82)  
+* removed vmd sub-package (#112), code now at
+  https://github.com/Becksteinlab/remote-vmd 
+* removed obsolete staging sub-package (#113)  
+* removed obsolete gromacs.manager module (#115)
+* removed obsolete fileformats.itp (and fileformats.preprocessor) (#139)
+* use versioneer for version management (removed gromacs.version)
+* add mdrun_args option to setup.energy_minimize to pass options to
+  the mdrun that carries out the energy minimization
+* set ff (OPLS/AA) and water model (TIP4P) as defaults for
+  setup.topology()
+* changed call signature of scaling.partial_tempering() (PR #138)
+* development: master branch instead of develop branch (#146)
+
+2017-03-23      0.6.2
+mohebifar, orbeckst, ianmkenney, PicoCentauri, dotsdl
+
+* fixed TOP parser (#61)
+* fixed isnan test in ITPData._clean_records (#99)
+* fixed formatting replacement for molecule name in ITP moleculetype section (#98)
+* fixed TypeError in numkit.integration.simps_error() (#115)
+* conversion for lists in Gromacs mdp files added (#104)
+
+
+2016-09-16      0.6.1
+orbeckst, quantifiedcode-bot
+
+* alias tpbconv <-> convert_tpr was not properly set with Gromacs 5
+* fixed cbook.grompp_qtot() (#89)
+* fixed setup.trj_compact_main() (like #89, spurious -doc argument passed)
+* additional tests; reactivated tests for top reader but marked many as
+  expected failure, i.e. the top reader is considered broken (#61)
+* code clean up (quantified code recommendations)
+
+2016-09-09      0.6.0
+pslacerda, orbeckst, ianmkenney
+
+* new Gromacs GMXRC parameter in cfg file: if present and set to a
+  file then GromacsWrapper sources GMXRC and sets the environment
+  automatically before setting up the Gromacs commands (#55)
+* doc strings for Gromacs tools are loaded lazily, which speeds up
+  the initial import of the library to almost instantaneously (PR #76)
+* guess which tools to load automatically if no tools option is provided (#68)
+* new documentation page on how to set up a cfg file
+
+2016-06-29      0.5.1
+whitead, dotsdl, orbeckst
+
+* fixed: check_mdrun_success() works now for Gromacs 4 and Gromacs 5
+  (issue #64)
+* fixed: MDRunner working for Gromacs 4 and Gromacs 5 (issue #64)
+* fixed setup.energy_minimize() not falling back to single precision
+  mdrun (issue #63)
+* fixed: added missing alias "gmx solvate" <--> "genbox" (issue #62)
+* added keyword argument use_shell=True to Command() to make Popen use
+  the shell
+* added template for Gromacs 4.6.x gromacswrapper.cfg
+* improved testing
+
+2016-05-23      0.5.0
+quantifiedcode-bot, orbeckst, jandom, whitead
+
+* requires Python 2.7
+* new: gromacs pre-processed topology reader
+* Added backwards compatibility for scripts written using Gromacs 4.x syntax with Gromacs 5.x.
+  Tool calls prefixed with 'G_' will still work. (PR #46, Issue #26)
+* removed gridmatmd plugin and GridMAT-MD.pl script (#41), fixes
+  installation issues (#40)
+* Allows custom prefixes like gmx_mpi:mdrun and gmx:trjconv (#48)
+* Made it so GromacsWrapper can be imported and tools loaded even if they can't
+  be executed at import time.
+
+2015-12-16      0.4.0
+orbeckst, richardjgowers
+
+* primitive support for Gromacs 5.x
+* fixed: gromacs.fileformats was not imported properly (PR #21)
+* docs at http://gromacswrapper.readthedocs.org
+
+2015-05-22      0.3.3
+orbeckst, jandom
+
+* improvements to the xpm reader
+* improvements to stripwater plugin and transformer
+* additional logging of filenames in setup._MD()
+* new repository URL: https://github.com/Becksteinlab/GromacsWrapper
+
+2013-08-07     0.3.2
+orbeckst, andy.somogyi
+
+* fixed setup.make_main_index() by using a workaround for a bug in make_ndx
+  when multiple groups have the same name (use the first one)
+* improvements in cbook.Transformer and the StripWater plugin (can
+  write output to specified directory)
+* gw-fit_strip_trajectories.py: can use a custom group for centering
+  (necessary when dealing with multimeric proteins that might get
+  split across the periodic boundaries)
+
+
+2012-12-10     0.3.1
+orbeckst, jandom
+
+* added IndexBuilder.write() method to safely write named index groups
+* new HBonds hydrogen bonding analysis plugin (uses g_hbond and can
+  return individual hbond existence probabilities)
+* XVG has initial support to plot periodic data such as dihedral angles
+* ITP reader:
+  - ITP.contains_preprocessor_constructs() to check if the
+    itp file uses some of the recognized preprocessing directives
+  - new set_data() method to completely rebuild a topology
+* set environment variable GROMACSWRAPPER_SUPPRESS_SETUP_CHECK to true
+  in order to avoid be notified of missing config files
+* example scripts are installed (all example script names start
+  with gw-*)
+  - gw-fit_strip_trajectories.py: remove water and fit to protein
+  - gw-join_parts.py: concatenate xtc, trr, edr, log for simulations
+    done in parts (and with -noappend)
+  - gw-merge_topologies.py: join multiple building block topologies
+* updated MDP templates
+  - increase Parrinello-Rahman time constant to 1.0 ps
+  - use refcoord_scaling = "com" for position restraints
+  - use recommended CHARMM NB values
+* fixed: cbook.grompp_qtot() would miss non-zero charge
+* fixed: Manager config parser ignored floats
+* gromacs.setup.solvate()
+  - default ion names are now NA and CL
+  - adapted for Gromacs 4.6
+  - bt takes precedence over boxtype
+
+
+2012-04-24     0.3.0
+orbeckst
+
+* improved file format handling (ITP (incomplete, but uses a
+  preprocessor), XPM, XVG (can do fairly fancy coarse-grained
+  plotting and error analysis))
+* output can be captured to a capture file (uses the new
+  gromacs.environment framework)
+* fixes for cbook.Transformer
+* removed deprecated edPDB (use MDAnalysis instead)
+* example script fit_strip_trajectory.py
+* scipy is now a package dependency (use in numkit and then XVG)
+
+Earlier releases did not have an explicit change log. See the commit
+history at https://github.com/orbeckst/GromacsWrapper for details.

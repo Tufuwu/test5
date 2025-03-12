@@ -1,0 +1,5 @@
+numpy>=1.0
+matplotlib
+pandas
+numkit>=1.0
+setuptools; python_version >= "3.12"

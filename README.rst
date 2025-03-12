@@ -1,56 +1,216 @@
-MARISA Trie
+.. -*- mode: rst, coding: utf-8 -*-
+.. The whole GromacsWrapper package is Copyright (c) 2009-2018 Oliver
+.. Beckstein and AUTHORS except where noted otherwise.
+
+
+========================
+ README: GromacsWrapper
+========================
+
+|build| |cov| |docs| |zenodo| |black| |PRsWelcome| |anaconda|
+
+A primitive Python wrapper around the Gromacs_ tools. The library is
+tested with GROMACS 4.6.5, 2018.x, 2019.x, 2020.x, 2021.x, 2022.x,
+2023.x, 2024.x (and 5.x and 2016.x should also work). It supports
+Python 3.9--3.12 on Linux and macOS.
+
+GromacsWrapper also provides a small library (cook book) of often-used
+recipes and helper functions to set up MD simulations.
+
+`Documentation`_ is mostly provided through the python doc strings and
+available at https://gromacswrapper.readthedocs.org for recent releases.
+
+The source code is available in the `GromacsWrapper git repository`_.
+
+Please be aware that this software is only minimally maintained and it
+most definitely contains bugs. It is *your* responsibility to ensure
+that you are running simulations with sensible parameters.
+
+.. _Gromacs: http://www.gromacs.org
+.. _Documentation: 
+   https://gromacswrapper.readthedocs.org/en/latest/
+.. _GromacsWrapper git repository:
+   https://github.com/Becksteinlab/GromacsWrapper
+.. |build| image:: https://github.com/Becksteinlab/GromacsWrapper/actions/workflows/ci.yaml/badge.svg?branch=main
+   :target: https://github.com/Becksteinlab/GromacsWrapper/actions/workflows/ci.yaml
+   :alt: Build Status	     
+.. |cov| image:: https://codecov.io/gh/Becksteinlab/GromacsWrapper/graph/badge.svg?token=LvbLZ49wxN
+   :target: https://codecov.io/gh/Becksteinlab/GromacsWrapper
+   :alt: Code Coverage
+.. |zenodo| image:: https://zenodo.org/badge/13219/Becksteinlab/GromacsWrapper.svg
+   :target: https://zenodo.org/badge/latestdoi/13219/Becksteinlab/GromacsWrapper
+   :alt: Latest release on zenodo (with DOI)
+.. |docs| image:: https://readthedocs.org/projects/gromacswrapper/badge/?version=latest
+   :target: https://gromacswrapper.readthedocs.org/en/latest/?badge=latest
+   :alt: Documentation
+.. |PRsWelcome| image:: https://img.shields.io/badge/PRs-welcome-brightgreen.svg
+   :target: http://makeapullrequest.com
+   :alt: PRs Welcome!	 
+.. |anaconda| image:: https://anaconda.org/conda-forge/gromacswrapper/badges/version.svg
+   :target: https://anaconda.org/conda-forge/gromacswrapper
+   :alt: Anaconda.org package
+.. |black| image:: https://img.shields.io/badge/code%20style-black-000000.svg
+   :target: https://github.com/psf/black	 
+   :alt: black   
+
+	 
+	 
+Quick Start
 ===========
 
-.. image:: https://img.shields.io/pypi/pyversions/marisa-trie.svg
-   :target: https://pypi.python.org/pypi/marisa-trie
+Given a PDB file ``1iee.pdb``, set up and run a simple simulation (assuming
+you have all other input files at hand such as the MDP files)::
 
-.. image:: https://github.com/pytries/marisa-trie/actions/workflows/tests.yml/badge.svg
-   :target: https://github.com/pytries/marisa-trie/actions/workflows/tests.yml
+  >>> import gromacs
+  >>> print(gromacs.release)
+  2018.2
+  >>> help(gromacs.pdb2gmx)
+  DESCRIPTION
 
-Static memory-efficient Trie-like structures for Python (3.8+)
-based on `marisa-trie`_ C++ library.
+  gmx pdb2gmx reads a .pdb (or .gro) file, reads some database files,
+  adds hydrogens to the molecules and generates coordinates in GROMACS
+  ...
+  ...
+  OPTIONS
 
-String data in a MARISA-trie may take up to 50x-100x less memory than
-in a standard Python dict; the raw lookup speed is comparable; trie also
-provides fast advanced methods like prefix search.
+  Options to specify input files:
 
-.. note::
+  -f      [<.gro/.g96/...>]  (eiwit.pdb)
+            Structure file: gro g96 pdb brk ent esp tpr
+  ...
+  ...
+  >>> gromacs.pdb2gmx(f="1iee.pdb", o="protein.gro", p="topol.top",
+  ...                 ff="oplsaa", water="tip4p")
+  >>> gromacs.editconf(f="protein.gro", o="boxed.gro",
+  ...                  bt="dodecahedron", d=1.5, princ=True,
+  ...                  input="Protein")
+  >>> gromacs.solvate(cp="boxed.gro", cs="tip4p", p="topol.top",
+  ...                 o="solvated.gro")
+  >>> gromacs.grompp(f="emin.mdp", c="solvated.gro", p="topol.top",
+  ...                o="emin.tpr")
+  >>> gromacs.mdrun(v=True, deffnm="emin")
+  >>> gromacs.grompp(f="md.mdp", c="emin.gro", p="topol.top", o="md.tpr")
+  >>> gromacs.mdrun(v=True, deffnm="md")
 
-    There are official SWIG-based Python bindings included
-    in C++ library distribution; this package provides alternative
-    Cython-based pip-installable Python bindings.
 
-.. _marisa-trie: https://github.com/s-yata/marisa-trie
+	 
+License
+=======
+
+The **GromacsWrapper** package is made available under the terms of
+the `GNU Public License v3`_ (or any higher version at your choice)
+except as noted below. See the file COPYING for the licensing terms
+for all modules.
+
+.. _GNU Public License v3: http://www.gnu.org/licenses/gpl.html
+
 
 Installation
 ============
 
-::
+Releases
+--------
 
-    python -m pip install -U marisa-trie
+The `latest version of GromacsWrapper from PyPi`_ can be installed
+with ::
 
-Usage
-=====
+  pip install GromacsWrapper
 
-See `tutorial`_ and `API`_ for details.
 
-.. _tutorial: https://marisa-trie.readthedocs.io/en/latest/tutorial.html
-.. _API: https://marisa-trie.readthedocs.io/en/latest/api.html
+or as a `conda-forge package`_ with ``conda`` from the *conda-forge* channel ::
 
-Current limitations
-===================
+   conda install -c conda-forge gromacswrapper
+    
 
-* The library is not tested with mingw32 compiler;
-* ``.prefixes()`` method of ``BytesTrie`` and ``RecordTrie`` is quite slow
-  and doesn't have iterator counterpart;
-* ``read()`` and ``write()`` methods don't work with file-like objects
-  (they work only with real files; pickling works fine for file-like objects);
-* there are ``keys()`` and ``items()`` methods but no ``values()`` method.
+.. _`latest version of GromacsWrapper from PyPi`:
+   https://pypi.org/project/GromacsWrapper/
 
-License
-=======
+.. _`conda-forge package`:
+   https://anaconda.org/conda-forge/gromacswrapper
 
-Wrapper code is licensed under MIT License.
 
-Bundled `marisa-trie`_ C++ library is dual-licensed under
-LGPL and BSD 2-clause license.
+Development version
+-------------------
+
+The *main* branch in the GitHub source repository generally
+contains useful code but nevertheless, things can break in weird and
+wonderful ways. Please report issues through the `Issue Tracker`_.
+
+To use the *development code base*:  checkout the ``main`` branch::
+
+   git clone https://github.com/Becksteinlab/GromacsWrapper.git   
+
+and install ::
+
+   pip install GromacsWrapper/
+
+Code contributions are welcome. We use `black`_ for uniform code
+formatting so please install black_ and run it on your code.
+
+.. _`black`: https://github.com/psf/black
+
+Download and Availability
+=========================
+
+The GromacsWrapper home page is
+http://github.com/Becksteinlab/GromacsWrapper.  The latest release of the
+package is being made available from https://github.com/Becksteinlab/GromacsWrapper/releases
+
+You can also clone the `GromacsWrapper git repository`_ or fork for
+your own development::
+
+  git clone git://github.com/Becksteinlab/GromacsWrapper.git
+
+Questions
+=========
+
+Please ask questions in the `Discussion forum`_ (instead of private email).
+
+
+Reporting Bugs and Contributing to GromacsWrapper
+=================================================
+
+Please use the `Issue Tracker`_ to report bugs, installation problems,
+and feature requests. Ask questions in the `Discussion forum`_.
+
+**Pull requests** for bug fixes and enhancements are very welcome. See http://makeapullrequest.com for a 
+general introduction on how make a pull request and contribute to open source projects.
+
+.. _Issue Tracker: https://github.com/Becksteinlab/GromacsWrapper/issues
+.. _Discussion forum: https://github.com/Becksteinlab/GromacsWrapper/discussions
+
+
+Building Documentation
+======================
+
+Install Sphinx::
+
+   pip install sphinx
+
+and compile::
+
+  cd GromacsWrapper
+  python setup.py build_sphinx
+  
+
+Citing
+======
+
+|zenodo|
+
+GromacsWrapper was written by Oliver Beckstein with contributions from
+many other people. Please see the file AUTHORS_ for all the names.
+
+If you find this package useful and use it in published work I'd be
+grateful if it was acknowledged in text as
+
+  "... used GromacsWrapper (Oliver Beckstein et al,
+  https://github.com/Becksteinlab/GromacsWrapper doi: 10.5281/zenodo.17901)"
+
+or in the Acknowledgements section.
+
+Thank you.
+
+.. _AUTHORS:
+   https://raw.githubusercontent.com/Becksteinlab/GromacsWrapper/main/AUTHORS
+
