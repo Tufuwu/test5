@@ -1,100 +1,69 @@
 [build-system]
-build-backend = "poetry.core.masonry.api"
 requires = [
-  "poetry-core>=2",
+    "setuptools",
+    "setuptools_scm",
+    "wheel",
 ]
+build-backend = "setuptools.build_meta"
 
 [project]
-name = "openapi-generator-cli"
-version = "0"
-description = "CLI for openapi generator"
+name = "tract_querier"
+description = "WMQL: Query language for automatic tract extraction from full-brain tractographies with a registered template on top of them"
 readme = "README.md"
-keywords = [
-  "cli",
-  "generator",
-  "openapi",
-]
-license = { text = "APACHE 2.0" }
+license = {file = "license.rst"}
 authors = [
-  { name = "OpenAPI Generator community", email = "team@openapitools.org" },
+  {name = "Demian Wassermann"}, {email = "demian.wassermann@inria.fr"}
 ]
-requires-python = ">=3.9,<4"
 classifiers = [
-  "License :: OSI Approved :: Apache Software License",
-  "Programming Language :: Python",
-  "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.9",
-  "Programming Language :: Python :: 3.10",
-  "Programming Language :: Python :: 3.11",
-  "Programming Language :: Python :: 3.12",
-  "Programming Language :: Python :: 3.13",
-  "Programming Language :: Python :: Implementation :: CPython",
-  "Programming Language :: Python :: Implementation :: PyPy",
-  "Typing :: Typed",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX",
+    "Operating System :: Unix",
+    "Operating System :: MacOS"
 ]
-optional-dependencies.jdk4py = [
-  "jdk4py>=21.0.4.1,<22; python_version>='3.10'",
+dependencies = [
+    "numpy>=1.23.0,<2.0.0",
+    "nibabel>=3.0.0,<4.0.0",
+    "vtk>8.1.0,<=9.4.0"
 ]
-urls.Documentation = "https://github.com/OpenAPITools/openapi-generator#3---usage"
-urls.Homepage = "https://openapi-generator.tech"
-urls.Repository = "https://github.com/OpenAPITools/openapi-generator"
-scripts.openapi-generator-cli = "openapi_generator_cli:cli"
+dynamic = ["version"]
+requires-python = ">=3.9,<3.12"
 
-[tool.poetry]
-requires-poetry = ">=2.0"
-packages = [
-  { include = "openapi_generator_cli" },
+[project.optional-dependencies]
+doc = [
+    "numpydoc",
 ]
-include = [
-  { path = "openapi_generator_cli/openapi-generator.jar", format = [ "sdist", "wheel" ] },
+test = [
+    "coverage",
+    "pytest",
+    "pytest-console-scripts",
 ]
 
-[tool.poetry.group.dev.dependencies]
-mypy = ">=0.991,<1.15"
-pre-commit = ">=2.20,<5.0"
-taskipy = "^1.10.3"
-pytest = ">=7.2.2,<9.0.0"
-natsort = "^8.4.0"
+[project.urls]
+documentation = "http://demianw.github.io/tract_querier"
+homepage = "http://demianw.github.io/tract_querier"
+repository = "https://github.com/demianw/tract_querier"
 
-[tool.poetry.requires-plugins]
-poetry-plugin-shell = ">=1.0"
+[project.scripts]
+tract_math = "scripts.cli_tract_math:main"
+tract_querier = "scripts.cli_tract_querier:main"
 
-[tool.black]
-line-length = 120
-target-version = [
-  'py39',
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.package-data]
+tract_querier = [
+    "data/FreeSurfer.qry",
+    "data/JHU_MNI_SS_WMPM_Type_I.qry",
+    "data/JHU_MNI_SS_WMPM_Type_II.qry",
+    "data/freesurfer_queries.qry",
+    "data/mori_queries.qry",
 ]
 
-[tool.ruff]
-line-length = 120
+[tool.setuptools.packages]
+find = {}  # Scanning implicit namespaces is active by default
 
-lint.select = [
-  "ALL",
-]
-lint.ignore = [
-  "D211", # No blank lines allowed before class docstring
-  "D213", # Multi-line docstring summary should start at the second line
-]
-lint.per-file-ignores."publish.py" = [
-  "D",
-  "S603", # `subprocess` call: check for execution of untrusted input
-  "T201", # `print` found
-]
-lint.per-file-ignores."tests/*" = [
-  "D",
-  "S101", # Use of `assert` detected
-]
-
-[tool.mypy]
-pretty = true
-python_version = "3.9"
-show_error_codes = true
-strict = true
-
-[tool.taskipy.tasks]
-download-latest-jar = "DOWNLOAD_LATEST_ONLY=1 task publish"
-test = "pytest"
-test-unpublished-versions = "DRYRUN=1 task publish"
-lint = "pre-commit run -a"
-publish = "python publish.py"
-profile = "python -m cProfile"
+[tool.setuptools_scm]
+write_to = "tract_querier/_version.py"
