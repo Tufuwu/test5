@@ -1,2 +1,4 @@
-.venv
-public_suffix_list.dat
+# Python artifacts (bytecode, PyCharm projects, ...)
+/.idea
+/__pycache__
+*.pyc

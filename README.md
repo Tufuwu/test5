@@ -1,251 +1,182 @@
-List of disposable email domains
-========================
-This repo contains a [list of disposable and temporary email address domains](disposable_email_blocklist.conf) often used to register dummy users in order to spam or abuse some services.
+# //build directory for GN-based projects
 
-We cannot guarantee all of these can still be considered disposable but we do basic checking so chances are they were disposable at one point in time.
+This project provides a work-in-progress standalone version of the toolchains and configs used by the Chromium project.
 
-> One of the most impactful mechanisms we currently have is prohibiting known "throw-away" email domains from creating accounts on the index. We currently use the `disposable-email-domains` list as well as our own internal list to block registration with －or association of － such domains for PyPI accounts.
+## Supported platforms
 
--- Ee Durbin, PyPI Admin, Director of Infrastructure (PSF) [link](https://blog.pypi.org/posts/2024-06-16-prohibiting-msn-emails/)
+The toolchains have been tested on the following platforms:
 
-Allowlist
-=========
-The file [allowlist.conf](allowlist.conf) gathers email domains that are often identified as disposable but in fact are not.
+* Windows (MSVC 2013/2015/2017/2019/2022, Clang 3.8 - 17.0)
+* FreeBSD (GCC 6, Clang 11)
+* Linux (GCC 6, Clang 3.8)
+* OS X (Xcode 7.3.1)
 
-Contributing
-============
-Feel free to create PR with additions or request removal of some domain (with reasons).
+The [testsrc](https://github.com/timniederhausen/gn-build/tree/testsrc)
+branch contains the test/example project used by the CI tests.
 
-**Specifically, please cite in your PR where one can generate a disposable email address which uses that domain, so the maintainers can verify it.**
+## Reference
 
-Please add new disposable domains directly into [disposable_email_blocklist.conf](disposable_email_blocklist.conf) in the same format (only second level domains on new line without @), then run [maintain.sh](maintain.sh). The shell script will help you convert uppercase to lowercase, sort, remove duplicates and remove allowlisted domains.
+### Basic variables
 
-License
-=======
-You can copy, modify, distribute and use the work, even for commercial purposes, all without asking permission.
+All variables described here are build args and can be overridden in the user's
+`args.gn` file.
 
-[![Licensed under CC0](https://licensebuttons.net/p/zero/1.0/88x31.png)](https://creativecommons.org/publicdomain/zero/1.0/) 
+#### [`//build/config/BUILDCONFIG.gn`](config/BUILDCONFIG.gn)
 
-Changelog
-============
+(these variables are available everywhere)
 
-* 1/9/25 Enabled [GitHub sponsorhip](https://github.com/sponsors/disposable-email-domains) for this work. Everybody can do it, but currently only one person does it. Send them $2 for a coffee if you care.
+* `is_debug` (default: true): Toggle between debug and release builds.
+* `is_clang` (default: false): Favor Clang over the platform default (GCC/MSVC).
+* `is_official_build` (default: !is_debug): Set to enable the official build
+  level of optimization. This enables an additional level of optimization above
+  release (!is_debug).
+* `external` (default: "//external"): Label of the external projects directory.
+  By convention, all 3rd-party projects should end up in this directory, so they
+  can depend on each other (e.g. $external/mysql_connector -> $external/zlib)
 
-* 2/11/21 We created a github [org account](https://github.com/disposable-email-domains) and transferred the repository to it.
+#### [`//build/toolchain/clang.gni`](toolchain/clang.gni)
 
-* 4/18/19 [@di](https://github.com/di) [joined](https://github.com/martenson/disposable-email-domains/issues/205) as a core maintainer of this project. Thank you!
+* `use_lld` (default: false): Use the new LLD linker.
+  This requires `is_clang` to be true.
+* `clang_base_path` (default: ""): The path of your Clang installation folder
+  (without /bin). If you use Clang on Windows, you are required to set this,
+  as the Clang installation isn't automatically detected.
 
-* 7/31/17 [@deguif](https://github.com/deguif) [joined](https://github.com/martenson/disposable-email-domains/issues/106) as a core maintainer of this project. Thanks!
+#### [`//build/toolchain/compiler_version.gni`](toolchain/compiler_version.gni)
 
-* 12/6/16 - Available as [PyPI module](https://pypi.org/project/disposable-email-domains) thanks to [@di](https://github.com/di)
+* `gcc_version` (default: auto-detected): Version of the GCC compiler.
+  **Note:** Auto-detection is toolchain-specific and happens only if GCC is the
+  active compiler. <br>
+  Format: `major` * 10000 + `minor` * 100 + `patchlevel`
+* `clang_version` (default: auto-detected): Version of the Clang compiler.
+  **Note:** Auto-detection is toolchain-specific and happens only if Clang is
+  the active compiler. <br>
+  Format: `major` * 10000 + `minor` * 100 + `patchlevel`
+* `msc_ver` (default: auto-detected): Value of the _MSC_VER variable.
+  See https://msdn.microsoft.com/en-us/library/b0084kay.aspx.
+  **Note:** Auto-detection happens only when targeting Windows.
+* `msc_full_ver` (default: auto-detected): Value of the _MSC_FULL_VER variable.
+  See https://msdn.microsoft.com/en-us/library/b0084kay.aspx.
+  **Note:** Auto-detection happens only when targeting Windows.
 
-* 7/27/16 - Converted all domains to the second level. This means that starting from [this commit](https://github.com/martenson/disposable-email-domains/commit/61ae67aacdab0b19098de2e13069d7c35b74017a) the implementers should take care of matching the second level domain names properly i.e. `@xxx.yyy.zzz` should match `yyy.zzz` in blocklist where `zzz` is a [public suffix](https://publicsuffix.org/). More info in [#46](https://github.com/martenson/disposable-email-domains/issues/46)
+### Windows toolchain
 
-* 9/2/14 - First commit [393c21f5](https://github.com/disposable-email-domains/disposable-email-domains/commit/393c21f56b5186f8db7d197b11cf1d7c5490a6f9)
-  
-Example Usage
-=============
+#### [`//build/toolchain/win/settings.gni`](toolchain/win/settings.gni)
 
-TOC: [Python](#python), [PHP](#php), [Go](#go), [Ruby on Rails](#ruby-on-rails), [NodeJS](#nodejs), [C#](#c), [bash](#bash), [Java](#java), [Swift](#swift)
+* `visual_studio_version` (default: "latest"): Desired version of Visual Studio.
+  If `visual_studio_path` is set, this must be the version of the VS installation
+  at the `visual_studio_path`.
 
-### Python
-```Python
-with open('disposable_email_blocklist.conf') as blocklist:
-    blocklist_content = {line.rstrip() for line in blocklist.readlines()}
-if email.partition('@')[2] in blocklist_content:
-    message = "Please enter your permanent email address."
-    return (False, message)
-else:
-    return True
-```
+  Use "2013" for Visual Studio 2013 or "latest" for automatically choosing the
+  highest version (`visual_studio_path` must be unset in this case).
+* `visual_studio_path` (default: auto-detected): The path of your MSVC installation.
+  If this is set you must set visual_studio_version as well.
+  Autodetected based on `visual_studio_version`.
+* `windows_sdk_version` (default: auto-detected): Windows SDK version to use.
+  Can either be a full Windows 10 SDK number (e.g. 10.0.10240.0),
+  "8.1" for the Windows 8.1 SDK or "default" for the default SDK selected by VS.
+* `clang_msc_ver` (default: auto-detected): MSVC version `clang-cl` will report
+  in `_MSC_VER`.
 
-Available as [PyPI module](https://pypi.org/project/disposable-email-domains) thanks to [@di](https://github.com/di)
-```python
->>> from disposable_email_domains import blocklist
->>> 'bearsarefuzzy.com' in blocklist
-True
-```
+### POSIX toolchain
 
-### PHP
-contributed by [@txt3rob](https://github.com/txt3rob), [@deguif](https://github.com/deguif), [@pjebs](https://github.com/pjebs) and [@Wruczek](https://github.com/Wruczek)
+This is the default toolchain for POSIX operating systems,
+which is used for all POSIX systems that don't have special toolchains.
 
-1. Make sure the passed email is valid. You can check that with [filter_var](https://secure.php.net/manual/en/function.filter-var.php)
-2. Make sure you have the mbstring extension installed on your server
-```php
-function isDisposableEmail($email, $blocklist_path = null) {
-    if (!$blocklist_path) $blocklist_path = __DIR__ . '/disposable_email_blocklist.conf';
-    $disposable_domains = file($blocklist_path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-    $domain = mb_strtolower(explode('@', trim($email))[1]);
-    return in_array($domain, $disposable_domains);
-}
-```
+#### [`//build/toolchain/posix/settings.gni`](toolchain/posix/settings.gni)
 
-Alternatively check out Composer package https://github.com/elliotjreed/disposable-emails-filter-php.
+* `gcc_cc` (default: gcc): Path of the GCC C compiler executable.
+  Does not have to be absolute.
+* `gcc_cxx` (default: g++): Path of the GCC C++ compiler executable.
+  Does not have to be absolute.
+* `clang_cc` (default: clang): Path of the Clang C compiler executable.
+  Does not have to be absolute. **Note:** If `clang_base_path` is set,
+  the default will be `clang_base_path/bin/clang`.
+* `clang_cxx` (default: clang++): Path of the Clang C++ compiler executable.
+  Does not have to be absolute. **Note:** If `clang_base_path` is set,
+  the default will be `clang_base_path/bin/clang++`.
 
-### Go
-contributed by [@pjebs](https://github.com/pjebs)
+### Mac/iOS toolchain
 
-```go
-import ("bufio"; "os"; "strings";)
-var disposableList = make(map[string]struct{}, 3500)
-func init() {
-	f, _ := os.Open("disposable_email_blocklist.conf")
-	for scanner := bufio.NewScanner(f); scanner.Scan(); {
-		disposableList[scanner.Text()] = struct{}{}
-	}
-	f.Close()
-}
+#### [`//build/toolchain/mac/settings.gni`](toolchain/mac/settings.gni)
 
-func isDisposableEmail(email string) (disposable bool) {
-	segs := strings.Split(email, "@")
-	_, disposable = disposableList[strings.ToLower(segs[len(segs)-1])]
-	return
-}
-```
+* `use_system_xcode` (default: true): Use the system install of Xcode for tools
+  like ibtool, libtool, etc. This does not affect the compiler. When this
+  variable is false, targets will instead use a hermetic install of Xcode.
+* `hermetic_xcode_path` (default: ""): The path to the hermetic install of
+  Xcode. Only relevant when use_system_xcode = false.
+* `use_xcode_clang` (default: true): Compile with Xcode version of clang
+  instead of hermetic version shipped with the build. If `true`,
+  `clang_base_path` needs to be set.
+* `enable_dsyms` (default: true): Produce dSYM files for targets that are
+  configured to do so. dSYM generation is controlled globally as it is a
+  linker output (produced via the `//build/toolchain/mac/linker_driver.py`.
+  Enabling this will result in all shared library, loadable module, and
+  executable targets having a dSYM generated.
+* `enable_stripping` (default: `is_official_build`): Strip symbols from linked
+  targets by default. If this is enabled, the //build/config/mac:strip_all
+  config will be applied to all linked targets. If custom stripping parameters
+  are required, remove that config from a linked target and apply custom
+  `-Wcrl,strip` flags. See //build/toolchain/mac/linker_driver.py for more
+  information.
 
-Alternatively check out Go package https://github.com/rocketlaunchr/anti-disposable-email.
+#### [`//build/toolchain/mac/mac_sdk.gni`](toolchain/mac/mac_sdk.gni)
 
-### Ruby on Rails
-contributed by [@MitsunChieh](https://github.com/MitsunChieh)
+* `mac_sdk_min` (default: "10.10"): Minimum supported version of the Mac SDK.
+* `mac_deployment_target` (default: "10.9"): Minimum supported version of OSX.
+* `mac_sdk_path` (default: ""): Path to a specific version of the Mac SDK, not
+  including a slash at the end. If empty, the path to the lowest version
+  greater than or equal to `mac_sdk_min` is used.
+* `mac_sdk_name` (default: "macosx"): The SDK name as accepted by xcodebuild.
 
-In the resource model, usually it is `user.rb`:
+#### [`//build/toolchain/mac/ios_sdk.gni`](toolchain/mac/ios_sdk.gni)
 
-```Ruby
-before_validation :reject_email_blocklist
+* `ios_sdk_path` (default: ""): Path to a specific version of the iOS SDK, not
+  including a slash at the end. When empty this will use the default SDK based
+  on the value of use_ios_simulator.
 
-def reject_email_blocklist
-  blocklist = File.read('config/disposable_email_blocklist.conf').split("\n")
+  SDK properties (required when `ios_sdk_path` is non-empty):
 
-  if blocklist.include?(email.split('@')[1])
-    errors[:email] << 'invalid email'
-    return false
-  else
-    return true
-  end
-end
-```
+  * `ios_sdk_name`: The SDK name as accepted by xcodebuild.
+  * `ios_sdk_version`
+  * `ios_sdk_platform`
+  * `ios_sdk_platform_path`
+  * `xcode_version`
+  * `xcode_build`
+  * `machine_os_build`
 
-### Node.js
-contributed by [@boywithkeyboard](https://github.com/boywithkeyboard)
+* `ios_deployment_target` (default: "9.0"): Minimum supported version of OSX.
 
-```js
-import { readFile } from 'node:fs/promises'
+### Android toolchain
 
-let blocklist
+#### [`//build/toolchain/android/settings.gni`](toolchain/android/settings.gni)
 
-async function isDisposable(email) {
-  if (!blocklist) {
-    const content = await readFile('disposable_email_blocklist.conf', { encoding: 'utf-8' })
+* `android_ndk_root` (default: "$external/android_tools/ndk"):
+  Path of the Android NDK.
+* `android_ndk_version` (default: "r12b"): NDK Version string.
+* `android_ndk_major_version` (default: 12): NDK Major version.
+* `android_sdk_root` (default: "$external/android_tools/sdk"):
+  Path of the Android SDK.
+* `android_sdk_version` (default: "24"): Android SDK version.
+* `android_sdk_build_tools_version` (default: "24.0.2"):
+  Version of the Build Tools contained in the SDK.
+* `android_libcpp_lib_dir` (default: ""): Libc++ library directory.
+  Override to use a custom libc++ binary.
+* `use_order_profiling` (default: false): Adds intrumentation to each function.
+  Writes a file with the order that functions are called at startup.
 
-    blocklist = content.split('\r\n').slice(0, -1)
-  }
+## Recommended workflow
 
-  return blocklist.includes(email.split('@')[1])
-}
-```
+Fork this repo and add it as a submodule/subtree/`DEPS`-entry to your project.
+This way you can modify every part of the `//build` directory while still being
+able to easily merge upstream changes (e.g. support for new GN features that
+you don't want to implement yourself.)
 
-Alternatively check out NPM package https://github.com/mziyut/disposable-email-domains-js.
+To ease sharing/composition of projects using this `//build` repo,
+it is recommended that you refrain from modifying large parts of the toolchains/configs.
+If changes are necessary, consider contributing them back ;)
 
-### C#
-```C#
-private static readonly Lazy<HashSet<string>> _emailBlockList = new Lazy<HashSet<string>>(() =>
-{
-  var lines = File.ReadLines("disposable_email_blocklist.conf")
-    .Where(line => !string.IsNullOrWhiteSpace(line) && !line.TrimStart().StartsWith("//"));
-  return new HashSet<string>(lines, StringComparer.OrdinalIgnoreCase);
-});
-
-private static bool IsBlocklisted(string domain) => _emailBlockList.Value.Contains(domain);
-
-...
-
-var addr = new MailAddress(email);
-if (IsBlocklisted(addr.Host)))
-  throw new ApplicationException("Email is blocklisted.");
-```
-
-### Bash
-
-```
-#!/bin/bash
-
-# This script checks if an email address is temporary.
-
-# Read blocklist file into a bash array
-mapfile -t blocklist < disposable_email_blocklist.conf
-
-# Check if email domain is in blocklist
-if [[ " ${blocklist[@]} " =~ " ${email#*@} " ]]; then
-    message="Please enter your permanent email address."
-    return_value=false
-else
-    return_value=true
-fi
-
-# Return result
-echo "$return_value"
-```
-
-### Java
-
-Code assumes that you have added `disposable_email_blocklist.conf` next to your class as classpath resource.
-
-```Java
-private static final Set<String> DISPOSABLE_EMAIL_DOMAINS;
-
-static {
-    Set<String> domains = new HashSet<>();
-    try (BufferedReader in = new BufferedReader(
-            new InputStreamReader(
-                EMailChecker.class.getResourceAsStream("disposable_email_blocklist.conf"), StandardCharsets.UTF_8))) {
-        String line;
-        while ((line = in.readLine()) != null) {
-            line = line.trim();
-            if (line.isEmpty()) {
-                continue;
-            }
-            
-            domains.add(line);
-        }
-    } catch (IOException ex) {
-        LOG.error("Failed to load list of disposable email domains.", ex);
-    }
-    DISPOSABLE_EMAIL_DOMAINS = domains;
-}
-
-public static boolean isDisposable(String email) throws AddressException {
-    InternetAddress contact = new InternetAddress(email);
-    return isDisposable(contact);
-}
-
-public static boolean isDisposable(InternetAddress contact) throws AddressException {
-    String address = contact.getAddress();
-    int domainSep = address.indexOf('@');
-    String domain = (domainSep >= 0) ? address.substring(domainSep + 1) : address;
-    return DISPOSABLE_EMAIL_DOMAINS.contains(domain);
-}
-```
-
-### Swift
-contributed by [@1998code](https://github.com/1998code)
-
-```swift
-func checkBlockList(email: String, completion: @escaping (Bool) -> Void) {
-    let url = URL(string: "https://raw.githubusercontent.com/disposable-email-domains/disposable-email-domains/master/disposable_email_blocklist.conf")!
-    let task = URLSession.shared.dataTask(with: url) { data, response, error in
-        if let data = data {
-            if let string = String(data: data, encoding: .utf8) {
-                let lines = string.components(separatedBy: "\n")
-                for line in lines {
-                    if email.contains(line) {
-                        completion(true)
-                        return
-                    }
-                }
-            }
-        }
-        completion(false)
-    }
-    task.resume()
-}
-```
+For more complex projects, it might be feasible to use a custom build-config file
+that just `import()s` [`//build/config/BUILDCONFIG.gn`](config/BUILDCONFIG.gn) and then overrides
+the defaults set inside `BUILDCONFIG.gn`. There's also GN's `default_args` scope, which can be used
+to provide project-specific argument overrides.
