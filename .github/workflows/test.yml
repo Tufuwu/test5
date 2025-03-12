@@ -1,29 +1,58 @@
-name: ci
-on: [push, workflow_dispatch]
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
 
+name: Unit Testing
 jobs:
-  job:
+  chore:
+    name: Unit Tests
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        toxenv: [py36, py37, py38, py39, flake8]
+        include:
+          - toxenv: py36
+            python-version: "3.9"
+          - toxenv: py37
+            python-version: "3.9"
+          - toxenv: py38
+            python-version: "3.9"
+          - toxenv: flake8
+            python-version: "3.9"
+          - toxenv: py39
+            python-version: "3.9"
+
     steps:
-      - name: Check out repository code
-        uses: actions/checkout@v2
-
-      - name: Install Python
-        uses: actions/setup-python@v2
+      - uses: actions/checkout@v2
         with:
-          python-version: 3.9
+          # Fetch the latest commit, only
+          fetch-depth: 1
 
-      - name: Test
-        run: tests/run_tests.sh
-        shell: bash
-        env:
-          LI_AT_COOKIE: ${{ secrets.LI_AT_COOKIE }}
-
-      - name: Build distribution
-        run: python setup.py install_egg_info sdist bdist_wheel
-
-      - name: Deploy to PyPi
-        uses: pypa/gh-action-pypi-publish@master
+      - uses: actions/setup-python@v2
         with:
-          user: __token__
-          password: ${{ secrets.PYPI_DEPLOY_TOKEN }}
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install virtualenv
+        run: |
+          pip install virtualenv
+          virtualenv --python=python3 .venv
+      - name: Print environment
+        run: |
+          source .venv/bin/activate
+          python --version
+          pip --version
+      - name: Install dependencies
+        run: |
+          source .venv/bin/activate
+          pip install tox
+      - name: Cleanup boto
+        run: |
+          rm -fr /etc/boto.cfg
+      - name: Tox
+        run: |
+          source .venv/bin/activate
+          tox -e ${{ matrix.toxenv }}
