@@ -1,36 +1,59 @@
+from __future__ import print_function
+# from __future__ import unicode_literals
+from __future__ import absolute_import
+from __future__ import division
+from setuptools import setup
+
+from setuptools.command.install import install as _install
 import os
-
 import versioneer
-from setuptools import find_packages, setup
+import datetime
+from pathlib import Path
 
-PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 
-DESCRIPTION = "Python module and CLI for hashing of file system directories."
+def copy_config():
+    from shutil import copyfile, move
+    srcfiles = [
+        'CreateCloudMap.ini',
+    ]
+    srcfiles_overwrite = [
+    ]
 
-try:
-    with open(os.path.join(PROJECT_ROOT, "README.md"), encoding="utf-8") as f:
-        long_description = "\n" + f.read()
-except OSError:
-    long_description = DESCRIPTION
+    dstdir = os.path.expanduser('~/.CreateCloudMap')
+    Path(dstdir).mkdir(parents=True, exist_ok=True)
+
+    for src in srcfiles:
+        dstfile = os.path.join(dstdir, src)
+        srcpath = os.path.join('cfg', src)
+        if not os.path.exists(dstfile):
+            copyfile(srcpath, dstfile)
+        else:
+            copyfile(srcpath, dstfile + '.new')
+
+    bak_date = datetime.datetime.now().strftime(
+        "%Y%m%d%H%M%S")
+
+    for src in srcfiles_overwrite:
+        dstfile = os.path.join(dstdir, src)
+        srcpath = os.path.join('cfg', src)
+        if not os.path.exists(dstfile):
+            copyfile(srcpath, dstfile)
+        else:
+            move(dstfile, dstfile + '.bak.' + bak_date)
+            copyfile(srcpath, dstfile)
+
+
+class Install(_install):
+    def run(self):
+        _install.run(self)
+        copy_config()
+
+
+cmdclass = versioneer.get_cmdclass()
+cmdclass['install'] = Install
 
 setup(
-    name="dirhash",
     version=versioneer.get_version(),
-    cmdclass=versioneer.get_cmdclass(),
-    description=DESCRIPTION,
-    long_description=long_description,
-    long_description_content_type="text/markdown",
-    url="https://github.com/andhus/dirhash-python",
-    author="Anders Huss",
-    author_email="andhus@kth.se",
-    license="MIT",
-    python_requires=">=3.8",
-    install_requires=["scantree>=0.0.4"],
-    packages=find_packages("src"),
-    package_dir={"": "src"},
-    include_package_data=True,
-    entry_points={
-        "console_scripts": ["dirhash=dirhash.cli:main"],
-    },
-    tests_require=["pre-commit", "pytest", "pytest-cov"],
+    packages=['cloudmap', ],
+    cmdclass=cmdclass,
 )
