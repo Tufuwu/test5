@@ -1,0 +1,33 @@
+{% load i18n lib_tags webmail_tags %}
+
+<table id="emailheaders" class="table table-condensed">
+  {% for hdr in headers %}
+    <tr>
+      <th>{{ hdr.name|localize_header_name }}</th>
+      <td>
+        {% if hdr.safe %}
+           {% if hdr.value|length > 100 %}
+              {{ hdr.value|safe|truncatechars_html:100 }}
+           {% else %}
+              {{ hdr.value|safe }}
+           {% endif %}
+      {% elif hdr.value|length > 100 %}
+          {{ hdr.value|truncatechars_html:100}}
+      {% else %}
+          {{ hdr.value}}
+      {% endif %}</td>
+    </tr>
+  {% endfor %}
+  {% if attachments %}
+    <tr>
+      <th>{% trans "Attachments" %}</th>
+      <td>
+        {% for key, fname in attachments.items %}
+          <a href="{% attachment_url mbox mailid fname key %}">{{ fname }}</a>
+        {% endfor %}
+      </td>
+    </tr>
+  {% endif %}
+</table>
+
+<iframe src="{% url 'modoboa_webmail:mailcontent_get' %}?mbox={{ mbox }}&mailid={{ mailid }}&links={{ links }}" id="mailcontent"></iframe>

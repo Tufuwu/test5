@@ -1,0 +1,53 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# 
+# Translators:
+# Jarda Tesar <intossh@gmail.com>, 2017
+# Miroslav Abrahám <miris@kunago.com>, 2013,2015
+msgid ""
+msgstr ""
+"Project-Id-Version: Modoboa\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-05-19 10:28+0200\n"
+"PO-Revision-Date: 2017-09-22 09:57+0000\n"
+"Last-Translator: Jarda Tesar <intossh@gmail.com>\n"
+"Language-Team: Czech (Czech Republic) (http://www.transifex.com/tonio/modoboa/language/cs_CZ/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: cs_CZ\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+
+#: static/modoboa_webmail/js/webmail.js:207
+msgid "No more message in this folder."
+msgstr "Žádné další zprávy v této složce"
+
+#: static/modoboa_webmail/js/webmail.js:703
+msgid "Remove the selected folder?"
+msgstr "Odebrat označenou složku?"
+
+#: static/modoboa_webmail/js/webmail.js:716
+msgid "Folder removed"
+msgstr "Složka odebrána"
+
+#: static/modoboa_webmail/js/webmail.js:1029
+msgid "Message sent"
+msgstr "Zpráva odeslána"
+
+#: static/modoboa_webmail/js/webmail.js:1362
+#, javascript-format
+msgid "Moving %s message"
+msgid_plural "Moving %s messages"
+msgstr[0] "Přesunuji %s zprávu"
+msgstr[1] "Přesunuji %s zprávy"
+msgstr[2] "Přesunuji %s zpráv"
+msgstr[3] "Přesunuji %s zpráv"
+
+#: static/modoboa_webmail/js/webmail.js:1434
+msgid "Contact added!"
+msgstr "Kontakt přidán!"
+
+#: static/modoboa_webmail/js/webmail.js:1443
+msgid "A contact with this address already exists"
+msgstr "Kontakt s touto adresou již existuje"

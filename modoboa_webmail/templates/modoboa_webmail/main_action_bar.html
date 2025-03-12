@@ -1,0 +1,18 @@
+{% extends "common/buttons_list.html" %}
+
+{% load i18n %}
+
+{% block before_menubar %}
+  <div class="col-xs-5" style="display: flex">
+    <input
+        class="hidden-xs"
+        type="checkbox" id="selectAll" name="selectAll" style="margin-right: 10px"
+        title="{% translate "Toggle selection" %}"
+    />
+    <div style="flex: 1">
+      {% include "common/email_searchbar.html" with extraopts=extraopts %}
+    </div>
+  </div>
+{% endblock %}
+
+{% block menubar_classes %}col-xs-7{% endblock %}
