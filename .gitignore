@@ -1,5 +1,25 @@
-udica.egg-info/
+auth.yaml
+venv
+*.pyc
+*~
+
+.sass-cache
+.webcache
+.cache
+
+.env
+
+# Coverage data
+.coverage
+htmlcov
+
+# The locally checked out repos
+.oep2-workspace
+
+# Ourselves, installed
+edx_repo_tools.egg-info
+
+# PyCharm files
+.idea/
+
 build/
-dist/
-__pycache__/
-*.py[cod]

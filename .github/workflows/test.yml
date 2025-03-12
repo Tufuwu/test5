@@ -1,29 +1,32 @@
-name: checks
-on: [push, pull_request]
+name: Python CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - run: sudo apt-get update -y
-      - run: sudo apt-get install -y python3-pip python3-setuptools
-      - run: sudo pip3 install black pyflakes
-      - run: make format-check
-      - run: make lint
-  tests:
-    runs-on: ubuntu-latest
+  build:
+
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        image:
-          # test on Fedora Rawhide
-          - fedora:rawhide
-          # test on the latest stable release of Fedora
-          - fedora:latest
-          # test on the stable release of Centos 8
-          - centos:centos8
-    container:
-      image: ${{ matrix.image }}
+        os: [ubuntu-latest]
+        python-version: ["3.9", "3.10"]
+
     steps:
-      - uses: actions/checkout@v2
-      - run: rpm -q python3 || dnf install --nogpgcheck -y python3
-      - run: python3 -m unittest -v tests/test_unit.py
+    - uses: actions/checkout@v2
+    - name: setup python
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install pip
+      run: pip install -r requirements/pip.txt
+
+    - name: Install Dependencies
+      run: make dev-install
+
+    - name: Run Tests
+      run: make test

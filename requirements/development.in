@@ -1,0 +1,8 @@
+-c constraints.txt
+-r base.txt
+
+edx-lint
+pip-tools
+pytest
+pytest-mock
+responses

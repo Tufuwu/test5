@@ -1,3 +1,0 @@
-(block my_container
-    (blockinherit container)
-)

@@ -1,0 +1,7 @@
+# Dependencies needed by find_dependencies.py
+
+-c ../../requirements/constraints.txt
+
+rich
+requests
+requirements-parser
