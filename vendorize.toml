@@ -1,0 +1,4 @@
+target = "vendorize/_vendor"
+packages = [
+    "pytoml==0.1.11",
+]
