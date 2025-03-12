@@ -1,62 +1,14 @@
 [build-system]
-requires = ["poetry_core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["setuptools >= 67.7.2, < 72.0.0", "wheel >= 0.40.0"]
+build-backend = "setuptools.build_meta"
 
-[tool.poetry]
-name = "django-object-actions"
-version = "4.3.0"
-description = "A Django app for adding object tools for models in the admin"
-authors = ["crccheck <c@crccheck.com>"]
-license = "Apache-2.0"
-readme = "README.md"
-
-repository = "https://github.com/crccheck/django-object-actions"
-
-keywords = ["django", "admin"]
-classifiers = [
-  "Development Status :: 5 - Production/Stable",
-  "Framework :: Django",
-  "Intended Audience :: Developers",
-  "License :: OSI Approved :: Apache Software License",
-  "Operating System :: OS Independent",
-  "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.9",
-  "Programming Language :: Python :: 3.10",
-  "Programming Language :: Python :: 3.11",
-  "Programming Language :: Python :: 3.12",
-  "Programming Language :: Python :: 3.13",
-]
-
-[tool.poetry.dependencies]
-python = "^3.9"
-
-[tool.poetry.group.dev.dependencies]
-coverage = "7.*"
-django-extensions = "3.*"
-factory-boy = "3.*"
-dj-database-url = "2.*"
-ruff = "*"
-
-[tool.semantic_release]
-version_toml = ["pyproject.toml:tool.poetry.version"]
-version_variables = ["django_object_actions/__init__.py:__version__"]
-build_command = "pip install poetry && poetry build"
-
-[tool.coverage.run]
-source = ["django_object_actions"]
-omit = ["*/tests/*"]
-branch = true
-
-[tool.coverage.report]
-exclude_lines = [
-  "pragma: no cover",
-  "__repr__",
-  "__unicode__",
-  "raise NotImplementedError",
-]
+[tool.pytest.ini_options]
+addopts = " --ignore django_prometheus/tests/end2end"
 
 [tool.ruff]
-target-version = "py37"
+line-length = 120
+target-version = "py38"
 
 [tool.ruff.lint]
-extend-select = ["UP"]
+select = ["B", "C4", "E", "F", "I", "T10", "YTT", "W"]
+
