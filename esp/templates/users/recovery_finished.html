@@ -1,0 +1,13 @@
+{% extends "main.html" %}
+
+{% block title %}Password reset successful{% endblock %}
+
+{% block content %}
+<h1>Password Recovery</h1>
+
+
+<p>
+  Congratulations {{request.user.first_name }} {{request.user.last_name}}! You are now signed on. <br />
+</p>
+
+{% endblock %}

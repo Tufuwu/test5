@@ -1,0 +1,73 @@
+<p>{{ num_users }} users were matched by the query.</p>
+<h2>Aggregrate Demographic Info</h2>
+
+<p>Ages and grades are reported as birth years and graduation years to allow aggregating results from multiple programs.</p>
+
+<h3>Program stats (from all registered students)</h3>
+<table>
+<tr>
+<th width="50%"></th>
+<th>#</th>
+</tr>
+<tr>
+    <td>Class subjects</td>
+    <td>{{ num_classes }}</td>
+</tr>
+<tr>
+    <td>Class sections</td>
+    <td>{{ num_sections }}</td>
+</tr>
+<tr>
+    <td>Class-hours</td>
+    <td>{{ num_class_hours }}</td>
+</tr>
+<tr>
+    <td>Student-class-hours registered</td>
+    <td>{{ num_student_class_hours }}</td>
+</tr>
+</table>
+<h3>Age distribution</h3>
+<table>
+<tr>
+<th width="50%">Birth Year</th>
+<th># of Students</th>
+</tr>
+{% for birth_year, num in birthyear_data %}
+<tr>
+    <td>{{ birth_year }}</td>
+    <td>{{ num }}</td>
+</tr>
+{% endfor %}
+</table>
+<h3>Grade distribution</h3>
+<table>
+<tr>
+<th width="50%">Graduation Year</th>
+<th># of Students</th>
+</tr>
+{% for grad_year, num in gradyear_data %}
+<tr>
+    <td>{{ grad_year }}</td>
+    <td>{{ num }}</td>
+</tr>
+{% endfor %}
+</table>
+<h3>Financial aid information</h3>
+<table>
+<tr>
+<th width="50%"></th>
+<th># of Students</th>
+</tr>
+<tr>
+    <td>Applied for financial aid</td>
+    <td>{{ finaid_applied }}</td>
+</tr>
+<tr>
+    <td>Claimed free/reduced lunch</td>
+    <td>{{ finaid_lunch }}</td>
+</tr>
+<tr>
+    <td>Received financial aid</td>
+    <td>{{ finaid_approved }}</td>
+</tr>
+</table>

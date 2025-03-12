@@ -1,0 +1,26 @@
+{% extends "main.html" %}
+
+{% block title %}{{ program.niceName }} Survey{% endblock %}
+
+{% block stylesheets %}
+    {{ block.super }}
+    <link rel="stylesheet" href="/media/styles/catalog.css" type="text/css" />
+    <link rel="stylesheet" href="/media/styles/forms.css" type="text/css" />
+{% endblock %}
+
+{% block content %}
+
+<style type="text/css">
+.nocheckmark { border: 1px solid black; }
+</style>
+<h1>{% if not view_list and general %}General {% endif %}Survey for {% if not view_list and section %}{{ section }}{% else %}{{ program.niceName }}{% endif %}</h1>
+
+{% include "survey/survey_form.html" %}
+
+{% if tl == "teach" %}
+    {% include "program/modules/teacherregcore/returnlink.html" %}
+{% elif tl == "learn" %}
+    {% include "program/modules/studentregcore/returnlink.html" %}
+{% endif %}
+
+{% endblock %}

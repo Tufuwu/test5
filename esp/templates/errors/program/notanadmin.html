@@ -1,0 +1,18 @@
+{% extends "main.html" %}
+
+{% block title %}Program Management{% endblock %}
+
+{% block content %}
+
+<h1>Program Management</h1>
+
+<p>
+Sorry {{ request.user.name }}, you are not an administrator of this program.
+<br />
+If you're interested in helping out with {{ settings.ORGANIZATION_SHORT_NAME }},
+just <a href="/contact/contact/">contact us</a>.
+We can always use an extra hand!
+</p>
+
+
+{% endblock %}

@@ -1,0 +1,42 @@
+<html>
+<head>
+<title>User List</title>
+<link rel="stylesheet" type="text/css" href="/media/styles/rosters.css" media="print,screen">
+<script src="/media/scripts/sorttable.js"></script>
+</head>
+<body>
+<div class="title" style="text-align: center;">
+<span>List generated for:</span><br />
+<tt>{{listdesc}}</tt>
+</div>
+<br />
+<br />
+<center>
+{% for list in lists %}
+<div style="page-break-after: always;">
+{% if list.key %}
+<h2>Users with {{ list.key }} = {{ list.value }}</h2>
+{% endif %}
+<p>
+    <table class="pretty sortable" cellspacing="0">
+    <tr>
+    <td>#</td>
+    {% for field in fields %}
+        <th>{{ field }}</th>
+    {% endfor %}
+    </tr>
+    {% for user in list.users %}
+        <tr>
+        <td>{{ forloop.counter }}</td>
+        {% for field in user.fields %}
+            <td>{{ field }}</td>
+        {% endfor %}
+        </tr>
+    {% endfor %}
+    </table>
+</p>
+</div>
+{% endfor %}
+</center>
+</body>
+</html>

@@ -1,0 +1,131 @@
+{% extends "main.html" %}
+
+{% block title %}{{program.niceName}} Printables{% endblock %}
+
+{% block stylesheets %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="/media/styles/forms.css" />
+{% endblock %}
+
+{% block content %}
+<style type="text/css">
+#divmaintext table, #divmaintext th, #divmaintext td {
+  border: 1px solid black; border-collapse: collapse;
+}
+</style>
+
+<h1>Catalog order for {{program.niceName}}</h1>
+
+<p>
+Before you can print off the catalog, please verify the order of the classes, this will allow you to make sure the generated PDF looks as good as it can. (Sometimes it will look unbalanced, etc.)
+</p>
+<p>
+<a href="{{request.path}}">Reset Order</a> (default is by catagory, timeblock, title)
+<br /><br />
+Get Catalog: 
+(<a href="/manage/{{program.getUrlBase}}/coursecatalog/pdf?sort_name_list={{ sort_name_list }}&clsids={{clsids}}">pdf</a>, 
+<a href="/manage/{{program.getUrlBase}}/coursecatalog/tex?sort_name_list={{ sort_name_list }}&clsids={{clsids}}">tex</a>, 
+<a href="/manage/{{program.getUrlBase}}/coursecatalog/log?sort_name_list={{ sort_name_list }}&clsids={{clsids}}">log</a>)
+
+<div id="program_form">
+<form action="" method="get">
+<table cellspacing="0" cellpadding="0">
+
+<tr>
+    <td colspan="6">
+        
+        Filter by 
+        
+        grades
+        <select name="grade_min">
+        {% for op in grade_options %}
+        <option value="{{ op }}"{% ifequal op grade_min_orig %} selected="selected"{% endifequal %}>{{ op }}</option>
+        {% endfor %}
+        </select>
+        to
+        <select name="grade_max">
+        {% for op in grade_options %}
+        <option value="{{ op }}"{% ifequal op grade_max_orig %} selected="selected"{% endifequal %}>{{ op }}</option>
+        {% endfor %}
+        </select>
+        
+        categories
+        <select name="categories" multiple="multiple">
+        {% for op in category_options %}
+        <option value="{{ op }}"{% if op in categories_orig %} selected="selected"{% endif %}>{{ op }}</option>
+        {% endfor %}
+        </select>
+        
+        <input type="submit" value="Go!"/>
+    </td>
+</tr>
+
+<tr>
+    <td colspan="6">
+        Sort by
+        <select name="first_sort">
+        {% for op in sorting_options %}
+        <option value="{{ op }}"{% ifequal op sort_name_list_orig.0 %} selected="selected"{% endifequal %}>{{ op }}</option>
+        {% endfor %}
+        </select>
+        
+        then
+        
+        <select name="second_sort">
+        {% for op in sorting_options %}
+        <option value="{{ op }}"{% ifequal op sort_name_list_orig.1 %} selected="selected"{% endifequal %}>{{ op }}</option>
+        {% endfor %}
+        </select>
+        
+        then
+        
+        <select name="third_sort">
+        {% for op in sorting_options %}
+        <option value="{{ op }}"{% ifequal op sort_name_list_orig.2 %} selected="selected"{% endifequal %}>{{ op }}</option>
+        {% endfor %}
+        </select>
+        <input type="submit" value="Go!"/>
+    </td>
+</tr>
+
+<tr>
+  <th>#</th>
+  <th>ID</th>
+  <th>Teachers</th>
+  <th>Time</th>
+  <th>Short Title</th>
+  <th>Up or down?</th>
+</tr>
+{% for cls in classes %}
+<tr>
+  <th>{{forloop.counter}}</th>
+  <td>{{cls.emailcode}}</td>
+  <td>{{cls.getTeacherNames|join:", "}}</td>
+  <td>{{cls.friendly_times|join:", "}}</td>
+  <td>{{cls.title|truncatewords:3}}</td>
+  <td>
+    {% if not forloop.first %}
+    <a href="{{request.path}}?sort_name_list={{ sort_name_list }}&clsid={{cls.id}}&op=up&ids={{clsids|urlencode}}"
+      title="Move Class up one!">[up]</a>
+    {% endif %} {% if not forloop.last %}
+    <a href="{{request.path}}?sort_name_list={{ sort_name_list }}&op=down&ids={{clsids|urlencode}}&clsid={{cls.id}}"
+     title="Move Class down one!">[down]</a>
+    {% endif %}
+  </td>
+</tr>
+{% endfor %}
+
+</table>
+</form>
+</div>
+
+<p>
+Get Catalog: 
+(<a href="/manage/{{program.getUrlBase}}/coursecatalog/pdf?sort_name_list={{ sort_name_list }}&clsids={{clsids}}">pdf</a>, 
+<a href="/manage/{{program.getUrlBase}}/coursecatalog/tex?sort_name_list={{ sort_name_list }}&clsids={{clsids}}">tex</a>, 
+<a href="/manage/{{program.getUrlBase}}/coursecatalog/log?sort_name_list={{ sort_name_list }}&clsids={{clsids}}">log</a>)
+</p>
+
+{% include "program/modules/admincore/returnlink.html" %}
+
+{% endblock %}

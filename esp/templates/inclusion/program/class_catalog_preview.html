@@ -1,0 +1,20 @@
+    <tr>
+        <td>
+            <b>{{ class.emailcode }}: <a href="{{ class.parent_program.get_teach_url }}catalogpreview/{{ class.id }}">{{ class.title|escape }}</a></b>
+        </td>
+        <td>
+       <span class="teachers">
+       {% for teacher in class.get_teachers %}
+       <a href="/teach/teachers/{{ teacher.username|urlencode }}/bio.html" 
+          title="Click for the biography of {{teacher.first_name }} {{teacher.last_name }}">
+          {{ teacher.first_name }} {{teacher.last_name }}
+       </a>{% if not forloop.last %}<br />{% endif %}{% endfor %}
+       </span>
+        </td>
+        <td>
+            {{ class.class_info|truncatewords:20 }}
+        </td>
+        <td>
+            {{ class.grade_min }}-{{ class.grade_max }}
+        </td>
+    </tr>

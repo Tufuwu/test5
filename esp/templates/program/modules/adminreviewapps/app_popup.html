@@ -1,0 +1,35 @@
+{% load users %}
+
+<html>
+
+<head>
+    <title>Viewing Student Application</title>
+    <link rel="stylesheet" type="text/css" href="/media/styles/forms.css" />
+</head>
+
+<body bgcolor="#FFFFFF">
+<div id="program_form">
+<br />
+<table class="application" class="fullwidth">
+<tr>
+  <th colspan="2">Student Application for {{ student.name }}</th>
+</tr>
+<tr>
+    <td width="25%">Grade:</td>
+    <td>{{ student|getGradeForProg:program.id }}</td>
+</tr>
+<tr>
+    <td>DOB:</td>
+    <td>{{ student.getLastProfile.student_info.dob|date:"M d, Y" }}</td>
+</tr>
+{% for response in student.app.responses.all %}
+<tr>
+  <th><label>{{ response.question.question }}</label></th>
+  <td>{{ response.response }}</td>
+</tr>
+{% endfor %}
+</table>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,116 @@
+<div id="loginbox">
+<table align="center" class="loginform" cellspacing="0" cellpadding="5">
+<tr><td>
+
+<div id="contact_info">
+        {% if theme.show_group_name %}
+        <span class="title accentcolor">{{ theme.full_group_name }}</span><br>
+        {% endif %}
+        {% if theme.contact_info %}
+        <span class="normal">{{ theme.contact_info|linebreaksbr }}</span><br>
+        {% endif %}
+        {% if theme.show_email %}
+        <span class="normal">Email: <a href="mailto:{{ settings.DEFAULT_EMAIL_ADDRESSES.default }}">{{ settings.DEFAULT_EMAIL_ADDRESSES.default }}</a></span><br>
+        {% endif %}
+        {% if theme.contact_links %}
+        <span class="normal">
+          {% for link in theme.contact_links %}
+          <a href="{{ link.link }}">{{ link.text }}</a>
+          {% if forloop.counter|divisibleby:2 or forloop.last %}<br />
+          {% elif not forloop.last %} | {% endif %}
+          {% endfor %}
+        </span>
+        {% endif %}
+        {% if theme.faq_link or theme.facebook_link %}
+        <span class="normal">
+          {% if theme.faq_link %}
+            <a href="{{ theme.faq_link }}">FAQ</a>
+          {% endif %}
+          {% if theme.faq_link and theme.facebook_link %} | {% endif %}
+          {% if theme.facebook_link %}
+            <a href="{{ theme.facebook_link }}">facebook</a>
+          {% endif %}
+        </span><br>
+        {% endif %}
+</div>
+<hr>
+
+{% if login_result %}
+    <div><center><span style="color: #BCCAF5;">{{ login_result }}{% ifequal "Invalid username or password" login_result %}<br /><a href="/myesp/login/">Try again here.</a>{% endifequal %}</span></center><br /></div>
+{% else %}
+    <div class="not_logged_in hidden">
+        <div>Log in here.  If you don't know your username or password, try <a href="/myesp/passwdrecover/">our password reset page</a>.<br /><br /></div>
+    </div>
+{% endif %}
+
+<div class="logged_in hidden">
+<div id="divnav">
+  <p align="center">
+    {% include "users/loginbox_userinfo.html" %}
+    <div class="unmorph hidden">
+       <br /><a href="/myesp/switchback/">Unmorph to <script type="text/javascript">document.write(esp_user.cur_retTitle);</script></a><br /><div id="unmorph_text"></div>
+    </div>
+    <a href="/myesp/accountmanage/">Manage Account</a>
+    <br/>
+    <a href="/myesp/signout/">Logout</a>
+    <br/>
+    <a href="https://www.learningu.org/about/privacy/" target="_blank">Privacy Policy</a>
+  </p>
+</div>
+</div>
+
+<div class="not_logged_in hidden">
+<div id="divnav">
+  <form name="loginform" id="loginform" method="post" action="/myesp/login/">
+    <input type="hidden" name="next" value="{{ request.path }}" />
+    <table border="0" cellpadding="0" cellspacing="0" summary=" ">
+      <tr>
+        <td><div class="divformcol1"><label for="user">User name:</label></div></td>
+        <td><div class="divformcol2"><input type="text" name="username" id="user" size="8" value="" maxlength="255" class="inputbox input-small" /></div></td>
+
+        <td><div class="divformcol3"></div></td>
+      </tr>
+      <tr>
+        <td><div class="divformcol1"><label for="pass">Password:</label></div></td>
+        <td><div class="divformcol2"><input type="password" name="password" id="pass" size="8" value="" maxlength="255" class="inputbox input-small" /></div></td>
+        <td style="vertical-align: top;"><div class="divformcol3"><button class="btn btn-inverse glyphicon glyphicon-log-in" id="gologin" type="submit" style="margin-left:5px;"></button></div></td>
+      </tr>
+      <tr>
+
+        <td colspan="3"><div class="divformcol1"><a href="/myesp/loginhelp.html">Login Help</a>
+        <span style="padding-left: 25px;">
+        <a href="/myesp/register">Register</a></span></div></td>
+      </tr>
+      <tr>
+        <td colspan="3"><div class="divformcol1"><a href="https://www.learningu.org/about/privacy/" target="_blank">Privacy Policy</a></div></td>
+      </tr>
+    </table>
+  </form>
+</div>
+</div>
+
+</td></tr>
+</table>
+</div>
+
+{% comment %} === Admin Toolbar (includes user search) === {% endcomment %}
+{% load modules %}
+<link rel="stylesheet" type="text/css" href="/media/default_styles/admin_bar.css">
+<div id="adminbar" class="admin hidden" style="position: fixed !important">
+  <div class="title" onclick="ESP.toggleDisplay('adminbar_content');">Admin Toolbar</div>
+  <div id="adminbar_content"></div>
+</div>
+<script type="text/javascript">
+var currentPrograms = [
+{% for current_program in current_programs %}
+    {
+        urlBase: "{{ current_program.getUrlBase }}",
+        name: "{{ current_program.niceName }}",
+        class_search: {% if current_program|hasModule:"ClassSearchModule" %}true{% else %}false{% endif %}
+    },
+{% endfor %}
+];
+var debug = {{ settings.DEBUG|yesno:"true,false" }};
+</script>
+<script type="text/javascript" src="/media/scripts/admin_bar.js"> </script>
+{% comment %} === End Admin Toolbar === {% endcomment %}

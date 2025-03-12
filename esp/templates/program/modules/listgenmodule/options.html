@@ -1,0 +1,43 @@
+{% extends "main.html" %}
+
+{% block title %}{{program.niceName}} Printables{% endblock %}
+
+{% block content %}
+<style type="text/css">
+.nocheckmark { border: 1px solid black; }
+#id_fields { list-style: none; margin: 0px; }
+input[name="fields"] { margin: 0px 3px 0px 0px; }
+</style>
+<br />
+<br />
+
+<br /><br />
+<h1>Generate Lists for {{program.niceName}}</h1>
+
+<p style="text-align: center">
+You have selected {{ num_users }} users.  Please go back to update your query, or select which information to display below.
+</p>
+
+<form action="/manage/{{ program.getUrlBase }}/generateList?filterid={{ filterid }}" class="form-inline" method="POST">
+<center>
+<table width="400" cellpadding="5">
+
+<tr>
+    <th colspan="2">Options</th>
+</tr>
+
+{{ form }}
+
+<input type="hidden" name="recipient_type" value="{{ recipient_type }}" />
+
+<tr>
+    <td colspan="2"><input type="Submit" value="Go"/></td>
+</tr>
+
+</table>
+</center>
+</form>
+
+{% include "program/modules/admincore/returnlink.html" %}
+
+{% endblock %}

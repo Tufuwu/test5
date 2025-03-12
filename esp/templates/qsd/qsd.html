@@ -1,0 +1,26 @@
+{% extends "main.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+{% block content_title %}{{ title }}{% endblock %}
+
+{% block keywords %}{{ qsdrec.keywords|default_if_none:""|escape }}{% endblock %}
+{% block description %}{{ qsdrec.description|default_if_none:""|escape }}{% endblock %}
+
+{% block xtrajs %}
+<script type="text/javascript">
+  if (window.location.hash == '#refresh') {
+    window.location.hash = '';
+    window.location.reload(true);
+  }
+</script>
+{% endblock %}
+
+{% block content %}
+
+{% load render_qsd %}
+{% autoescape off %}{% render_qsd qsdrec %}{% endautoescape %}
+
+<div class="qsd_bits hidden">
+    <a class="btn btn-primary" href="{{ edit_url }}">Edit this page</a>
+</div>
+{% endblock %}

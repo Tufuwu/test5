@@ -1,0 +1,55 @@
+{% autoescape off %}Teacher Registration Notification
+{% if admin %}Manage this class: <https://{{ DEFAULT_HOST }}/manage/{{ one }}/{{ two }}/manageclass/{{ id }}>{% endif %}
+---------------------------------
+Teachers:{% for teacher in teachers %}
+
+{{ teacher.teacher.get_full_name }} <{{ teacher.teacher.email }}>
+{% if not teacher.from_here %}    *** This teacher is not currently enrolled at this university. ***
+    Teacher's school/employer: {{ teacher.college }}{% endif %}{% if not teacher.taught_programs %}    *** This teacher is a first-time teacher. ***
+{% else %}    Programs this teacher has taught in: {{ teacher.taught_programs }}{% endif %}{% endfor %}
+
+---------------------------------
+
+Class Title: {{ title }}
+
+Category: {{ category }}
+
+Class Description: 
+{{ class_info }}
+
+Prerequisites:
+{{ prereqs }}
+
+Duration: {{ duration|floatformat }} hours
+
+Number of sections: {{ num_sections }}
+
+Grade range: {{ grade_min }}-{{ grade_max }}
+
+Maximum class size: {{ class_size_max }}
+
+Optimal class size: {{ class_size_optimal }}
+
+{% if optimal_class_size_range %}Optimal class size range: {{ optimal_class_size_range }}{% endif %}
+{% if allowable_class_size_ranges %}Allowable class size ranges: {% for cls_size in allowable_class_size_ranges %}{{ cls_size.range_min }}-{{ cls_size.range_max }}, {% endfor %}{% endif %}
+
+Room request: {{ requested_room }}
+
+Equipment/resource requests:{% for res in global_resources %}
+-{{ res.res_type.name }}: {{res.desired_value}}{% endfor %}
+
+Special Resources:
+{{ requested_special_resources }}
+
+Planned purchases:
+{{ purchase_requests }}
+
+Comments to Director:
+{{ message_for_directors }}
+
+---------------------------------
+{% if admin %}If you have reviewed all of this information and would like to approve the class, click here: 
+    <https://{{ DEFAULT_HOST }}/manage/{{ one }}/{{ two }}/approveclass/{{ id }}>
+{% endif %}
+
+{% endautoescape %}

@@ -1,0 +1,36 @@
+{% extends "main.html" %}
+
+{% block title %}{{program.niceName}} Refund Receipt {% endblock %}
+
+{% block content %}
+<h1>Refund Receipt for {{ student.name }}</h1>
+
+<br />
+
+<p>
+Please get the <em>payer's</em> information to get a printable credit card refund form.
+</p>
+
+Transaction Info:<br />
+<pre>
+Student Name: {{ student.name }}
+Student Address:  {{ student.getLastProfile.contact_user.address_street }}, {{ student.getLastProfile.contact_user.address_city }}, {{ student.getLastProfile.contact_user.address_state }} {{ student.getLastProfile.contact_user.address_zip }}
+
+Transaction ID: {{ transaction.id }}
+Transaction Type: {{ transaction.payment_type }}
+Transaction Amount: {{ transaction.amount }}
+</pre>
+
+<form action="{{ request.path }}" method="get" name="payer_info">
+<table>
+{{ form }}
+<input type="hidden" name="payer_post" value="true" />
+<tr>
+  <th colspan="2">
+    <input type="submit" value="Submit" name="submit_btn" />
+  </th>
+</tr>
+</table>
+</form>
+
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends "main.html" %}
+
+{% block title %}{{ title }} - EDIT{% endblock %}
+
+{% block stylesheets %}
+{{ block.super }}
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jodit/3.2.36/jodit.min.css">
+{% endblock %}
+
+{% block xtrajs %}
+{{ block.super }}
+<script src="//cdnjs.cloudflare.com/ajax/libs/jodit/3.2.36/jodit.min.js"></script>
+<!--jQuery.initialize plugin is created to help maintain dynamically created elements on the page-->
+<script src="https://cdn.jsdelivr.net/gh/pie6k/jquery.initialize@eb28c24e2eef256344777b45a455173cba36e850/jquery.initialize.js"></script>
+{% endblock %}
+
+
+{% block content %}
+<form method="post" action="{{ request.path }}" enctype="multipart/form-data">
+
+<h1>Static Page Editing</h1>
+<p>Current URL path: <tt>{{ qsdrec.url }}</tt> <br />
+<a href="{{ return_to_view }}">Back to Page View</a></p>
+
+  <h2>Title</h2>
+  <input type="text" name="title" value="{{ title|escape }}" size="64" />
+  <br /><br />
+
+  <h2>Metadata</h2>
+  <p>
+    <strong>Keywords</strong><input type="text" name="keywords" class="wide" value="{{ keywords|default_if_none:""|escape }}"/> <br />
+    <strong>Description</strong><br />
+    <textarea class="wide" name="description" rows="5">{{ description|default_if_none:""|escape }}</textarea><br />
+    <strong>Navigation Category: </strong>
+    <select name="nav_category" value="{{ nav_category }}">
+    {% for category in nav_categories %}
+        <option value="{{ category.id }}" {% ifequal category.id nav_category.id %}selected{% endifequal %}>{{ category.name }} - {{ category.long_explanation|truncatewords:8 }}</option>
+    {% endfor %}
+    </select> <br />
+  </p>
+
+  <h2>Content</h2>
+  <p><textarea id="qsd_content" class="wide" name="content" rows="50" style="font-family: monospace;">{{ content|escape }}</textarea></p>
+  <p><input type="hidden" name="post_edit"><input type="submit" value="Save Changes!" class="btn btn-primary" /> &nbsp;| <a href="{{ target_url }}">Cancel</a> | <a href="{{ return_to_view }}">Back to Page View</a></p>
+</form>
+<div id="divmainqsddatetimestamp">
+  <p>Last modified by {{ qsdrec.author }} on {{ qsdrec.create_date }}</p>
+</div>
+
+<script type="text/javascript">
+var editor = new Jodit("#qsd_content", {
+  "enter": "BR",
+  "buttons": "source,|,bold,strikethrough,underline,italic,|,superscript,subscript,|,ul,ol,outdent,indent,align,|,font,fontsize,brush,paragraph,|,image,video,table,link,hr,|,undo,redo,cut,eraser,copyformat,|,symbol,fullsize,selectall",
+  "toolbarAdaptive": false,
+  "saveModeInStorage": true,
+});
+
+$j(document).ready(function() {
+  $j.initialize(".jodit_toolbar_btn-image input[name=url]", function() {
+    $j(this).after("Upload files <a href='/admin/filebrowser/browse/' target='_blank'>here");
+  });
+});
+</script>
+{% endblock %}

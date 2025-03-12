@@ -1,0 +1,29 @@
+\documentclass[10pt]{article}  % standard LaTeX, 12 point type
+\usepackage{amsfonts,latexsym}
+\usepackage{amsthm, amssymb, amsmath}
+\usepackage[left=1in,right=1in,top=2in,bottom=1in,headheight=0in,nofoot]{geometry}
+\usepackage{lastpage}
+\usepackage{graphicx}
+\usepackage[utf8]{inputenc}
+\usepackage{enumerate}
+\usepackage{subfigure}
+\usepackage{boxedminipage}
+\usepackage{wallpaper}
+\usepackage{tabularx}
+
+\ULCornerWallPaper{1}{% templatetag openbrace %}{{ MEDIA_ROOT }}latex_media/letterhead.pdf}
+\pagestyle{empty}
+
+{% block headers %}
+{% endblock %}
+
+\begin{document}
+
+
+{% block maincontent %}
+{% endblock %}
+
+{% block additionalcontent %}
+
+{% endblock %}
+\end{document}

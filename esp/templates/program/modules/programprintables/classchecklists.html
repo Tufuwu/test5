@@ -1,0 +1,18 @@
+<html>
+<head>
+<title>Class Check-in Checklists</title>
+<link rel="stylesheet" type="text/css" href="/media/styles/rosters.css" media="print,screen">
+<style type="text/css" media="print,screen">
+.blocks { padding: 4px; font-size: 10pt; font-weight: bold; }
+</style>
+</head>
+<body>
+{% for item in class_list %}
+{% if not forloop.first %}
+<div style="page-break-after: always;">&nbsp;</div>
+{% endif %}
+{% include "program/modules/programprintables/classchecklist.html" %}
+{% endfor %}
+
+</body>
+</html>

@@ -1,0 +1,21 @@
+<html>
+<head>
+<title>Class Rosters</title>
+<link rel="stylesheet" type="text/css" href="/media/styles/rosters.css" media="print,screen">
+
+</head>
+<body>
+{% for item in scheditems %}
+    {% if bymoderator %}
+        {% with item.cls as sec %}
+            {% include "program/modules/programprintables/classattend.html" %}
+        {% endwith %}
+    {% else %}
+        {% for sec in item.cls.sections.all %}
+            {% include "program/modules/programprintables/classattend.html" %}
+        {% endfor %}
+    {% endif %}
+{% endfor %}
+
+</body>
+</html>

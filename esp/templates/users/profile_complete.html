@@ -1,0 +1,37 @@
+{% extends "main.html" %}
+
+{% block title %}Profile Complete{% endblock %}
+
+{% block content %}
+
+<h1>Congratulations</h1>
+
+<p>
+Your profile has now been successfully completed.
+</p>
+
+{% if userrole and progs %}
+{% if not progs|length_is:0 %}
+<p>
+Continue on to:<br />
+{% for prog in progs %}
+<span style="font-weight: bold;">
+ <a href="/{{userrole.base}}/{{prog.getUrlBase}}/{{userrole.reg}}">{{userrole.name}} Registration for {{prog.niceName}}</a>
+</span>
+<br />
+{% endfor %}
+{% endif %}
+{% endif %}
+<br />
+<br />
+</p>
+
+<div class="note">
+{% load render_qsd %}
+{% inline_qsd_block "account_registration_notice" %}<strong>Note:</strong> Registering for an account <u>does not</u> register you for a program.<br /><br />{% end_inline_qsd_block %}
+Please head over to our <a href="/teach/index.html" title="Teach a class!">Teach</a> or 
+<a href="/learn/index.html" title="Take a Class!">Learn</a> section to join a program.
+</div>
+
+
+{% endblock %}

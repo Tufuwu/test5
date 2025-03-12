@@ -1,0 +1,14 @@
+<html>
+<head>
+<title>Class Rosters</title>
+<link rel="stylesheet" type="text/css" href="/media/styles/rosters.css" media="print,screen">
+</head>
+<body>
+{% for item in scheditems %}
+{% with section=item.cls %}
+{% include "program/modules/programprintables/classroster.html" %}
+{% endwith %}
+{% endfor %}
+
+</body>
+</html>

@@ -1,0 +1,25 @@
+{% extends "main.html" %}
+
+{% block title %}{{prog.niceName }} Student Registration{% endblock %}
+
+{% block content %}
+
+<h1>{{prog.niceName }} Student Registration Error</h1>
+
+{% load render_qsd %}
+{% inline_program_qsd_block prog "notastudent_error" %}
+
+
+<p>
+The user account is not a student.
+<br />
+Please note: <em>Each</em> child should create a separate account for themself. This allows us to accurately determine which students are in which classes.
+<br />
+<br />
+<a href="/myesp/signout/?redirect=/myesp/register/&role=Student" title="Create a student account!">Click here to create a new {{ settings.INSTITUTION_NAME }} {{ settings.ORGANIZATION_SHORT_NAME }} student account!</a>
+
+</p>
+
+{% end_inline_program_qsd_block %}
+
+{% endblock %}

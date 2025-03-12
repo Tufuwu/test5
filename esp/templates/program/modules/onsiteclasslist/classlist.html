@@ -1,0 +1,197 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/{{ settings.JQUERY_VERSION }}/jquery.min.js" integrity="{{ settings.JQUERY_HASH }}" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-migrate-3.3.2.{% if not settings.DEBUG %}min.{% endif %}js"></script>
+<script type='text/javascript' src='/media/scripts/common.js'></script>
+<script>
+scroll_offset = 0;
+interval_handle = -1;
+categories = [];
+start_times = [];
+next_category = 0;
+next_start_time = 0;
+
+function setElementStyleById(id, propertyName, propertyValue) {
+    if (!document.getElementById) return;
+    var el = document.getElementById(id);
+    if (el) el.style[propertyName] = propertyValue;
+}
+
+function getElementStyleById(id, propertyName) {
+    if (!document.getElementById) return;
+    var el = document.getElementById(id);
+    return el.style[propertyName];
+}
+
+function scroll()
+{
+    scroll_offset -= {{ scrollspeed }};
+    elt1 = document.getElementById("scroller_top");
+    if (elt1.offsetHeight + scroll_offset < 0)
+    {
+        reset();
+    }
+    setElementStyleById("scroller_top", "top", scroll_offset + "px");
+    setElementStyleById("scroller_bottom", "top", scroll_offset + elt1.offsetHeight + "px");
+
+    if(start_times[next_start_time]){
+        if($j(start_times[next_start_time]).position().top < -scroll_offset + 24){
+            $j(".fixed_header1").css("top", $j(start_times[next_start_time]).position().top + scroll_offset);
+        }
+        if($j(start_times[next_start_time]).position().top < -scroll_offset){
+            $j(".fixed_header1").removeClass("fixed_header1").css("top", "");
+            $j(start_times[next_start_time]).addClass("fixed_header1");
+            next_start_time++;
+        }
+    }
+
+    if(categories[next_category]){
+        if($j(categories[next_category]).position().top < -scroll_offset + 48){
+            $j(".fixed_header2").css("top", $j(categories[next_category]).position().top + scroll_offset - 24);
+        }
+        if($j(categories[next_category]).position().top < -scroll_offset + 24){
+            $j(".fixed_header2").removeClass("fixed_header2").css("top", "");
+            $j(categories[next_category]).addClass("fixed_header2");
+            next_category++;
+        }
+    }
+
+    sessionStorage.onsiteClassListOffset = scroll_offset;
+}
+
+function reset()
+{
+    if (interval_handle != -1)
+        clearInterval(interval_handle);
+    categories = $j(".category");
+    start_times = $j(".start_time");
+    next_category = 0;
+    next_start_time = 0;
+    scroll_offset = 0;
+    $j(".fixed_header1").removeClass("fixed_header1").css("top", "");
+    $j(".fixed_header2").removeClass("fixed_header2").css("top", "");
+    scroll();
+    setTimeout(start_scrolling, 50);
+}
+
+function start_scrolling()
+{
+    interval_handle = setInterval(scroll, 50);
+}
+
+$j(function(){
+    var startOffset = parseInt(sessionStorage.onsiteClassListOffset);
+    reset();
+    if(startOffset)
+        scroll_offset = startOffset;
+});
+
+</script>
+
+<style type="text/css">
+html, body {
+    overflow:hidden;
+}
+
+#scroller_top, #scroller_bottom {
+    position: absolute;
+    overflow: auto;
+    top: 0px;
+}
+
+.classitem {
+padding-bottom: 5px;
+font-size: 1.2em;
+}
+
+.materials, .begin_time, .category {
+font-size: 1.7em;
+}
+
+.fixed_header1 {
+    position: fixed;
+    top: 0px;
+    width: 49%;
+    z-index: 20;
+}
+
+.fixed_header2 {
+    position: fixed;
+    top: 24px;
+    width: 49%;
+    z-index: 10;
+}
+
+.classlist_emailcode {
+   font-size: 0.7em;
+   line-height: 0.6em;
+   font-weight: bold;
+}
+
+.classlist_title {
+    font-size: 0.7em;
+}
+
+table .openclasslist td {
+    height: 16px !important;
+}
+
+</style>
+
+<meta http-equiv="refresh" content="{{ refresh }}" />
+<title>Onsite Class List for {{ prog.niceName }}</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<link rel="stylesheet" type="text/css" href="/media/styles/catalog.css" />
+
+<br />
+
+{% load class_render %}
+
+<div id="catalog">
+<table width="100%">
+<tr>
+<td width="50%" valign="top">
+  <table class="openclasslist" cellpadding="2" cellspacing="0" width="100%">
+    <tr>
+        <th style="font-size: 1.0em" colspan="2">Open classes starting at {{ current_time.start|date:"D P" }}</th>
+    </tr>
+{% comment %}
+    <tr>
+        <th style="font-size: 1.3em" class="materials">Code</th>
+        <th style="font-size: 1.3em" class="materials">Class Title</th>
+    </tr>
+{% endcomment %}
+    {% for class in classes %}
+        {% ifequal class.start_time current_time %}
+        {% if not class.isFull %}
+        {% if not class.already_passed %}
+    <tr>
+        <td><div class="classlist_emailcode">{{class.emailcode}}</div></td>
+        <td><div class="classlist_title">{{class.title}} ({% for ft in class.friendly_times %}{{ ft }}{% if not forloop.last %}, {% endif %}{% endfor %}; {{class.parent_class.grade_min}}-{{class.parent_class.grade_max}})</div></td>
+    </tr>
+        {% endif %}
+        {% endif %}
+        {% endifequal %}
+    {% endfor %}
+</table>
+</td>
+<Td valign="top">
+  <div id="scroller_top" onclick="reset();">
+    {% include "program/modules/onsiteclasslist/allclass_fragment.html" %}
+    </div>
+    <br />
+    <div id="scroller_bottom" onclick="reset();">
+    {% include "program/modules/onsiteclasslist/allclass_fragment.html" %}
+    </div>
+</td>
+</tr>
+</table>
+</div>
+
+</body>
+</html>

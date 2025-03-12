@@ -1,0 +1,63 @@
+{% extends "main.html" %}
+
+{% block title %}{{ program.niceName }} Survey Responses{% endblock %}
+
+{% block stylesheets %}
+    {{ block.super }}
+    <link rel="stylesheet" href="/media/styles/catalog.css" type="text/css" />
+    <link rel="stylesheet" href="/media/styles/forms.css" type="text/css" />
+{% endblock %}
+
+{% block content %}
+{% load survey %}
+
+<style type="text/css">
+.nocheckmark { border: 1px solid black; }
+</style>
+<br /><br />
+<h1>Survey Response #{{ response.id }} for {{ response.survey.name }} </h1>
+<p>
+This is the anonymous survey response of a single student at {{ program.niceName }}.
+</p>
+<div id="program_form">
+<center>
+    
+    {% if not classes_only %}
+        <table class="fullwidth">
+        <tr>
+            <th>Responses for: {{ response.survey.name }}</th>
+        </tr>
+        </table>
+    {% endif %}
+    {% if answers|length_is:0 %}
+    </center>
+    <p>
+    This survey response contains no results for any of the classes that you taught.  To see the aggregate results for your classes, <a href="/teach/{{ program.getUrlBase }}/survey/review">click here</a>.  Here are the individual survey responses relevant to you (e.g. students that took one or more of your classes):
+    <ul>
+    {% for resp in other_responses %}
+    <li><a href="/teach/{{ program.getUrlBase }}/survey/review_single?{{ resp.id }}">Survey response #{{ resp.id }}</a></li>
+    {% endfor %}
+    </ul>
+    </p>
+    <center>
+    {% endif %}
+    {% for answer in answers %}
+        {% ifchanged answer.object_id %}{% if not forloop.first or classes_only %}
+            <table class="fullwidth">
+            <tr>
+                <th>Responses for Class {{ answer.target.emailcode }}: {{ answer.target.title }}</th>
+            </tr>
+            </table>
+        {% endif %}{% endifchanged %}
+        <table class="fullwidth">
+        <tr>
+            <td width="35%" valign="top"><b>{{ answer.question.name }}</b></td>
+            <td><ul>{{ answer|answer_to_list|unordered_list }}</ul></td>
+        </tr>
+        </table>
+    {% endfor %}
+
+</center>
+</div>
+
+{% endblock %}

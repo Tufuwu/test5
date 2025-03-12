@@ -1,0 +1,47 @@
+{% load users %}
+{% load getTag %}
+<html>
+<head>
+<title>Student List</title>
+<link rel="stylesheet" type="text/css" href="/media/styles/rosters.css" media="print,screen">
+<script src="/media/scripts/sorttable.js"></script>
+</head>
+<body>
+
+<table class="pretty sortable" cellspacing="0">
+<tr>
+   <th>#</th>
+   <th>Name</th>
+   {% if "student_profile_pronoun_field"|getBooleanTag %}
+      <th>Pronouns</th>
+   {% endif %}
+   <th>Email</th>
+   <th>DOB</th>
+   <th>Grade</th>
+   <th>Parent's Home Phone</th>
+   <th>Parent's Cell Phone</th>
+   <th>ID</th>
+   <th>Shirt Size</th>
+   <th>Shirt Type</th>
+</tr>
+{% for student in students %}
+<tr>
+   <td>{{ forloop.counter }}</td>
+   <td>{{ student.last_name }}, {{ student.first_name}}</td>
+   {% if "student_profile_pronoun_field"|getBooleanTag %}
+      <td>{{ student.getLastProfile.student_info.pronoun }}</td>
+   {% endif %}
+   <td>{{ student.email}}</td>
+   <td>{{ student.getLastProfile.student_info.dob|date:"m/d/Y" }}</td>
+   <td>{{ student|getGradeForProg:program.id }}</td>
+   <td>{{ student.getLastProfile.contact_emergency.phone_day }}&nbsp;</td>
+   <td>{{ student.getLastProfile.contact_emergency.phone_cell }}&nbsp;</td>
+   <td>{{ student.id }}</td>
+   <td>{{ student.getLastProfile.student_info.shirt_size }}</td>
+   <td>{{ student.getLastProfile.student_info.shirt_type }}</td>
+</tr>
+ {% endfor %}
+</table>
+
+</body>
+</html>
