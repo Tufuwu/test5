@@ -1,6 +1,14 @@
+# global
 *.pyc
+*.pyo
+*~
+__pycache__
 
-/urdf2webots.egg-info
+# /
+/.coverage
+/.tox
+/build
+/coverage
 /dist
-.vscode/launch.json
-.vscode/settings.json
+/distribute-*.egg
+/python_stdnum.egg-info

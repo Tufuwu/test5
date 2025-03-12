@@ -1,167 +1,314 @@
-# urdf2webots
+python-stdnum
+=============
 
-![Test Status](https://github.com/cyberbotics/urdf2webots/actions/workflows/test.yml/badge.svg)
-[![PyPI version](https://badge.fury.io/py/urdf2webots.svg)](https://badge.fury.io/py/urdf2webots)
+A Python module to parse, validate and reformat standard numbers and codes
+in different formats. It contains a large collection of number formats.
 
-This tool converts URDF files into Webots PROTO files or into Webots Robot node strings.
-Python 3.5 or higher is required.
+Basically any number or code that has some validation mechanism available
+or some common formatting is eligible for inclusion in this library.
 
-## Install
-
-### From pip
-
-```
-pip install urdf2webots
-```
-
-On macOS, export the pip binary path to the PATH: `export PATH="/Users/$USER/Library/Python/3.7/bin:$PATH"`
-
-### From Sources
-
-```
-git clone --recurse-submodules https://github.com/cyberbotics/urdf2webots.git
-pip install --upgrade --editable urdf2webots
-```
-
-## Usage
-
-### From pip
-
-```
-python -m urdf2webots.importer --input=someRobot.urdf [--output=outputFile] [--normal] [--box-collision] [--tool-slot=linkName] [--help]
-```
-
-### Arguments
-
-The script accepts the following arguments:
-  - **-h, --help**: Show the help message and exit.
-  - **--input=INPUT**: Specifies the URDF file to convert.
-  - **--output=OUTPUT**: If set, specifies the path and, if ending in ".proto", name of the resulting PROTO file. The filename minus the .proto extension will be the robot name (for PROTO conversion only).
-  - **--robot-name**: Specify the name of the robot and generate a Robot node string instead of a PROTO file (has to be unique).
-  - **--normal**: If set, the normals are exported if present in the URDF definition.
-  - **--box-collision**: If set, the bounding objects are approximated using boxes.
-  - **--tool-slot=LinkName**: Specify the link that you want to add a tool slot to (exact link name from URDF, for PROTO conversion only).
-  - **--translation="0 0 0"**: Set the translation field of the PROTO file or Webots Robot node string.
-  - **--rotation="0 0 1 0"**: Set the rotation field of the PROTO file or Webots Robot node string.
-  - **--init-pos=JointPositions**: Set the initial positions of your robot joints. Example: `--init-pos="[1.2, 0.5, -1.5]"` would set the first 3 joints of your robot to the specified values, and leave the rest with their default value.
-  - **--link-to-def**: Creates a DEF with the link name for each solid to be able to access it using getFromProtoDef(defName) (for PROTO conversion only).
-  - **--joint-to-def**: Creates a DEF with the joint name for each joint to be able to access it using getFromProtoDef(defName) (for PROTO conversion only).
-  - **--relative-path-prefix**: If **--input** is not set, the relative paths in your URDF file sent through stdin will use this prefix. For example: `filename="head.obj"` with `--relative-path-prefix="/home/user/myRobot/"` will become `filename="/home/user/myRobot/head.obj"`.
-
-In case the **--input** option is missing, the script will read the URDF content from `stdin`.
-In that case, you can pipe the content of your URDF file into the script: `cat my_robot.urdf | urdf2proto.py`.
-Relative paths present in your URDF file will be treated relatively to the current directory from which the script is called unless **--relative-path-prefix** is set.
-
-> Previously the **--static-base** argument was supported in order to set the base link to be static (disabled physics). It has been removed as there is a better way to do it by adding the following to your URDF file (assuming **base_link** is the root link of your robot):
->
->```
-> <link name="world" />
-><joint name="world_joint" type="fixed">
->    <parent link="world" />
->    <child link="base_link" />
-></joint>
->```
-
-### In your Python Code
-
-#### Arguments
-
-The command line arguments available from the terminal are also available from the Python interface, but some have different names:
-
-| Terminal   |      Python      |
-|----------|-------------|
-| --input |  input |
-| --output |  output |
-| --robot-name |  robotName |
-| --normal |  normal |
-| --box-collision |  boxCollision |
-| --tool-slot |  toolSlot |
-| --translation |  initTranslation |
-| --rotation |  initRotation |
-| --init-pos |  initPos |
-| --link-to-def |  linkToDef |
-| --joint-to-def |  jointToDef |
-| --relative-path-prefix |  relativePathPrefix |
-
-In Python, you can convert a URDF file by passing its path as an argument to the `convertUrdfFile()` function or directly by passing its content as an argument to the `convertUrdfContent()` function.
-
-#### Convert into Webots PROTO files
-
-```
-from urdf2webots.importer import convertUrdfFile
-convertUrdfFile(input = 'MY_PATH/MY_URDF.urdf')
-```
-
-or
-
-```
-import pathlib
-from urdf2webots.importer import convertUrdfContent
-robot_description = pathlib.Path('MY_PATH/MY_URDF.urdf').read_text()
-convertUrdfContent(input = robot_description)
-```
-
-#### Convert into Webots Robot node strings
-
-```
-from urdf2webots.importer import convertUrdfFile
-convertUrdfFile(input = 'MY_PATH/MY_URDF.urdf', robotName="myRobot")
-```
-
-or
-
-```
-import pathlib
-from urdf2webots.importer import convertUrdfContent
-robot_description = pathlib.Path('MY_PATH/MY_URDF.urdf').read_text()
-convertUrdfContent(input = robot_description, robotName="myRobot")
-```
-
-### In-Depth Tutorial
-Check out [this tutorial](./docs/tutorial.md) for a more in-depth, step by step instruction, on how to:
-- Generate a URDF file from a ROS repository.
-- Convert your URDF file to a Webots PROTO file.
-- Load your converted model into Webots and make final adjustments.
-- Convert your URDF file to a Webots Robot string and import it.
+https://arthurdejong.org/python-stdnum/
 
 
-## Notes
-This tool was tested using Webots R2022b on Ubuntu22.04.
-You can find the sources of these URDF files here:
-  - Universal Robot: https://github.com/ros-industrial/universal_robot/tree/kinetic-devel/ur_description
-  - PR2 robot: https://github.com/PR2/pr2_common/tree/kinetic-devel/pr2_description
-  - Motoman robot: https://github.com/ros-industrial/motoman/tree/kinetic-devel/motoman_sia20d_support
-  - Kinova robot: https://github.com/Kinovarobotics/kinova-ros/tree/kinetic/kinova_description
-  - gait2392 human skeleton: https://github.com/cyberbotics/urdf2webots/tree/master/tests/sources/gait2392_simbody
+Available formats
+-----------------
 
-## Acknowledgements
+Currently this package supports the following formats:
 
-<a href="http://rosin-project.eu">
-  <img src="http://rosin-project.eu/wp-content/uploads/rosin_ack_logo_wide.png"
-       alt="rosin_logo" height="60" >
-</a></br>
+ * NRT (Número de Registre Tributari, Andorra tax number)
+ * NIPT, NUIS (Numri i Identifikimit për Personin e Tatueshëm, Albanian tax number)
+ * CBU (Clave Bancaria Uniforme, Argentine bank account number)
+ * CUIT (Código Único de Identificación Tributaria, Argentinian tax number)
+ * DNI (Documento Nacional de Identidad, Argentinian national identity nr.)
+ * Austrian Company Register Numbers
+ * Postleitzahl (Austrian postal code)
+ * Abgabenkontonummer (Austrian tax identification number)
+ * UID (Umsatzsteuer-Identifikationsnummer, Austrian VAT number)
+ * VNR, SVNR, VSNR (Versicherungsnummer, Austrian social security number)
+ * ABN (Australian Business Number)
+ * ACN (Australian Company Number)
+ * TFN (Australian Tax File Number)
+ * BIS (Belgian BIS number)
+ * Belgian IBAN (International Bank Account Number)
+ * NN, NISS, RRN (Belgian national number)
+ * BTW, TVA, NWSt, ondernemingsnummer (Belgian enterprise number)
+ * EGN (ЕГН, Единен граждански номер, Bulgarian personal identity codes)
+ * PNF (ЛНЧ, Личен номер на чужденец, Bulgarian number of a foreigner)
+ * VAT (Идентификационен номер по ДДС, Bulgarian VAT number)
+ * BIC (ISO 9362 Business identifier codes)
+ * Bitcoin address
+ * CNPJ (Cadastro Nacional da Pessoa Jurídica, Brazilian company identifier)
+ * CPF (Cadastro de Pessoas Físicas, Brazilian national identifier)
+ * УНП, UNP (Учетный номер плательщика, the Belarus VAT number)
+ * BC PHN (British Columbia Personal Health Number)
+ * BN (Canadian Business Number)
+ * SIN (Canadian Social Insurance Number)
+ * CAS RN (Chemical Abstracts Service Registry Number)
+ * CFI (ISO 10962 Classification of Financial Instruments)
+ * ESR, ISR, QR-reference (reference number on Swiss payment slips)
+ * Swiss social security number ("Sozialversicherungsnummer")
+ * UID (Unternehmens-Identifikationsnummer, Swiss business identifier)
+ * VAT, MWST, TVA, IVA, TPV (Mehrwertsteuernummer, the Swiss VAT number)
+ * RUT (Rol Único Tributario, Chilean national tax number)
+ * RIC No. (Chinese Resident Identity Card Number)
+ * USCC (Unified Social Credit Code, 统一社会信用代码, China tax number)
+ * NIT (Número De Identificación Tributaria, Colombian identity code)
+ * CPF (Cédula de Persona Física, Costa Rica physical person ID number)
+ * CPJ (Cédula de Persona Jurídica, Costa Rica tax number)
+ * CR (Cédula de Residencia, Costa Rica foreigners ID number)
+ * NI (Número de identidad, Cuban identity card numbers)
+ * CUSIP number (financial security identification number)
+ * Αριθμός Εγγραφής Φ.Π.Α. (Cypriot VAT number)
+ * Czech bank account number
+ * DIČ (Daňové identifikační číslo, Czech VAT number)
+ * RČ (Rodné číslo, the Czech birth number)
+ * Handelsregisternummer (German company register number)
+ * IdNr (Steuerliche Identifikationsnummer, German personal tax number)
+ * St.-Nr. (Steuernummer, German tax number)
+ * Ust ID Nr. (Umsatzsteur Identifikationnummer, German VAT number)
+ * Wertpapierkennnummer (German securities identification code)
+ * CPR (personnummer, the Danish citizen number)
+ * CVR (Momsregistreringsnummer, Danish VAT number)
+ * Cedula (Dominican Republic national identification number)
+ * NCF (Números de Comprobante Fiscal, Dominican Republic receipt number)
+ * RNC (Registro Nacional del Contribuyente, Dominican Republic tax number)
+ * NIF, sometimes N.I.F. (Numéro d'Identification Fiscale, Algeria tax number)
+ * EAN (International Article Number)
+ * CI (Cédula de identidad, Ecuadorian personal identity code)
+ * RUC (Registro Único de Contribuyentes, Ecuadorian company tax number)
+ * Isikukood (Estonian Personal ID number)
+ * KMKR (Käibemaksukohuslase, Estonian VAT number)
+ * Registrikood (Estonian organisation registration code)
+ * Tax Registration Number (الرقم الضريبي, Egypt tax number)
+ * CCC (Código Cuenta Corriente, Spanish Bank Account Code)
+ * CIF (Código de Identificación Fiscal, Spanish company tax number)
+ * CUPS (Código Unificado de Punto de Suministro, Spanish meter point number)
+ * DNI (Documento Nacional de Identidad, Spanish personal identity codes)
+ * Spanish IBAN (International Bank Account Number)
+ * NIE (Número de Identificación de Extranjero, Spanish foreigner number)
+ * NIF (Número de Identificación Fiscal, Spanish VAT number)
+ * Postcode (the Spanish postal code)
+ * Referencia Catastral (Spanish real estate property id)
+ * SEPA Identifier of the Creditor (AT-02)
+ * Euro banknote serial numbers
+ * EC Number (European Community number)
+ * EIC (European Energy Identification Code)
+ * NACE (classification for businesses in the European Union)
+ * OSS (European VAT on e-Commerce - One Stop Shop)
+ * VAT (European Union VAT number)
+ * ALV nro (Arvonlisäveronumero, Finnish VAT number)
+ * Finnish Association Identifier
+ * HETU (Henkilötunnus, Finnish personal identity code)
+ * Veronumero (Finnish individual tax number)
+ * Y-tunnus (Finnish business identifier)
+ * FIGI (Financial Instrument Global Identifier)
+ * V-number (Vinnutal, Faroe Islands tax number)
+ * NIF (Numéro d'Immatriculation Fiscale, French tax identification number)
+ * NIR (French personal identification number)
+ * SIREN (a French company identification number)
+ * SIRET (a French company establishment identification number)
+ * n° TVA (taxe sur la valeur ajoutée, French VAT number)
+ * NHS (United Kingdom National Health Service patient identifier)
+ * SEDOL number (Stock Exchange Daily Official List number)
+ * UPN (English Unique Pupil Number)
+ * UTR (United Kingdom Unique Taxpayer Reference)
+ * VAT (United Kingdom (and Isle of Man) VAT registration number)
+ * TIN (Taxpayer Identification Number, Ghana tax number)
+ * NIFp (Numéro d'Identification Fiscale Permanent, Guinea tax number)
+ * AMKA (Αριθμός Μητρώου Κοινωνικής Ασφάλισης, Greek social security number)
+ * FPA, ΦΠΑ, ΑΦΜ (Αριθμός Φορολογικού Μητρώου, the Greek VAT number)
+ * GRid (Global Release Identifier)
+ * GS1-128 (Standard to encode product information in Code 128 barcodes)
+ * NIT (Número de Identificación Tributaria, Guatemala tax number)
+ * OIB (Osobni identifikacijski broj, Croatian identification number)
+ * ANUM (Közösségi adószám, Hungarian VAT number)
+ * IBAN (International Bank Account Number)
+ * NPWP (Nomor Pokok Wajib Pajak, Indonesian VAT Number)
+ * PPS No (Personal Public Service Number, Irish personal number)
+ * VAT (Irish tax reference number)
+ * Company Number (מספר חברה, or short ח.פ. Israeli company number)
+ * Identity Number (Mispar Zehut, מספר זהות, Israeli identity number)
+ * IMEI (International Mobile Equipment Identity)
+ * IMO number (International Maritime Organization number)
+ * IMSI (International Mobile Subscriber Identity)
+ * Aadhaar (Indian personal identity number)
+ * EPIC (Electoral Photo Identity Card, Indian Voter ID)
+ * GSTIN (Goods and Services Tax identification number, Indian VAT number)
+ * PAN (Permanent Account Number, Indian income tax identifier)
+ * VID (Indian personal virtual identity number)
+ * Kennitala (Icelandic personal and organisation identity code)
+ * VSK number (Virðisaukaskattsnúmer, Icelandic VAT number)
+ * ISAN (International Standard Audiovisual Number)
+ * ISBN (International Standard Book Number)
+ * ISIL (International Standard Identifier for Libraries)
+ * ISIN (International Securities Identification Number)
+ * ISMN (International Standard Music Number)
+ * ISO 11649 (Structured Creditor Reference)
+ * ISO 6346 (International standard for container identification)
+ * ISRC (International Standard Recording Code)
+ * ISSN (International Standard Serial Number)
+ * AIC (Italian code for identification of drugs)
+ * Codice Fiscale (Italian tax code for individuals)
+ * Partita IVA (Italian VAT number)
+ * CN (法人番号, hōjin bangō, Japanese Corporate Number)
+ * PIN (Personal Identification Number, Kenya tax number)
+ * BRN (사업자 등록 번호, South Korea Business Registration Number)
+ * RRN (South Korean resident registration number)
+ * LEI (Legal Entity Identifier)
+ * PEID (Liechtenstein tax code for individuals and entities)
+ * Asmens kodas (Lithuanian, personal numbers)
+ * PVM (Pridėtinės vertės mokestis mokėtojo kodas, Lithuanian VAT number)
+ * TVA (taxe sur la valeur ajoutée, Luxembourgian VAT number)
+ * PVN (Pievienotās vērtības nodokļa, Latvian VAT number)
+ * ICE (Identifiant Commun de l’Entreprise, التعريف الموحد للمقاولة, Morocco tax number)
+ * MAC address (Media Access Control address)
+ * n° TVA (taxe sur la valeur ajoutée, Monacan VAT number)
+ * IDNO (Moldavian company identification number)
+ * Montenegro IBAN (International Bank Account Number)
+ * PIB (Poreski Identifikacioni Broj, Montenegro tax number)
+ * MEID (Mobile Equipment Identifier)
+ * ЕДБ (Едниствен Даночен Број, North Macedonia tax number)
+ * VAT (Maltese VAT number)
+ * ID number (Mauritian national identifier)
+ * CURP (Clave Única de Registro de Población, Mexican personal ID)
+ * RFC (Registro Federal de Contribuyentes, Mexican tax number)
+ * NRIC No. (Malaysian National Registration Identity Card Number)
+ * BRIN number (the Dutch school identification number)
+ * BSN (Burgerservicenummer, the Dutch citizen identification number)
+ * Btw-identificatienummer (Omzetbelastingnummer, the Dutch VAT number)
+ * Onderwijsnummer (the Dutch student identification number)
+ * Postcode (the Dutch postal code)
+ * Fødselsnummer (Norwegian birth number, the national identity number)
+ * Norwegian IBAN (International Bank Account Number)
+ * Konto nr. (Norwegian bank account number)
+ * MVA (Merverdiavgift, Norwegian VAT number)
+ * Orgnr (Organisasjonsnummer, Norwegian organisation number)
+ * New Zealand bank account number
+ * IRD number (New Zealand Inland Revenue Department (Te Tari Tāke) number)
+ * CUI (Cédula Única de Identidad, Peruvian identity number)
+ * RUC (Registro Único de Contribuyentes, Peruvian company tax number)
+ * CNIC number (Pakistani Computerised National Identity Card number)
+ * NIP (Numer Identyfikacji Podatkowej, Polish VAT number)
+ * PESEL (Polish national identification number)
+ * REGON (Rejestr Gospodarki Narodowej, Polish register of economic units)
+ * CC (Número de Cartão de Cidadão, Portuguese Identity number)
+ * NIF (Número de identificação fiscal, Portuguese VAT number)
+ * RUC number (Registro Único de Contribuyentes, Paraguay tax number)
+ * CF (Cod de înregistrare în scopuri de TVA, Romanian VAT number)
+ * CNP (Cod Numeric Personal, Romanian Numerical Personal Code)
+ * CUI or CIF (Codul Unic de Înregistrare, Romanian company identifier)
+ * ONRC (Ordine din Registrul Comerţului, Romanian Trade Register identifier)
+ * PIB (Poreski Identifikacioni Broj, Serbian tax identification number)
+ * ИНН (Идентификационный номер налогоплательщика, Russian tax identifier)
+ * Orgnr (Organisationsnummer, Swedish company number)
+ * Personnummer (Swedish personal identity number)
+ * Postcode (the Swedish postal code)
+ * VAT (Moms, Mervärdesskatt, Swedish VAT number)
+ * UEN (Singapore's Unique Entity Number)
+ * ID za DDV (Davčna številka, Slovenian VAT number)
+ * Enotna matična številka občana (Unique Master Citizen Number)
+ * Matična številka poslovnega registra (Corporate Registration Number)
+ * IČ DPH (IČ pre daň z pridanej hodnoty, Slovak VAT number)
+ * RČ (Rodné číslo, the Slovak birth number)
+ * COE (Codice operatore economico, San Marino national tax number)
+ * NIT (Número de Identificación Tributaria, El Salvador tax number)
+ * MOA (Thailand Memorandum of Association Number)
+ * PIN (Thailand Personal Identification Number)
+ * TIN (Thailand Taxpayer Identification Number)
+ * MF (Matricule Fiscal, Tunisia tax number)
+ * T.C. Kimlik No. (Turkish personal identification number)
+ * VKN (Vergi Kimlik Numarası, Turkish tax identification number)
+ * UBN (Unified Business Number, 統一編號, Taiwanese tax number)
+ * ЄДРПОУ, EDRPOU (Identifier for enterprises and organizations in Ukraine)
+ * РНОКПП, RNTRC (Individual taxpayer registration number in Ukraine)
+ * ATIN (U.S. Adoption Taxpayer Identification Number)
+ * EIN (U.S. Employer Identification Number)
+ * ITIN (U.S. Individual Taxpayer Identification Number)
+ * PTIN (U.S. Preparer Tax Identification Number)
+ * RTN (Routing transport number)
+ * SSN (U.S. Social Security Number)
+ * TIN (U.S. Taxpayer Identification Number)
+ * RUT (Registro Único Tributario, Uruguay tax number)
+ * VATIN (International value added tax identification number)
+ * RIF (Registro de Identificación Fiscal, Venezuelan VAT number)
+ * MST (Mã số thuế, Vietnam tax number)
+ * ID number (South African Identity Document number)
+ * TIN (South African Tax Identification Number)
 
-Supported by ROSIN - ROS-Industrial Quality-Assured Robot Software Components.
-More information: <a href="http://rosin-project.eu">rosin-project.eu</a>
+Furthermore a number of generic check digit algorithms are available:
 
-<img src="http://rosin-project.eu/wp-content/uploads/rosin_eu_flag.jpg"
-     alt="eu_flag" height="45" align="left" >
+ * the Verhoeff algorithm
+ * the Damm algorithm
+ * the Luhn and Luhn mod N algorithms
+ * some algorithms described in ISO/IEC 7064: Mod 11, 2, Mod 37, 2,
+   Mod 97, 10, Mod 11, 10 and Mod 37, 36
 
-This project has received funding from the European Union’s Horizon 2020
-research and innovation programme under grant agreement no. 732287.
+Basically any number or code that has some validation mechanism available
+or some common formatting is eligible for inclusion into this library.
 
-<br>
+These modules generally do not provide background information on the meaning
+and use of the specified numbers, only parsing and handling functions.
 
-<a href="https://opendr.eu/">
-  <img src="https://opendr.eu/wp-content/uploads/2020/01/logo-300x125.png"
-       alt="opendr_logo" height="60" >
-</a></br>
+Interface
+---------
 
-Supported by OpenDR - Open Deep Learning Toolkit for Robotics.
-More information: <a href="https://opendr.eu/">opendr.eu</a>
+All modules implement a common interface. For example for ISBN validation:
 
-<img src="https://opendr.csd.auth.gr/wp-content/uploads/2019/12/Flag_of_Europe-300x200.png"
-     alt="eu_flag" height="45" align="left" >
+    >>> from stdnum import isbn
+    >>> isbn.validate('978-9024538270')
+    '9789024538270'
+    >>> isbn.validate('978-9024538271')
+    Traceback (most recent call last):
+        ...
+    InvalidChecksum: ...
 
-This project has received funding from the European Union’s Horizon 2020
-research and innovation programme under grant agreement no. 871449.
+Most of these modules implement the following functions:
+
+ * `validate()`
+    validate the correctness of the passed number and return a compact
+    representation of the number invalid numbers are rejected with one of the
+    exceptions from the stdnum.exceptions module
+ * `compact()`
+   return a compact representation of the number or code this function
+   generally does not do validation but may raise exceptions for wildly
+   incorrect numbers
+ * `format()`
+   return a formatted version of the number in the preferred format this
+   function generally expects to be passed a valid number or code
+
+Apart from the above, the module may add extra parsing, validation or
+conversion functions.
+
+Requirements
+------------
+
+The modules should not require any external Python modules and should be pure
+Python. The modules are developed and tested with Python 3 versions (see `setup.py`).
+
+Copyright
+---------
+
+Copyright (C) 2010-2025 Arthur de Jong and others
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+02110-1301 USA
+
+Feedback and bug reports
+------------------------
+
+If you have any questions regarding python-stdnum, would like to report a bug
+or request addition of a format please send an email to
+<python-stdnum-users@lists.arthurdejong.org>
+Patches and code contributions are more than welcome.
