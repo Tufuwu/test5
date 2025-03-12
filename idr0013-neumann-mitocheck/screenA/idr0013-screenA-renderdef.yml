@@ -1,0 +1,7 @@
+---
+channels:
+  1:
+    label: 0
+    min: 14
+    max: 200
+    color: "808080"
