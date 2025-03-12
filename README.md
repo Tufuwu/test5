@@ -1,358 +1,244 @@
-# GOATOOLS: A Python library for Gene Ontology analyses
+# JCVI: A Versatile Toolkit for Comparative Genomics Analysis
 
-[![Latest PyPI version](https://img.shields.io/pypi/v/goatools.svg)](https://pypi.python.org/pypi/goatools)
-[![bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat)](http://bioconda.github.io/recipes/goatools/README.html?highlight=goatools)
-[![Github Actions](https://github.com/tanghaibao/goatools/workflows/build/badge.svg)](https://github.com/tanghaibao/goatools/actions)
-[![Downloads](https://pepy.tech/badge/goatools)](https://pepy.tech/project/goatools)
+[![Latest PyPI version](https://img.shields.io/pypi/v/jcvi.svg)](https://pypi.python.org/pypi/jcvi)
+[![bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat)](http://bioconda.github.io/recipes/jcvi/README.html?highlight=jcvi)
+[![Github Actions](https://github.com/tanghaibao/jcvi/workflows/build/badge.svg)](https://github.com/tanghaibao/jcvi/actions)
+[![Downloads](https://pepy.tech/badge/jcvi)](https://pepy.tech/project/jcvi)
 
-|         |                                                                       |
-| ------- | --------------------------------------------------------------------- |
-| Authors | Haibao Tang ([tanghaibao](http://github.com/tanghaibao))              |
-|         | DV Klopfenstein ([dvklopfenstein](https://github.com/dvklopfenstein)) |
-|         | Brent Pedersen ([brentp](http://github.com/brentp))                   |
-|         | Fidel Ramirez ([fidelram](https://github.com/fidelram))               |
-|         | Aurelien Naldi ([aurelien-naldi](http://github.com/aurelien-naldi))   |
-|         | Patrick Flick ([patflick](http://github.com/patflick))                |
-|         | Jeff Yunes ([yunesj](http://github.com/yunesj))                       |
-|         | Kenta Sato ([bicycle1885](http://github.com/bicycle1885))             |
-|         | Chris Mungall ([cmungall](https://github.com/cmungall))               |
-|         | Greg Stupp ([stuppie](https://github.com/stuppie))                    |
-|         | David DeTomaso ([deto](https://github.com/deto))                      |
-|         | Olga Botvinnik ([olgabot](https://github.com/olgabot))                |
-| Email   | <tanghaibao@gmail.com>                                                |
-| License | BSD                                                                   |
+Collection of Python libraries to parse bioinformatics files, or perform
+computation related to assembly, annotation, and comparative genomics.
+
+|         |                                                                  |
+| ------- | ---------------------------------------------------------------- |
+| Authors | Haibao Tang ([tanghaibao](http://github.com/tanghaibao))         |
+|         | Vivek Krishnakumar ([vivekkrish](https://github.com/vivekkrish)) |
+|         | Adam Taranto ([Adamtaranto](https://github.com/Adamtaranto))     |
+|         | Xingtan Zhang ([tangerzhang](https://github.com/tangerzhang))    |
+|         | Won Cheol Yim ([wyim-pgl](https://github.com/wyim-pgl))          |
+| Email   | <tanghaibao@gmail.com>                                           |
+| License | [BSD](http://creativecommons.org/licenses/BSD/)                  |
 
 ## How to cite
 
 > [!TIP]
-> GOATOOLS is now published in Scientific Reports!
+> JCVI is now published in iMeta!
 >
-> _Klopfenstein DV, ... Tang H (2018) GOATOOLS: A Python library for Gene
-> Ontology analyses [Scientific reports](https://www.nature.com/articles/s41598-018-28948-z)_
+> _Tang et al. (2024) JCVI: A Versatile Toolkit for Comparative Genomics
+> Analysis. [iMeta](https://doi.org/10.1002/imt2.211)_
 
-- **GO Grouping**:
-  Visualize the major findings in a gene ontology enrichment analysis (GOEA) more easily with grouping.
-  A detailed description of GOATOOLS GO grouping is found in the
-  [manuscript](https://www.nature.com/articles/s41598-018-28948-z).
-- **Compare GO lists**:
-  Compare [two](https://github.com/tanghaibao/goatools/issues/162) or more lists
-  of GO IDs using `compare_gos.py`, which can be used with or without
-  grouping.
-- **Stochastic GOEA simulations**:
-  One of the findings resulting from our simulations is:
-  [Larger study sizes result in higher GOEA sensitivity](https://github.com/dvklopfenstein/goatools_simulation#manuscript-figures),
-  meaning fewer truly significant observations go unreported.
-  The code for the stochastic GOEA simulations
-  described in the paper is found [here](https://github.com/dvklopfenstein/goatools_simulation)
+![MCSCAN example](https://www.dropbox.com/s/9vl3ys3ndvimg4c/grape-peach-cacao.png?raw=1)
 
-![GOATOOLS example](https://www.dropbox.com/scl/fi/m6c3ckv1vzj3tgy31b1l4/41598_2018_28948_Fig2_HTML.png?rlkey=ud8n05c1dcejtg32z6jy2m4lt&raw=1)
+![ALLMAPS animation](https://www.dropbox.com/s/jfs8xavcxix37se/ALLMAPS.gif?raw=1)
+
+![GRABSEEDS example](https://www.dropbox.com/s/yu9ehsi6sqifuaa/bluredges.png?raw=1)
 
 ## Contents
 
-This package contains a Python library to
+Following modules are available as generic Bioinformatics handling
+methods.
 
-- Process over- and under-representation of certain GO terms, based on
-  Fisher's exact test. With numerous multiple correction routines
-  including locally implemented routines for Bonferroni, Sidak, Holm,
-  and false discovery rate. Also included are multiple test
-  corrections from
-  [statsmodels](http://www.statsmodels.org/stable/index.html): FDR
-  Benjamini/Hochberg, FDR Benjamini/Yekutieli, Holm-Sidak,
-  Simes-Hochberg, Hommel, FDR 2-stage Benjamini-Hochberg, FDR 2-stage
-  Benjamini-Krieger-Yekutieli, FDR adaptive Gavrilov-Benjamini-Sarkar,
-  Bonferroni, Sidak, and Holm.
+- <kbd>algorithms</kbd>
 
-- Process the obo-formatted file from [Gene Ontology
-  website](http://geneontology.org). The data structure is a directed
-  acyclic graph (DAG) that allows easy traversal from leaf to root.
+  - Linear programming solver with SCIP and GLPK.
+  - Supermap: find set of non-overlapping anchors in BLAST or NUCMER output.
+  - Longest or heaviest increasing subsequence.
+  - Matrix operations.
 
-- Read [GO Association files](http://geneontology.org/page/go-annotation-file-formats):
+- <kbd>apps</kbd>
 
-  - GAF ([GO Annotation
-    File](http://geneontology.org/page/go-annotation-file-gaf-format-21))
-  - GPAD ([Gene Product Association Data](https://geneontology.github.io/docs/gene-product-association-data-gpad-format/))
-  - NCBI's gene2go file
-  - id2gos format. See [example](https://raw.githubusercontent.com/tanghaibao/goatools/main/data/association)
+  - GenBank entrez accession, Phytozome, Ensembl and SRA downloader.
+  - Calculate (non)synonymous substitution rate between gene pairs.
+  - Basic phylogenetic tree construction using PHYLIP, PhyML, or RAxML, and viualization.
+  - Wrapper for BLAST+, LASTZ, LAST, BWA, BOWTIE2, CLC, CDHIT, CAP3, etc.
 
-- [Print **_decendants count_** and/or **_information content_**](/notebooks/dcnt_and_tinfo.ipynb)
-  for a list of GO terms
+- <kbd>formats</kbd>
 
-- [Get parents or ancestors for a GO term with or without optional
-  relationships](notebooks/parents_and_ancestors.ipynb), including [Print details about a
-  GO ID's parents](notebooks/parent_go_terms.ipynb)
+  Currently supports `.ace` format (phrap, cap3, etc.), `.agp`
+  (goldenpath), `.bed` format, `.blast` output, `.btab` format,
+  `.coords` format (`nucmer` output), `.fasta` format, `.fastq`
+  format, `.fpc` format, `.gff` format, `obo` format (ontology),
+  `.psl` format (UCSC blat, GMAP, etc.), `.posmap` format (Celera
+  assembler output), `.sam` format (read mapping), `.contig`
+  format (TIGR assembly format), etc.
 
-- Compare two or more lists of GO IDs
-- [Plot GO hierarchies](https://github.com/tanghaibao/goatools#plot-go-lineage)
-- [Write GO hierarchies to an ASCII text file](https://github.com/tanghaibao/goatools#write-go-hierarchy)
-- Group GO terms for easier viewing
+- <kbd>graphics</kbd>
 
-- Map GO terms (or protein products with multiple associations to
-  GO terms) to GOslim terms (analog to the map2slim.pl script supplied
-  by geneontology.org)
+  - BLAST or synteny dot plot.
+  - Histogram using R and ASCII art.
+  - Paint regions on set of chromosomes.
+  - Macro-synteny and micro-synteny plots.
+  - Ribbon plots from whole genome alignments.
 
-## Installation
+- <kbd>utils</kbd>
+  - Grouper can be used as disjoint set data structure.
+  - range contains common range operations, like overlap
+    and chaining.
+  - Miscellaneous cookbook recipes, iterators decorators,
+    table utilities.
 
-Make sure your Python version >= 3.7, and download an
-`.obo` file of the most current
-[GO](http://geneontology.org/docs/download-ontology):
+Then there are modules that contain domain-specific methods.
 
-```bash
-wget http://current.geneontology.org/ontology/go-basic.obo
-```
+- <kbd>assembly</kbd>
 
-or `.obo` file for the most current [GO
-Slim](http://geneontology.org/docs/go-subset-guide/) terms (e.g.
-generic GOslim) :
+  - K-mer histogram analysis.
+  - Preparation and validation of tiling path for clone-based assemblies.
+  - Scaffolding through ALLMAPS, optical map and genetic map.
+  - Pre-assembly and post-assembly QC procedures.
 
-```bash
-wget http://current.geneontology.org/ontology/subsets/goslim_generic.obo
-```
+- <kbd>annotation</kbd>
 
+  - Training of _ab initio_ gene predictors.
+  - Calculate gene, exon and intron statistics.
+  - Wrapper for PASA and EVM.
+  - Launch multiple MAKER processes.
 
+- <kbd>compara</kbd>
+  - C-score based BLAST filter.
+  - Synteny scan (de-novo) and lift over (find nearby anchors).
+  - Ancestral genome reconstruction using Sankoff's and PAR method.
+  - Ortholog and tandem gene duplicates finder.
 
-### [PyPI](https://pypi.org/project/goatools/)
+## Applications
 
-```bash
-pip install goatools
-```
-
-To install the development version:
-
-```bash
-pip install git+git://github.com/tanghaibao/goatools.git
-```
-
-### [Bioconda](http://bioconda.github.io/recipes/goatools/README.html?highlight=goatools)
-```bash
-conda install -c bioconda goatools
-```
+Please visit [wiki](https://github.com/tanghaibao/jcvi/wiki) for
+full-fledged applications.
 
 ## Dependencies
 
-When installing via PyPI or Bioconda as described above, all dependencies are automatically downloaded.
-Alternatively, you can manually install:
+JCVI requires Python3 between v3.8 and v3.12.
 
-- For statistical testing of GO enrichment:
-  - [`scipy.stats.fisher_exact`](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.fisher_exact.html)
-  - `statsmodels` (optional) for access to a variety of statistical tests for GOEA
+Some graphics modules require the [ImageMagick](https://imagemagick.org/index.php) library.
 
-
-- To plot the ontology lineage, install one of these two options:
-  - [Graphviz](http://www.graphviz.org/), for graph visualization.
-  - [pygraphviz](http://networkx.lanl.gov/pygraphviz/), Python binding for communicating with Graphviz:
-  - [pydot](https://code.google.com/p/pydot/), a Python interface to Graphviz's Dot language.
-
-## Cookbook
-
-`run.sh` contains example cases, which calls the utility scripts in the
-`scripts` folder.
-
-### Find GO enrichment of genes under study
-
-See examples in [find_enrichment](/doc/md/README_find_enrichment.md)
-
-The `find_enrichment.py` takes as arguments files
-containing:
-
-- gene names in a study
-- gene names in population (or other study if `--compare` is specified)
-- an association file that maps a gene name to a GO category.
-
-Please look at `tests/data` folder to see examples on how to make these
-files. when ready, the command looks like:
+On MacOS this can be installed using Conda (see next section). If you are using a linux system (i.e. Ubuntu) you can install ImageMagick using apt-get:
 
 ```bash
-python scripts/find_enrichment.py --pval=0.05 --indent data/study \
-                                  data/population data/association
+sudo apt-get update
+sudo apt-get install libmagickwand-dev
 ```
 
-and can filter on the significance of (e)nrichment or (p)urification. it
-can report various multiple testing corrected p-values as well as the
-false discovery rate.
+See the [Wand](https://docs.wand-py.org/en/0.2.4/guide/install.html) docs for instructions on installing ImageMagick on other systems.
 
-The `e` in the "Enrichment" column means "enriched" - the concentration
-of GO term in the study group is significantly _higher_ than those in
-the population. The "p" stands for "purified" - significantly _lower_
-concentration of the GO term in the study group than in the population.
+A few modules may ask for locations of external programs,
+if the executable cannot be found in your `PATH`.
 
-**Important note**: by default, `find_enrichment.py` propagates counts
-to all the parents of a GO term. As a result, users may find terms in
-the output that are not present in their `association` file. Use
-`--no_propagate_counts` to disable this behavior.
+The external programs that are often used are:
 
-### Write GO hierarchy
+- [Kent tools](http://hgdownload.cse.ucsc.edu/admin/jksrc.zip)
+- [BEDTOOLS](http://code.google.com/p/bedtools/)
+- [EMBOSS](http://emboss.sourceforge.net/)
 
-- [`wr_hier.py`](doc/md/README_wr_hier.md): Given a GO ID, write the hierarchy below (default)
-  or above (`--up`) the given GO.
+### Managing dependencies with Conda
 
-### Plot GO lineage
+You can use the the YAML files in this repo to create an environment with basic JCVI dependencies.
 
-- [`go_plot.py`](doc/md/README_go_plot.md):
-  - Plots user-specified GO term(s) up to root
-  - Multiple user-specified GOs
-  - User-defined colors
-  - Plot relationships (`-r`)
-  - Optionally plot children of user-specfied GO terms
-- `plot_go_term.py` can plot the lineage
-of a certain GO term, by:
+If you are new to Conda, we recommend the [Miniforge](https://conda-forge.org/download/) distribution.
 
 ```bash
-python scripts/plot_go_term.py --term=GO:0008135
+conda env create -f environment.yml
+
+conda activate jcvi
 ```
 
-This command will plot the following image.
+Note: If you are using a Mac with an ARM64 (Apple Silicon) processor, some dependencies are not currently available from Bioconda for this architecture.
 
-![GO term lineage](https://www.dropbox.com/s/4zbqx8sqcls3mge/gograph.png?raw=1)
-
-Sometimes people like to stylize the graph themselves, use option
-`--gml` to generate a GML output which can then be used in an external
-graph editing software like [Cytoscape](http://www.cytoscape.org/). The
-following image is produced by importing the GML file into Cytoscape
-using yFile orthogonal layout and solid VizMapping. Note that the [GML
-reader plugin](https://code.google.com/p/graphmlreader/) may need to be
-downloaded and installed in the `plugins` folder of Cytoscape:
+You can instead create a virtual OSX64 (intel) env like this:
 
 ```bash
-python scripts/plot_go_term.py --term=GO:0008135 --gml
+conda env create -f env_osx64.yml
+
+conda activate jcvi-osx64
 ```
 
-![GO term lineage (Cytoscape)](https://www.dropbox.com/s/ueov2ioxl063q8h/gograph-gml.png?raw=1)
+After activating the Conda environment install JCVI using one of the following options.
 
-### Map GO terms to GOslim terms
+## Installation
 
-See `map_to_slim.py` for usage. As arguments it takes the gene ontology
-files:
+### Installation options
 
-- the current gene ontology file `go-basic.obo`
-- the GOslim file to be used (e.g. `goslim_generic.obo` or any other GOslim file)
-
-The script either maps one GO term to its GOslim terms, or protein
-products with multiple associations to all its GOslim terms.
-
-To determine the GOslim terms for a single GO term, you can use the
-following command:
+1) Use pip to install the latest development version directly from this repo.
 
 ```bash
-python scripts/map_to_slim.py --term=GO:0008135 go-basic.obo goslim_generic.obo
+pip install git+git://github.com/tanghaibao/jcvi.git
 ```
 
-To determine the GOslim terms for protein products with multiple
-associations:
+2) Install latest release from PyPi.
 
 ```bash
-python scripts/map_to_slim.py --association_file=data/association go-basic.obo goslim_generic.obo
+pip install jcvi
 ```
 
-Where the `association` file has the same format as used for
-`find_enrichment.py`.
+3) Alternatively, if you want to install in development mode.
 
-The implementation is similar to
-[map2slim](http://search.cpan.org/~cmungall/go-perl/scripts/map2slim).
+```bash
+git clone git://github.com/tanghaibao/jcvi.git && cd jcvi
+pip install -e '.[tests]'
+```
 
-## Technical notes
+### Test Installation
 
-### Available statistical tests for calculating uncorrected p-values
+If installed successfully, you can check the version with:
 
-For calculating uncorrected p-values, we use SciPy:
+```bash
+jcvi --version
+```
 
-- [`scipy.stats.fisher_exact`](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.fisher_exact.html)
+## Usage
 
-### Available multiple test corrections
+Use `python -m` to call any of the modules installed with JCVI.
 
-We have implemented several significance tests:
-
-- `bonferroni`, bonferroni correction
-- `sidak`, sidak correction
-- `holm`, hold correction
-- `fdr`, false discovery rate (fdr) implementation using resampling
-
-Additional methods are available if `statsmodels` is installed:
-
-- `sm_bonferroni`, bonferroni one-step correction
-- `sm_sidak`, sidak one-step correction
-- `sm_holm-sidak`, holm-sidak step-down method using Sidak adjustments
-- `sm_holm`, holm step-down method using Bonferroni adjustments
-- `simes-hochberg`, simes-hochberg step-up method (independent)
-- `hommel`, hommel closed method based on Simes tests (non-negative)
-- `fdr_bh`, fdr correction with Benjamini/Hochberg (non-negative)
-- `fdr_by`, fdr correction with Benjamini/Yekutieli (negative)
-- `fdr_tsbh`, two stage fdr correction (non-negative)
-- `fdr_tsbky`, two stage fdr correction (non-negative)
-- `fdr_gbs`, fdr adaptive Gavrilov-Benjamini-Sarkar
-
-In total 15 tests are available, which can be selected using option
-`--method`. Please note that the default FDR (`fdr`) uses a resampling
-strategy which may lead to slightly different q-values between runs.
-
-## iPython [Notebooks](notebooks)
-
-### Optional attributes
-
-[definition](notebooks/Optional_attribute_definition.ipynb)
-
-### Run a Ontology Enrichment Analysis (GOEA)
-
-[goea_nbt3102](notebooks/goea_nbt3102.ipynb)
-[human phenotype ontologies](notebooks/Enrichment_analyses_human_phenotype_ontology.ipynb)
-
-### Show many study genes are associated with RNA, translation, mitochondria, and ribosomal
-
-[goea_nbt3102_group_results](notebooks/goea_nbt3102_group_results.ipynb)
-
-### Report level and depth counts of a set of GO terms
-
-[report_depth_level](notebooks/report_depth_level.ipynb)
-
-### Find all human protein-coding genes associated with cell cycle
-
-[cell_cycle](notebooks/cell_cycle.ipynb)
-
-### Calculate annotation coverage of GO terms on various species
-
-[annotation_coverage](notebooks/annotation_coverage.ipynb)
-
-### Determine the semantic similarities between GO terms
-
-[semantic_similarity](notebooks/semantic_similarity.ipynb) [semantic_similarity_wang](notebooks/semantic_similarity_wang.ipynb)
-
-### Obsolete GO terms are loaded upon request
-
-[godag_obsolete_terms](notebooks/godag_obsolete_terms.ipynb)
-
-## Want to Help?
-
-Prior to submitting your pull request, please add a test which verifies your code, and run:
+Most of the modules in this package contains multiple actions. To use
+the `fasta` example:
 
 ```console
-make test
+Usage:
+    python -m jcvi.formats.fasta ACTION
+
+
+Available ACTIONs:
+          clean | Remove irregular chars in FASTA seqs
+           diff | Check if two fasta records contain same information
+        extract | Given fasta file and seq id, retrieve the sequence in fasta format
+          fastq | Combine fasta and qual to create fastq file
+         filter | Filter the records by size
+         format | Trim accession id to the first space or switch id based on 2-column mapping file
+        fromtab | Convert 2-column sequence file to FASTA format
+           gaps | Print out a list of gap sizes within sequences
+             gc | Plot G+C content distribution
+      identical | Given 2 fasta files, find all exactly identical records
+            ids | Generate a list of headers
+           info | Run `sequence_info` on fasta files
+          ispcr | Reformat paired primers into isPcr query format
+           join | Concatenate a list of seqs and add gaps in between
+     longestorf | Find longest orf for CDS fasta
+           pair | Sort paired reads to .pairs, rest to .fragments
+    pairinplace | Starting from fragment.fasta, find if adjacent records can form pairs
+           pool | Pool a bunch of fastafiles together and add prefix
+           qual | Generate dummy .qual file based on FASTA file
+         random | Randomly take some records
+         sequin | Generate a gapped fasta file for sequin submission
+       simulate | Simulate random fasta file for testing
+           some | Include or exclude a list of records (also performs on .qual file if available)
+           sort | Sort the records by IDs, sizes, etc.
+        summary | Report the real no of bases and N's in fasta files
+           tidy | Normalize gap sizes and remove small components in fasta
+      translate | Translate CDS to proteins
+           trim | Given a cross_match screened fasta, trim the sequence
+      trimsplit | Split sequences at lower-cased letters
+           uniq | Remove records that are the same
 ```
 
-Items that we know we need include:
+Then you need to use one action, you can just do:
 
-- Add code coverage runs
-- Edit tests in the `makefile` under the comment
-- Help setting up [documentation](http://goatools.readthedocs.io/en/latest/). We
-  are using Sphinx and Python docstrings to create documentation.
-  For documentation practice, use make targets:
+```console
+python -m jcvi.formats.fasta extract
+```
 
-  ```bash
-  make mkdocs_practice
-  ```
+This will tell you the options and arguments it expects.
 
-  To remove practice documentation:
-
-  ```bash
-  make rmdocs_practice
-  ```
-
-  Once you are happy with the documentation do:
-
-  ```bash
-  make gh-pages
-  ```
+**Feel free to check out other scripts in the package, it is not just
+for FASTA.**
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=tanghaibao/goatools&type=Date)](https://star-history.com/#tanghaibao/goatools&Date)
-
-Copyright (C) 2010-2021, Haibao Tang et al. All rights reserved.
+[![Star History
+Chart](https://api.star-history.com/svg?repos=tanghaibao/jcvi&type=Date)](https://star-history.com/#tanghaibao/jcvi&Date)
