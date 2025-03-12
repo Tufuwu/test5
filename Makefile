@@ -1,53 +1,62 @@
-PYTHON3 := $(shell which python3 2>/dev/null)
-COVERAGE3 := $(shell which coverage3 2>/dev/null)
+PROJECT = marshmallow_jsonschema
 
-PYTHON := python3
-COVERAGE := --cov=thewalrus --cov-report term-missing --cov-report=html:coverage_html_report --cov-report=xml:coverage.xml
-TESTRUNNER := -m pytest --randomly-seed=137 thewalrus
+PYTHON_VERSION ?= 3.8
+VIRTUAL_ENV ?= .venv
+PYTHON ?= $(VIRTUAL_ENV)/bin/python
 
-.PHONY: help
-help:
-	@echo "Please use \`make <target>' where <target> is one of"
-	@echo "  install            to install The Walrus"
-	@echo "  wheel              to build the The Walrus wheel"
-	@echo "  dist               to package the source distribution"
-	@echo "  clean              to delete all temporary, cache, and build files"
-	@echo "  clean-docs         to delete all built documentation"
-	@echo "  test               to run the Python test suite"
-	@echo "  coverage           to generate a coverage report"
 
-.PHONY: install
-install:
-ifndef PYTHON3
-	@echo "To install The Walrus you need to have Python 3 installed"
-endif
-	$(PYTHON) setup.py install
+REQUIREMENTS = requirements.txt
+REQUIREMENTS_TEST = requirements-test.txt
+REQUIREMENTS_TOX = requirements-tox.txt
 
-.PHONY: wheel
-wheel:
-	$(PYTHON) setup.py bdist_wheel
+SHELL := /bin/bash -euo pipefail
 
-.PHONY: dist
-dist:
-	$(PYTHON) setup.py sdist
+venv_init:
+	pip install virtualenv
+	if [ ! -d $(VIRTUAL_ENV) ]; then \
+		virtualenv -p python$(PYTHON_VERSION) --prompt="($(PROJECT))" $(VIRTUAL_ENV); \
+	fi
 
-.PHONY : clean
-clean:
-	make -C examples clean
-	rm -rf thewalrus/__pycache__
-	rm -rf thewalrus/tests/__pycache__
-	rm -rf dist
-	rm -rf build
+venv:  venv_init
+	$(VIRTUAL_ENV)/bin/pip install -r $(REQUIREMENTS)
+	$(VIRTUAL_ENV)/bin/pip install -r $(REQUIREMENTS_TEST)
+	$(VIRTUAL_ENV)/bin/pip install -r $(REQUIREMENTS_TOX)
 
-doc:
-	make -C docs html
-
-.PHONY : clean-docs
-clean-docs:
-	make -C docs clean
+tox:
+	tox
 
 test:
-	$(PYTHON) $(TESTRUNNER)
+	pytest
 
-coverage:
-	$(PYTHON) $(TESTRUNNER) $(COVERAGE)
+test_coverage:
+	pytest --cov-report html --cov-config .coveragerc --cov $(PROJECT)
+
+clean_build_and_dist:
+	if [ -d build/ ]; then \
+		rm -rf build/ dist/ ; \
+	fi
+
+sdist: clean_build_and_dist
+	python setup.py sdist
+
+bdist_wheel:
+	pip install -U wheel
+	python setup.py bdist_wheel
+
+twine:
+	pip install -U twine
+
+pypitest: sdist bdist_wheel twine
+	twine upload -r pypitest dist/*
+
+pypi: sdist bdist_wheel twine
+	twine upload -r pypi dist/*
+
+
+clean_venv:
+	rm -rf $(VIRTUAL_ENV)
+
+clean_pyc:
+	find . -name \*.pyc -delete
+
+clean: clean_venv clean_pyc

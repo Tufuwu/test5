@@ -1,2 +1,0 @@
-.. automodule:: thewalrus.csamples
-    :members:

@@ -1,7 +1,2 @@
-include README.rst
-include docs/*
+include README.md requirements.txt requirements-test.txt requirements-tox.txt
 include LICENSE
-include examples/*
-include include/*
-include tests/*
-include octave/*

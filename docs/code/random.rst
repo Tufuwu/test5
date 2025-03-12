@@ -1,2 +1,0 @@
-.. automodule:: thewalrus.random
-    :members:
