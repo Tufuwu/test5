@@ -1,68 +1,27 @@
-[tool.poetry]
-name = "wakeonlan"
-version = "3.1.0"
-description = "A small python module for wake on lan."
-authors = ["Remco Haszing <remcohaszing@gmail.com>"]
-license = "MIT"
-readme = "README.rst"
-documentation = "http://pywakeonlan.readthedocs.io"
-repository = "https://github.com/remcohaszing/pywakeonlan"
-classifiers = [
-    "Development Status :: 5 - Production/Stable",
-    "Intended Audience :: Developers",
-    "Intended Audience :: System Administrators",
-    "Topic :: System :: Networking",
-    "Typing :: Typed"
-]
+	# Brownie configuration for Black.
 
-[tool.poetry.urls]
-Changelog = "https://github.com/remcohaszing/pywakeonlan/releases"
-Issues = "https://github.com/remcohaszing/pywakeonlan/issues"
-Sponsor = "https://github.com/sponsors/remcohaszing"
+# NOTE: you have to use single-quoted strings in TOML for regular expressions.
+# It's the equivalent of r-strings in Python.  Multiline strings are treated as
+# verbose regular expressions by Black.  Use [ ] to denote a significant space
+# character.
 
-[tool.poetry.scripts]
-wakeonlan = "wakeonlan:main"
-
-[tool.poetry.dependencies]
-python = "^3.7"
-
-[tool.poetry.dev-dependencies]
-coverage = { version = "*", extras = ["toml"] }
-mypy = { version = "*", python = ">=3.8" }
-ruff = { version = "*", python = ">=3.8" }
-types-setuptools = { version = "*", python = ">=3.8" }
-
-[tool.coverage.run]
-branch = true
-command_line = "-m unittest -v"
-source = ["wakeonlan"]
-
-[tool.coverage.report]
-show_missing = true
-
-[tool.mypy]
-check_untyped_defs = true
-disallow_incomplete_defs = true
-disallow_untyped_calls = true
-disallow_untyped_decorators = true
-disallow_untyped_defs = true
-ignore_missing_imports = true
-strict_optional = true
-warn_return_any = true
-
-[tool.ruff.format]
-quote-style = "single"
-
-[tool.ruff.lint]
-select = ["D", "E", "F", "I", "N", "W"]
-ignore = ["D200", "D212", "E501", "W505"]
-
-[tool.ruff.lint.isort]
-lines-after-imports = 2
-
-[tool.ruff.lint.pydocstyle]
-convention = "google"
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+[tool.black]
+line-length = 100
+target-version = ['py37', 'py38', 'py39']
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+  | env
+  | venv
+)/
+'''
