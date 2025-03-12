@@ -1,1 +1,0 @@
-document.write(gettext('Hello world!'));

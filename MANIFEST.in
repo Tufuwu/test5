@@ -1,3 +1,10 @@
-include README.rst LICENSE
-recursive-exclude statici18n *.pyc
-recursive-exclude tests *
+include LICENSE
+include documentation.ipynb
+include README.md
+include Makefile
+graft tests
+graft docs
+prune docs/build
+
+global-exclude .ipynb_checkpoints
+global-exclude *.pyc

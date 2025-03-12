@@ -1,40 +1,38 @@
-from setuptools import setup, find_packages
+from setuptools import setup
+
+from nbval._version import __version__
+
+with open('README.md') as f:
+    readme = f.read()
 
 setup(
-    name="django-statici18n",
-    version="2.6.0",
-    author="Sebastien Fievet",
-    author_email="zyegfryed@gmail.com",
-    url="http://django-statici18n.readthedocs.org/",
-    description=("A Django app that compiles i18n JavaScript catalogs "
-                 "to static files."),
-    long_description=open("README.rst").read(),
-    package_dir={"": "src"},
-    packages=find_packages("src"),
-    include_package_data=True,
-    zip_safe=False,
-    install_requires=[
-        "Django>=3.2",
-        "django-appconf>=1.0",
-    ],
-    license="BSD",
-    classifiers=[
-        "Development Status :: 5 - Production/Stable",
-        "Environment :: Web Environment",
-        "Framework :: Django",
-        "Intended Audience :: Developers",
-        "License :: OSI Approved :: BSD License",
-        "Operating System :: OS Independent",
-        "Programming Language :: Python",
-        "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.6",
-        "Programming Language :: Python :: 3.7",
-        "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",
-        "Programming Language :: Python :: 3.10",
-        "Programming Language :: Python :: 3.11",
-    ],
-    project_urls={
-        "Source": "https://github.com/zyegfryed/django-statici18n",
+    name="nbval",
+    version=__version__,
+    author="Laslett, Cortes, Fauske, Kluyver, Pepper, Fangohr",
+    description='A py.test plugin to validate Jupyter notebooks',
+    long_description=readme,
+    long_description_content_type="text/markdown",
+    packages = ['nbval'],
+    url='https://github.com/computationalmodelling/nbval',
+    # the following makes a plugin available to pytest
+    entry_points = {
+        'pytest11': [
+            'nbval = nbval.plugin',
+        ]
     },
+    install_requires = [
+        'pytest >= 7',
+        'jupyter_client',
+        'nbformat',
+        'ipykernel',
+        'coverage',
+    ],
+    python_requires='>=3.8, <4',
+    classifiers = [
+        'Framework :: IPython',
+        'Framework :: Pytest',
+        'License :: OSI Approved :: BSD License',
+        'Programming Language :: Python :: 3',
+        'Topic :: Software Development :: Testing',
+    ]
 )
