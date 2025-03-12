@@ -1,6 +1,0 @@
-// https://aka.ms/devcontainer.json
-{
-    "name": "replace dev",
-    "image": "ghcr.io/aureliojargas/devcontainer",
-    "remoteUser": "vscode"
-}
