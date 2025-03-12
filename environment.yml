@@ -1,0 +1,26 @@
+name: pyseer_env
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - python
+  - pip
+  - pytest
+  - numpy
+  - scipy
+  - python-dateutil >=2.5.0
+  - pandas
+  - statsmodels >=0.10
+  - scikit-learn
+  - conda-forge::glmnet_py !=1.0.1,!=1.0.2 # avoids errors in GH actions
+  - scipy=1.7.0 # avoid errors with older glmnet_py
+  - pysam >=0.15.3
+  - dendropy >=4.4.0
+  - matplotlib-base
+  - pybedtools
+  - mash
+  - bwa
+  - bedtools
+  - bedops
+  - tqdm

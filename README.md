@@ -1,61 +1,114 @@
-# Orquesta
+pyseer
+======
 
-Orquesta is a graph based workflow engine designed specifically for
-[StackStorm](https://github.com/StackStorm/st2). As a building block, Orquesta does not include
-all the parts such as messaging, persistence, and locking required to run as a service.
+[SEER](https://github.com/johnlees/seer), reimplemented in python by
+[Marco Galardini](https://github.com/mgalardini) and [John Lees](https://github.com/johnlees)
 
-The engine consists of the workflow models that are decomposed from the language spec, the composer
-that composes the execution graph from the workflow models, and the conductor that directs the
-execution of the workflow using the graph.
+    pyseer --phenotypes phenotypes.tsv --kmers kmers.gz --distances structure.tsv --min-af 0.01 --max-af 0.99 --cpu 15 --filter-pvalue 1E-8
 
-A workflow definition is a structured YAML file that describes the intent of the workflow. A
-workflow is made up of one or more tasks. A task defines what action to execute, with what input.
-When a task completes, it can transition into other tasks based upon criteria. Tasks can also
-publish output for the next tasks. When there are no more tasks to execute, the workflow is
-complete.
+![Run tests](https://github.com/mgalardini/pyseer/workflows/Run%20tests/badge.svg)
+[![Documentation Status](https://readthedocs.org/projects/pyseer/badge/?version=master)](http://pyseer.readthedocs.io/)
+[![Anaconda package](https://anaconda.org/bioconda/pyseer/badges/version.svg)](https://anaconda.org/bioconda/pyseer)
 
-Orquesta includes a native language spec for the workflow definition. The language spec is
-decomposed into various models and described with [JSON schema](http://json-schema.org/). A
-workflow composer that understands the models converts the workflow definition into a directed
-graph. The nodes represent the tasks and edges are the task transition. The criteria for task
-transition is an attribute of the edge. The graph is the underpinning for conducting the workflow
-execution. The workflow definition is just syntactic sugar.
+Motivation
+----------
 
-Orquesta allows for one or more language specs to be defined. So as long as the workflow
-definition, however structured, is composed into the expected graph, the workflow conductor can
-handle it.
+Kmers-based GWAS analysis is particularly well suited for bacterial samples,
+given their high genetic variability. This approach has been
+implemented by [Lees, Vehkala et al.](https://www.nature.com/articles/ncomms12797),
+in the form of the [SEER](https://github.com/johnlees/seer) software.
 
-The workflow execution graph can be a directed graph or a directed cycle graph. It can have one or
-more root nodes which are the starting tasks for the workflow. The graph can have branches that run
-in parallel and then converge back to a single branch. A single branch in the graph can diverge into
-multiple branches. The graph model exposes operations to identify starting tasks, get inbound and
-outbound task transitions, get connected tasks, and check if cycle exists. The graph serves more
-like a map for the conductor. It is stateless and does not contain any runtime data such as task
-status and result.
+The reimplementation presented here should be consistent with the
+current version of the C++ seer (though we do not guarantee this for all
+possible cases).
 
-The workflow conductor traverses the graph, directs the flow of the workflow execution, and
-tracks runtime state of the execution. The conductor does not actually execute the action that is
-specified for the task. The action execution is perform by another provider such as StackStorm. The
-conductor directs the provider on what action to execute. As each action execution completes, the
-provider relays the status and result back to the conductor. The conductor then takes the state
-change, keeps track of the sequence of task execution, manages change history of the runtime
-context, evaluate outbound task transitions, identifies any new tasks for execution, and determines
-the overall workflow state and result.
+In this version, as well as all the original features, many new features (input types,
+association models and output parsing) have been implemented. See the
+[documentation](http://pyseer.readthedocs.io/) and
+[paper](https://doi.org/10.1093/bioinformatics/bty539) for full details.
 
-## Copyright, License, and Contributors Agreement
+Citations
+--------
 
-Copyright 2019-2021 The StackStorm Authors.
-Copyright 2014-2018 StackStorm, Inc.
+Unitigs and elastic net preprint: `Lees, John A., Tien Mai, T., et al.` [Improved inference and prediction of bacterial genotype-phenotype associations using pangenome-spanning regressions.](https://www.biorxiv.org/content/10.1101/852426v1) `bioRxiv 852426 (2019) doi: 10.1101/852426`
 
-Licensed under the Apache License, Version 2.0 (the "License"); you may not use this work except
-in compliance with the License. You may obtain a copy of the License in the [LICENSE](LICENSE)
-file or at [http://www.apache.org/licenses/LICENSE-2.0](http://www.apache.org/licenses/LICENSE-2.0).
+pyseer and LMM implementation paper: `Lees, John A., Galardini, M., et al.` [pyseer: a comprehensive tool for microbial
+pangenome-wide association studies.](https://academic.oup.com/bioinformatics/article/34/24/4310/5047751) `Bioinformatics 34:4310–4312 (2018). doi: 10.1093/bioinformatics/bty539`
 
-By contributing you agree that these contributions are your own (or approved by your employer) and
-you grant a full, complete, irrevocable copyright license to all users and developers of the
-project, present and future, pursuant to the license of the project.
+Original SEER implementation paper: `Lees, John A., et al.` [Sequence element enrichment analysis to determine
+the genetic basis of bacterial phenotypes.](https://www.nature.com/articles/ncomms12797) `Nature communications 7:12797 (2016). doi: 10.1038/ncomms12797`
 
-## Getting Help
+Documentation
+--------------------
 
-If you need help or get stuck at any point during development, stop by on our
-[Slack Community](https://stackstorm.com/community-signup) and we will do our best to assist you.
+Full documentation is available at [readthedocs](http://pyseer.readthedocs.io/).
+
+You can also build the docs locally (requires `sphinx`) by typing:
+
+    cd docs/
+    make html
+
+Prerequisites
+-------------
+
+Between parenthesis the versions the script was tested against:
+
+* `python` 3+ (3.6.6)
+* `numpy` (1.15.2)
+* `scipy` (1.1.0)
+* `pandas` (0.23.4)
+* `scikit-learn` (0.20.0)
+* `statsmodels` (0.9.0)
+* `pysam` (0.15.1)
+* `glmnet_python` (commit `946b65c`)
+* `DendroPy` (4.4.0)
+
+If you would like to use the `scree_plot_pyseer` script you will also need to have
+`matplotlib` installed.
+If you would like to use the scripts to map and annotate kmers, you will also need
+`bwa`, `bedtools`,
+`bedops` and `pybedtools` installed.
+
+Installation
+------------
+
+The easiest way to install pyseer and its dependencies is through `conda`::
+
+    conda install pyseer
+
+If you need `conda`, download [miniconda](https://conda.io/miniconda.html)
+and add the necessary channels::
+
+    conda config --add channels defaults
+    conda config --add channels bioconda
+    conda config --add channels conda-forge
+
+`pyseer` can also be installed through `pip`; download this repository
+(or one of the [releases](https://github.com/mgalardini/pyseer/releases)), `cd` into it, followed by:
+
+   `python -m pip install .`
+
+If you want multithreading make sure that you are using a version 3 python interpreter:
+
+   `python3 -m pip install .`
+
+**If you want the next pre-release**, just clone/download this repository and run:
+
+    python pyseer-runner.py
+
+Copyright
+---------
+
+Copyright 2017 EMBL-European Bioinformatics Institute
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.

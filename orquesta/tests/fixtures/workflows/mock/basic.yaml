@@ -1,4 +1,0 @@
-version: 1.0
-basic:
-  tasks:
-    - task1: foobar

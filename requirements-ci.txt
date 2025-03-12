@@ -1,3 +1,0 @@
-tox-gh-actions
-tox==4.11.3
-wheel
