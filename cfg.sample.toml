@@ -1,0 +1,227 @@
+# The configuration file supports variable interpolation. In any string field,
+# ${VARIABLE_NAME} will be replaced with the value of the VARIABLE_NAME
+# environment variable.
+
+# Priority values above max_priority will be refused.
+max_priority = 9001
+
+# How long to keep the retry log
+# Should be a negative interval of time recognized by SQLite3.
+retry_log_expire = '-42 days'
+
+[github]
+
+# Information for securely interacting with GitHub. These are found/generated
+# under <https://github.com/settings/applications>.
+
+# A GitHub personal access token.
+access_token = ""
+
+# A GitHub oauth application for this instance of homu:
+app_client_id = ""
+app_client_secret = ""
+
+
+[git]
+# Use the local Git command. Required to use some advanced features. It also
+# speeds up Travis by reducing temporary commits.
+#local_git = false
+
+# Directory storing the local clones of the git repositories. If this is on an
+# ephemeral file system, there will be a delay to start new builds after a
+# restart while homu clones the repository.
+# cache_dir = "cache"
+
+# SSH private key. Needed only when the local Git command is used.
+#ssh_key = """
+#"""
+
+# By default, Homu extracts the name+email from the Github account it will be
+# using. However, you may want to use a private email for the account, and
+# associate the commits with a public email address.
+#user = "Some Cool Project Bot"
+#email = "coolprojectbot-devel@example.com"
+
+[web]
+
+# The port homu listens on.
+port = 54856
+
+# Synchronize all open PRs on startup. "Synchronize" means fetch the state of
+# all open PRs.
+sync_on_start = true
+
+# The base url used for links pointing to this homu instance.
+# If base_url is not present, links will use canonical_url as a fallback.
+# If neither base_url nor canonical_url are present, no links to this homu
+# instance will be generated.
+#base_url = "https://bors.example.com"
+
+# The canonical URL of this homu instance. If a user reaches the instance
+# through a different path they will be redirected. If this is not present in
+# the configuration homu will still work, but no redirect will be performed.
+#canonical_url = "https://bors.example.com"
+
+# List of path prefixes to remove from the URL. This is useful if the homu
+# instance was moved from a subdirectory of a domain to the top level.
+#remove_path_prefixes = ["homu"]
+
+# Message to display on top of the web interface. It's possible to use
+# arbitrary HTML tags in the message.
+#announcement = "Homu will be offline tomorrow for maintenance."
+
+# Custom hooks can be added as well.
+# Homu will ping the given endpoint with POSTdata of the form:
+# {'body': 'comment body', 'extra_data': 'extra data', 'pull': pull req number}
+# The extra data is the text specified in `@homu hookname=text`
+#
+# [hooks.hookname]
+# trigger = "hookname" # will be triggered by @homu hookname or @homu hookname=text
+# endpoint = "http://path/to/endpoint"
+# access = "try" # access level required
+# has_response = true # Should the response be posted back to github? Only allowed if realtime=true
+# realtime = true # Should it only run in realtime mode? If false, this will be replayed each time homu is started (probably not what you want)
+
+# An example configuration for repository (there can be many of these). NAME
+# refers to your repo name.
+[repo.NAME]
+
+# Which repo are we talking about? You can get these fields from your repo URL:
+#    github.com/<owner>/<name>
+owner = ""
+name = ""
+
+# If this repo should be integrated with the permissions defined in
+# https://github.com/rust-lang/team uncomment the following line.
+# Note that the other ACLs will *also* apply.
+#rust_team = true
+
+# Who can approve PRs (r+ rights)? You can put GitHub usernames here.
+reviewers = []
+# Alternatively, set this  allow any github collaborator;
+# note that you can *also* specify reviewers above.
+# auth_collaborators = true
+
+# Who has 'try' rights? (try, retry, force, clean, prioritization). It's fine to
+# keep this empty.
+try_users = []
+
+# Keep the commit history linear. Requires the local Git command.
+#linear = false
+
+# Auto-squash commits. Requires the local Git command.
+#autosquash = true
+
+# If the PR already has the same success statuses that we expect on the `auto`
+# branch, then push directly to branch if safe to do so. Requires the local Git
+# command.
+#status_based_exemption = false
+
+# Maximum test duration allowed for testing a PR in this repository.
+# Default to 10 hours.
+#timeout = 36000
+
+# Branch names. These settings are the defaults; it makes sense to leave these
+# as-is.
+#[repo.NAME.branch]
+#
+#auto = "auto"
+#try = "try"
+
+# test-on-fork allows you to run the CI builds for a project in a separate fork
+# instead of the main repository, while still approving PRs and merging the
+# commits in the main one.
+#
+# To enable test-on-fork you need to uncomment the section below and fill the
+# fork's owner and repository name. The fork MUST BE AN ACTUAL GITHUB FORK for
+# this feature to work. That means it will likely need to be in a separate
+# GitHub organization.
+#
+# This only works when `local_git = true`.
+#
+#[repo.NAME.test-on-fork]
+#owner = ""
+#name = ""
+
+[repo.NAME.github]
+# Arbitrary secret. You can generate one with: openssl rand -hex 20
+secret = ""
+
+# Remove and add GitHub labels when some event happened.
+# See servo/homu#141 for detail.
+#
+#[repo.NAME.labels.approved]    # after homu received `r+`
+#[repo.NAME.labels.rejected]    # after homu received `r-`
+#[repo.NAME.labels.conflict]    # a merge conflict is detected
+#[repo.NAME.labels.succeed]     # test successful
+#[repo.NAME.labels.failed]      # test failed
+#[repo.NAME.labels.exempted]    # test exempted
+#[repo.NAME.labels.timed_out]   # test timed out (after 10 hours)
+#[repo.NAME.labels.interrupted] # test interrupted (buildbot only)
+#[repo.NAME.labels.try]         # after homu received `try`
+#[repo.NAME.labels.try_succeed] # try-build successful
+#[repo.NAME.labels.try_failed]  # try-build failed
+#[repo.NAME.labels.pushed]      # user pushed a commit after `r+`/`try`
+#remove = ['list', 'of', 'labels', 'to', 'remove']
+#add = ['list', 'of', 'labels', 'to', 'add']
+#unless = [
+#   'avoid', 'relabeling', 'if',
+#   'any', 'of', 'these', 'labels', 'are', 'present',
+#]
+
+# Travis integration. Don't forget to allow Travis to test the `auto` branch!
+[repo.NAME.checks.travis]
+# Name of the Checks API run. Don't touch this unless you really know what
+# you're doing.
+name = "Travis CI - Branch"
+
+# Appveyor integration. Don't forget to allow Appveyor to test the `auto` branch!
+#[repo.NAME.status.appveyor]
+#
+# String label set by status updates. Don't touch this unless you really know
+# what you're doing.
+#context = 'continuous-integration/appveyor/branch'
+
+# Generic GitHub Status API support. You don't need this if you're using the
+# above examples for Travis/Appveyor.
+#[repo.NAME.status.LABEL]
+#
+# String label set by status updates.
+#context = ""
+#
+# Equivalent context to look for on the PR itself if checking whether the
+# build should be exempted. If omitted, looks for the same context. This is
+# only used if status_based_exemption is true.
+#pr_context = ""
+
+# Generic GitHub Checks API support. You don't need this if you're using the
+# above examples for Travis/Appveyor.
+#[repo.NAME.checks.LABEL]
+#
+# String name of the Checks run.
+#name = ""
+#
+# String name of the Checks run used for try runs.
+# If the field is omitted the same name as the auto build will be used.
+#try_name = ""
+
+# Use buildbot for running tests
+#[repo.NAME.buildbot]
+#
+#url = ""
+#secret = ""
+#
+#builders = ["auto-linux", "auto-mac"]
+#try_builders = ["try-linux", "try-mac"]
+#
+#username = ""
+#password = ""
+
+#
+## Boolean which indicates whether the builder is included in try builds (defaults to true)
+#try = false
+
+# The database homu uses
+[db]
+# SQLite file
+file = "main.db"

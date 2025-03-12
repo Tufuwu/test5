@@ -1,103 +1,139 @@
-# Features
+# Homu
 
-* ANT base interface.
-* ANT-FS (with command pipe, file listings, downloading, uploading, etc).
-* ANT+ device profiles and base class for custom ones (openant.devices).
-* Four libs:
-    * openant.base basic ANT library.
-    * openant.easy blocking version using openant.base.
-    * openant.fs ANT-FS library.
-    * openant.device ANT+ like devices.
-* Command-line tool `openant`:
-    * `openant scan`: Scan for nearby devices and optionally print device data.
-    * `openant influx`: Stream device data to InfluxDB instance.
+[![Hommando]][Akemi Homura]
 
-A note on ANT/ANT-FS/ANT+: this module is for development and testing of devices and not intended to be used as a reference. Refer to the [thisisant.com website](https://www.thisisant.com/) for full ANT documentation and ANT+ device profiles. The intention of this module is for quick R&D of ANT capable devices. In case non-obvious, this module is not an official tool.
+Homu is a bot that integrates with GitHub and your favorite continuous
+integration service such as [Travis CI], [Appveyor] or [Buildbot].
 
-# Installation
+[Hommando]: https://i.imgur.com/j0jNvHF.png
+[Akemi Homura]: https://wiki.puella-magi.net/Homura_Akemi
+[Buildbot]: http://buildbot.net/
+[Travis CI]: https://travis-ci.org/
+[Appveyor]: https://www.appveyor.com/
 
-## Requirements
+## Why is it needed?
 
-* Python >= 3.8
+Let's take Travis CI as an example. If you send a pull request to a repository,
+Travis CI instantly shows you the test result, which is great. However, after
+several other pull requests are merged into the `master` branch, your pull
+request can *still* break things after being merged into `master`. The
+traditional continuous integration solutions don't protect you from this.
 
-Run `pip install openant` or `pip install git+https://github.com/Tigge/openant#egg=openant` for HEAD.
+In fact, that's why they provide the build status badges. If anything pushed to
+`master` is completely free from any breakage, those badges will **not** be
+necessary, as they will always be green. The badges themselves prove that there
+can still be some breakages, even when continuous integration services are used.
 
-If using on Linux, a udev rule for the Dynastream ANTUSB stick can be installed with `sudo python -m openant.udev_rules`. macOS/Windows does not use udev_rules and therefore does not need to be installed. Follow libusb's driver installation [instructions](https://github.com/libusb/libusb/wiki/Windows#Driver_Installation) for Windows. macOS should work with just libusb installed.
+To solve this problem, the test procedure should be executed *just before the
+merge*, not just after the pull request is received. You can manually click the
+"restart build" button each time before you merge a pull request, but Homu can
+automate this process. It listens to the pull request comments, waiting for an
+approval comment from one of the configured reviewers. When the pull request is
+approved, Homu tests it using your favorite continuous integration service, and
+only when it passes all the tests, it is merged into `master`.
 
-### ANT USB Stick
+Note that Homu is **not** a replacement of Travis CI, Buildbot or Appveyor. It
+works on top of them. Homu itself doesn't have the ability to test pull
+requests.
 
-A USB stick that provides a ANT node is probably required. Here are ones made by Dynastream (Garmin):
+## Influences of bors
 
-* [ANTUSB2 Stick](http://www.thisisant.com/developer/components/antusb2/) (0fcf:1008: Dynastream Innovations, Inc.)
-* [ANTUSB-m Stick](http://www.thisisant.com/developer/components/antusb-m/) (0fcf:1009: Dynastream Innovations, Inc.)
+Homu is largely inspired by [bors]. The concept of "tests should be done just
+before the merge" came from bors. However, there are also some differences:
 
-See the note regarding Linux and the udev rule above to ensure the user has permission to run this module without elevated privileges.
+1. Stateful: Unlike bors, which intends to be stateless, Homu is stateful. It
+   means that Homu does not need to retrieve all the information again and again
+   from GitHub at every run. This is essential because of GitHub's rate
+   limiting. Once it downloads the initial state, the following changes are
+   delivered with the [Webhooks] API.
+2. Pushing over polling: Homu prefers pushing wherever possible. The pull
+   requests from GitHub are retrieved using Webhooks, as stated above. The test
+   results from Buildbot are pushed back to Homu with the [HttpStatusPush]
+   feature. This approach improves the overall performance and the response
+   time, because the bot is informed about the status changes immediately.
 
-## InfluxDB CLI Tool
+And also, Homu has more features, such as `rollup`, `try`, and the Travis CI &
+Appveyor support.
 
-Requires install with [influx] (`pip install openant[influx]`) or influxdb-client module installed manually and InfluxDB server >= 2.0. See `openant influx --help` for the server setup. To quickly get a local instance running with Docker:
+[bors]: https://github.com/graydon/bors
+[Webhooks]: https://developer.github.com/webhooks/
+[HttpStatusPush]: http://docs.buildbot.net/current/manual/cfg-statustargets.html#httpstatuspush
 
-```
-docker run --rm -p 8086:8086 -v $PWD:/var/lib/influxdb2 influxdb:latest
-```
+## Usage
 
-Navigate to 'http://localhost:8086' and setup a user/org (default org used is 'my-org'). Then setup a bucket to use (default 'my-bucket') and a API access token (Load Data > API Tokens).
+### How to install
 
-# Module Usage
-
-Explore the examples in './examples', and docstrings within module code. Further documentation to be developed in './docs'.
-
-# CLI Tools
-
-Accessed from module binary `openant`. Logging output can be enabled using the `--logging` flag.
-
-# Scan
-
-Scan for nearby devices, for example to obtain device IDs. Can search for specific devices `--device_type` or all. Found devices can be saved to file with `--outfile`.
-
-### Example Usage
-
-```
-# print devices found to terminal
-openant scan
-# capture devices found to devices.json for use with antinflux
-openant scan --outfile devices.json
-# instantiate object when found so that device data is also printed
-openant scan --auto_create
-```
-
-## ANT+ to InfluxDB
-
-Stream DeviceData from a ANT+ device to a InfluxDB instance. Useful for plotting real-time data and for post review. See `openant influx --help`. See the notes on installation for this tool. Refer to the InfluxDB documentation for the required flags.
-
-### Example Usage
-
-```
-# attach to first trainer found and push data to localhost InfluxDB
-openant influx --verbose FitnessDevice
-# attach to power meter with device id 12345 and push to localhost InfluxDB
-openant influx --id 12345 --verbose PowerMeter
-# attach to devices in 'devices.json' - allows connection to multiple devices
-openant influx --config --verbose devices.json config
+```sh
+$ sudo apt-get install python3-venv python3-wheel
+$ python3 -m venv .venv
+$ . .venv/bin/activate
+$ pip install -U pip
+$ git clone https://github.com/rust-lang/homu.git
+$ pip install -e homu
 ```
 
-# Supported ANT-FS Devices
+### How to configure
 
-Any compliant ANT-FS device should in theory work, but those specific devices have been reported as working:
+In the following instructions, `HOST` refers to the hostname (or IP address)
+where you are running your custom homu instance. `PORT` is the port the service
+is listening to and is configured in `web.port` in `cfg.toml`. `NAME` refers to
+the name of the repository you are configuring homu for.
 
- - Garmin Forerunner 60
- - Garmin Forerunner 405CX
- - Garmin Forerunner 310XT
- - Garmin Forerunner 610
- - Garmin Forerunner 910XT
- - Garmin FR70
- - Garmin Swim
- - Garmin vívoactive HR
+1. Copy `cfg.sample.toml` to `cfg.toml`. You'll need to edit this file to set up
+   your configuration. The following steps explain where you can find important
+   config values. 
 
-Please let me know if you have any success with devices that are not listed here.
+2. Create a GitHub account that will be used by Homu. You can also use an
+   existing account. In the [developer settings][settings], go to "OAuth
+   Apps" and create a new application:
+   - Make note of the "Client ID" and "Client Secret"; you will need to put them in
+   your `cfg.toml`.
+   - The OAuth Callback URL should be `http://HOST:PORT/callback`.
+   - The homepage URL isn't necessary; you could set `http://HOST:PORT/`.
+   
+3. Go back to the developer settings of the GitHub account you created/used in the
+   previous step. Go to "Personal access tokens". Click "Generate new token" and
+   choose the "repo" and "user" scopes. Put the token value in your `cfg.toml`.
+   
+4. Add your new GitHub account as a Collaborator to the GitHub repo you are
+   setting up homu for. This can be done in repo (NOT user) "Settings", then
+   "Collaborators". Enable "Write" access.
+   
+     4.1. Make sure you login as the new GitHub account and that you **accept 
+          the collaborator invitation** you just sent! 
 
-# Develop
+5. Add a Webhook to your repository. This is done under repo (NOT user)
+   "Settings", then "Webhooks". Click "Add webhook", then set:
+   - Payload URL: `http://HOST:PORT/github`
+   - Content type: `application/json`
+   - Secret: The same as `repo.NAME.github.secret` in `cfg.toml`
+   - Events: click "Let me select individual events", then pick
+       `Issue comments`, `Pull requests`, `Pushes`, `Statuses`, `Check runs`
 
-## Create Documentation
+6. Add a Webhook to your continuous integration service, if necessary. You don't
+   need this if using Travis/Appveyor.
+   - Buildbot 
 
-Install requirements from './docs'. From './docs' run `make html`. To auto-generate any new module content run `make rst` or `sphinx-apidoc -f -o docs/src openant` in root directory.
+     Insert the following code to the `master.cfg` file:
+
+     ```python
+     from buildbot.status.status_push import HttpStatusPush
+
+     c['status'].append(HttpStatusPush(
+        serverUrl='http://HOST:PORT/buildbot',
+        extra_post_params={'secret': 'repo.NAME.buildbot.secret in cfg.toml'},
+     ))
+     ```
+
+7. Go through the rest of your `cfg.toml` and uncomment (and change, if needed)
+   parts of the config you'll need.
+
+[settings]: https://github.com/settings/apps
+[travis]: https://travis-ci.org/profile/info
+
+### How to run
+
+```sh
+$ . .venv/bin/activate
+$ homu
+```
