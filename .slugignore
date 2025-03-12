@@ -1,0 +1,6 @@
+*.sqlite3
+*.md
+**/tests
+conftest.py
+pytest.ini
+Dockerfile

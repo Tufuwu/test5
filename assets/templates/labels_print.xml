@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE document SYSTEM "rml.dtd">
+{% load multiply from filters %}
+{% load index from asset_tags %}
+<document filename="{{filename}}">
+    <template>
+        <pageTemplate id="main">
+            <pageGraphics>
+            </pageGraphics>
+            <frame id="first" x1="5" y1="-10" width="581" height="842"/>
+        </pageTemplate>
+    </template>
+    <stylesheet>
+        <blockTableStyle id="table">
+        </blockTableStyle>
+    </stylesheet>
+    <story>
+        <blockTable style="table">
+            {% for i in images0 %}
+            <tr>
+                <td>{% with images0|index:forloop.counter0 as image %}{% if image %}<illustration width="180" height="55" borderStrokeWidth="1"
+borderStrokeColor="black"><image file="data:image/png;base64,{{image.1}}" x="0" y="0"
+{% if image.0.csa >= 4 %}width="180" height="55"{% else %}width="130" height="38"{%endif%}/></illustration>{% endif %}{% endwith %}</td>
+                <td>{% with images1|index:forloop.counter0 as image %}{% if image %}<illustration width="180" height="55"><image file="data:image/png;base64,{{image.1}}" x="0" y="0"
+{% if image.0.csa >= 4 %}width="180" height="55"{% else %}width="130" height="38"{%endif%}/></illustration>{% endif %}{% endwith %}</td>
+                <td>{% with images2|index:forloop.counter0 as image %}{% if image %}<illustration width="180" height="55"><image file="data:image/png;base64,{{image.1}}" x="0" y="0" {% if image.0.csa >= 4 %}width="180" height="55"{% else %}width="130" height="38"{%endif%}/></illustration>{% endif %}{% endwith %}</td>
+            </tr>
+            {% endfor %}
+        </blockTable>
+    </story>
+</document>

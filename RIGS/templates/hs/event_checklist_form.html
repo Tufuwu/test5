@@ -1,0 +1,99 @@
+{% extends request.is_ajax|yesno:'base_ajax.html,base_rigs.html' %}
+{% load widget_tweaks %}
+{% load static %}
+{% load help_text from filters %}
+{% load profile_by_index from filters %}
+{% load button from filters %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'css/selects.css' %}"/>
+{% endblock %}
+
+{% block preload_js %}
+    {{ block.super }}
+    <script src="{% static 'js/selects.js' %}"></script>
+    <script src="{% static 'js/interaction.js' %}"></script>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'js/autocompleter.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="col-12">
+        {% include 'form_errors.html' %}
+
+        <form role="form" method="POST" action="{% if edit %}{% url 'ec_edit' pk=object.pk %}{% else %}{% url 'event_ec' pk=event.pk %}{% endif %}">
+            <input type="hidden" name="{{ form.event.name }}" id="{{ form.event.id_for_label }}"
+               value="{{event.pk}}"/>
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">Event Information</div>
+                        <div class="card-body">
+                            <dl class="row">
+                                <dt class="col-4">Event Date</dt>
+                                <dd class="col-8">{{ event.start_date}}{%if event.end_date %}-{{ event.end_date}}{%endif%}</dd>
+                                <dt class="col-4">Event Name</dt>
+                                <dd class="col-8">{{ event.name }}</dd>
+                                <dt class="col-4">Client</dt>
+                                <dd class="col-8">{{ event.person }}</dd>
+                                <dt class="col-4">Event Size</dt>
+                                <dd class="col-8">{% include 'partials/event_size.html' with object=event.riskassessment %}</dd>
+                            </dl>
+                            <div class="form-group form-row">
+                                <label for="{{ form.date.id_for_label }}"
+                                       class="col-4 col-form-label">{{ form.date.label }}</label>
+                                {% if not form.date.value %}
+                                {% render_field form.date class+="form-control col-8" value=event.start_date %}
+                                {% else %}
+                                {% render_field form.date class+="form-control col-8" %}
+                                {% endif %}
+                            </div>
+                            <div class="form-group form-row" id="{{ form.venue.id_for_label }}-group">
+                                <label for="{{ form.venue.id_for_label }}"
+                                class="col-4 col-form-label">{{ form.venue.label }}</label>
+                                <select id="{{ form.venue.id_for_label }}" name="{{ form.venue.name }}" class="selectpicker" data-live-search="true" data-sourceurl="{% url 'api_secure' model='venue' %}">
+                                {% if venue %}
+                                    <option value="{{venue.pk}}" selected="selected">{{ venue.name }}</option>
+                                {% endif %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row my-3">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">Safety Checks</div>
+                        <div class="card-body">
+                            {% include 'partials/checklist_checkbox.html' with formitem=form.safe_parking %}
+                            {% include 'partials/checklist_checkbox.html' with formitem=form.safe_packing %}
+                            {% include 'partials/checklist_checkbox.html' with formitem=form.exits %}
+                            {% include 'partials/checklist_checkbox.html' with formitem=form.trip_hazard %}
+                            {% include 'partials/checklist_checkbox.html' with formitem=form.warning_signs %}
+                            {% include 'partials/checklist_checkbox.html' with formitem=form.ear_plugs %}
+                            <div class="row pt-3">
+                                <label class="col-5" for="{{ form.hs_location.id_for_label }}">{{ form.hs_location.help_text }}</label>
+                                {% render_field form.hs_location class+="form-control col-7 col-md-4" %}
+                            </div>
+                            <div class="row pt-1">
+                                <label class="col-5" for="{{ form.extinguishers_location.id_for_label }}">{{ form.extinguishers_location.help_text }}</label>
+                                {% render_field form.extinguishers_location class+="form-control col-7 col-md-4" %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-sm-12 text-right">
+                    {% button 'submit' %}
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
