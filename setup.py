@@ -1,52 +1,64 @@
-import os
+import setuptools
+# from flintrock import __version__
 
-from setuptools import find_packages, setup
 
-with open(os.path.join(os.path.dirname(__file__), "README.rst")) as readme:
-    README = readme.read()
+with open('README.md') as f:
+    long_description = f.read()
 
-# allow setup.py to be run from any path
-os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
+setuptools.setup(
+    name='Flintrock',
+    # Moved to setup.cfg to avoid import of flintrock during installation of
+    # flintrock. This used to work, but becomes a problem with isolated builds
+    # and new pip behavior triggered by pyproject.toml.
+    # version=__version__,
+    description='A command-line tool for launching Apache Spark clusters.',
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    url='https://github.com/nchammas/flintrock',
+    author='Nicholas Chammas',
+    author_email='nicholas.chammas@gmail.com',
+    license='Apache License 2.0',
+    python_requires='>= 3.9',
 
-setup(
-    name="django-phone-verify",
-    version="3.0.0",
-    packages=find_packages(),
-    include_package_data=True,
-    license="GPLv3",
-    description="A Django app to support phone number verification using security code sent via SMS.",
-    long_description=README,
-    url="https://github.com/CuriousLearner/django-phone-verify",
-    author="Sanyam Khurana",
-    author_email="sanyam@sanyamkhurana.com",
-    install_requires=[
-        "django>=2.1.5",
-        "djangorestframework>=3.9.0",
-        "PyJWT>=1.7.1",
-        "python-dotenv>=0.10.0",
-        "phonenumbers>=8.10.2",
-        "django-phonenumber-field>=2.1.0",
-        "twilio>=6.21.0",
-        "nexmo>=2.4.0",
-    ],
+    # See: https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
-        "Environment :: Web Environment",
-        "Development Status :: 5 - Production/Stable",
-        "Framework :: Django",
-        "Framework :: Django :: 2.0",
-        "Framework :: Django :: 2.1",
-        "Framework :: Django :: 2.2",
-        "Framework :: Django :: 3.0",
-        "Framework :: Django :: 3.1",
-        "Intended Audience :: Developers",
-        "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
-        "Operating System :: OS Independent",
-        "Programming Language :: Python",
-        "Programming Language :: Python :: 3.6",
-        "Programming Language :: Python :: 3.7",
-        "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",
-        "Topic :: Internet :: WWW/HTTP",
-        "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+        'Development Status :: 5 - Production/Stable',
+
+        'Intended Audience :: Developers',
+        'Intended Audience :: Science/Research',
+
+        'Topic :: Utilities',
+        'Environment :: Console',
+        'Operating System :: MacOS :: MacOS X',
+        'Operating System :: POSIX',
+
+        'License :: OSI Approved :: Apache Software License',
+
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3 :: Only',
     ],
+    keywords=['Apache Spark'],
+
+    packages=setuptools.find_packages(),
+    include_package_data=True,
+
+    # We pin dependencies because sometimes projects do not
+    # strictly follow semantic versioning, so new "feature"
+    # releases end up making backwards-incompatible changes.
+    # Sometimes, new releases even introduce bugs which
+    # totally break Flintrock.
+    # For example: https://github.com/paramiko/paramiko/issues/615
+    install_requires=[
+        'boto3 == 1.29.4',
+        'botocore == 1.32.4',
+        'click == 8.1.7',
+        'paramiko == 3.4.0',
+        'PyYAML == 6.0.2',
+    ],
+
+    entry_points={
+        'console_scripts': [
+            'flintrock = flintrock.__main__:main',
+        ],
+    },
 )
