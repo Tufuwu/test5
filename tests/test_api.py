@@ -1,0 +1,362 @@
+import os
+import os.path
+from secrets import token_hex
+
+import pytest
+
+from suitable.api import Api, list_ansible_modules
+from suitable.errors import ModuleError, UnreachableError
+from suitable.mitogen import Api as MitogenApi
+from suitable.mitogen import is_mitogen_supported
+from suitable.runner_results import RunnerResults
+
+
+def test_auto_localhost():
+    host = Api('localhost')
+    assert host.inventory['localhost']['ansible_connection'] == 'local'
+
+
+def test_auto_localhost_different_port():
+    host = Api('localhost:8888')
+    assert host.inventory['localhost:8888']['ansible_host'] == 'localhost'
+    assert host.inventory['localhost:8888']['ansible_port'] == 8888
+    assert 'ansible_connection' not in host.inventory['localhost:8888']
+
+
+def test_smart_connection():
+    host = Api('localhost', connection='smart')
+    assert 'ansible_connection' not in host.inventory['localhost']
+    assert host.options.connection == 'smart'
+
+
+def test_sudo():
+    host = Api('localhost', sudo=True)
+    try:
+        assert host.command('whoami').stdout() == 'root'
+    except ModuleError as e:
+        assert 'password' in e.result['module_stderr']
+
+
+def test_module_args():
+    upgrade = (
+        'apt-get upgrade -y -o Dpkg::Options::="--force-confdef" '
+        '-o Dpkg::Options::="--force-confold"'
+    )
+
+    try:
+        Api('localhost').command(upgrade)
+    except ModuleError as e:
+        assert e.result['invocation']['module_args']['_raw_params'] == upgrade
+
+
+def test_module_args_non_scalar():
+    upgrade = (
+        'apt-get',
+        'upgrade',
+        '-y',
+        '-o',
+        'Dpkg::Options::="--force-confdef"',
+        '-o',
+        'Dpkg::Options::="--force-confold"'
+    )
+
+    try:
+        Api('localhost').command(argv=upgrade)
+    except ModuleError as e:
+        assert e.result['invocation']['module_args']['argv'] == list(upgrade)
+
+
+def test_results():
+    result = Api('localhost').command('whoami')
+    assert result.rc('localhost') == 0
+    assert result.stdout('localhost') is not None
+    assert result['contacted']['localhost']['rc'] == 0
+
+    with pytest.raises(AttributeError):
+        result.asdf('localhost')
+
+    result['contacted'] = []
+
+    with pytest.raises(KeyError):
+        result.rc('localhost')
+
+
+def test_results_dry_run():
+    result = Api('localhost', dry_run=True).command('whoami')
+    assert not result['contacted']
+    with pytest.raises(ValueError, match=r'not available in dry run'):
+        result.rc()
+
+    with pytest.raises(ValueError, match=r'not available in dry run'):
+        result.rc('localhost')
+
+
+@pytest.mark.parametrize("server", ('localhost',))
+def test_results_single_server(server):
+    result = Api(server).command('whoami')
+    assert result.rc() == 0
+    assert result.rc(server) == 0
+
+
+def test_results_multiple_servers():
+    result = RunnerResults({
+        'contacted': {
+            'web.seantis.dev': {'rc': 0},
+            'db.seantis.dev': {'rc': 1},
+            'buggy.result.dev': {},
+        }
+    })
+
+    assert result.rc('web.seantis.dev') == 0
+    assert result.rc('db.seantis.dev') == 1
+    with pytest.raises(AttributeError, match=r'rc'):
+        result.rc('buggy.result.dev')
+    with pytest.raises(ValueError, match=r'When contacting multiple'):
+        result.rc()
+
+
+@pytest.mark.parametrize("server", (('localhost', 'localhost:22'),))
+def test_whoami_multiple_servers(server):
+    host = Api(server)
+    results = host.command('whoami')
+    assert results.rc(server[0]) == 0
+    assert results.rc(server[1]) == 0
+    with pytest.raises(ValueError, match=r'When contacting multiple'):
+        results.rc()
+
+
+def test_non_scalar_parameter():
+    host = Api('localhost')
+    result = host.command(argv=['echo', 'hello world'])
+
+    assert result.rc() == 0
+    assert result.cmd() == ['echo', 'hello world']
+    assert result.stdout() == 'hello world'
+
+
+def test_valid_return_codes():
+    host = Api('localhost')
+    assert host._valid_return_codes == (0,)
+
+    with host.valid_return_codes(0, 1):
+        assert host._valid_return_codes == (0, 1)
+        host.shell('whoami | grep -q asdfasdfasdf')
+
+    assert host._valid_return_codes == (0,)
+
+
+def test_list_ansible_modules():
+    modules = list_ansible_modules()
+
+    # look for some basic modules
+    assert 'command' in modules
+    assert 'file' in modules
+    assert 'user' in modules
+    assert 'shell' in modules
+    assert 'git' in modules
+    assert 'setup' in modules
+
+
+def test_module_error():
+    with pytest.raises(ModuleError):
+        # command cannot include pipes
+        Api('localhost').command('whoami | less')
+
+
+@pytest.mark.parametrize("server", ('255.255.255.255', '255.255.255.255:22'))
+def test_unreachable(server):
+    host = Api(server)
+
+    assert server in host.inventory
+
+    try:
+        host.command('whoami')
+    except UnreachableError as e:
+        assert server in str(e)
+    else:
+        pytest.fail("an error should have been thrown")
+
+    assert server not in host.inventory
+
+
+@pytest.mark.parametrize("server", ('255.255.255.255', '255.255.255.255:22'))
+def test_ignore_unreachable(server):
+    host = Api(server, ignore_unreachable=True)
+    assert server in host.inventory
+    result = host.command('whoami')
+    assert server in result['unreachable']
+    assert server in host.inventory
+
+
+def test_custom_unreachable():
+    class MyApi(Api):
+        unreachable = []
+
+        def on_unreachable_host(self, module, host):
+            self.unreachable.append(host)
+            return 'keep-trying'
+
+    host = MyApi('255.255.255.255')
+
+    host.command('whoami')
+    assert len(host.unreachable) == 1
+
+    host.command('whoami')
+    assert len(host.unreachable) == 2
+
+    host.command('whoami')
+    assert len(host.unreachable) == 3
+
+
+def test_custom_unreachable_default():
+    class MyApi(Api):
+        unreachable = []
+
+        def on_unreachable_host(self, module, host):
+            self.unreachable.append(host)
+
+    host = MyApi('255.255.255.255')
+
+    host.command('whoami')
+    assert len(host.unreachable) == 1
+
+    host.command('whoami')
+    assert len(host.unreachable) == 1
+
+    host.command('whoami')
+    assert len(host.unreachable) == 1
+
+
+def test_ignore_errors():
+    host = Api('localhost', ignore_errors=True)
+    result = host.command('whoami | less')
+
+    assert result.rc() == 1
+    assert result.cmd() == ['whoami', '|', 'less']
+
+
+def test_error_string():
+    try:
+        Api('localhost').command('whoami | less')
+    except ModuleError as e:
+        # we don't have a msg so we mock that out, for coverage!
+        e.result['msg'] = '0xdeadbeef'
+        error_string = str(e)
+
+        # we don't make many guarantees with the string messages, so
+        # a basic somke test suffices here. This is not something to
+        # depend on.
+
+        assert '0xdeadbeef' in error_string
+        assert 'command: whoami | less' in error_string
+        assert 'Returncode: 1' in error_string
+    else:
+        pytest.fail("this needs to trigger an exception")
+
+
+def test_escaping(tempdir):
+    special_dir = os.path.join(tempdir, 'special dir with "-char')
+    os.mkdir(special_dir)
+
+    api = Api('localhost')
+    api.file(
+        dest=os.path.join(special_dir, 'foo.txt'),
+        state='touch'
+    )
+
+
+def test_extra_vars(tempdir):
+    api = Api('localhost', extra_vars={'path': tempdir})
+    api.file(dest="{{ path }}/foo.txt", state='touch')
+
+    assert os.path.exists(tempdir + '/foo.txt')
+
+
+def test_environment():
+    api = Api('localhost', environment={'FOO': 'BAR'})
+    assert api.shell('echo $FOO').stdout() == 'BAR'
+
+    api.environment['FOO'] = 'BAZ'
+    assert api.shell('echo $FOO').stdout() == 'BAZ'
+
+
+def test_same_server_multiple_ports():
+    api = Api(('localhost', 'localhost:22'))
+    assert len(api.inventory) == 2
+
+    # Ansible groups these calls, so we only get one result back
+    result = api.command('whoami')
+    assert len(result['contacted']) == 2
+
+
+@pytest.mark.skipif(not is_mitogen_supported(), reason="incompatible mitogen")
+def test_mitogen_integration():
+    try:
+        result = MitogenApi('localhost').command('whoami')
+        assert len(result['contacted']) == 1
+    except SystemExit:
+        pass
+
+
+def test_list_args():
+    api = Api('localhost')
+
+    # api.assert is not valid Python syntax
+    getattr(api, 'assert')(that=[
+        "'bar' != 'foo'",
+        "'bar' == 'bar'"
+    ])
+
+
+def test_dict_args(tempdir):
+    api = Api('localhost')
+    api.set_stats(data={'foo': 'bar'})
+
+
+def test_assert_alias():
+    api = Api('localhost')
+    api.assert_(that=[
+        "'bar' != 'foo'",
+        "'bar' == 'bar'"
+    ])
+
+
+@pytest.mark.xfail
+def test_disable_hostkey_checking(api):
+    api.host_key_checking = False
+    assert api.command('whoami').stdout() == 'root'
+
+
+@pytest.mark.xfail
+def test_enable_hostkey_checking(api):
+    with pytest.raises(UnreachableError):
+        assert api.command('whoami').stdout() == 'root'
+
+
+@pytest.mark.skip(
+    'opening multiple connections to the same server '
+    'does not appear to currently work'
+)
+def test_interleaving(container):
+    # make sure we can interleave calls of different API objects
+    password = token_hex(16)
+
+    root = container.vanilla_api(connection='paramiko')
+    root.host_key_checking = False
+
+    root.command('useradd --non-unique --uid 0 foo -p ' + password)
+    root.command('useradd --non-unique --uid 0 bar -p ' + password)
+
+    foo = container.vanilla_api(
+        connection='paramiko', remote_user='foo', remote_pass='foobar')
+    bar = container.vanilla_api(
+        connection='paramiko', remote_user='bar', remote_pass='foobar')
+
+    foo.host_key_checking = False
+    bar.host_key_checking = False
+
+    assert foo.command('id -g').stdout() == '1000'
+    assert bar.command('id -g').stdout() == '1001'
+
+    assert foo.command('id -g').stdout() == '1000'
+    assert bar.command('id -g').stdout() == '1001'

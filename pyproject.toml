@@ -1,6 +1,143 @@
-[tool.black]
-line-length = 79
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
 
-[tool.isort]
-profile = 'black'
-line_length = 79
+[tool.pytest.ini_options]
+log_level = "INFO"
+testpaths = ["tests"]
+filterwarnings = [
+    "ignore:The _yaml extension module is now located at yaml._yaml",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["src"]
+omit = [
+  "src/suitable/_modules.py",
+  "src/suitable/_module_types.py",
+  "src/suitable/types.py",
+]
+
+[tool.bandit]
+exclude_dirs = ["tests"]
+skips = ["B101"]
+
+[tool.mypy]
+python_version = "3.8"
+follow_imports = "silent"
+namespace_packages = true
+explicit_package_bases = true
+strict = true
+mypy_path = "$MYPY_CONFIG_FILE_DIR/src"
+
+[[tool.mypy.overrides]]
+module = ["suitable._module_types"]
+warn_return_any = false
+
+[tool.bumpversion]
+current_version = "0.20.3"
+commit = true
+message = "Release {new_version}"
+tag = true
+tag_message = "Release {new_version}"
+
+[[tool.bumpversion.files]]
+filename="setup.cfg"
+
+[[tool.bumpversion.files]]
+filename="docs/conf.py"
+
+[[tool.bumpversion.files]]
+filename="CHANGELOG.rst"
+search = """
+Changelog
+---------
+"""
+replace = """
+Changelog
+---------
+
+{new_version} ({now:%Y-%m-%d})
+~~~~~~~~~~~~~~~~~~~
+"""
+
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+envlist =
+  py{38,39,310}-ansible6
+  py{39,310,311}-ansible7
+  py{39,310,311}-ansible8
+  py{310,311,312}-ansible9
+  py{310,311,312}-ansible10
+  flake8
+  bandit
+  mypy
+  report
+
+[gh-actions]
+python =
+    3.8: py38
+    3.9: py39
+    3.10: py310,flake8,bandit,mypy
+    3.11: py311
+    3.12: py312
+
+[testenv]
+usedevelop = true
+setenv =
+  py{38,39,310,311,312}: COVERAGE_FILE = .coverage.{envname}
+deps =
+  -e{toxinidir}[tests]
+  ansible6: ansible==6.*
+  ansible6: ansible-core==2.13.*
+  ansible7: ansible==7.*
+  ansible7: ansible-core==2.14.*
+  ansible8: ansible==8.*
+  ansible8: ansible-core==2.15.*
+  ansible9: ansible==9.*
+  ansible9: ansible-core==2.16.*
+  ansible10: ansible==10.*
+  ansible10: ansible-core==2.17.*
+
+commands = pytest --cov --cov-report= {posargs}
+
+passenv = *
+
+[testenv:flake8]
+basepython = python3.10
+skip_install = true
+deps =
+  flake8
+  flake8-bugbear
+commands = flake8 src/ tests/
+
+[testenv:bandit]
+basepython = python3.10
+skip_install = true
+deps =
+  bandit[toml]
+commands = bandit -q -c pyproject.toml -r src
+
+[testenv:mypy]
+basepython = python3.10
+deps =
+    -e{toxinidir}
+    mypy
+    mitogen
+commands =
+  mypy -p suitable --python-version 3.8
+  mypy -p suitable --python-version 3.9
+  mypy -p suitable --python-version 3.10
+  mypy -p suitable --python-version 3.11
+  mypy -p suitable --python-version 3.12
+
+[testenv:report]
+deps =
+  coverage
+skip_install = true
+commands =
+  coverage combine
+  coverage report -m
+
+"""
