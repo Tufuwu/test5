@@ -1,2 +1,1 @@
-include versioneer.py
-include thunor/_version.py
+include VERSION

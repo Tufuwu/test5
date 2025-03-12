@@ -1,65 +1,127 @@
-# Thunor
+aactivator
+========
 
-**Thunor** (pronounced THOO-nor) is a free software platform for managing,
-visualizing, and analyzing high throughput screen (HTS) data, which measure
-the dose-dependent response of cells to one or more drug(s).
+[![PyPI version](https://badge.fury.io/py/aactivator.svg)](https://pypi.python.org/pypi/aactivator)
+![Build Status](https://github.com/Yelp/aactivator/workflows/build/badge.svg?branch=master)
 
-This repository, Thunor Core, is a Python package which can be used for
-standalone analysis or integration into computational pipelines. There
-is also a web interface, [Thunor Web](https://github.com/alubbock/thunor-web),
-built around this package with added database, multi-user capabilities, drag-and-drop upload of cell count data,
-automatic calculation of dose response curves, and an interactive
-multi-panelled plot system ([demo](https://demo.thunor.net)).
+`aactivator` is a simple tool that automatically sources ("activates") and
+unsources a project's environment when entering and exiting it.
 
-## Implementation
+Key features of aactivator include:
 
-Thunor is written in pure Python and is compatible with Python 3 only.
-It makes extensive use of [pandas](http://pandas.pydata.org/) and
-[plotly](http://plot.ly/python/).
+* Prompting before sourcing previously-unseen directories.
+* Refusing to source files that can be modified via others.
+* First-class support for both `bash` and `zsh`.
+* Well-tested, with integration tests applied to both supported shells.
 
-## Installation
+aactivator supports Python 2.7, 3.4+; it has no dependencies besides
+the standard library.
 
-Thunor Core is tested against the three most recent stable releases
-of Python (currently 3.10-3.12), so one of these versions is
-recommended. Install Thunor Core using `pip`:
 
-```
-pip install thunor
-```
+## The aactivator interface
 
-## Examples and documentation
+aactivator provides a simple interface for projects, via two files at the root
+of the project:
 
-The Thunor Core documentation is available [online](https://core.thunor.net),
-or you can build it locally for offline use. To do so, clone this git
-repository and change into the `thunor` directory.
+* `.activate.sh`, which is sourced by the shell on enter.
 
-To build documentation locally, you'll need a few software dependencies:
+  If working with Python virtualenvs, it usually makes the most sense to
+  symlink `.activate.sh` to the `bin/activate` file inside your virtualenv.
+  For example, `ln -s venv/bin/activate .activate.sh`. This symlink can be
+  checked directly into git (just make sure to use a relative symlink, like in
+  the command before).
 
-    pip install -e '.[docs]'
+* `.deactivate.sh`, which is sourced by the shell on exit.
 
-You'll also need to install [pandoc](https://pandoc.org/installing.html).
+  For Python projects, this is typically just a one-line file that contains
+  `deactivate`, though it can be modified to suit your particular project.
 
-Then, you can build the documentation like so:
+Note that neither of these files need to be executable or contain a shebang.
+This is because they are *sourced* (run inside your current shell) and not
+*executed*.
 
-    cd doc
-    make html
 
-After the build completes, open _build/html/index.html in your web browser.
+## Installing into your shell
 
-## Tutorial
+We recommend adding `aactivator` to your shell's config. It will stay out of
+your way during regular usage, and you'll only ever notice it doing its job
+when you `cd` into a project directory that supports aactivator.
 
-Like the docs, you can also view the [tutorial](https://core.thunor.net/en/latest/tutorial.html) online.
-To work through the tutorial locally, build the documentation as per the previous section. You can then open the file with Jupyter Notebook:
+You first need to install the `aactivator` binary somewhere on your system. You
+have a few options:
 
-    jupyter notebook --NotebookApp.iopub_data_rate_limit=1.0e10 doc/tutorial.ipynb
+1. Just copy the [`aactivator.py` script][aactivator.py-master] somewhere on
+   your system and make it executable (`chmod +x aactivator.py`). It has no
+   dependencies besides the Python standard library.
 
-## Citation
+2. Install it via pip (`pip install aactivator`). You can install system-wide,
+   to your home directory, or into a virtualenv (your preference).
 
-Lubbock A.L.R., Harris L.A., Quaranta V., Tyson D.R., Lopez C.F.
-[Thunor: visualization and analysis of high-throughput dose–response datasets](https://doi.org/10.1093/nar/gkab424)
-Nucleic Acids Research (2021), gkab424.
+3. Install the Debian package. This is the best option for system-wide
+   automated installations, and gives you other niceties like a man-page.
+   You can find pre-built Debian packages under the [Releases][releases] GitHub
+   tab.
 
-## Further help and resources
+Once you have `aactivator` installed, you need to enable it on login. To do
+that, just add this line to the `.bashrc` (or `.zshrc` for zsh) file in your
+home directory:
 
-See the [Thunor website](https://www.thunor.net) for further links,
-documentation and related projects.
+    eval "$(aactivator init)"
+
+(You may need to prefix `aactivator` with the full path to the binary if you
+didn't install it somewhere on your `$PATH`).
+
+
+## Motivation
+
+Automatically sourcing virtualenvs is a huge boon to large projects. It means
+that you can directly execute tools like `pytest`, and also that the project
+can register command-line tools (via setuptools' `console_scripts` entrypoint)
+for use by contributors.
+
+
+## Security considerations
+
+We tried pretty hard to make this not a giant arbitrary-code-execution vector.
+There are two main protections:
+
+* `aactivator` asks before sourcing previously-unseen directories. You can
+  choose between not sourcing once, never sourcing, or sourcing.
+
+  You shouldn't choose to source projects whose code you don't trust. However,
+  it's worth keeping in mind that the same consideration exists with running
+  tests, building the virtualenv, or running any of that project's code.
+  Sourcing the virtualenv is just as dangerous as any of these.
+
+* `aactivator` refuses to source environment files which can be modified by
+  others. It does this by recursing upwards from the current directory until
+  hitting a filesystem boundary, and checking that the file (and all of its
+  parents) can be modified by only you and `root`.
+
+
+## Alternatives to aactivator
+
+Some alternatives to `aactivator` already exist. For example:
+
+* [kennethreitz's autoenv][autoenv]
+* [codysoyland's virtualenv-auto-activate][codysoyland]
+* [yourlabs's shell function][yourlabs]
+* [direnv]
+
+These alternatives all have at least one of the following problems (compared to
+aactivator):
+
+* Don't ask (or remember) permission before sourcing directories
+* Don't deactivate when leaving project directories
+* Work by overriding the `cd` builtin (which means things like `popd` or other
+  methods of changing directories don't work)
+* Lack support for `zsh`
+* Don't perform important security checks (see "Security" above)
+
+
+[aactivator.py-master]: https://github.com/Yelp/aactivator/blob/master/aactivator.py
+[autoenv]: https://github.com/kennethreitz/autoenv
+[codysoyland]: https://gist.github.com/codysoyland/2198913
+[releases]: https://github.com/Yelp/aactivator/releases
+[yourlabs]: http://blog.yourlabs.org/post/21015702927/automatic-virtualenv-activation
+[direnv]: http://github.com/direnv/direnv/
