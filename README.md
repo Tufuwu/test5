@@ -1,66 +1,67 @@
 ```
-                                 __   _ __      ___  ___  ___   __  ___
-                                / /  (_) /____ / _ \/ _ \/ _ | /  |/  /
-                               / /__/ / __/ -_) // / , _/ __ |/ /|_/ /
-                              /____/_/\__/\__/____/_/|_/_/ |_/_/  /_/
+                                      __   _ __      ______  __
+                                     / /  (_) /____ / __/ /_/ /
+                                    / /__/ / __/ -_) _// __/ _ \
+                                   /____/_/\__/\__/___/\__/_//_/
 
-                                   Copyright 2015-2024 / EnjoyDigital
-                               A small footprint and configurable DRAM core
-                                        powered by Migen & LiteX
+                                 Copyright 2012-2024 / EnjoyDigital
+
+                             A small footprint and configurable Ethernet core
+                                      powered by Migen & LiteX
 ```
 
-[![](https://github.com/enjoy-digital/litedram/workflows/ci/badge.svg)](https://github.com/enjoy-digital/litedram/actions) ![License](https://img.shields.io/badge/License-BSD%202--Clause-orange.svg)
+[![](https://github.com/enjoy-digital/liteeth/workflows/ci/badge.svg)](https://github.com/enjoy-digital/liteeth/actions) ![License](https://img.shields.io/badge/License-BSD%202--Clause-orange.svg)
 
 
 [> Intro
 --------
-LiteDRAM provides a small footprint and configurable DRAM core.
+LiteEth provides a small footprint and configurable Ethernet core.
 
-LiteDRAM is part of LiteX libraries whose aims are to lower entry level of
+LiteEth is part of LiteX libraries whose aims are to lower entry level of
 complex FPGA cores by providing simple, elegant and efficient implementations
 of components used in today's SoC such as Ethernet, SATA, PCIe, SDRAM Controller...
 
 Using Migen to describe the HDL allows the core to be highly and easily configurable.
 
-LiteDRAM can be used as LiteX library or can be integrated with your standard
+LiteEth can be used as LiteX library or can be integrated with your standard
 design flow by generating the verilog rtl that you will use as a standard core.
 
 [> Features
 -----------
 PHY:
-  - Generic SDRAM PHY (vendor agnostic, tested on Xilinx, Altera, Lattice)
-  - Xilinx Spartan6 DDR/LPDDR/DDR2/DDR3 PHY (1:2 or 1:4 frequency ratio)
-  - Xilinx Spartan7/Artix7/Kintex7/Virtex7 DDR2/DDR3 PHY (1:2 or 1:4 frequency ratio)
-  - Xilinx Kintex/Virtex Ultrascale (Plus) DDR3/DDR4 PHY (1:4 frequency ratio)
-  - Lattice ECP5 DDR3 PHY (1:2 frequency ratio)
-  - Gowin G2A DDR3 PHY (1:2 frequency ratio)
+  - MII, RMII 100Mbps PHYs.
+  - GMII / RGMII / SGMII / 1000BaseX 1Gbps PHYs.
+  - SGMII / 2500BaseX 3.125Gbps PHYs.
+
+| -     | All | ECP5 | Spartan6 | Trion | Titanium | 7-Series | Ultrascale(+) |
+|-------|-----|------|----------|-------|----------|----------|---------------|
+| MII   |  X  |  X  |      X    |   X   |     X    |     X    |       X       |
+| RMII  |  X  |  X  |      X    |   X   |     X    |     X    |       X       |
+| GMII  |     |     |      X    |       |          |     X    |       X       |
+| RGMII |     |  X  |      X    |   X   |     X    |     X    |       X       |
+| SGMII |     |     |           |       |          |     X    |       X       |
+
 
 Core:
-  - Fully pipelined, high performance.
-  - Configurable commands depth on bankmachines.
-  - Auto-Precharge.
-  - Periodic refresh/ZQ short calibration (up to 8 postponed refreshes).
+  - Configurable MAC (HW or SW interface)
+  - ARP / ICMP / UDP (HW or SW) / DHCP
 
 Frontend:
-  - Configurable crossbar (simply use crossbar.get_port() to add a new port!)
-  - Ports arbitration transparent to the user.
-  - Native, AXI-MM or Wishbone user interface.
-  - DMA reader/writer.
-  - BIST.
-  - ECC (Error-correcting code)
+  - Etherbone (Wishbone over UDP: Slave or Master support)
+  - UDP Streaming.
 
 [> FPGA Proven
 ---------------
-LiteDRAM is already used in commercial and open-source designs:
+LiteEth is already used in commercial and open-source designs:
+- MiSoC: http://m-labs.hk/gateware.html
+- ARTIQ: http://m-labs.hk/artiq/index.html
 - HDMI2USB: http://hdmi2usb.tv/home/
-- NeTV2: https://www.crowdsupply.com/alphamax/netv2
-- USBSniffer: http://blog.lambdaconcept.com/doku.php?id=products:usb_sniffer
 - and others commercial designs...
 
 [> Possible improvements
 ------------------------
-- add Avalon-ST interface.
-- add support for Altera devices.
+- add standardized interfaces (AXI, Avalon-ST)
+- add DMA interface to MAC
 - add more documentation
 - ... See below Support and consulting :)
 
@@ -88,24 +89,24 @@ $ python3 -m unittest test.test_name
 
 [> License
 ----------
-LiteDRAM is released under the very permissive two-clause BSD license. Under
-the terms of this license, you are authorized to use LiteDRAM for closed-source
+LiteEth is released under the very permissive two-clause BSD license. Under
+the terms of this license, you are authorized to use LiteEth for closed-source
 proprietary designs.
 Even though we do not require you to do so, those things are awesome, so please
 do them if possible:
- - tell us that you are using LiteDRAM
- - cite LiteDRAM in publications related to research it has helped
+ - tell us that you are using LiteEth
+ - cite LiteEth in publications related to research it has helped
  - send us feedback and suggestions for improvements
  - send us bug reports when something goes wrong
- - send us the modifications and improvements you have done to LiteDRAM.
+ - send us the modifications and improvements you have done to LiteEth.
 
 [> Support and consulting
 -------------------------
 We love open-source hardware and like sharing our designs with others.
 
-LiteDRAM is developed and maintained by EnjoyDigital.
+LiteEth is developed and maintained by EnjoyDigital.
 
-If you would like to know more about LiteDRAM or if you are already a happy
+If you would like to know more about LiteEth or if you are already a happy
 user and would like to extend it for your needs, EnjoyDigital can provide standard
 commercial support as well as consulting services.
 

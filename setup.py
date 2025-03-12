@@ -9,27 +9,20 @@ with open("README.md", "r", encoding="utf-8") as fp:
 
 
 setup(
-    name                          = "litedram",
+    name                          = "liteeth",
     version                       = "2024.12",
-    description                   = "Small footprint and configurable DRAM core",
+    description                   = "Small footprint and configurable Ethernet core",
     long_description              = long_description,
     long_description_content_type = "text/markdown",
     author                        = "Florent Kermarrec",
     author_email                  = "florent@enjoy-digital.fr",
     url                           = "http://enjoy-digital.fr",
-    download_url                  = "https://github.com/enjoy-digital/litedram",
+    download_url                  = "https://github.com/enjoy-digital/liteeth",
     test_suite                    = "test",
     license                       = "BSD",
     python_requires               = "~=3.7",
-    install_requires              = ["pyyaml", "litex"],
-    extras_require                = {
-        "develop": [
-          "meson"
-          "pexpect"
-          "setuptools"
-          "requests"
-        ]
-    },
+    install_requires              = ["pyyaml", "litex", "liteiclink"],
+    extras_require                = {"develop": ["setuptools"]},
     packages                      = find_packages(exclude=("test*", "sim*", "doc*", "examples*")),
     include_package_data          = True,
     keywords                      = "HDL ASIC FPGA hardware design",
@@ -44,7 +37,7 @@ setup(
     ],
     entry_points = {
         "console_scripts": [
-            "litedram_gen=litedram.gen:main",
+            "liteeth_gen=liteeth.gen:main",
         ],
     },
 )
