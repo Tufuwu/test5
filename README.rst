@@ -1,44 +1,98 @@
-Demultiplex: FASTA/FASTQ demultiplexer
-======================================
+Toolium
+=======
 
-.. image:: https://img.shields.io/github/last-commit/jfjlaros/demultiplex.svg
-   :target: https://github.com/jfjlaros/demultiplex/graphs/commit-activity
-.. image:: https://github.com/jfjlaros/demultiplex/actions/workflows/python-package.yml/badge.svg
-   :target: https://github.com/jfjlaros/demultiplex/actions/workflows/python-package.yml
-.. image:: https://readthedocs.org/projects/demultiplex/badge/?version=latest
-   :target: https://demultiplex.readthedocs.io/en/latest
-.. image:: https://img.shields.io/github/release-date/jfjlaros/demultiplex.svg
-   :target: https://github.com/jfjlaros/demultiplex/releases
-.. image:: https://img.shields.io/github/release/jfjlaros/demultiplex.svg
-   :target: https://github.com/jfjlaros/demultiplex/releases
-.. image:: https://img.shields.io/pypi/v/demultiplex.svg
-   :target: https://pypi.org/project/demultiplex/
-.. image:: https://img.shields.io/github/languages/code-size/jfjlaros/demultiplex.svg
-   :target: https://github.com/jfjlaros/demultiplex
-.. image:: https://img.shields.io/github/languages/count/jfjlaros/demultiplex.svg
-   :target: https://github.com/jfjlaros/demultiplex
-.. image:: https://img.shields.io/github/languages/top/jfjlaros/demultiplex.svg
-   :target: https://github.com/jfjlaros/demultiplex
-.. image:: https://img.shields.io/github/license/jfjlaros/demultiplex.svg
-   :target: https://raw.githubusercontent.com/jfjlaros/demultiplex/master/LICENSE.md
-.. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.8362959.svg
-   :target: https://zenodo.org/record/8362959
-----
+|Build Status| |Coverage Status| |CodeClimate| |Documentation Status|
 
-Versatile NGS demultiplexer with the following features:
+Toolium is a Python wrapper tool of Selenium and Appium libraries to test web and mobile applications in a single
+project. It provides a way of choosing and configuring the driver through a configuration file, implements a Page Object
+pattern and includes a simple visual testing solution.
 
-- Support for FASTA and FASTQ files.
-- Support for gzip and bzip2 compressed files.
-- Support for multiple reads per fragment, e.g., paired-end.
-- Handles barcodes in the header and in the reads.
-- Handles barcodes at *unknown* locations in reads (e.g., PacBio or Nanopore
-  barcodes).
-- Support for selection of part of a barcode.
-- Allows for mismatches, insertions and deletions.
-- Barcode guessing by frequency or fixed amount.
-- Handles large numbers (over one million) of barcodes.
+.. |Build Status| image:: https://github.com/Telefonica/toolium/workflows/build/badge.svg?branch=master
+   :target: https://github.com/Telefonica/toolium/actions?query=branch%3Amaster
+.. |Documentation Status| image:: https://readthedocs.org/projects/toolium/badge/?version=latest
+   :target: http://toolium.readthedocs.org/en/latest
+.. |Coverage Status| image:: https://coveralls.io/repos/Telefonica/toolium/badge.svg?branch=master&service=github
+   :target: https://coveralls.io/github/Telefonica/toolium?branch=master
+.. |CodeClimate| image:: https://api.codeclimate.com/v1/badges/3e5773b2e5272b546f8a/maintainability
+   :target: https://codeclimate.com/github/Telefonica/toolium/maintainability
 
-Please see ReadTheDocs_ for the latest documentation.
+Getting Started
+---------------
 
+Run ``pip install toolium`` to install the latest version from `PyPi <https://pypi.org/project/toolium>`_. It's
+highly recommendable to use a virtualenv.
 
-.. _ReadTheDocs: https://demultiplex.readthedocs.io/en/latest/index.html
+The main dependencies are:
+
+- `Selenium <http://docs.seleniumhq.org/>`_: to test web applications in major browsers (Firefox, Chrome, Internet
+  Explorer, Edge or Safari)
+- `Appium-Python-Client <https://github.com/appium/python-client>`_: to test mobile applications (native, hybrid or web)
+  in Android or iOS devices/emulators.
+- `requests <http://docs.python-requests.org>`_: to test APIs
+
+You might need to adjust the Selenium and Appium-Python-Client versions in your project.
+In that case follow the `compatibility matrix <https://github.com/appium/python-client?tab=readme-ov-file#compatibility-matrix>`_
+
+**Using toolium-template**
+
+The easiest way of getting started is to clone `toolium-template <https://github.com/Telefonica/toolium-template>`_
+project, run the example test and add your own tests and configuration.
+
+.. code:: console
+
+    $ git clone git@github.com:Telefonica/toolium-template.git
+    $ cd toolium-template
+    $ pip install -r requirements.txt
+
+Now, just follow `toolium-template instructions <https://github.com/Telefonica/toolium-template#running-tests>`_ to know
+how to start your testing project.
+
+**Running toolium-examples**
+
+You can also clone `toolium-examples <https://github.com/Telefonica/toolium-examples>`_ to get more examples about how
+to use the library to test web, Android or iOS applications, in different scenarios.
+
+.. code:: console
+
+    $ git clone git@github.com:Telefonica/toolium-examples.git
+    $ cd toolium-examples
+    $ pip install -r requirements.txt
+
+Now, just follow `toolium-examples instructions <https://github.com/Telefonica/toolium-examples#running-tests>`_ to run
+the examples of the tests.
+
+Contributing
+------------
+
+If you want to collaborate in Toolium development, feel free of `forking it <https://github.com/Telefonica/toolium>`_
+and asking for a pull request.
+
+Don't forget to run unit tests:
+
+.. code:: console
+
+    $ git clone git@github.com:<your_github_user>/toolium.git
+    $ cd toolium
+    $ pip install -r requirements.txt
+    $ pip install -r requirements_dev.txt
+    $ python -m pytest
+
+Finally, before accepting your contribution, we need you to sign our
+`Contributor License Agreement <https://raw.githubusercontent.com/telefonicaid/Licensing/master/ContributionPolicy.txt>`_
+and send it to ruben.gonzalezalonso@telefonica.com.
+
+Main Features
+-------------
+
+- `Choosing driver through a configuration file </docs/driver_configuration.rst>`_
+- `Page Object pattern </docs/page_objects.rst>`_
+- `BDD integration </docs/bdd_integration.rst>`_
+- `Visual testing solution </docs/visual_testing.rst>`_
+- `Tests result analysis </docs/tests_result_analysis.rst>`_
+
+Documentation
+-------------
+
+Further information about features and fixes included in each release: `CHANGELOG </CHANGELOG.rst>`_.
+
+Complete library reference and documentation available at `ReadTheDocs <http://toolium.readthedocs.org>`_.

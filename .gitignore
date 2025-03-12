@@ -1,7 +1,98 @@
+# Eclipse IDE File
+.classpath
+.project
+.springBeans
+.settings
+target
+.pydevproject
+
+# VSCode IDE
+.vscode
+
+# virtualenv
+.venv
+venv/
+VENV/
+ENV/
+
+# Packages
+*.egg
+*.egg-info
+dist
+build
+eggs
+parts
+bin
+var
+sdist
+dist
+develop-eggs
+.installed.cfg
+lib
+lib64
+
+# OS or Editor folders
+.DS_Store
+Thumbs.db
+.cache
+.project
+.settings
+.classpath
+.springBeans
+.metadata
+target
+Server
+classes
+.tmproj
+*.esproj
+.checkstyle
+nbproject
+nbactions.xml
+cobertura.ser
+*.iml
+
+# Numerous always-ignore extensions
 *.pyc
+*.diff
+*.err
+*.orig
+*.log
+*.rej
+*.swo
 *.swp
-.cache/
-.pytest_cache/
-build/
-dist/
-demultiplex.egg-info/
+*.vi
+*~
+*.sass-cache
+
+# Dreamweaver added files
+_notes
+dwsync.xml
+
+# Komodo
+*.komodoproject
+.komodotools
+
+# Folders to ignore
+.hg
+.svn
+.CVS
+intermediate
+publish
+.idea
+/*.html
+/reports
+.sonar
+.coverage
+tmp
+output
+.eggs
+.tox
+.env
+.autoenv
+
+# Database
+*.sqlite3
+*.db3
+
+# Tests
+*/test/output
