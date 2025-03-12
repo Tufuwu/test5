@@ -1,38 +1,51 @@
-image: python:3.11
+stages:
+  - test
 
-services:
-  - postgres:16
-
-variables:
-  POSTGRES_DB: sodar_core
-  POSTGRES_USER: sodar_core
-  POSTGRES_PASSWORD: sodar_core
-  DATABASE_URL: postgres://sodar_core:sodar_core@postgres/sodar_core
-  DEBIAN_FRONTEND: noninteractive
-
-before_script:
-  # SSH setup taken from https://gitlab.com/gitlab-examples/ssh-private-key
-  - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
-  - eval $(ssh-agent -s)
-  - ssh-add <(echo "$SSH_PRIVATE_KEY")
-  - mkdir -p ~/.ssh
-  - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
-
-  - sh ./utility/install_os_gitlab.sh
-  - sh ./utility/install_chrome_gitlab.sh
-  - python3 -m venv ./env
-  - source ./env/bin/activate
-  # - sh ./utility/install_python_dependencies.sh
-  - pip3 install "wheel>=0.38.4, <0.39"
-  - pip3 install -r ./requirements/local.txt
-  - pip3 install -r ./requirements/test.txt
-
-all_tests:
+test-py36:
+  image: python:3.6-alpine
+  stage: test
   script:
-    - python3 manage.py geticons
-    - python3 manage.py collectstatic --noinput
-    - coverage run --source="." manage.py test -v 2 --settings=config.settings.test
-    - coverage report
-    - make black arg=--check
-    - flake8 .
-  when: on_success
+    - pip install tox
+    - tox -e py36
+
+test-py35:
+  image: python:3.5-alpine
+  stage: test
+  script:
+    - pip install tox
+    - tox -e py35
+
+test-py34:
+  image: python:3.4-alpine
+  stage: test
+  script:
+    - pip install tox
+    - tox -e py34
+
+test-py33:
+  image: python:3.3-alpine
+  stage: test
+  script:
+    - pip install tox
+    - tox -e py33
+
+test-py27:
+  image: python:2.7-alpine
+  stage: test
+  script:
+    - pip install tox
+    - tox -e py27
+
+test-pypy:
+  image: pypy:2-slim
+  stage: test
+  script:
+    - pip install tox
+    - tox -e pypy
+
+test-pypy3:
+  image: pypy:3-slim
+  stage: test
+  script:
+    - pip install tox
+    - tox -e pypy3
