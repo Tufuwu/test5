@@ -1,101 +1,39 @@
-# Compiled python files
 *.py[cod]
-*$py.class
-*.pyc
 
 # C extensions
 *.so
 
-# Cache python
-__pycache__/
-
-# Python egg metadata, regenerated from source files by setuptools
-/*.egg-info
-/.eggs/
-develop-eggs/
-wheels/
-.installed.cfg
+# Packages
 *.egg
-
-# Exclude everything in subprojects but wrap files
-subprojects/*
-!subprojects/*.wrap
-
-# Setuptools build and distribution directories
-/dist/
-/build/
-sdist/
-
-# Virtualenv
-/venv/
-
-# Tox
-.tox
-
-# Pytest
-.pytest_cache/
-pytest-report.xml
-nosetests.xml
-
-# Python coverage output
-.coverage
-.coverage.*
-coverage.xml
-/htmlcov/
-
-# pylint report
-pylint-report.txt
-
-# Debug file logging
-debug.log
-
-# Documentation build and API
-docs/build/
-docs/_build/
-docs/source/api_reference/
-docs/source/apidoc/
+*.egg-info
+dist
+pur/build
+eggs
+parts
+bin
+var
+sdist
+develop-eggs
+.installed.cfg
+lib
+lib64
 
 # Installer logs
 pip-log.txt
-pip-delete-this-directory.txt
 
-#  Code quality
-pylint-report.xml
+# Unit test / coverage reports
+.coverage
+.tox
+nosetests.xml
 
 # Translations
 *.mo
-*.pot
 
-# Django stuff:
-*.log
-local_settings.py
+# Mr Developer
+.mr.developer.cfg
+.project
+.pydevproject
 
-# Flask stuff:
-instance/
-.webassets-cache
-
-# Scrapy stuff:
-.scrapy
-
-# Jupyter Notebook
-.ipynb_checkpoints
-output
-
-# pyenv
-.python-version
-
-# dotenv
-.env
-
-# mkdocs documentation
-/site
-
-# mypy
-.mypy_cache/
-
-# IDE settings
-.vscode/
-.idea/
-
-# Swap file
-*.swp
+virtualenv
+venv
+.DS_Store

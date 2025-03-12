@@ -1,5 +1,9 @@
 [run]
-source = pandora
+branch = false
 omit =
-    # Omit tests
-    /tests/*
+    pur/packages/*
+[report]
+omit =
+    pur/packages/*
+    */python?.?/*
+    */site-packages/nose/*

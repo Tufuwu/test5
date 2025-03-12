@@ -1,40 +1,48 @@
-#!/usr/bin/env python
-# coding: utf8
-#
-# Copyright (c) 2024 Centre National d'Etudes Spatiales (CNES).
-#
-# This file is part of PANDORA
-#
-#     https://github.com/CNES/Pandora
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
-"""
-This module contains the required libraries and softwares allowing to execute the software,
-and setup elements to configure and identify the software.
-setup.py kept for different version compatibility
-All packaging in setup.cfg
-"""
-
 from setuptools import setup
 
-try:
-    setup()
-except Exception:
-    print(
-        "\n\nAn error occurred while building the project, "
-        "please ensure you have the most updated version of pip, setuptools, "
-        "setuptools_scm and wheel with:\n"
-        "   pip install -U pip setuptools setuptools_scm wheel\n\n"
-    )
-    raise
+about = {}
+with open('pur/__about__.py') as f:
+    exec(f.read(), about)
+
+packages = [
+    about['__title__'],
+]
+
+install_requires = [x.strip() for x in open('requirements.txt').readlines()]
+
+setup(
+    name=about['__title__'],
+    version=about['__version__'],
+    license=about['__license__'],
+    description=about['__description__'],
+    long_description=open('README.md').read(),
+    long_description_content_type="text/markdown",
+    author=about['__author__'],
+    author_email=about['__author_email__'],
+    url=about['__url__'],
+    packages=packages,
+    package_dir={about['__title__']: about['__title__']},
+    include_package_data=True,
+    zip_safe=False,
+    platforms='any',
+    install_requires=install_requires,
+    entry_points={
+        'console_scripts': ['pur = pur.__init__:pur'],
+    },
+    classifiers=[
+        'Development Status :: 5 - Production/Stable',
+        'Environment :: Console',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: BSD License',
+        'Natural Language :: English',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
+        'Topic :: Software Development :: Build Tools',
+    ],
+)

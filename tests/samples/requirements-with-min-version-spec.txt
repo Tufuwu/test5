@@ -1,0 +1,2 @@
+fakewebserver>=1.8.6,<=1.9
+fakewebserver > 1.8.6, < 1.9

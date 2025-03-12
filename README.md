@@ -1,105 +1,108 @@
-<div align="center">
-<a target="_blank" href="https://github.com/CNES/pandora">
-<picture>
-  <img
-    src="https://raw.githubusercontent.com/CNES/Pandora/master/docs/source/Images/logo/logo_typo_large.png?inline=false""
-    alt="Pandora"
-    width="40%"
-  />
-</picture>
-</a>
+[![Tests](https://img.shields.io/github/actions/workflow/status/alanhamlett/pip-update-requirements/tests.yml?branch=master)](https://github.com/alanhamlett/pip-update-requirements/actions)
+[![Coverage](https://codecov.io/gh/alanhamlett/pip-update-requirements/branch/master/graph/badge.svg?token=Ob1I7eMhiS)](https://codecov.io/gh/alanhamlett/pip-update-requirements)
+[![Version](https://img.shields.io/pypi/v/pur.svg)](https://pypi.python.org/pypi/pur)
+[![Supported Python Versions](https://img.shields.io/pypi/pyversions/pur.svg)](https://pypi.python.org/pypi/pur)
+[![WakaTime](https://wakatime.com/badge/github/alanhamlett/pip-update-requirements.svg)](https://wakatime.com/)
 
-<h4> Pandora, a stereo matching framework</h4>
+# pip-update-requirements
 
-[![Python](https://img.shields.io/badge/python-v3.8+-blue.svg)](https://www.python.org/downloads/release/python-390/)
-[![Contributions welcome](https://img.shields.io/badge/contributions-welcome-orange.svg)](CONTRIBUTING.md)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0/)
-[![Documentation](https://readthedocs.org/projects/pandora/badge/?version=latest)](https://pandora.readthedocs.io/)
-[![Github Action](https://github.com/CNES/Pandora/actions/workflows/pandora_ci.yml/badge.svg?branch=master)](https://github.com/CNES/Pandora/actions)
-[![Codecov](https://codecov.io/gh/CNES/Pandora/branch/master/graph/badge.svg?token=IENWO02GB3)](https://codecov.io/gh/CNES/Pandora)
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/CNES/Pandora/master)
+Update the packages in a `requirements.txt` file.
 
-<p>
-  <a href="#overview">Overview</a> •
-  <a href="#install">Install</a> •
-  <a href="#quick-start">Quick Start</a> •
-  <a href="#Documentation">Documentation</a> •
-  <a href="#credits">Credits</a> •
-  <a href="#related">Related</a> •
-  <a href="#references">References</a>
-</p>
+![Purring Cat](https://raw.githubusercontent.com/alanhamlett/pip-update-requirements/master/pur.gif)
 
-</div>
+## Installation
 
-## Overview
+    pip install pur
 
-From stereo rectified images to disparity map  |  Pandora is working with cost volumes
-:-------------------------:|:-------------------------:
-![](https://raw.githubusercontent.com/CNES/Pandora/master/docs/source/Images/schema_readme.png?inline=false)  |  ![](https://raw.githubusercontent.com/CNES/Pandora/master/docs/source/Images/disparity3D_with_projected_dispartiry_color.gif)
+## Usage
 
-Pandora is a stereo matching flexible framework made for research and production with state of the art performances:
+Give pur your `requirements.txt` file and it updates all your packages to
+the latest versions.
 
-- Inspired from the (Scharstein et al., 2002) modular taxonomy, it allows one to emulate, analyse and hopefully improve state of the art stereo algorithms with a few lines of code.
-- For production purpose, Pandora have been created for the CNES & Airbus <a href="https://co3d.cnes.fr/en/co3d-0">CO3D project</a> processing chain, as [CARS](https://github.com/CNES/CARS) core stereo matching tool.
+For example, given a `requirements.txt` file:
 
-The tool is open for contributions, contact us to pandora AT cnes.fr !
+    flask==0.9
+    sqlalchemy==0.9.10
+    alembic==0.8.4
 
-## Install
+Running pur on that file updates the packages to current latest versions:
 
-Pandora is available on Pypi and can be installed by:
+    $ pur -r requirements.txt
+    Updated flask: 0.9 -> 1.0.2
+    Updated sqlalchemy: 0.9.10 -> 1.2.8
+    Updated alembic: 0.8.4 -> 0.9.9
+    All requirements up-to-date.
 
-```bash
-pip install pandora
-```
 
-For stereo reconstruction, install pandora **with** following plugins:
+Pur never modifies your environment or installed packages, it only modifies
+your `requirements.txt` file.
 
-```bash
-# SGM regularization
-pip install pandora[sgm]
-#  MCCNN AI matching cost capability (heavy!)
-pip install pandora[mccnn]
-```
+You can also use Pur directly from Python:
 
-## Quick Start
+    $ python
+    Python 3.6.1
+    >>> from pur import update_requirements
+    >>> print([x[0]['message'] for x in update_requirements(input_file='requirements.txt').values()])
+    ['Updated flask: 0.9 -> 1.0.2', 'Updated sqlalchemy: 0.9.10 -> 1.2.8', 'Updated alembic: 0.8.4 -> 0.9.9']
+    >>> print(open('requirements.txt').read())
+    flask==1.0.2
+    sqlalchemy==1.2.8
+    alembic==0.9.9
 
-```bash
 
-# Download configuration file
-wget https://raw.githubusercontent.com/CNES/Pandora/master/data_samples/json_conf_files/a_local_block_matching.json
+## Options
 
-# Download data samples
-wget https://raw.githubusercontent.com/CNES/Pandora/master/data_samples/images/cones.zip
+    -r, --requirement PATH   The requirements.txt file to update; Defaults to
+                             using requirements.txt from the current directory
+                             if it exist.
+    -o, --output PATH        Output updated packages to this file; Defaults to
+                             overwriting the input requirements.txt file.
+    --interactive            Interactively prompts before updating each package.
+    -f, --force              Force updating packages even when a package has no
+                             version specified in the input requirements.txt
+                             file.
+    -d, --dry-run            Output changes to STDOUT instead of overwriting the
+                             requirements.txt file.
+    --dry-run-changed        Enable dry run and only output packages with
+                             updates, not packages that are already the latest.
+    -n, --no-recursive       Prevents updating nested requirements files.
+    --skip TEXT              Comma separated list of packages to skip updating.
+    --skip-gt                Skip updating packages using > or >= spec, to allow
+                             specifying minimum supported versions of packages.
+    --index-url TEXT         Base URL of the Python Package Index. Can be
+                             provided multiple times for extra index urls.
+    --cert PATH              Path to PEM-encoded CA certificate bundle. If
+                             provided, overrides the default.
+    --no-ssl-verify          Disable verifying the server's TLS certificate.
+    --only TEXT              Comma separated list of packages. Only these
+                             packages will be updated.
+    --minor TEXT             Comma separated list of packages to only update
+                             minor versions, never major. Use "*" to limit every
+                             package to minor version updates.
+    --patch TEXT             Comma separated list of packages to only update
+                             patch versions, never major or minor. Use "*" to
+                             limit every package to patch version updates.
+    --pre TEXT               Comma separated list of packages to allow updating
+                             to pre-release versions. Use "*" to allow all
+                             packages to be updated to pre-release versions. By
+                             default packages are only updated to stable
+                             versions.
+    -z, --nonzero-exit-code  Exit with status 1 when some packages were updated,
+                             0 when no packages updated, or a number greater
+                             than 1 when there was an error. By default, exit
+                             status 0 is used unless there was an error
+                             irregardless of whether packages were or not
+                             updated.
+    --version                Show the version and exit.
+    --help                   Show this message and exit.
 
-# Uncompress data
-unzip cones.zip
+## Contributing
 
-# Run pandora
-pandora a_local_block_matching.json output_dir
+Before contributing a pull request, make sure tests pass:
 
-# Left and right disparity maps are saved in output_dir: left_disparity.tif and right_disparity.tif
-```
+    virtualenv venv
+    . venv/bin/activate
+    pip install tox
+    tox
 
-## Documentation
-
-To go further, please consult [our online documentation](https://pandora.readthedocs.io/).
-
-## Credits
-
-- *Scharstein, D., & Szeliski, R. (2002). A taxonomy and evaluation of dense two-frame stereo correspondence algorithms. International journal of computer vision, 47(1-3), 7-42.*  
-- *Scharstein, D., & Szeliski, R. (2003, June). High-accuracy stereo depth maps using structured light. In IEEE Computer Society Conference on Computer Vision and Pattern Recognition, 2003. Proceedings. (Vol. 1, pp. I-I).*
-- *2003 Middleburry dataset (D. Scharstein & R. Szeliski, 2003).*
-
-## Related
-
-[Plugin_LibSGM](https://github.com/CNES/pandora_plugin_libsgm) - Stereo Matching Algorithm plugin for Pandora  
-[Plugin_MC-CNN](https://github.com/CNES/pandora_plugin_mccnn) - MC-CNN Neural Network plugin for Pandora  
-[Pandora2D](https://github.com/CNES/Pandora2D) - CNES Image Registration framework based on Pandora, with 2D disparity maps.
-[CARS](https://github.com/CNES/CARS) - CNES 3D reconstruction software
-
-## References
-
-Please cite the following papers when using Pandora:
-
-- *Cournet, M., Sarrazin, E., Dumas, L., Michel, J., Guinet, J., Youssefi, D., Defonte, V., Fardet, Q., 2020. Ground-truth generation and disparity estimation for optical satellite imagery. ISPRS - International Archives of the Photogrammetry, Remote Sensing and Spatial Information Sciences.*
-- *Youssefi D., Michel, J., Sarrazin, E., Buffe, F., Cournet, M., Delvit, J., L’Helguen, C., Melet, O., Emilien, A., Bosman, J., 2020. Cars: A photogrammetry pipeline using dask graphs to construct a global 3d model. IGARSS - IEEE International Geoscience and Remote Sensing Symposium.*
+Many thanks to all [contributors](https://github.com/alanhamlett/pip-update-requirements/blob/master/AUTHORS)!
