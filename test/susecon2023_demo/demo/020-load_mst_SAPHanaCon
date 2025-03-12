@@ -1,2 +1,0 @@
-#!/bin/bash
-crm configure load update  demo_mst_SAPHanaCon.txt

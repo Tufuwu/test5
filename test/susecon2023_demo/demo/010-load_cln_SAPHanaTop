@@ -1,3 +1,0 @@
-#!/bin/bash
-crm maintenance off
-crm configure load update  demo_cln_SAPHanaTop.txt
