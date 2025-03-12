@@ -1,4 +1,0 @@
-# Mapping from repo to Jira.
-defaults:
-  project: ONEBUCKET
-  type: Task

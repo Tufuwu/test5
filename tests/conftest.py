@@ -1,133 +1,340 @@
-"""Automatically run by pytest to set up test infrastructure."""
+import operator
 
-import re
-from pathlib import Path
-from typing import Dict
-
+import numpy as np
 import pytest
-import requests_mock
+from ladybug.epw import EPW
+from ladybug_pandas.extension_types.arraytype import LadybugArrayType
+from ladybug_pandas.extension_types.dtype import LadybugDType
+from pandas import Series
+from pandas.core import ops
 
-import openedx_webhooks
-import openedx_webhooks.info
-import openedx_webhooks.utils
 
-from . import settings as test_settings
-from .fake_github import FakeGitHub
-from .fake_jira import FakeJira
+@pytest.fixture(scope='session')
+def dbt_data_collection():
+    epw_path = 'tests/assets/epw/tokyo.epw'
+
+    epw = EPW(epw_path)
+
+    return epw.dry_bulb_temperature
+
+
+@pytest.fixture(scope='session')
+def dtype(dbt_data_collection):
+    """A fixture providing the ExtensionDtype to validate."""
+    return LadybugDType.construct_from_header(dbt_data_collection.header)
+
+
+# @pytest.fixture
+# def dbt_array(dtype):
+#     return LadybugArrayType
+
+@pytest.fixture
+def data(dbt_data_collection, dtype):
+    """
+    Length-100 array for this type.
+    * data[0] and data[1] should both be non missing
+    * data[0] and data[1] should not be equal
+    """
+
+    # values = dbt_data_collection.values[:100]
+
+    # return dbt_array(values)
+    # dbt_data_collection.values = dbt_data_collection[:100]
+
+    return LadybugArrayType(dbt_data_collection.values[:100], dtype=dtype)
 
 
 @pytest.fixture
-def requests_mocker():
-    """Make requests_mock available as a fixture."""
-    mocker = requests_mock.Mocker(real_http=False, case_sensitive=True)
-    mocker.start()
-    try:
-        yield mocker
-    finally:
-        mocker.stop()
-
-# URLs we use to grab data from GitHub.  We use requests_mock to provide
-# canned data during tests.
-DATA_REGEX = re.compile(r"https://raw.githubusercontent.com/([^/]+/[^/]+)/HEAD/(.*)")
-
-@pytest.fixture
-def fake_repo_data(requests_mocker):
-    """A fixture to use local files instead of GitHub-fetched data files."""
-
-    def _repo_data_callback(request, context):
-        """Read repo_data data from local data."""
-        m = re.fullmatch(DATA_REGEX, request.url)
-        assert m, f"{request.url = }"
-        repo_data_dir = Path(__file__).parent / "repo_data"
-        file_path = repo_data_dir / "/".join(m.groups())
-        if file_path.exists():
-            return file_path.read_text()
-        else:
-            context.status_code = 404
-            return "No such file"
-
-    requests_mocker.get(DATA_REGEX, text=_repo_data_callback)
+def data_missing(dtype):
+    """Length-2 array with [NA, Valid]"""
+    return LadybugArrayType([np.nan, 3.4], dtype=dtype)
 
 
-@pytest.fixture(scope="session", autouse=True)
-def hard_cache_yaml_data_files(session_mocker) -> None:
-    """
-    Reading yaml files is slowish, and these data files don't change.
-    Read them once per test run, and re-use the data.
-    """
-    real_read_yaml_data_file = openedx_webhooks.info._read_yaml_data_file
-    data_files: Dict[str, Dict] = {}
-    def new_read_yaml_data_file(filename):
-        data = data_files.get(filename)
-        if data is None:
-            data = real_read_yaml_data_file(filename)
-            data_files[filename] = data
+@pytest.fixture(params=["data", "data_missing"])
+def all_data(request, data, data_missing):
+    """Parametrized fixture giving 'data' and 'data_missing'"""
+    if request.param == "data":
         return data
-    session_mocker.patch("openedx_webhooks.info._read_yaml_data_file", new_read_yaml_data_file)
+    elif request.param == "data_missing":
+        return data_missing
 
-
-def pytest_addoption(parser):
-    parser.addoption(
-        "--percent-404",
-        action="store",
-        help="What percent of HTTP requests should fail with a 404",
-        default="0",
-    )
-
-
-@pytest.fixture(autouse=True)
-def settings_for_tests(mocker):
-    for name, value in vars(test_settings).items():
-        if name.isupper():
-            mocker.patch(f"openedx_webhooks.settings.{name}", value)
 
 @pytest.fixture
-def fake_github(pytestconfig, mocker, requests_mocker, fake_repo_data):
-    fraction_404 = float(pytestconfig.getoption("percent_404")) / 100.0
-    the_fake_github = FakeGitHub(login="webhook-bot", fraction_404=fraction_404)
-    the_fake_github.install_mocks(requests_mocker)
-    if fraction_404:
-        # Make the retry sleep a no-op so it won't slow the tests.
-        mocker.patch("openedx_webhooks.utils.retry_sleep", lambda x: None)
-    return the_fake_github
-
-
-def fake_jira_fixture(url):
-    """A function to make fake Jira fixtures!"""
-    @pytest.fixture
-    def _fake_jira(requests_mocker, fake_repo_data):
-        """A FakeJira for the first server configured in our jira-info.yaml."""
-        the_fake_jira = FakeJira(url)
-        the_fake_jira.install_mocks(requests_mocker)
-        return the_fake_jira
-    return _fake_jira
-
-fake_jira = fake_jira_fixture("https://test.atlassian.net")
-fake_jira2 = fake_jira_fixture("https://test2.atlassian.net")
-fake_jira_another = fake_jira_fixture("https://anotherorg.atlassian.net")
-
-
-@pytest.fixture(autouse=True)
-def configure_flask_app():
+def data_repeated(data):
     """
-    Needed to make the app understand it's running under HTTPS, and have Flask
-    initialized properly.
+    Generate many datasets.
+    Parameters
+    ----------
+    data : fixture implementing `data`
+    Returns
+    -------
+    Callable[[int], Generator]:
+        A callable that takes a `count` argument and
+        returns a generator yielding `count` datasets.
     """
-    app = openedx_webhooks.create_app(config="testing")
-    with app.test_request_context('/', base_url="https://openedx-webhooks.herokuapp.com"):
-        yield
+
+    def gen(count):
+        for _ in range(count):
+            yield data
+
+    return gen
 
 
-@pytest.fixture(autouse=True)
-def reset_all_memoized_functions():
-    """Clears the values cached by @memoize before each test. Applied automatically."""
-    openedx_webhooks.utils.clear_memoized_values()
+@pytest.fixture
+def data_for_sorting(dtype):
+    """
+    Length-3 array with a known sort order.
+    This should be three items [B, C, A] with
+    A < B < C
+    """
+    return LadybugArrayType([5, 10, 2], dtype=dtype)
 
 
-@pytest.fixture(params=[
-    pytest.param(False, id="pr:closed"),
-    pytest.param(True, id="pr:merged"),
-])
-def is_merged(request):
-    """Makes tests try both merged and closed pull requests."""
+@pytest.fixture
+def sort_by_key():
+    return None
+
+
+@pytest.fixture
+def data_missing_for_sorting(dtype):
+    """
+    Length-3 array with a known sort order.
+    This should be three items [B, NA, A] with
+    A < B and NA missing.
+    """
+    return LadybugArrayType([5, None, 2], dtype=dtype)
+
+
+@pytest.fixture
+def data_for_twos(dtype):
+    """Length-100 array in which all the elements are two."""
+    return LadybugArrayType([2]*100, dtype=dtype)
+
+
+@pytest.fixture
+def na_cmp():
+    """
+    Binary operator for comparing NA values.
+    Should return a function of two arguments that returns
+    True if both arguments are (scalar) NA for your type.
+    By default, uses ``operator.is_``
+    """
+    def comp(a, b):
+        return np.isnan(a) and np.isnan(b)
+
+    return comp
+    # return operator.is_
+
+
+@pytest.fixture
+def na_value():
+    """The scalar missing value for this type. Default 'None'"""
+    return np.nan
+
+
+@pytest.fixture
+def data_for_grouping(dtype):
+    """
+    Data for factorization, grouping, and unique tests.
+    Expected to be like [B, B, NA, NA, A, A, B, C]
+    Where A < B < C and NA is missing
+    """
+    return LadybugArrayType([3, 3, None, None, 1, 1, 3, 5], dtype=dtype)
+
+
+@pytest.fixture(params=[True, False])
+def box_in_series(request):
+    """Whether to box the data in a Series"""
+    return request.param
+
+
+@pytest.fixture(
+    params=[
+        lambda x: 1,
+        lambda x: [1] * len(x),
+        lambda x: Series([1] * len(x)),
+        lambda x: x,
+    ],
+    ids=["scalar", "list", "series", "object"],
+)
+def groupby_apply_op(request):
+    """
+    Functions to test groupby.apply().
+    """
+    return request.param
+
+
+@pytest.fixture(params=[True, False])
+def as_frame(request):
+    """
+    Boolean fixture to support Series and Series.to_frame() comparison testing.
+    """
+    return request.param
+
+
+@pytest.fixture(params=[True, False])
+def as_series(request):
+    """
+    Boolean fixture to support arr and Series(arr) comparison testing.
+    """
+    return request.param
+
+
+@pytest.fixture(params=[True, False])
+def use_numpy(request):
+    """
+    Boolean fixture to support comparison testing of ExtensionDtype array
+    and numpy array.
+    """
+    return request.param
+
+
+@pytest.fixture(params=["ffill", "bfill"])
+def fillna_method(request):
+    """
+    Parametrized fixture giving method parameters 'ffill' and 'bfill' for
+    Series.fillna(method=<method>) testing.
+    """
+    return request.param
+
+
+@pytest.fixture(params=[True, False])
+def as_array(request):
+    """
+    Boolean fixture to support ExtensionDtype _from_sequence method testing.
+    """
+    return request.param
+
+
+# ----------------------------------------------------------------
+# Operators & Operations
+# ----------------------------------------------------------------
+_all_arithmetic_operators = [
+    "__add__",
+    # "__radd__",
+    "__sub__",
+    # "__rsub__",
+    "__mul__",
+    # "__rmul__",
+    "__floordiv__",
+    # "__rfloordiv__",
+    "__truediv__",
+    # "__rtruediv__",
+    "__pow__",
+    # "__rpow__",
+    "__mod__",
+    # "__rmod__",
+]
+
+
+@pytest.fixture(params=_all_arithmetic_operators)
+def all_arithmetic_operators(request):
+    """
+    Fixture for dunder names for common arithmetic operations.
+    """
+    return request.param
+
+
+@pytest.fixture(
+    params=[
+        operator.add,
+        ops.radd,
+        operator.sub,
+        ops.rsub,
+        operator.mul,
+        ops.rmul,
+        operator.truediv,
+        ops.rtruediv,
+        operator.floordiv,
+        ops.rfloordiv,
+        operator.mod,
+        ops.rmod,
+        operator.pow,
+        ops.rpow,
+    ]
+)
+def all_arithmetic_functions(request):
+    """
+    Fixture for operator and roperator arithmetic functions.
+
+    Notes
+    -----
+    This includes divmod and rdivmod, whereas all_arithmetic_operators
+    does not.
+    """
+    return request.param
+
+
+_all_numeric_reductions = [
+    "sum",
+    "max",
+    "min",
+    "mean",
+    "prod",
+    "std",
+    "var",
+    "median",
+    "kurt",
+    "skew",
+]
+
+
+@pytest.fixture(params=_all_numeric_reductions)
+def all_numeric_reductions(request):
+    """
+    Fixture for numeric reduction names.
+    """
+    return request.param
+
+
+_all_boolean_reductions = ["all", "any"]
+
+
+@pytest.fixture(params=_all_boolean_reductions)
+def all_boolean_reductions(request):
+    """
+    Fixture for boolean reduction names.
+    """
+    return request.param
+
+
+@pytest.fixture(params=["__eq__", "__ne__", "__le__", "__lt__", "__ge__", "__gt__"])
+def all_compare_operators(request):
+    """
+    Fixture for dunder names for common compare operations
+
+    * >=
+    * >
+    * ==
+    * !=
+    * <
+    * <=
+    """
+    return request.param
+
+
+@pytest.fixture(params=["__le__", "__lt__", "__ge__", "__gt__"])
+def compare_operators_no_eq_ne(request):
+    """
+    Fixture for dunder names for compare operations except == and !=
+
+    * >=
+    * >
+    * <
+    * <=
+    """
+    return request.param
+
+
+@pytest.fixture(
+    params=["__and__", "__rand__", "__or__", "__ror__", "__xor__", "__rxor__"]
+)
+def all_logical_operators(request):
+    """
+    Fixture for dunder names for common logical operations
+
+    * |
+    * &
+    * ^
+    """
     return request.param
