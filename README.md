@@ -1,184 +1,63 @@
-# amitools - various AmigaOS tools for other platforms
+# full-offline-backup-for-todoist
 
-- written by Christian Vogelgsang <chris@vogelgsang.org>
-- under the GNU Public License V2
+[![Build Status](https://github.com/joanbm/full-offline-backup-for-todoist/actions/workflows/run-tests.yml/badge.svg?branch=master)](https://github.com/joanbm/full-offline-backup-for-todoist/actions/workflows/run-tests.yml)
 
-## Introduction
+[![Coverage Status](https://coveralls.io/repos/github/joanbm/full-offline-backup-for-todoist/badge.svg)](https://coveralls.io/github/joanbm/full-offline-backup-for-todoist)
 
-`amitools` is a collection of Python 3 tools that I've written to work with
-*Amiga OS* binaries and files on macOS and all other *nix-like platforms
-supporting Python. Windows might work as
-well, but is heavily untested. However, patches are welcome.
+## Quick description
 
-I focus with my tools on classic Amiga setups, i.e. a 680x0 based system with
-Amiga OS 1.x - 3.x running on it. However, this is an open project, so you can
-provide other Amiga support, too.
+It is a utility that allows you to download a complete backup of your Todoist tasks, including all attachments, to your local computer, so you remain in control of all your data.
 
-The tools are mostly developer-oriented, so a background in Amiga programming
-will be very helpful.
+## What is the main aim of this tool?
 
-## Prerequisites
+With Todoist Premium, you can **attach files or photos to tasks as comments**, which can be very convenient for everyday use, e.g. you can attach a photo of a bill to a task about paying it.
 
-- Python >= ```3.8```
-- [pip3][1]
+Furthermore, Todoist has a **backup functionality**, which allows exporting the task data to a local computer in the form of a ZIP file, e.g. for offline usage or in the event of an incident with Todoist's servers.
 
-### Optional Packages
+Unfortunately, the two don't mix: **The backup functionality doesn't back up any of the attachments assigned to tasks**. Instead, only a URL to download the attachment is included in the backup, which isn't useful or ideal for most scenarios.
 
-- [lhafile - FS Edition][2]: required to use ```.lha``` file scanner
-- [machine68k][3]: required to run `vamos`
+This tool aims to allow you to make a complete backup, including all attachments, so you can easily keep all your task data secure on your own computer.
 
-[1]: https://pip.pypa.io/en/stable/installation/
-[2]: https://github.com/FrodeSolheim/python-lhafile
-[3]: https://github.com/cnvogelg/machine68k/
+## Full feature list
 
-## Installation
+* Can download the backups from Todoist's servers through the Todoist API.
 
-### Stable/Release Version
+* Can download all attachments of the tasks associated with your Todoist backup.
 
-If you only need the tools without `vamos` then you can install the pure
-Python version:
+* Can be easily automated to download your backups periodically.
 
-```bash
-pip3 install amitools
-```
+## Status
 
-If you want to run `vamos` then you need the CPU emulator from the `machine68k`
-package and you can install this dependency with:
+Stable, but not tested under every possible scenario under the sun.
 
-```bash
-pip3 install 'amitools[vamos]'
-```
+## Requirements
 
-Note:
+* Python 3 (tested with Python 3.8+). No additional dependencies needed.
 
-- on Linux/macOS may use ``sudo`` to install for all users
-- the version may be a bit outdated. If you need recent changes use the
-  current version.
+## Usage examples
 
-### Current Version from GitHub
+Download the repository and open a terminal at the root folder.
 
-If you wan to run `vamos` then first install the CPU emulator `machine68k`:
+To create a backup from Todoist's servers, without including attachments (you will be asked for your Todoist API Token through the command line):
 
-```bash
-pip3 install -U git+https://github.com/cnvogelg/machine68k.git
-```
+``python3 -m full_offline_backup_for_todoist download``
 
-Then install `amitools` directly from the git repository:
+To create a backup from Todoist's servers, including attachments, and with tracing/progress info:
 
-```bash
-pip3 install -U git+https://github.com/cnvogelg/amitools.git
-```
+``python3 -m full_offline_backup_for_todoist --verbose download --with-attachments``
 
-Note:
+Print full help:
 
-- This will install the latest version found in the github repository.
-- You find the latest features but it may also be unstable from time to time.
-- Repeat this command to update to the latest version.
+``python3 -m full_offline_backup_for_todoist -h``
 
-### Developers
+## How to get my Todoist API token?
 
-- Follow this route if you want to hack around with the amitools codebase
-- Clone the Git repo: [amitools@git](https://github.com/cnvogelg/amitools)
-- Ensure you have Cython and `machine68k` installed:
+The easiest way to get one is to open the **web version of Todoist**, go to the **Settings** section, then to the **Integrations** sections, and you will see an API token there in the **"Token API"** section.
 
-```bash
-pip3 install cython machine68k
-```
+## How can I automate the backup process?
 
-- Enter the directory of the cloned repo and install via pip:
+To automate the backup process, you can use any automation tool you want (e.g. cron, Jenkins) that can run the utility. In order to pass the credentials non-interactively, you can set the `TODOIST_TOKEN` environment variable before running it from your automation tool.
 
-```bash
-pip3 install -U -e .
-```
+# Disclaimer
 
-This install `amitools` in your current Python environment but takes the
-source files still from this repository. So you can change the code there
-and directly test the tools.
-
-## Contents
-
-The new Documentation of `amitools` is hosted on [readthedocs][4]
-
-### Tools
-
-- [vamos](docs/vamos.md) **V)irtual AM)iga OS**
-
-  vamos allows you to run command line (CLI) Amiga programs on your host
-  Mac or PC. vamos is an API level Amiga OS Emulator that replaces exec
-  and dos calls with its own implementation and maps all file access to
-  your local file system.
-
-  Note: `vamos` requires the package `machine68k` installed first!
-
-- [xdftool][5]
-
-  Create and modify ADF or HDF disk image files.
-
-- [xdfscan][6]
-
-  Scan directory trees for ADF or HDF disk image files and verify the contents.
-
-- [rdbtool][7]
-
-  Create or modify disk images with Rigid Disk Block (RDB)
-
-- [romtool][8]
-
-  A tool to inspect, dissect, and build Amiga Kickstart ROM images to be
-  used with emulators, run with soft kickers or burned into flash ROMs.
-
-- hunktool
-
-  The hunktool uses amitools' hunk library to load a hunk-based amiga
-  binary. Currently, its main purpose is to display the contents of the
-  files in various formats.
-
-  You can load hunk-based binaries, libraries, and object files. Even
-  overlayed binary files are supported.
-
-- typetool
-
-  This little tool is a companion for vamos. It allows you to dump and get
-  further information on the API C structure of AmigaOS used in vamos.
-
-- fdtool
-
-  This tool reads the fd (function description) files Commodore supplied for
-  all of their libraries and dumps their contents in different formats
-  including a code structure used in vamos.
-
-  You can query functions and find their jump table offset.
-
-[4]: https://amitools.readthedocs.io/
-[5]: https://amitools.readthedocs.io/en/latest/tools/xdftool.html
-[6]: https://amitools.readthedocs.io/en/latest/tools/xdfscan.html
-[7]: https://amitools.readthedocs.io/en/latest/tools/rdbtool.html
-[8]: https://amitools.readthedocs.io/en/latest/tools/romtool.html
-
-### Python Libraries
-
-- Hunk library ```amitools.binfmt.hunk```
-
-  This library allows to read Amiga OS loadSeg()able binaries and represent
-  them in a python structure. You could query all items found there,
-  retrieve the code, data, and bss segments and even relocate them to target
-  addresses
-
-- ELF library ```amitools.binfmt.elf```
-
-  This library allows to read a subset of the ELF format mainly used in
-  AROS m68k.
-
-- .fd File Parser ```amitools.fd```
-
-  Parse function descriptions shipped by Commodore to describe the Amiga APIs
-
-- OFS and FFS File System Tools ```amitools.fs```
-
-  Create or modify Amiga's OFS and FFS file system structures
-
-- File Scanners ```amitools.scan```
-
-  I've written some scanners that walk through file trees and retrieve the
-  file data for further processing. I support file trees on the file system,
-  in lha archives or in adf/hdf disk images
+This is **NOT** an official application. This application is not created by, affiliated with, or supported by Doist.
