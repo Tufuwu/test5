@@ -12,6 +12,9 @@ jobs:
         python: ["3.9", "3.10"]
         django: [2.2]
 
+    env:
+      DATABASE_URL: ${{ matrix.database_url }}
+
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python }}
@@ -19,6 +22,8 @@ jobs:
       with:
         python-version: ${{ matrix.python }}
     - name: Install dependencies
-      run: pip install -U django==${{ matrix.django }}
+      run: pip install -U django==${{ matrix.django }} black
     - name: Run tests
       run: python manage.py test
+    - name: Run black
+      run: black --check zen_queries

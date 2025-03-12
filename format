@@ -2,5 +2,5 @@
 
 set -e
 
-black enforce_host
-isort enforce_host
+black zen_queries
+isort zen_queries
