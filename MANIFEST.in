@@ -1,3 +1,5 @@
-include README.md
+include README.rst
 include LICENSE
-include requirements.txt
+include MANIFEST.in
+recursive-include swingtime/locale *
+recursive-include tests *.py

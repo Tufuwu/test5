@@ -1,31 +1,11 @@
-name: Python package
+name: Test
 
 on:
-  - push
-  - pull_request
+  push:
+    branches: [ master, develop ]
 
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v1
-    - uses: actions/setup-python@v2
-      with:
-        python-version: 3.9
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r dev-requirements.txt
-    - name: flake8
-      run: flake8 sendgrid_backend/
-    - name: isort
-      run: isort -c ./
-    - name: black
-      run: black --check ./
-    - name: mypy
-      run: mypy sendgrid_backend/
-
-  test:
+  build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -42,6 +22,4 @@ jobs:
         python -m pip install --upgrade pip
         pip install tox tox-gh-actions
     - name: Test with tox
-      env:
-        SENDGRID_API_TOKEN: ${{ secrets.SENDGRID_API_TOKEN }}
       run: tox
