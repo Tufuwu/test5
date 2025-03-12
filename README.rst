@@ -1,94 +1,62 @@
-aioapns - An efficient APNs Client Library for Python/asyncio
-=================================================================================
+================
+Django Oscar API
+================
 
-.. image:: https://github.com/Fatal1ty/aioapns/workflows/tests/badge.svg
-   :target: https://github.com/Fatal1ty/aioapns/actions
+This package provides a RESTful API for `django-oscar`_.
 
-.. image:: https://img.shields.io/pypi/v/aioapns.svg
-    :target: https://pypi.python.org/pypi/aioapns
+.. _`django-oscar`: https://github.com/django-oscar/django-oscar
 
-.. image:: https://img.shields.io/pypi/pyversions/aioapns.svg
-    :target: https://pypi.python.org/pypi/aioapns/
+.. image:: https://travis-ci.org/django-oscar/django-oscar-api.svg?branch=master
+    :target: https://travis-ci.org/django-oscar/django-oscar-api
 
-.. image:: https://img.shields.io/badge/License-Apache%202.0-blue.svg
-    :target: https://opensource.org/licenses/Apache-2.0
+.. image:: https://codecov.io/github/django-oscar/django-oscar-api/coverage.svg?branch=master
+    :alt: Coverage
+    :target: http://codecov.io/github/django-oscar/django-oscar-api?branch=master
 
-**aioapns** is a library designed specifically for sending push-notifications to iOS devices
-via Apple Push Notification Service. aioapns provides an efficient client through
-asynchronous HTTP2 protocol for use with Python's ``asyncio``
-framework.
+.. image:: https://readthedocs.org/projects/django-oscar-api/badge/
+   :alt: Documentation Status
+   :target: https://django-oscar-api.readthedocs.io/
 
-aioapns requires Python 3.8 or later.
+.. image:: https://badge.fury.io/py/django-oscar-api.svg
+   :alt: Latest PyPi release
+   :target: https://pypi.python.org/pypi/django-oscar-api
 
+Usage
+=====
 
-Performance
------------
+To use the Oscar API application in an Oscar E-commerce site, follow these
+steps:
 
-In my testing aioapns allows you to send on average 1.3k notifications per second on a single core.
+1. Install the ``django-oscar-api`` package (``pip install django-oscar-api``).
 
+2. Add ``rest_framework`` and ``oscarapi`` to ``INSTALLED_APPS``
 
-Features
---------
+    .. code-block:: python
 
-* Internal connection pool which adapts to the current load
-* Support for certificate and token based connections
-* Ability to set TTL (time to live) for notifications
-* Ability to set priority for notifications
-* Ability to set collapse-key for notifications
-* Ability to use production or development APNs server
-* Support for basic HTTP-Proxies
+       INSTALLED_APPS = [
+        ...
+        'rest_framework',
+        'oscarapi',
+       ]
 
+3. Add the application's urls to your urlconf
 
-Installation
-------------
+   .. code-block:: python
 
-Use pip to install::
+      from django.urls import include
 
-    $ pip install aioapns
+      urlpatterns = (
+          # all the things you already have
+          path("api/", include("oscarapi.urls")),
+      )
 
+4. Apply migrations::
 
-Basic Usage
------------
-
-.. code-block:: python
-
-    import asyncio
-    from uuid import uuid4
-    from aioapns import APNs, NotificationRequest, PushType
+    python manage.py migrate
 
 
-    async def run():
-        apns_cert_client = APNs(
-            client_cert='/path/to/apns-cert.pem',
-            use_sandbox=False,
-        )
-        apns_key_client = APNs(
-            key='/path/to/apns-key.p8',
-            key_id='<KEY_ID>',
-            team_id='<TEAM_ID>',
-            topic='<APNS_TOPIC>',  # Bundle ID
-            use_sandbox=False,
-        )
-        request = NotificationRequest(
-            device_token='<DEVICE_TOKEN>',
-            message = {
-                "aps": {
-                    "alert": "Hello from APNs",
-                    "badge": "1",
-                }
-            },
-            notification_id=str(uuid4()),  # optional
-            time_to_live=3,                # optional
-            push_type=PushType.ALERT,      # optional
-        )
-        await apns_cert_client.send_notification(request)
-        await apns_key_client.send_notification(request)
+See the Documentation_ for more information and the Changelog_ for release notes.
 
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(run())
+.. _Documentation: https://django-oscar-api.readthedocs.io
+.. _Changelog: https://django-oscar-api.readthedocs.io/en/latest/changelog.html
 
-
-License
--------
-
-aioapns is developed and distributed under the Apache 2.0 license.
