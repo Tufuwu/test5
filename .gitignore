@@ -9,6 +9,7 @@ __pycache__/
 # Distribution / packaging
 .Python
 env/
+venv/
 build/
 develop-eggs/
 dist/
@@ -23,6 +24,7 @@ var/
 *.egg-info/
 .installed.cfg
 *.egg
+*.pex
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -43,7 +45,6 @@ htmlcov/
 nosetests.xml
 coverage.xml
 *,cover
-.hypothesis/
 
 # Translations
 *.mo
@@ -54,20 +55,10 @@ coverage.xml
 
 # Sphinx documentation
 docs/_build/
+docs/build/
 
 # PyBuilder
 target/
 
-#Ipython Notebook
-.ipynb_checkpoints
-
-
-# JetBrains IDE stuff
-.idea/
-
-# Virtual environment directories
-/venv*/
-
-*.swp # Vim files
-
-.vscode/
+# Rope stuff
+.ropeproject/
