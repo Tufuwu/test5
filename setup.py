@@ -1,48 +1,71 @@
-# Setup for epydemic
-#
-# Copyright (C) 2017--2022 Simon Dobson
-#
-# This file is part of epydemic, epidemic network simulations in Python.
-#
-# epydemic is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# epydemic is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with epydemic. If not, see <http://www.gnu.org/licenses/gpl.html>.
+import codecs
+from os import path
 
-from setuptools import setup
+from setuptools import find_packages, setup
 
-with open('README.rst') as f:
-    longDescription = f.read()
+try:
+    from collections import OrderedDict  # noqa
+except ImportError:
+    dependencies = ["ordereddict"]
+else:
+    dependencies = []
 
-setup(name='epydemic',
-      version='1.14.1',
-      description='Epidemic network simulations in Python',
-      long_description=longDescription,
-      url='http://github.com/simoninireland/epydemic',
-      author='Simon Dobson',
-      author_email='simoninireland@gmail.com',
-      license='License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
-      classifiers=['Development Status :: 4 - Beta',
-                   'Intended Audience :: Science/Research',
-                   'Intended Audience :: Developers',
-                   'Programming Language :: Python :: 3.6',
-                   'Programming Language :: Python :: 3.7',
-                   'Programming Language :: Python :: 3.8',
-                   'Programming Language :: Python :: 3.9',
-                   'Programming Language :: Python :: 3.10',
-                   'Topic :: Scientific/Engineering'],
-      python_requires='>=3.6',
-      packages=['epydemic', 'epydemic.gf'],
-      package_data={'epydemic': ['py.typed']},
-      zip_safe=False,
-      install_requires=[ "networkx >= 2.4", "epyc >= 1.7.2", "pandas", "numpy >= 1.18", "scipy", "mpmath", "python-dotenv", "epydemicarchive_client",  ],
-      extra_requires={':python_version < 3.8': ['typing_extensions']},
+here = path.abspath(path.dirname(__file__))
+
+with codecs.open(path.join(here, "README.rst"), encoding="utf-8") as f:
+    long_description = f.read()
+
+with open("cvss/__init__.py") as f:
+    for line in f:
+        if line.startswith("__version__"):
+            delim = '"' if '"' in line else "'"
+            version = line.split(delim)[1]
+            break
+    else:
+        raise RuntimeError("Unable to find version string.")
+
+setup(
+    name="cvss",
+    version=version,
+    description="CVSS2/3/4 library with interactive calculator for Python 2 and Python 3",
+    long_description=long_description,
+    long_description_content_type="text/x-rst",
+    url="https://github.com/RedHatProductSecurity/cvss",
+    project_urls={
+        "Releases": "https://github.com/RedHatProductSecurity/cvss/releases",
+        "Source code": "https://github.com/RedHatProductSecurity/cvss",
+        "Issues": "https://github.com/RedHatProductSecurity/cvss/issues",
+        "CI": "https://github.com/RedHatProductSecurity/cvss/actions",
+    },
+    author="Stanislav Kontar, Red Hat Product Security",
+    author_email="skontar@redhat.com",
+    license="LGPLv3+",
+    classifiers=[
+        "Development Status :: 5 - Production/Stable",
+        "Intended Audience :: Developers",
+        "Topic :: Security",
+        "License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)",
+        "Programming Language :: Python :: 2",
+        "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
+    ],
+    keywords="security cvss score calculator",
+    packages=find_packages(),
+    install_requires=dependencies,
+    tests_require=["jsonschema"],
+    entry_points={
+        "console_scripts": [
+            "cvss_calculator = cvss.cvss_calculator:main",
+        ],
+    },
+    # to make Python 2 and Python 3 compatible wheel
+    options={"bdist_wheel": {"universal": "1"}},
 )
