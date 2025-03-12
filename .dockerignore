@@ -1,0 +1,14 @@
+*.egg-info/
+*.sqlite3
+*.gitbundle
+.idea/
+.git/
+.github/
+.pytest_cache/
+__pycache__/
+env/
+env-minimum/
+env-no-wagtail/
+dist/
+build/
+wiki/

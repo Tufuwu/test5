@@ -1,0 +1,112 @@
+version: "3.9"
+
+# Run two instances of `sample-project`
+#
+# Instance #1:
+# - Accessible at http://localhost:8001
+# - Uses `celery` and `RabbitMQ` to handle webmentions.
+#
+# Instance #2:
+# - Accessible at http://localhost:8002
+# - Uses `cron` to handle webmentions, scheduled to run every minute.
+# - Also uses Wagtail.
+#
+# - Each instance can send mentions to the other one
+# - Each instance has a cron job which has a chance of sending a mention to the
+#   other each minute.
+
+x-healthy: &healthy
+  interval: 10s
+  timeout: 2s
+  retries: 3
+  start_period: 20s
+
+x-database: &database
+  image: postgres
+  healthcheck:
+    test: [ "CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}" ]
+    <<: *healthy
+
+x-app-volumes: &app-volumes
+  volumes:
+    - ./sample-project:/project
+    - ./mentions:/project/mentions
+
+x-with-celery: &with-celery
+  env_file:
+    - ./sample-project/docker/.env
+    - ./sample-project/docker/with-celery/.env
+
+x-with-wagtail: &with-wagtail
+  env_file:
+    - ./sample-project/docker/.env
+    - ./sample-project/docker/with-wagtail/.env
+
+
+services:
+  # This version uses Celery
+  with-celery-db:
+    <<: [*with-celery, *database]
+
+  with-celery-rabbitmq:
+    image: rabbitmq:3-alpine
+    <<: *with-celery
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      <<: *healthy
+    ports:
+      - "5672"
+
+  with-celery-web.org:
+    <<: [*with-celery, *app-volumes]
+    build:
+      target: with_celery
+    depends_on:
+      with-celery-db:
+        condition: service_healthy
+    healthcheck:
+      test: "curl --fail http://localhost"
+    ports:
+      - "8001:80"
+
+  with-celery-celery:
+    <<: [*with-celery, *app-volumes]
+    build:
+      target: with_celery_celery
+    depends_on:
+      with-celery-rabbitmq:
+        condition: service_healthy
+      with-celery-web.org:
+        condition: service_healthy
+
+  with-celery-cron:
+    <<: [*with-celery, *app-volumes]
+    build:
+      target: with_celery_cron
+    depends_on:
+      with-celery-web.org:
+        condition: service_healthy
+
+  # This version uses Wagtail and does not use Celery
+  with-wagtail-db:
+    <<: [*with-wagtail, *database]
+
+  with-wagtail-web.org:
+    <<: [*with-wagtail, *app-volumes]
+    build:
+      target: with_wagtail
+    depends_on:
+      with-wagtail-db:
+        condition: service_healthy
+    healthcheck:
+      test: "curl --fail http://localhost"
+    ports:
+      - "8002:80"
+
+  with-wagtail-cron:
+    <<: [*with-wagtail, *app-volumes]
+    build:
+      target: with_wagtail_cron
+    depends_on:
+      with-wagtail-web.org:
+        condition: service_healthy
