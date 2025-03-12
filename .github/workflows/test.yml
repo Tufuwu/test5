@@ -1,25 +1,39 @@
-name: CI
-on: [push, pull_request]
+#
+# This software may be modified and distributed under the terms
+# of the MIT license.  See the LICENSE file for details.
+
+name: CI Tests
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
 jobs:
-  build:
-    runs-on: ${{ matrix.os }}
+  test:
+    name: Python ${{ matrix.python }}
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        os:
-          - ubuntu-latest
-          - macos-latest
-          - windows-latest
-        python-version: ["3.9", "3.10"]
+        python: ["3.9", "3.10"]
+      fail-fast: false
+
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python
+
+      - name: Setup Python
         uses: actions/setup-python@v2
         with:
-          python-version: ${{ matrix.python-version }}
-      - name: Run CI
-        run: |
-          python -m pip install --requirement requirements.txt
-          python -m pip install --requirement requirements-dev.txt
-          python -m pip install --editable .
-          python -m flake8
-          python -m pytest --cov
+          python-version: ${{ matrix.python }}
+
+      - name: Update Pip
+        run: pip install --upgrade pip setuptools
+
+      - name: Install Tox
+        run: pip install tox
+
+      - name: Run tests
+        run: tox -e py
