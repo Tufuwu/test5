@@ -1,10 +1,9 @@
-# for running tests
-molecule~=24.12.0
-molecule-plugins[docker]~=23.5.3
-requests==2.30.0
-docker~=7.1.0
-ansible~=11.2.0
-# for development
-pre-commit
-# for README generation
-pyyaml
+csscompressor==0.9.5
+docopt==0.6.2
+htmlmin==0.1.12
+jsmin==3.0.0
+pykwalify==1.8.0
+python-dateutil==2.8.2
+PyYAML==6.0.2
+ruamel.yaml==0.16.12
+six==1.16.0
