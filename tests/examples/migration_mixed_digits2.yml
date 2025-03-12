@@ -1,0 +1,13 @@
+migration:
+  options:
+    # --workers=0 --stop-after-init are automatically added
+    install_command: odoo
+    install_args: --log-level=debug
+  versions:
+    - version: setup
+    - version: 10.17.0
+    - version: 10.17.1
+    # here we switch to new versioning
+    - version: 10.0.0.18.0
+    - version: 10.0.0.19.0
+
