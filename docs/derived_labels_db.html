@@ -1,0 +1,563 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.1" />
+<title>paroxython.derived_labels_db API documentation</title>
+<meta name="description" content="An in-memory database collecting the labels of a given program …" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS_CHTML" integrity="sha256-kZafAc6mZvK3W3v1pHOcUix30OHQN6pU/NO2oFkqZVw=" crossorigin></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+<a href="https://github.com/laowantong/paroxython"><img style="position: absolute; top: 0; right: 0; border: 0; width: 150px; height: 150px" src="https://laowantong.github.io/paroxython/resources/source_on_github.png" alt="Source on GitHub"></a>
+<style>.homelink{display:block}.homelink:hover{color:inherit}.homelink img{margin:auto;margin-bottom:.3em}</style>
+<link rel="canonical" href="https://laowantong.github.io/paroxython/derived_labels_db.html">
+<link rel="icon" href="https://laowantong.github.io/paroxython/resources/logo.png">
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>paroxython.derived_labels_db</code></h1>
+</header>
+<section id="section-intro">
+<p>An in-memory database collecting the labels of a given program.</p>
+<h3 id="main-table">Main table</h3>
+<p>The database is not really relational. It merely consists in a table <code>t</code> where each row is a
+distinct occurrence of every label featured by a given program. Initially, <code>t</code> is populated with
+the labels found by the queries specified by a regular expression of <a href="https://github.com/laowantong/paroxython/blob/master/paroxython/resources/spec.md"><code>spec.md</code></a>.</p>
+<p>The <abbr title="Structured Query Language">SQL</abbr> queries are then executed, and the resulting labels (known as <em>derived</em>) inserted into <code>t</code>
+as they are found.</p>
+<p>Note that the results of a given <abbr title="Structured Query Language">SQL</abbr> query may themselves be required by a subsequent <abbr title="Structured Query Language">SQL</abbr> query.</p>
+<h4 id="example">Example</h4>
+<p>The following simple <abbr title="Structured Query Language">SQL</abbr> query of <a href="https://github.com/laowantong/paroxython/blob/master/paroxython/resources/spec.md"><code>spec.md</code></a> finds the loops of a program. The resulting label names
+(e.g., <code>"loop:while"</code>) consist in a fixed prefix <code>"loop"</code> and a suffix denoting the category of
+the loop (either <code>"for"</code> or <code>"while"</code>).</p>
+<pre><code class="sql">SELECT &quot;loop&quot;,
+    name_prefix,
+    span,
+    path
+FROM t
+WHERE name_prefix IN (&quot;for&quot;, &quot;while&quot;)
+GROUP BY path
+</code></pre>
+<p>The execution of this query comes after the evaluation of all regular expressions, in particular
+those collecting the features <code>"for"</code> and <code>"while"</code>. It simply gathers them under the prefix
+<code>"loop"</code>, and qualifies them by their category.</p>
+<p>The resulting labels will later be used by other <abbr title="Structured Query Language">SQL</abbr> queries to search for features such as
+<code>"loop_with_break"</code>, <code>"loop_with_late_exit"</code>, <code>"loop_with_else"</code>, and so on.</p>
+<h3 id="subtables">Subtables</h3>
+<p>For simplicity and performance reasons, a bunch of subtables are extracted on the fly from <code>t</code>.
+Actually, every time a query relies on a non-existing table named <code>t_PREFIX</code>, this table is
+dynamically created as the set of rows of <code>t</code> whose value on column <code>name_prefix</code> is <code>PREFIX</code>.</p>
+<h4 id="example_1">Example</h4>
+<p>The following <abbr title="Structured Query Language">SQL</abbr> query of <a href="https://github.com/laowantong/paroxython/blob/master/paroxython/resources/spec.md"><code>spec.md</code></a> relies on the previous one to find the loops featuring a
+<code>break</code> statement. It is more complicated, since it suffixes <code>"loop_with_break"</code> with the span of
+the smallest enclosing loop. Anyway, it relies on the results of both the previous <abbr title="Structured Query Language">SQL</abbr> query and a
+trivial regular expression matching the <code>break</code> statements.</p>
+<pre><code class="sql">SELECT &quot;loop_with_break&quot;,
+    l.name_suffix,
+    max(l.span_start) || &quot;-&quot; || min(l.span_end),
+    max(l.path)
+FROM t_loop l
+JOIN t_break b ON (b.path GLOB l.path || &quot;*-&quot;)
+GROUP BY b.rowid
+</code></pre>
+<p>Instead of referring the corresponding rows in <code>t</code> (which would complicate the query), two
+subtables restricted to them are referred, <code>t_loop</code> and <code>t_break</code>. For example, if a <code>t_loop</code>
+subtable does not exist yet, the system extracts it from <code>t</code> by executing:</p>
+<pre><code class="sql">CREATE TABLE t_loop AS
+SELECT *
+FROM t
+WHERE name_prefix = 'loop'
+</code></pre>
+<p>The newly created table is then available for all subsequent queries that may need it, which can
+significantly speed up their execution.</p>
+<h3 id="note">Note</h3>
+<p>Using views instead of tables turns out to be slightly slower. Also, for whatever mysterious
+reason, several queries produce an incorrect result.</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+<a href="https://github.com/laowantong/paroxython/blob/master/paroxython/derived_labels_db.py#L0-L226" class="git-link">Browse GitHub</a>
+</summary>
+<pre><code class="python">import sqlite3
+from collections import defaultdict
+from typing import Any, Set, Callable, Dict
+
+import regex  # type: ignore
+
+from .goodies import couple_to_string, print_warning
+from .user_types import Label, LabelName, Labels, Query, Span
+
+
+class DerivedLabelsDatabase:
+
+    columns = (
+        # use rowid as primary key:
+        &#34;name TEXT&#34;,
+        &#34;name_prefix TEXT&#34;,
+        &#34;name_suffix TEXT&#34;,
+        &#34;span TEXT&#34;,
+        &#34;span_start INT&#34;,
+        &#34;span_end INT&#34;,
+        &#34;path TEXT&#34;,
+    )
+    def __init__(self):
+        self.c = sqlite3.connect(&#34;:memory:&#34;)
+        self.c.create_function(&#34;regexp&#34;, narg=2, func=lambda rex, s: bool(regex.match(rex, s)))
+        # References:
+        # - https://www.sqlite.org/inmemorydb.html
+        # - https://www.sqlite.org/lang_expr.html#regexp
+        # - https://docs.python.org/3/library/sqlite3.html#sqlite3.Connection.create_function
+
+    def create(
+        self,
+        labels: Labels,
+        create_main_table: str = f&#34;CREATE TABLE t ({&#39;,&#39;.join(columns)})&#34;,  # never provided
+    ) -&gt; None:
+        self.c.execute(create_main_table)
+        self.update(labels)
+        self.subtables: Set[LabelName] = set()
+
+    def read(
+        self,
+        query: Query,
+        prerequisites: Callable = regex.compile(r&#34;(?m)\b(?:FROM|JOIN) t_(\w+)&#34;).findall,
+        create_subtable: str = &#34;CREATE TABLE t_{0} AS SELECT * FROM t WHERE name_prefix = &#39;{0}&#39;&#34;,
+    ) -&gt; Labels:
+        # Parse the prerequisites of the query, and create the corresponding subtables if needed.
+        for label_name in prerequisites(query):
+            if label_name not in self.subtables:
+                self.c.execute(create_subtable.format(label_name))
+            self.subtables.add(label_name)
+        self.c.commit()
+        # Execute the query and return the resulting labels, deduplicated by (label_name, path).
+        labels_spans: Dict[LabelName, Dict[Span, Any]] = defaultdict(dict)
+        try:
+            row_iterator = self.c.execute(query)
+        except Exception as exception:  # pragma: no cover
+            print_warning(f&#34;problem in the following query:\n\n{query}\n&#34;)
+            raise exception
+        for (name_prefix, name_suffix, span_string, path) in row_iterator:
+            label_name = f&#34;{name_prefix}:{name_suffix}&#34; if name_suffix != &#34;&#34; else name_prefix
+            span = span_string.split(&#34;-&#34;)
+            labels_spans[label_name][Span(int(span[0]), int(span[-1]), path)] = None
+        return [Label(name, list(spans)) for (name, spans) in labels_spans.items()]
+
+    def update(
+        self,
+        labels: Labels,
+        update_query: str = f&#34;INSERT INTO t VALUES ({&#39;,&#39;.join(&#39;?&#39; * len(columns))})&#34;,
+    ) -&gt; None:
+        rows = []
+        for (name, spans) in labels:
+            for span in spans:
+                (prefix, _, suffix) = name.partition(&#34;:&#34;)  # split on the first colon
+                span_string = couple_to_string(span)
+                rows.append((name, prefix, suffix, span_string, span.start, span.end, span.path))
+        self.c.executemany(update_query, rows)
+
+    def delete(self) -&gt; None:
+        self.c.execute(&#34;DROP TABLE t&#34;)
+        for label_name in self.subtables:
+            self.c.execute(f&#34;DROP TABLE t_{label_name}&#34;)
+
+    def __str__(self) -&gt; str:  # pragma: no cover
+        rows = [&#34;name name_prefix name_suffix span span_start span_end path&#34;.split()]
+        rows.extend(sorted(list(map(str, row)) for row in self.c.execute(&#34;SELECT * FROM t&#34;)))
+        widths = list(map(len, [max(column, key=len) for column in zip(*rows)]))
+        result = [&#34;&#34;]
+        for row in rows:
+            result.append(&#34; | &#34;.join(s + &#34; &#34; * (w - len(s)) for (w, s) in zip(widths, row)))
+        result[1:1] = [&#34;-+-&#34;.join(&#34;-&#34; * w for w in widths)]
+        return &#34;\n&#34;.join(result)</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="paroxython.derived_labels_db.DerivedLabelsDatabase"><code class="flex name class">
+<span>class <span class="ident">DerivedLabelsDatabase</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+<a href="https://github.com/laowantong/paroxython/blob/master/paroxython/derived_labels_db.py#L90-L227" class="git-link">Browse GitHub</a>
+</summary>
+<pre><code class="python">class DerivedLabelsDatabase:
+
+    columns = (
+        # use rowid as primary key:
+        &#34;name TEXT&#34;,
+        &#34;name_prefix TEXT&#34;,
+        &#34;name_suffix TEXT&#34;,
+        &#34;span TEXT&#34;,
+        &#34;span_start INT&#34;,
+        &#34;span_end INT&#34;,
+        &#34;path TEXT&#34;,
+    )
+    def __init__(self):
+        self.c = sqlite3.connect(&#34;:memory:&#34;)
+        self.c.create_function(&#34;regexp&#34;, narg=2, func=lambda rex, s: bool(regex.match(rex, s)))
+        # References:
+        # - https://www.sqlite.org/inmemorydb.html
+        # - https://www.sqlite.org/lang_expr.html#regexp
+        # - https://docs.python.org/3/library/sqlite3.html#sqlite3.Connection.create_function
+
+    def create(
+        self,
+        labels: Labels,
+        create_main_table: str = f&#34;CREATE TABLE t ({&#39;,&#39;.join(columns)})&#34;,  # never provided
+    ) -&gt; None:
+        self.c.execute(create_main_table)
+        self.update(labels)
+        self.subtables: Set[LabelName] = set()
+
+    def read(
+        self,
+        query: Query,
+        prerequisites: Callable = regex.compile(r&#34;(?m)\b(?:FROM|JOIN) t_(\w+)&#34;).findall,
+        create_subtable: str = &#34;CREATE TABLE t_{0} AS SELECT * FROM t WHERE name_prefix = &#39;{0}&#39;&#34;,
+    ) -&gt; Labels:
+        # Parse the prerequisites of the query, and create the corresponding subtables if needed.
+        for label_name in prerequisites(query):
+            if label_name not in self.subtables:
+                self.c.execute(create_subtable.format(label_name))
+            self.subtables.add(label_name)
+        self.c.commit()
+        # Execute the query and return the resulting labels, deduplicated by (label_name, path).
+        labels_spans: Dict[LabelName, Dict[Span, Any]] = defaultdict(dict)
+        try:
+            row_iterator = self.c.execute(query)
+        except Exception as exception:  # pragma: no cover
+            print_warning(f&#34;problem in the following query:\n\n{query}\n&#34;)
+            raise exception
+        for (name_prefix, name_suffix, span_string, path) in row_iterator:
+            label_name = f&#34;{name_prefix}:{name_suffix}&#34; if name_suffix != &#34;&#34; else name_prefix
+            span = span_string.split(&#34;-&#34;)
+            labels_spans[label_name][Span(int(span[0]), int(span[-1]), path)] = None
+        return [Label(name, list(spans)) for (name, spans) in labels_spans.items()]
+
+    def update(
+        self,
+        labels: Labels,
+        update_query: str = f&#34;INSERT INTO t VALUES ({&#39;,&#39;.join(&#39;?&#39; * len(columns))})&#34;,
+    ) -&gt; None:
+        rows = []
+        for (name, spans) in labels:
+            for span in spans:
+                (prefix, _, suffix) = name.partition(&#34;:&#34;)  # split on the first colon
+                span_string = couple_to_string(span)
+                rows.append((name, prefix, suffix, span_string, span.start, span.end, span.path))
+        self.c.executemany(update_query, rows)
+
+    def delete(self) -&gt; None:
+        self.c.execute(&#34;DROP TABLE t&#34;)
+        for label_name in self.subtables:
+            self.c.execute(f&#34;DROP TABLE t_{label_name}&#34;)
+
+    def __str__(self) -&gt; str:  # pragma: no cover
+        rows = [&#34;name name_prefix name_suffix span span_start span_end path&#34;.split()]
+        rows.extend(sorted(list(map(str, row)) for row in self.c.execute(&#34;SELECT * FROM t&#34;)))
+        widths = list(map(len, [max(column, key=len) for column in zip(*rows)]))
+        result = [&#34;&#34;]
+        for row in rows:
+            result.append(&#34; | &#34;.join(s + &#34; &#34; * (w - len(s)) for (w, s) in zip(widths, row)))
+        result[1:1] = [&#34;-+-&#34;.join(&#34;-&#34; * w for w in widths)]
+        return &#34;\n&#34;.join(result)</code></pre>
+</details>
+<h3>Class variables</h3>
+<dl>
+<dt id="paroxython.derived_labels_db.DerivedLabelsDatabase.columns"><code class="name">var <span class="ident">columns</span></code></dt>
+<dd>
+<div class="desc"><p>The structure of the main table <code>t</code>, consisting of the following columns:</p>
+<table>
+<thead>
+<tr>
+<th align="left">Column</th>
+<th align="left">Type</th>
+<th align="left">Description and example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>rowid</code></td>
+<td align="left"><code>INT</code></td>
+<td align="left">Primary key (automatically generated)</td>
+</tr>
+<tr>
+<td align="left"><code>name</code></td>
+<td align="left"><code>TEXT</code></td>
+<td align="left">Complete name of the label, e.g.</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"><code>"loop_with_early_exit:for:break"</code></td>
+</tr>
+<tr>
+<td align="left"><code>name_prefix</code></td>
+<td align="left"><code>TEXT</code></td>
+<td align="left">Its prefix (part before the first colon, here</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"><code>"loop_with_early_exit"</code></td>
+</tr>
+<tr>
+<td align="left"><code>name_suffix</code></td>
+<td align="left"><code>TEXT</code></td>
+<td align="left">Its suffix (may contain one or more colons),</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">here <code>"for:break"</code></td>
+</tr>
+<tr>
+<td align="left"><code>span</code></td>
+<td align="left"><code>TEXT</code></td>
+<td align="left">Numbers of the first and last lines of the</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">feature as a hyphen-separated string, e.g. <code>"2-8"</code></td>
+</tr>
+<tr>
+<td align="left"><code>span_start</code></td>
+<td align="left"><code>INT</code></td>
+<td align="left">Its first line number, here <code>2</code></td>
+</tr>
+<tr>
+<td align="left"><code>span_end</code></td>
+<td align="left"><code>INT</code></td>
+<td align="left">Its first line number, here <code>8</code></td>
+</tr>
+<tr>
+<td align="left"><code>path</code></td>
+<td align="left"><code>TEXT</code></td>
+<td align="left">String encoding the beginning of the feature</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">as its path from the root of the <abbr title="Abstract Syntax Tree">AST</abbr>, e.g.</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"><code>"3-5-3-0-1-2-2-1-"</code></td>
+</tr>
+</tbody>
+</table></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="paroxython.derived_labels_db.DerivedLabelsDatabase.create"><code class="name flex">
+<span>def <span class="ident">create</span></span>(<span>self, <br>labels: List[Label], <br>create_main_table: str = 'CREATE TABLE t (name TEXT,name_prefix TEXT,name_suffix TEXT,span TEXT,span_start INT,span_end INT,path TEXT)'<br>) ‑> NoneType</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create the main table and populate it with regex-specified labels.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>labels</code></strong> :&ensp;<code>Labels</code></dt>
+<dd>The label names and spans featured by a certain program. Only those
+specified by a regular expression in <a href="https://github.com/laowantong/paroxython/blob/master/paroxython/resources/spec.md"><code>spec.md</code></a> are included. It is the very purpose
+of this module to add the remaining ones, specified by a <abbr title="Structured Query Language">SQL</abbr> query.</dd>
+<dt><strong><code>create_main_table</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>The <abbr title="Structured Query Language">SQL</abbr> query creating the table. Not to be
+explicitly provided. Defaults to <code>f"CREATE TABLE t ({','.join(columns)})"</code>.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+<a href="https://github.com/laowantong/paroxython/blob/master/paroxython/derived_labels_db.py#L130-L146" class="git-link">Browse GitHub</a>
+</summary>
+<pre><code class="python">def create(
+    self,
+    labels: Labels,
+    create_main_table: str = f&#34;CREATE TABLE t ({&#39;,&#39;.join(columns)})&#34;,  # never provided
+) -&gt; None:
+    self.c.execute(create_main_table)
+    self.update(labels)
+    self.subtables: Set[LabelName] = set()</code></pre>
+</details>
+</dd>
+<dt id="paroxython.derived_labels_db.DerivedLabelsDatabase.read"><code class="name flex">
+<span>def <span class="ident">read</span></span>(<span>self, <br>query: Query, <br>prerequisites: Callable = &lt;built-in method findall of regex&gt;, <br>create_subtable: str = "CREATE TABLE t_{0} AS SELECT * FROM t WHERE name_prefix = '{0}'"<br>) ‑> List[Label]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Apply the given <abbr title="Structured Query Language">SQL</abbr> query to the currently known labels, and returns the new labels.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>query</code></strong> :&ensp;<code>Query</code></dt>
+<dd>The <abbr title="Structured Query Language">SQL</abbr> specification of a certain feature, as defined in <a href="https://github.com/laowantong/paroxython/blob/master/paroxython/resources/spec.md"><code>spec.md</code></a>.</dd>
+<dt><strong><code>prerequisites</code></strong> :&ensp;<code>Callable</code>, optional</dt>
+<dd>A function taking an <abbr title="Structured Query Language">SQL</abbr> query, and returning the
+table names referred to in the FROM clause.
+<a href="developer_manual/index.html#default-argument-trick">Not to be explicitly provided.</a>
+Defaults to <code>regex.compile(r"(?m)\b(?:FROM|JOIN) t_(\w+)").findall</code>.</dd>
+<dt><strong><code>create_subtable</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>The <abbr title="Structured Query Language">SQL</abbr> query creating a subtable from a label prefix.
+Not to be explicitly provided.
+Defaults to <code>"CREATE TABLE t_{0} AS SELECT * FROM t WHERE name_prefix = '{0}'"</code>.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Labels</code></dt>
+<dd>The additional labels found by the given <abbr title="Structured Query Language">SQL</abbr> query.</dd>
+</dl>
+<h2 id="note">Note</h2>
+<p>As a side-effect, create in the database any non-existing subtable of <code>t</code> referred to
+as a prerequisite.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+<a href="https://github.com/laowantong/paroxython/blob/master/paroxython/derived_labels_db.py#L148-L190" class="git-link">Browse GitHub</a>
+</summary>
+<pre><code class="python">def read(
+    self,
+    query: Query,
+    prerequisites: Callable = regex.compile(r&#34;(?m)\b(?:FROM|JOIN) t_(\w+)&#34;).findall,
+    create_subtable: str = &#34;CREATE TABLE t_{0} AS SELECT * FROM t WHERE name_prefix = &#39;{0}&#39;&#34;,
+) -&gt; Labels:
+    # Parse the prerequisites of the query, and create the corresponding subtables if needed.
+    for label_name in prerequisites(query):
+        if label_name not in self.subtables:
+            self.c.execute(create_subtable.format(label_name))
+        self.subtables.add(label_name)
+    self.c.commit()
+    # Execute the query and return the resulting labels, deduplicated by (label_name, path).
+    labels_spans: Dict[LabelName, Dict[Span, Any]] = defaultdict(dict)
+    try:
+        row_iterator = self.c.execute(query)
+    except Exception as exception:  # pragma: no cover
+        print_warning(f&#34;problem in the following query:\n\n{query}\n&#34;)
+        raise exception
+    for (name_prefix, name_suffix, span_string, path) in row_iterator:
+        label_name = f&#34;{name_prefix}:{name_suffix}&#34; if name_suffix != &#34;&#34; else name_prefix
+        span = span_string.split(&#34;-&#34;)
+        labels_spans[label_name][Span(int(span[0]), int(span[-1]), path)] = None
+    return [Label(name, list(spans)) for (name, spans) in labels_spans.items()]</code></pre>
+</details>
+</dd>
+<dt id="paroxython.derived_labels_db.DerivedLabelsDatabase.update"><code class="name flex">
+<span>def <span class="ident">update</span></span>(<span>self, <br>labels: List[Label], <br>update_query: str = 'INSERT INTO t VALUES (?,?,?,?,?,?,?)'<br>) ‑> NoneType</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Insert a set of labels into the main table <code>t</code>.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>labels</code></strong> :&ensp;<code>Labels</code></dt>
+<dd>The labels to be inserted.</dd>
+<dt><strong><code>update_query</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>The <abbr title="Structured Query Language">SQL</abbr> query inserting a row in <code>t</code>. Not to be
+explicitly provided. Defaults to <code>f"INSERT INTO t VALUES ({','.join('?' *
+len(columns))})"</code>.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+<a href="https://github.com/laowantong/paroxython/blob/master/paroxython/derived_labels_db.py#L192-L211" class="git-link">Browse GitHub</a>
+</summary>
+<pre><code class="python">def update(
+    self,
+    labels: Labels,
+    update_query: str = f&#34;INSERT INTO t VALUES ({&#39;,&#39;.join(&#39;?&#39; * len(columns))})&#34;,
+) -&gt; None:
+    rows = []
+    for (name, spans) in labels:
+        for span in spans:
+            (prefix, _, suffix) = name.partition(&#34;:&#34;)  # split on the first colon
+            span_string = couple_to_string(span)
+            rows.append((name, prefix, suffix, span_string, span.start, span.end, span.path))
+    self.c.executemany(update_query, rows)</code></pre>
+</details>
+</dd>
+<dt id="paroxython.derived_labels_db.DerivedLabelsDatabase.delete"><code class="name flex">
+<span>def <span class="ident">delete</span></span>(<span>self) ‑> NoneType</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Empty the database after having executed all the <abbr title="Structured Query Language">SQL</abbr> queries.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+<a href="https://github.com/laowantong/paroxython/blob/master/paroxython/derived_labels_db.py#L213-L217" class="git-link">Browse GitHub</a>
+</summary>
+<pre><code class="python">def delete(self) -&gt; None:
+    self.c.execute(&#34;DROP TABLE t&#34;)
+    for label_name in self.subtables:
+        self.c.execute(f&#34;DROP TABLE t_{label_name}&#34;)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<header>
+<a class="homelink" rel="home" title="Paroxython Home" href="index.html">
+<img src="https://laowantong.github.io/paroxython/resources/logo.png" alt="Paroxython logo">
+</a>
+</header>
+<h1>Index</h1>
+<div class="toc">
+<ul>
+<li><a href="#main-table">Main table</a><ul>
+<li><a href="#example">Example</a></li>
+</ul>
+</li>
+<li><a href="#subtables">Subtables</a><ul>
+<li><a href="#example_1">Example</a></li>
+</ul>
+</li>
+<li><a href="#note">Note</a></li>
+</ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="paroxython" href="index.html">paroxython</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="paroxython.derived_labels_db.DerivedLabelsDatabase" href="#paroxython.derived_labels_db.DerivedLabelsDatabase">DerivedLabelsDatabase</a></code></h4>
+<ul class="">
+<li><code><a title="paroxython.derived_labels_db.DerivedLabelsDatabase.create" href="#paroxython.derived_labels_db.DerivedLabelsDatabase.create">create</a></code></li>
+<li><code><a title="paroxython.derived_labels_db.DerivedLabelsDatabase.read" href="#paroxython.derived_labels_db.DerivedLabelsDatabase.read">read</a></code></li>
+<li><code><a title="paroxython.derived_labels_db.DerivedLabelsDatabase.update" href="#paroxython.derived_labels_db.DerivedLabelsDatabase.update">update</a></code></li>
+<li><code><a title="paroxython.derived_labels_db.DerivedLabelsDatabase.delete" href="#paroxython.derived_labels_db.DerivedLabelsDatabase.delete">delete</a></code></li>
+<li><code><a title="paroxython.derived_labels_db.DerivedLabelsDatabase.columns" href="#paroxython.derived_labels_db.DerivedLabelsDatabase.columns">columns</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
+</footer>
+</body>
+</html>

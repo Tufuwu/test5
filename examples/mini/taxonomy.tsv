@@ -1,0 +1,9 @@
+Taxa (replacement patterns)	Labels (search patterns)
+call/subroutine/builtin/casting/\1	free_call:(list|dict)
+call/subroutine/builtin/casting/set	literal:Set
+condition/inequality	comparison_operator:(Lt|LtE|Gt|GtE)
+flow/conditional	if
+flow/conditional/else	if_else
+type/non_sequence/set	literal:Set
+type/non_sequence/set	member_call_method:difference_update
+type/sequence/list	free_call:list

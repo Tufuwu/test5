@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.1" />
+<title>paroxython API documentation</title>
+<meta name="description" content="Will you ever read me?." />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS_CHTML" integrity="sha256-kZafAc6mZvK3W3v1pHOcUix30OHQN6pU/NO2oFkqZVw=" crossorigin></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+<a href="https://github.com/laowantong/paroxython"><img style="position: absolute; top: 0; right: 0; border: 0; width: 150px; height: 150px" src="https://laowantong.github.io/paroxython/resources/source_on_github.png" alt="Source on GitHub"></a>
+<style>.homelink{display:block}.homelink:hover{color:inherit}.homelink img{margin:auto;margin-bottom:.3em}</style>
+<link rel="canonical" href="https://laowantong.github.io/paroxython/">
+<link rel="icon" href="https://laowantong.github.io/paroxython/resources/logo.png">
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Package <code>paroxython</code></h1>
+</header>
+<section id="section-intro">
+<h1 id="will-you-ever-read-me">Will you ever read me?</h1>
+<h2 id="introduction">Introduction</h2>
+<p>Paroxython is a set of command line tools which <strong>tag</strong> and <strong>filter</strong> by algorithmic features your collection of Python programming exercises.</p>
+<h3 id="audience">Audience</h3>
+<p>You are a teacher, in charge of an introductory programming course in an educational institution. Over the years, you have accumulated many—far too many—programs and code snippets that may be of interest to your students.</p>
+<p>Or, as a seasoned developer, you would like to share your knowledge by helping a loved one learn how to code. A cursory search for pedagogical material yields an overwhelming amount of websites and repositories stuffed with Python programs of various levels (e.g.,
+<a href="https://github.com/TheAlgorithms/Python">1</a>,
+<a href="http://rosettacode.org/wiki/Category:Python">2</a>,
+<a href="https://www.programming-idioms.org/about#about-block-language-coverage">3</a>,
+<a href="https://github.com/codebasics/py">4</a>,
+<a href="https://github.com/keon/algorithms">5</a>,
+<a href="https://github.com/OmkarPathak/Python-Programs">6</a>,
+and a lot more from <a href="https://github.com/quobit/awesome-python-in-education">Awesome Python in Education</a>).</p>
+<p>In any case, the Python source codes you have gathered are typically
+<strong>numerous</strong> (hundreds or even thousands),
+<strong>reasonably sized</strong> (anything below 100 lines of code),
+and <strong>educational</strong> in nature (e.g., snippets, examples, quizzes, exercise solutions, classic algorithms).
+The programming concepts you plan to teach remain relatively <strong>low level</strong> (e.g. assignments, nested loops, accumulation patterns, tail recursive functions, etc.).</p>
+<p>If all that sounds familiar, keep reading me.</p>
+<h3 id="main-goals">Main goals</h3>
+<p>Paroxython aims to help you select, from your collection, the one program that best suits your needs. For instance, it will gladly answer the following questions:</p>
+<blockquote>
+<ul>
+<li>How can this concept be illustrated?</li>
+<li>What problems use the same algorithmic and data structures as this one?</li>
+<li>What homework assignment should I give my students so they can practice the content of the last lesson?</li>
+</ul>
+</blockquote>
+<p>Moreover, since Paroxython knows what your class knows, it can recommend the right program at the right time:</p>
+<blockquote>
+<ul>
+<li>What would make a good review exercise?</li>
+<li>Which exercises can I give on this exam?</li>
+<li>What is the current learning cost of this example?</li>
+</ul>
+</blockquote>
+<p>In the long run, Paroxython may guide you and somehow make you rethink your course outline:</p>
+<blockquote>
+<ul>
+<li>What are the prerequisites for the concept of assignment?</li>
+<li>Do I have enough material to introduce subroutines before I even talk about conditionals and loops?</li>
+<li>Among the loops, which must come first: the most powerful (<code>while</code>), or the most useful (<code>for</code>)?</li>
+<li>How to logically structure this bunch of usual iterative patterns?</li>
+<li>What are the <em>basics</em>, exactly?</li>
+</ul>
+</blockquote>
+<p>All issues on which the author changed his mind since he started to work on this project!</p>
+<p>In an ideal world, Paroxython could even put an end to the deadliest religious wars, with rational, data-driven arguments:</p>
+<blockquote>
+<ul>
+<li>Father, is it a sin to exit early?</li>
+<li>Should a real byte use a mask?</li>
+</ul>
+</blockquote>
+<h3 id="how-it-works">How it works</h3>
+<p align="center">
+<a href="https://laowantong.github.io/paroxython/developer_manual/index.html">
+<img src="resources/waterfall.png">
+</a>
+</p>
+<p>Paroxython starts from a given folder of <strong>programs</strong>. Its contents is parsed, and all features that meet the provided <strong>specifications</strong> are labelled and associated with their spans (e.g., <code>"assignment_lhs_identifier:a": 4, 6, 18</code> or <code>"loop_with_late_exit:while": 3-7, 20-29</code>).</p>
+<p>These <strong>labels</strong> constitute only scattered knowledge. The next step is to map them onto a <strong>taxonomy</strong> designed with basic hierarchical constraints in mind (e.g., the fact that the introduction of the concept of early exit must come after that of loop, which itself requires that of control flow, is expressed by the <em>taxon</em> <code>"flow/loop/exit/early"</code>).</p>
+<p align="center">
+<a href="https://laowantong.github.io/paroxython/user_manual/index.html#taxonomy">
+<img src="resources/tree.png" alt="A taxonomy.">
+</a>
+<br>
+<em>Extract of the taxonomy generated from <a href="https://github.com/TheAlgorithms/Python">The Algorithms - Python</a>.<br>Click to jump to its full dynamic version in the user manual.</em>
+</p>
+<p>Everything is then persisted in a tag <strong>database</strong>, which can later be filtered through a <strong>pipeline</strong> of commands, for instance:</p>
+<ul>
+<li><em>include</em> only the programs which feature a recursive function;</li>
+<li><em>exclude</em> this or that program you want to set aside for the exam;</li>
+<li>“<em>impart</em>” all programs studied so far, <em>i.e</em>, consider that all the notions they implement are acquired.</li>
+</ul>
+<p>The result is a list of program <strong>recommendations</strong> ordered by increasing learning cost.</p>
+<h3 id="example">Example</h3>
+<p>Suppose that the <code>programs</code> directory contains <a href="https://wiki.python.org/moin/SimplePrograms">these simple programs</a>.</p>
+<p>First, build <a href="https://github.com/laowantong/paroxython/blob/master/examples/simple/programs_db.json">this tag database</a>:</p>
+<pre><code class="shell">&gt; paroxython collect programs
+Labelling 21 programs.
+Mapping taxonomy on 21 programs.
+Writing programs_db.json.
+</code></pre>
+<p>Then, filter it through <a href="https://github.com/laowantong/paroxython/blob/master/examples/simple/programs_pipe.py">this pipeline</a>:</p>
+<pre><code class="shell">&gt; paroxython recommend programs
+Processing 5 commands on 21 programs.
+  19 programs remaining after operation 1 (impart).
+  18 programs remaining after operation 2 (exclude).
+  12 programs remaining after operation 3 (exclude).
+  10 programs remaining after operation 4 (include).
+  10 programs remaining after operation 5 (hide).
+Dumped: programs_recommendations.md.
+</code></pre>
+<p>Et voilà, <a href="https://github.com/laowantong/paroxython/blob/master/examples/simple/programs_recommendations.md">your recommendation report</a>!</p>
+<h2 id="installation-and-test-drive">Installation and test-drive</h2>
+<h3 id="command-line">Command line</h3>
+<p>Much to no one's surprise:</p>
+<pre><code>python -m pip install paroxython
+</code></pre>
+<p>The following command should print a help message and exit:</p>
+<pre><code>paroxython --help
+</code></pre>
+<h3 id="ipython-magic-command">IPython magic command</h3>
+<p>If you use Jupyter notebook/lab, you've also just installed a so-called magic command. Load it like this:</p>
+<pre><code class="python">%load_ext paroxython
+</code></pre>
+<p>This should print <code>"paroxython 0.7.0 loaded."</code>. Run it on a cell of Python code:</p>
+<pre><code class="python">%%paroxython                          # Lines
+def fibonacci(n):                     # 2
+    result = []                       # 3
+    (a, b) = (0, 1)                   # 4
+    while a &lt; n:                      # 5
+        result.append(a)              # 6
+        (a, b) = (b, a + b)           # 7
+    return result                     # 8
+</code></pre>
+<table>
+<thead>
+<tr>
+<th align="left">Taxon</th>
+<th align="left">Lines</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>call/subroutine/method/sequence/list/append</code></td>
+<td align="left">6</td>
+</tr>
+<tr>
+<td align="left"><code>condition/inequality</code></td>
+<td align="left">5</td>
+</tr>
+<tr>
+<td align="left"><code>def/subroutine/function/impure</code></td>
+<td align="left">2-8</td>
+</tr>
+<tr>
+<td align="left"><code>def/subroutine/parameter/arg</code></td>
+<td align="left">2</td>
+</tr>
+<tr>
+<td align="left"><code>flow/loop/exit/late</code></td>
+<td align="left">5-7</td>
+</tr>
+<tr>
+<td align="left"><code>flow/loop/while</code></td>
+<td align="left">5-7</td>
+</tr>
+<tr>
+<td align="left"><code>meta/count/program/sloc/8</code></td>
+<td align="left">2-8</td>
+</tr>
+<tr>
+<td align="left"><code>meta/count/subroutine/sloc/7</code></td>
+<td align="left">2-8</td>
+</tr>
+<tr>
+<td align="left"><code>meta/count/variety/3</code></td>
+<td align="left">2-8</td>
+</tr>
+<tr>
+<td align="left"><code>meta/program</code></td>
+<td align="left">2-8</td>
+</tr>
+<tr>
+<td align="left"><code>operator/arithmetic/addition</code></td>
+<td align="left">7</td>
+</tr>
+<tr>
+<td align="left"><code>style/procedural</code></td>
+<td align="left">2-8</td>
+</tr>
+<tr>
+<td align="left"><code>type/number/integer/literal</code></td>
+<td align="left">4</td>
+</tr>
+<tr>
+<td align="left"><code>type/number/integer/literal/zero</code></td>
+<td align="left">4</td>
+</tr>
+<tr>
+<td align="left"><code>type/sequence/list</code></td>
+<td align="left">6</td>
+</tr>
+<tr>
+<td align="left"><code>type/sequence/list/literal/empty</code></td>
+<td align="left">3</td>
+</tr>
+<tr>
+<td align="left"><code>type/sequence/tuple/literal</code></td>
+<td align="left">4, 4, 7, 7</td>
+</tr>
+<tr>
+<td align="left"><code>var/assignment/explicit/parallel</code></td>
+<td align="left">4</td>
+</tr>
+<tr>
+<td align="left"><code>var/assignment/explicit/parallel/slide</code></td>
+<td align="left">7</td>
+</tr>
+<tr>
+<td align="left"><code>var/assignment/explicit/single</code></td>
+<td align="left">3</td>
+</tr>
+<tr>
+<td align="left"><code>var/assignment/implicit/parameter</code></td>
+<td align="left">2</td>
+</tr>
+<tr>
+<td align="left"><code>var/scope/local</code></td>
+<td align="left">2-8, 2-8, 2-8, 2-8</td>
+</tr>
+</tbody>
+</table>
+<p>As you can see, in this program, Paroxython identifies among others:</p>
+<ul>
+<li>the use of the <a href="https://en.wikipedia.org/wiki/Procedural_programming">procedural paradigm</a> (<code>style/procedural</code>);</li>
+<li>an im<a href="https://en.wikipedia.org/wiki/Pure_function">pure function</a> (<code>def/subroutine/function/impure</code>);</li>
+<li>a <code>while</code> loop (<code>flow/loop/while</code>) with a late exit (<code>flow/loop/exit/late</code>);</li>
+<li>a little bit of voodoo on lists (<code>type/sequence/list/literal/empty</code> and <code>call/subroutine/method/sequence/list/append</code>);</li>
+<li>a simple <a href="https://en.wikibooks.org/wiki/Python_Programming/Tuples#Packing_and_Unpacking">tuple assignment</a> (<code>var/assignment/explicit/parallel</code>). Note that we distinguish between explicit (with <code>=</code>) and implicit (parameters and iteration variables) assignments;</li>
+<li>a “sliding” tuple assignment (<code>var/assignment/explicit/parallel/slide</code>). If the denomination is unique to us, the pattern itself occurs in a number of programs: implementations of <a href="https://en.wikipedia.org/wiki/Constant-recursive_sequence">C-finite sequences</a> with C greater than 1, <a href="https://en.wikipedia.org/wiki/Greatest_common_divisor">Greatest Common Divisor</a>, <a href="https://en.wikipedia.org/wiki/Quicksort">Quicksort</a>, etc.</li>
+<li>four local variables (<code>var/scope/local</code>);</li>
+<li>an estimation of the variety of concepts involved (<code>meta/count/variety/***</code>), depending on the number of lines, features and distinct features.</li>
+</ul>
+<p>The magic command <code>%%paroxython</code> (corresponding to the subcommand <a href="https://laowantong.github.io/paroxython/cli_tag.html"><code>tag</code></a>) only scratches the surface of the system. As shown before, to estimate the learning cost of the features and get actionable recommendations, you will need first to construct the tag database with <a href="https://laowantong.github.io/paroxython/cli_collect.html"><code>collect</code></a>, and then call <a href="https://laowantong.github.io/paroxython/cli_recommend.html"><code>recommend</code></a> on a pipeline of yours.
+<br></p>
+<h1 id="about">About</h1>
+<h2 id="whats-in-a-name">What's in a name?</h2>
+<p>Far from being an arbitrary label, “Paroxython” has been scientifically formulated by an independent laboratory to possess the following properties:</p>
+<ol>
+<li>It features both “Python” and “taxon”.</li>
+<li>It provides a future-proof template for adaptations to other languages (Carox, Jaroxava, JaroxavaScript, Garoxo, Laroxua, Ocaroxaml, Haroxaskell, etc.) or fields of knowledge (Haroxarmony, Garoxeography, Maroxagnetohydrodynamics, etc.).</li>
+<li>“Paroxytone” denotes a word accented or stressed on the penult<sup id="fnref:paroxytone"><a class="footnote-ref" href="#fn:paroxytone">1</a></sup> and translates as “paroxyton” in <a href="https://youtu.be/M9DCAFUerzs">my mother tongue</a>.</li>
+</ol>
+<h2 id="citing-this-work">Citing this work</h2>
+<pre><code class="bibtex">@manual{,
+  title = {Paroxython: Tag and Recommend Python Exercises Based on Algorithmic Features},
+  author = {{Aristide Grange}},
+  organization = {Université de Lorraine},
+  address = {Metz, France},
+  year = {2020},
+  url = {https://laowantong.github.io/paroxython/},
+}
+</code></pre>
+<h2 id="collaborating">Collaborating</h2>
+<p>Paroxython is on <a href="https://github.com/laowantong/paroxython">GitHub</a> and welcomes your <a href="https://github.com/laowantong/paroxython/issues">issues</a> or <a href="https://github.com/laowantong/paroxython/pulls">pull requests</a>. You may:</p>
+<ul>
+<li>contribute to the code;</li>
+<li>add new features in <a href="https://github.com/laowantong/paroxython/blob/master/paroxython/resources/spec.md"><code>spec.md</code></a>;</li>
+<li>submit your personal changes to <a href="https://github.com/laowantong/paroxython/blob/master/paroxython/resources/taxonomy.tsv"><code>taxonomy.tsv</code></a> for integration in the default taxonomy;</li>
+<li>translate some of this documentation into English.</li>
+</ul>
+<p>If you use Paroxython for your programming course, I would love to get your feedback. If you're a researcher and interested in a scientific collaboration, drop an email to my dot-separated name (cf. previous section) at <code>univ-lorraine.fr</code>.</p>
+<div class="footnote">
+<hr>
+<ol>
+<li id="fn:paroxytone">
+<p>“paroxytone,” Merriam-Webster.com Dictionary, <a href="https://www.merriam-webster.com/dictionary/paroxytone.">https://www.merriam-webster.com/dictionary/paroxytone.</a> Accessed 8/7/2020.&#160;<a class="footnote-backref" href="#fnref:paroxytone" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+</section>
+<section>
+<h2 class="section-title" id="header-submodules">Sub-modules</h2>
+<dl>
+<dt><code class="name"><a title="paroxython.assess_costs" href="assess_costs.html">paroxython.assess_costs</a></code></dt>
+<dd>
+<div class="desc"><p>Assess the learning cost associated with the introduction of the given programs.</p></div>
+</dd>
+<dt><code class="name"><a title="paroxython.cli" href="cli.html">paroxython.cli</a></code></dt>
+<dd>
+<div class="desc"><p>Command line interface for the main functionalities of Paroxython.</p></div>
+</dd>
+<dt><code class="name"><a title="paroxython.cli_collect" href="cli_collect.html">paroxython.cli_collect</a></code></dt>
+<dd>
+<div class="desc"><p>Walk a directory, tag its Python files and make a database of the results.</p></div>
+</dd>
+<dt><code class="name"><a title="paroxython.cli_recommend" href="cli_recommend.html">paroxython.cli_recommend</a></code></dt>
+<dd>
+<div class="desc"><p>Read and execute a pipeline of commands and report the learning costs.</p></div>
+</dd>
+<dt><code class="name"><a title="paroxython.cli_tag" href="cli_tag.html">paroxython.cli_tag</a></code></dt>
+<dd>
+<div class="desc"><p>Tag one Python file and output the table of its taxa or labels.</p></div>
+</dd>
+<dt><code class="name"><a title="paroxython.compare_spans" href="compare_spans.html">paroxython.compare_spans</a></code></dt>
+<dd>
+<div class="desc"><p>A dictionary of predicates listing all possible relations between two intervals
+<span><span class="MathJax_Preview">(x_1, x_2)</span><script type="math/tex">(x_1, x_2)</script></span> and <span><span class="MathJax_Preview">(y_1, y_2)</span><script type="math/tex">(y_1, y_2)</script></span>.</p></div>
+</dd>
+<dt><code class="name"><a title="paroxython.derived_labels_db" href="derived_labels_db.html">paroxython.derived_labels_db</a></code></dt>
+<dd>
+<div class="desc"><p>An in-memory database collecting the labels of a given program.</p></div>
+</dd>
+<dt><code class="name"><a title="paroxython.filter_programs" href="filter_programs.html">paroxython.filter_programs</a></code></dt>
+<dd>
+<div class="desc"><p>Evolve a set of selected programs and a set of taxa representing the imparted knowledge.</p></div>
+</dd>
+<dt><code class="name"><a title="paroxython.flatten_ast" href="flatten_ast.html">paroxython.flatten_ast</a></code></dt>
+<dd>
+<div class="desc"><p>Return a non-recursive, multiline dump of the <abbr title="Abstract Syntax Tree">AST</abbr> (with some tweaks).</p></div>
+</dd>
+<dt><code class="name"><a title="paroxython.goodies" href="goodies.html">paroxython.goodies</a></code></dt>
+<dd>
+<div class="desc"><p>A grab bag of various generic functions and factories.</p></div>
+</dd>
+<dt><code class="name"><a title="paroxython.label_programs" href="label_programs.html">paroxython.label_programs</a></code></dt>
+<dd>
+<div class="desc"><p>List all the programs of a given directory, with their field <code>labels</code> populated.</p></div>
+</dd>
+<dt><code class="name"><a title="paroxython.list_programs" href="list_programs.html">paroxython.list_programs</a></code></dt>
+<dd>
+<div class="desc"><p>Scan a directory for Python programs and yield the corresponding <code>Program</code> objects.</p></div>
+</dd>
+<dt><code class="name"><a title="paroxython.make_db" href="make_db.html">paroxython.make_db</a></code></dt>
+<dd>
+<div class="desc"><p>Collect all infos pertaining to the programs, labels and taxa into a so-called tag database.</p></div>
+</dd>
+<dt><code class="name"><a title="paroxython.map_taxonomy" href="map_taxonomy.html">paroxython.map_taxonomy</a></code></dt>
+<dd>
+<div class="desc"><p>Translate labels into taxa.</p></div>
+</dd>
+<dt><code class="name"><a title="paroxython.normalize_predicate" href="normalize_predicate.html">paroxython.normalize_predicate</a></code></dt>
+<dd>
+<div class="desc"><p>Process an input string to interpret it as a known predicate.</p></div>
+</dd>
+<dt><code class="name"><a title="paroxython.parse_program" href="parse_program.html">paroxython.parse_program</a></code></dt>
+<dd>
+<div class="desc"><p>Search a program for the features specified in <a href="https://github.com/laowantong/paroxython/blob/master/paroxython/resources/spec.md"><code>spec.md</code></a>.</p></div>
+</dd>
+<dt><code class="name"><a title="paroxython.preprocess_source" href="preprocess_source.html">paroxython.preprocess_source</a></code></dt>
+<dd>
+<div class="desc"><p>Bring together everything relative to the pre-processing of a given source code.</p></div>
+</dd>
+<dt><code class="name"><a title="paroxython.recommend_programs" href="recommend_programs.html">paroxython.recommend_programs</a></code></dt>
+<dd>
+<div class="desc"><p>A wrapper around <code><a title="paroxython.filter_programs.ProgramFilter" href="filter_programs.html#paroxython.filter_programs.ProgramFilter">ProgramFilter</a></code>, feeding it with commands and assessing
+the learning costs of its final state.</p></div>
+</dd>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<header>
+<a class="homelink" rel="home" title="Paroxython Home" href="index.html">
+<img src="https://laowantong.github.io/paroxython/resources/logo.png" alt="Paroxython logo">
+</a>
+</header>
+<div class="toc">
+<ul>
+<li><a href="#will-you-ever-read-me">Will you ever read me?</a><ul>
+<li><a href="#introduction">Introduction</a><ul>
+<li><a href="#audience">Audience</a></li>
+<li><a href="#main-goals">Main goals</a></li>
+<li><a href="#how-it-works">How it works</a></li>
+<li><a href="#example">Example</a></li>
+</ul>
+</li>
+<li><a href="#installation-and-test-drive">Installation and test-drive</a><ul>
+<li><a href="#command-line">Command line</a></li>
+<li><a href="#ipython-magic-command">IPython magic command</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="user_manual/index.html">User manual</a></li><ul><li><a href="user_manual/index.html#how-to-read-this-manual">How to read this manual</a></li><li><a href="user_manual/index.html#preparing-your-program-collection">Preparing your program collection</a></li><li><a href="user_manual/index.html#taxonomy">Taxonomy</a></li><li><a href="user_manual/index.html#pipeline-tutorial">Pipeline tutorial</a></li><li><a href="user_manual/index.html#pipeline-documentation">Pipeline documentation</a></li><li><a href="user_manual/index.html#glossary">Glossary</a></li></ul><li><a href="developer_manual/index.html">Developer manual</a></li><ul><li><a href="developer_manual/index.html#bird-view">Bird view</a></li><li><a href="developer_manual/index.html#helper-programs">Helper programs</a></li><li><a href="developer_manual/index.html#tag-databases">Tag databases</a></li><li><a href="developer_manual/index.html#implementation-notes">Implementation notes</a></li></ul><li><a href="#about">About</a><ul>
+<li><a href="#whats-in-a-name">What's in a name?</a></li>
+<li><a href="#citing-this-work">Citing this work</a></li>
+<li><a href="#collaborating">Collaborating</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<ul id="index">
+<li><h3><a href="#header-submodules">Sub-modules</a></h3>
+<ul>
+<li><code><a title="paroxython.assess_costs" href="assess_costs.html">paroxython.assess_costs</a></code></li>
+<li><code><a title="paroxython.cli" href="cli.html">paroxython.cli</a></code></li>
+<li><code><a title="paroxython.cli_collect" href="cli_collect.html">paroxython.cli_collect</a></code></li>
+<li><code><a title="paroxython.cli_recommend" href="cli_recommend.html">paroxython.cli_recommend</a></code></li>
+<li><code><a title="paroxython.cli_tag" href="cli_tag.html">paroxython.cli_tag</a></code></li>
+<li><code><a title="paroxython.compare_spans" href="compare_spans.html">paroxython.compare_spans</a></code></li>
+<li><code><a title="paroxython.derived_labels_db" href="derived_labels_db.html">paroxython.derived_labels_db</a></code></li>
+<li><code><a title="paroxython.filter_programs" href="filter_programs.html">paroxython.filter_programs</a></code></li>
+<li><code><a title="paroxython.flatten_ast" href="flatten_ast.html">paroxython.flatten_ast</a></code></li>
+<li><code><a title="paroxython.goodies" href="goodies.html">paroxython.goodies</a></code></li>
+<li><code><a title="paroxython.label_programs" href="label_programs.html">paroxython.label_programs</a></code></li>
+<li><code><a title="paroxython.list_programs" href="list_programs.html">paroxython.list_programs</a></code></li>
+<li><code><a title="paroxython.make_db" href="make_db.html">paroxython.make_db</a></code></li>
+<li><code><a title="paroxython.map_taxonomy" href="map_taxonomy.html">paroxython.map_taxonomy</a></code></li>
+<li><code><a title="paroxython.normalize_predicate" href="normalize_predicate.html">paroxython.normalize_predicate</a></code></li>
+<li><code><a title="paroxython.parse_program" href="parse_program.html">paroxython.parse_program</a></code></li>
+<li><code><a title="paroxython.preprocess_source" href="preprocess_source.html">paroxython.preprocess_source</a></code></li>
+<li><code><a title="paroxython.recommend_programs" href="recommend_programs.html">paroxython.recommend_programs</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,327 @@
+# Present labels
+
+- addition_operator / collatz.py / 7
+- argument: / fizzbuzz.py / 4, 6, 8
+- argument:1 / fizzbuzz.py / 2
+- argument:101 / fizzbuzz.py / 2
+- argument:i / fizzbuzz.py / 10
+- argument:n / collatz.py / 3, 8
+- assignment / assignment.py / 1
+- assignment:Add / collatz.py / 7
+- assignment:FloorDiv / collatz.py / 5
+- assignment_lhs_identifier:a / assignment.py / 1
+- assignment_lhs_identifier:n / collatz.py / 5, 7
+- assignment_rhs_atom:1 / collatz.py / 7
+- assignment_rhs_atom:2 / collatz.py / 5
+- assignment_rhs_atom:3 / collatz.py / 7
+- assignment_rhs_atom:b / assignment.py / 1
+- assignment_rhs_atom:n / collatz.py / 5, 7
+- augmented_assignment_unpythonic / collatz.py / 5
+- binary_operator:Add / collatz.py / 7
+- binary_operator:FloorDiv / collatz.py / 5
+- binary_operator:Mod / collatz.py / 4
+- binary_operator:Mod / fizzbuzz.py / 3, 5, 7
+- binary_operator:Mod / is_even.py / 3
+- binary_operator:Mult / collatz.py / 7
+- comparison_operator:Eq / collatz.py / 4
+- comparison_operator:Eq / fizzbuzz.py / 3, 5, 7
+- comparison_operator:Eq / is_even.py / 3
+- comparison_operator:NotEq / collatz.py / 2
+- divisibility_test:15 / fizzbuzz.py / 3
+- divisibility_test:2 / collatz.py / 4
+- divisibility_test:2 / is_even.py / 3
+- divisibility_test:3 / fizzbuzz.py / 5
+- divisibility_test:5 / fizzbuzz.py / 7
+- external_free_call:print / collatz.py / 3, 8
+- external_free_call:print / fizzbuzz.py / 4, 6, 8, 10
+- external_free_call:range / fizzbuzz.py / 2
+- flat_style / assignment.py / 1
+- for:i / fizzbuzz.py / 2-10
+- for_range:1:101 / fizzbuzz.py / 2-10
+- free_call:print / collatz.py / 3, 8
+- free_call:print / fizzbuzz.py / 4, 6, 8, 10
+- free_call:range / fizzbuzz.py / 2
+- free_call_without_result:print / collatz.py / 3, 8
+- free_call_without_result:print / fizzbuzz.py / 4, 6, 8, 10
+- function:is_even / is_even.py / 2-3
+- function:print_collatz / collatz.py / 1-8
+- function_line_count:2 / is_even.py / 2-3
+- function_line_count:8 / collatz.py / 1-8
+- function_parameter:n / collatz.py / 1
+- function_parameter:n / is_even.py / 2
+- function_parameter_flavor:arg / collatz.py / 1
+- function_parameter_flavor:arg / is_even.py / 2
+- function_returning_nothing:print_collatz / collatz.py / 1-8
+- function_returning_something:is_even / is_even.py / 2-3
+- functional_style / is_even.py / 1-3
+- global_scope:a / assignment.py / 1
+- global_scope:i / fizzbuzz.py / 1-10
+- if / collatz.py / 4-7
+- if / fizzbuzz.py / 3-10, 5-10, 7-10
+- if_elif_branch / fizzbuzz.py / 6, 8
+- if_else_branch / collatz.py / 7
+- if_else_branch / fizzbuzz.py / 10
+- if_test_atom:0 / collatz.py / 4
+- if_test_atom:0 / fizzbuzz.py / 3, 5, 7
+- if_test_atom:15 / fizzbuzz.py / 3
+- if_test_atom:2 / collatz.py / 4
+- if_test_atom:3 / fizzbuzz.py / 5
+- if_test_atom:5 / fizzbuzz.py / 7
+- if_test_atom:i / fizzbuzz.py / 3, 5, 7
+- if_test_atom:n / collatz.py / 4
+- if_then_branch / collatz.py / 5
+- if_then_branch / fizzbuzz.py / 4
+- imperative_style / assignment.py / 1
+- imperative_style / fizzbuzz.py / 1-10
+- import:collatz / fizzbuzz.py / 1
+- import:fizzbuzz / is_even.py / 1
+- import_module:collatz / fizzbuzz.py / 1
+- import_module:fizzbuzz / is_even.py / 1
+- iteration_variable:i / fizzbuzz.py / 2
+- literal:0 / collatz.py / 4
+- literal:0 / fizzbuzz.py / 3, 5, 7
+- literal:0 / is_even.py / 3
+- literal:1 / collatz.py / 2, 7
+- literal:1 / fizzbuzz.py / 2
+- literal:101 / fizzbuzz.py / 2
+- literal:15 / fizzbuzz.py / 3
+- literal:2 / collatz.py / 4, 5
+- literal:2 / is_even.py / 3
+- literal:3 / collatz.py / 7
+- literal:3 / fizzbuzz.py / 5
+- literal:5 / fizzbuzz.py / 7
+- literal:Str / fizzbuzz.py / 4, 6, 8
+- loaded_variable:b / assignment.py / 1
+- loaded_variable:i / fizzbuzz.py / 3, 5, 7, 10
+- loaded_variable:n / collatz.py / 2, 3, 4, 5, 7, 8
+- loaded_variable:n / is_even.py / 3
+- local_scope:n / collatz.py / 1-8
+- local_scope:n / is_even.py / 2-3
+- loop:for / fizzbuzz.py / 2-10
+- loop:while / collatz.py / 2-7
+- loop_with_late_exit:for / fizzbuzz.py / 2-10
+- loop_with_late_exit:while / collatz.py / 2-7
+- magic_number:101 / fizzbuzz.py / 2
+- magic_number:15 / fizzbuzz.py / 3
+- magic_number:3 / collatz.py / 7
+- magic_number:3 / fizzbuzz.py / 5
+- magic_number:5 / fizzbuzz.py / 7
+- modulo_operator / collatz.py / 4
+- modulo_operator / fizzbuzz.py / 3, 5, 7
+- modulo_operator / is_even.py / 3
+- multiplication_operator / collatz.py / 7
+- node:Assign / assignment.py / 1
+- node:Assign / collatz.py / 5, 7
+- node:BinOp / collatz.py / 4, 5, 7, 7
+- node:BinOp / fizzbuzz.py / 3, 5, 7
+- node:BinOp / is_even.py / 3
+- node:Call / collatz.py / 3, 8
+- node:Call / fizzbuzz.py / 2, 4, 6, 8, 10
+- node:Compare / collatz.py / 2, 4
+- node:Compare / fizzbuzz.py / 3, 5, 7
+- node:Compare / is_even.py / 3
+- node:Expr / collatz.py / 3, 8
+- node:Expr / fizzbuzz.py / 4, 6, 8, 10
+- node:For / fizzbuzz.py / 2-10
+- node:FunctionDef / collatz.py / 1-8
+- node:FunctionDef / is_even.py / 2-3
+- node:If / collatz.py / 4-7
+- node:If / fizzbuzz.py / 3-10, 5-10, 7-10
+- node:Import / fizzbuzz.py / 1
+- node:Import / is_even.py / 1
+- node:Name / assignment.py / 1, 1
+- node:Name / collatz.py / 2, 3, 3, 4, 5, 5, 7, 7, 8, 8
+- node:Name / fizzbuzz.py / 2, 2, 3, 4, 5, 6, 7, 8, 10, 10
+- node:Name / is_even.py / 3
+- node:Num / collatz.py / 2, 4, 4, 5, 7, 7
+- node:Num / fizzbuzz.py / 2, 2, 3, 3, 5, 5, 7, 7
+- node:Num / is_even.py / 3, 3
+- node:Return / is_even.py / 3
+- node:Str / fizzbuzz.py / 4, 6, 8
+- node:While / collatz.py / 2-7
+- node:arg / collatz.py / 1
+- node:arg / is_even.py / 2
+- one_liner_style / assignment.py / 1
+- one_liner_style / is_even.py / 1-3
+- procedural_style / collatz.py / 1-8
+- pure_function:is_even / is_even.py / 2-3
+- range:1:101 / fizzbuzz.py / 2
+- return / is_even.py / 3
+- scope:a / assignment.py / 1
+- scope:i / fizzbuzz.py / 1-10
+- scope:n / collatz.py / 1-8
+- scope:n / is_even.py / 2-3
+- single_assignment:a / assignment.py / 1
+- single_assignment:n / collatz.py / 5, 7
+- update:n:1 / collatz.py / 7
+- update:n:2 / collatz.py / 5
+- update:n:3 / collatz.py / 7
+- update_by_assignment:n:1 / collatz.py / 7
+- update_by_assignment:n:2 / collatz.py / 5
+- update_by_assignment:n:3 / collatz.py / 7
+- update_by_assignment_with:Add / collatz.py / 7
+- update_by_assignment_with:FloorDiv / collatz.py / 5
+- update_with:Add / collatz.py / 7
+- update_with:FloorDiv / collatz.py / 5
+- variety:1 / assignment.py / 1
+- variety:2 / is_even.py / 1-3
+- variety:3 / collatz.py / 1-8
+- variety:3 / fizzbuzz.py / 1-10
+- verbose_conditional_assignment / collatz.py / 4-7
+- whole_span:1 / assignment.py / 1
+- whole_span:10 / fizzbuzz.py / 1-10
+- whole_span:3 / is_even.py / 1-3
+- whole_span:8 / collatz.py / 1-8
+
+# Absent labels
+
+- access_outer_scope
+- accumulate_all_elements
+- accumulate_elements
+- accumulate_inputs
+- accumulate_some_elements
+- argument
+- assignment_expression
+- assignment_lhs_identifier
+- assignment_rhs_atom
+- attribute_deletion
+- augmented_assignment
+- binary_operator
+- body_recursive_function
+- boolean_operator
+- chained_assignment
+- chained_comparison
+- chained_comparison_unpythonic
+- chained_equalities|chained_inequalities
+- clamp_min_max
+- clamp_ternary
+- class
+- class_method_count
+- closure
+- compact_conditional_assignment
+- comparison_operator
+- composition
+- comprehension
+- comprehension_for_count
+- concatenation_operator|replication_operator
+- corrective_conditional_assignment
+- count_elements|count_states
+- count_inputs
+- count_some_elements|count_some_states
+- decorated_function
+- deeply_recursive_function
+- divisibility_test
+- empty_literal
+- except
+- external_free_call
+- filtered_comprehension
+- find_best_element
+- find_best_element_index
+- find_best_element_index_unpythonic
+- find_first_good_element
+- find_first_good_element_index
+- find_first_good_element_index_unpythonic
+- for
+- for_each
+- for_indexes
+- for_indexes_elements
+- for_range
+- free_call
+- free_call_no_arguments
+- free_call_with_keyword_argument
+- free_call_without_result
+- free_tail_call
+- function
+- function_decorator
+- function_line_count
+- function_parameter
+- function_parameter_default
+- function_parameter_flavor
+- function_returning_nothing
+- function_returning_something
+- function_without_parameters
+- generator
+- get_valid_input
+- global_scope
+- higher-order function
+- if_guard
+- if_test_atom
+- if_without_else
+- import
+- import_module
+- import_name
+- impure_function
+- increment
+- index
+- index_arithmetic
+- index_shape
+- infinite_while
+- instance_method|class_method|static_method
+- internal_free_call
+- iteration_variable
+- keyword_argument
+- literal
+- local_scope
+- loop
+- loop_else
+- loop_with_break
+- loop_with_early_exit
+- loop_with_else
+- loop_with_late_exit
+- loop_with_raise
+- loop_with_return
+- magic_number
+- member_call
+- member_call_method
+- member_call_object
+- method
+- method_chaining
+- mid_value_naive
+- mid_value_recommended
+- negate
+- negative_index
+- nested_for
+- nested_function
+- nested_if
+- nested_index
+- no_operation
+- object_oriented_style
+- parallel_assignment
+- pure_function
+- raise
+- range
+- recursive_call_count
+- recursive_function
+- return_condition_naive
+- shadowing_scope
+- single_assignment
+- slice
+- slice_lower
+- slice_step
+- slice_upper
+- slide
+- special_literal_string
+- square_nested_for
+- string_formatting_operator
+- subscript_assignment
+- subscript_augmented_assignment
+- subscript_deletion
+- swap
+- swap_unpythonic
+- tail_recursive_function
+- triangular_nested_for
+- try_raise|try_except
+- unary_operator
+- unbinding
+- universal_quantification|existential_quantification
+- update
+- update_by_assignment
+- update_by_assignment_with
+- update_by_augmented_assignment
+- update_by_augmented_assignment_with
+- update_by_member_call
+- update_by_member_call_with
+- update_with
+- value_attr
+- yield
+- yoda_comparison_unpythonic
