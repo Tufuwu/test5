@@ -1,37 +1,46 @@
----
 
-name: PyFeeds CI
-on: [push]
+name: Testing
 
-# Run tests against each supported version while docs and style are only
-# considered on the latest supported version.
+on: [push, pull_request, create]
+
 jobs:
+    tests:
+        runs-on: ${{ matrix.os }}
+        strategy:
+            matrix:
+                os: [ubuntu-latest, ubuntu-latest, macos-latest]
+                python: ["3.9", "3.10"]
+                pytorch: ['1.3.0', '1.4.0', '1.5.0', '1.6.0', '1.7.0']
+                include: 
+                    - pytorch: '1.3.0'
+                      torchvision: '0.4.1'
+                    - pytorch: '1.4.0'
+                      torchvision: '0.5.0'
+                    - pytorch: '1.5.0'
+                      torchvision: '0.6.0'
+                    - pytorch: '1.6.0'
+                      torchvision: '0.7.0'
+                    - pytorch: '1.7.0'
+                      torchvision: '0.8.0'
 
-  build:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python: ["3.9", "3.10"]
-            toxenv: py36
-          - version: 3.7
-            toxenv: py37
-          - version: 3.8
-            toxenv: py38
-          - version: 3.9
-            toxenv: py39,docs,style
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Set up Python ${{ matrix.python.version }} and tox ${{ matrix.python.toxenv }}
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python.version }}
-
-      - name: Install Tox
-        run: |
-          pip install tox
-
-      - name: Run Tox
-        run: |
-          tox -e ${{ matrix.python.toxenv }}
+        steps:
+            - name: Clone Repository
+              uses: actions/checkout@master
+              with:
+                ref: ${{ github.ref }}
+            - name: Set up Python
+              uses: actions/setup-python@v2
+              with:
+                python-version: ${{ matrix.python }}
+            - name: Install Dependencies
+              run: |
+                  python --version
+                  python -m pip install -U pip
+                  pip install --install-option="--no-cython-compile" cython
+                  pip install torch==${{ matrix.pytorch }}
+                  pip install torchvision==${{ matrix.torchvision }}
+                  make dev
+            - name: Lint Code
+              run: make lint
+            - name: Run Tests
+              run: make tests

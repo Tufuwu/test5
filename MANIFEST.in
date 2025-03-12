@@ -1,5 +1,4 @@
-include LICENSE
-include README.rst
-include feeds.cfg.dist
-include scrapy.cfg
-recursive-include docs Makefile conf.py *.rst
+global-include *.pyx
+global-include *.pxd
+global-include *.c
+include learn2learn/**/*
