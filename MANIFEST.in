@@ -1,0 +1,10 @@
+include requirements.txt
+include AUTHORS
+include LICENCE
+include README.md
+include director.png
+include CONTRIBUTING.md
+include CONTRIBUTORS
+graft director
+graft migrations
+global-exclude *.pyc

@@ -1,0 +1,36 @@
+site_name: "Celery Director"
+
+repo_name: ovh/celery-director
+repo_url: https://github.com/ovh/celery-director
+edit_uri: ""
+
+theme:
+  name: 'material'
+  palette:
+    primary: 'teal'
+    accent: 'teal'
+
+nav:
+  - Introduction: 'index.md'
+  - Quickstart: 'quickstart.md'
+  - User Guides:
+    - 'Write Tasks': 'guides/write-tasks.md'
+    - 'Build Workflows': 'guides/build-workflows.md'
+    - 'Run Workflows': 'guides/run-workflows.md'
+    - 'Cleanup Workflows': 'guides/cleanup-workflows.md'
+    - 'Enable Authentication': 'guides/enable-authentication.md'
+    - 'Use Payload': 'guides/use-payload.md'
+    - 'Error Tracking': 'guides/error-tracking.md'
+    - 'Custom Configuration': 'guides/custom-configuration.md'
+    - 'Use Flower': 'guides/use-flower.md'
+    - 'Trigger Hooks': 'guides/trigger-hooks.md'
+  - API: 'api.md'
+
+extra_css:
+   - "css/custom.css"
+
+markdown_extensions:
+  - admonition
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences

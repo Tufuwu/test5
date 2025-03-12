@@ -1,19 +1,10 @@
-<p align="center">
-  <img alt="Celery Director logo" src="https://raw.githubusercontent.com/ovh/celery-director/master/logo.png">
-</p>
-<p align="center">
-  <a href="https://github.com/ovh/celery-director/actions/workflows/tests.yml"><img alt="Tests" src="https://github.com/ovh/celery-director/workflows/Tests/badge.svg"></a>
-  <a href="https://www.python.org/"><img alt="Python versions" src="https://img.shields.io/badge/python-3.8%2B-blue.svg"></a>
-  <a href="https://github.com/ovh/depc/blob/master/LICENSE"><img alt="License" src="https://img.shields.io/badge/license-BSD%203--Clause-blue.svg"></a>
-  <a href="https://github.com/python/black"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg"></a>
-</p>
-<p align="center">
-  <a href="https://raw.githubusercontent.com/ovh/celery-director/master/director.gif"><img alt="Celery Director" src="https://raw.githubusercontent.com/ovh/celery-director/master/director.gif"></a>
-</p>
-
-----------------
+# Celery Director Documentation
 
 Director is a simple and rapid framework used to manage tasks and build workflows using Celery.
+
+![Celery Director](img/director.gif)
+
+## Features
 
 The objective is to make Celery easier to use by providing :
 
@@ -23,11 +14,19 @@ The objective is to make Celery easier to use by providing :
 - the ability to periodically launch a whole workflow,
 - and many others.
 
-See how to use Director with the quickstart and guides in the [documentation](https://ovh.github.io/celery-director/).
+!!! info
+    Director is built on top of the excellent [Celery library](http://docs.celeryproject.org/en/latest/index.html).
+    All the orchestration engine has not been changed : we didn't want to reinvent the wheel but
+    provide an easy tool to use Celery.
+
+    It means that all your existing tasks can easily be migrated to Director. Furthermore the
+    documentation of the tasks and all the features powered by Celery like the **rate limiting**,
+    the **task exception retrying** or even the **queue routing** stay the same.
+
 
 ## Installation
 
-Install the latest version of Director with pip (requires at least `Python 3.7`):
+Install the latest version of Director with pip (requires at least `Python 3.8`):
 
 ```bash
 pip install celery-director
@@ -87,7 +86,9 @@ $ curl --header "Content-Type: application/json" \
   http://localhost:8000/api/workflows
 ```
 
-Read the [documentation](https://ovh.github.io/celery-director/) to try the quickstart and see advanced usages of Celery Director.
+You can also use the WebUI to execute your workflows:
+
+![Execute Workflow](img/execute_workflow.png)
 
 ## Project layout
 
@@ -103,7 +104,3 @@ Read the [documentation](https://ovh.github.io/celery-director/) to try the quic
 * `director celery [worker|beat|flower]` - Start Celery daemons.
 * `director webserver` - Start the webserver.
 * `director workflow [list|show|run]` - Manage your project workflows.
-
-## License
-
-See https://github.com/ovh/celery-director/blob/master/LICENSE
