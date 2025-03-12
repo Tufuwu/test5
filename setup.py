@@ -1,58 +1,53 @@
-from setuptools import setup
-import os.path
-import codecs
+import os
+
+import setuptools
+
+DIR = os.path.dirname(os.path.abspath(__file__))
+
+with open(os.path.join(DIR, "laia/VERSION")) as f:
+    VERSION = f.read()
 
 
-def read(rel_path):
-    here = os.path.abspath(os.path.dirname(__file__))
-    with codecs.open(os.path.join(here, rel_path), 'r') as fp:
-        return fp.read()
+def get_requirements():
+    requirements_path = os.path.join(DIR, "requirements.txt")
+    with open(requirements_path, encoding="utf-8") as f:
+        return [line.strip() for line in f]
 
 
-def get_version(rel_path):
-    for line in read(rel_path).splitlines():
-        if line.startswith('__version__'):
-            delim = '"' if '"' in line else "'"
-            return line.split(delim)[1]
-    else:
-        raise RuntimeError("Unable to find version string.")
+def get_long_description():
+    readme_path = os.path.join(DIR, "README.md")
+    return open(readme_path, encoding="utf-8").read()
 
 
-requirements_filename = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), 'requirements.txt')
-
-with open(requirements_filename) as fd:
-    install_requires = [i.strip() for i in fd.readlines()]
-
-requirements_dev_filename = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), 'tests/requirements.txt')
-
-with open(requirements_dev_filename) as fd:
-    tests_require = [i.strip() for i in fd.readlines()]
-
-long_description_filename = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), 'README.md')
-
-with open(long_description_filename) as fd:
-    long_description = fd.read()
-
-setup(
-    name='duo_universal',
-    version=get_version("duo_universal/version.py"),
-    packages=['duo_universal'],
-    package_data={'duo_universal': ['ca_certs.pem']},
-    url='https://github.com/duosecurity/duo_universal_python',
-    license='BSD',
-    author='Duo Security, Inc.',
-    author_email='support@duosecurity.com',
-    description='Duo Web SDK for two-factor authentication',
-    long_description=long_description,
-    long_description_content_type='text/markdown',
-    python_requires='>=3',
-    classifiers=[
-        'Programming Language :: Python :: 3',
-        'License :: OSI Approved :: BSD License'
-    ],
-    install_requires=install_requires,
-    tests_require=tests_require
+setuptools.setup(
+    name="pylaia",
+    version=VERSION,
+    author="Joan Puigcerver",
+    author_email="joapuipe@gmail.com",
+    maintainer="Teklia",
+    maintainer_email="contact@teklia.com",
+    license="MIT",
+    url="https://github.com/jpuigcerver/PyLaia",
+    download_url="https://github.com/jpuigcerver/PyLaia",
+    # Requirements
+    setup_requires=["setuptools_scm"],
+    install_requires=get_requirements(),
+    extras_require={
+        "dev": ["pre-commit", "isort", "black"],
+        "test": ["pytest", "pytest-cov", "pandas", "regex"],
+    },
+    python_requires=">=3.6",
+    # Package contents
+    packages=setuptools.find_packages(exclude=["tests"]),
+    include_package_data=True,
+    entry_points={
+        "console_scripts": [
+            "pylaia-htr-create-model=laia.scripts.htr.create_model:main",
+            "pylaia-htr-train-ctc=laia.scripts.htr.train_ctc:main",
+            "pylaia-htr-decode-ctc=laia.scripts.htr.decode_ctc:main",
+            "pylaia-htr-netout=laia.scripts.htr.netout:main",
+        ],
+    },
+    long_description=get_long_description(),
+    long_description_content_type="text/markdown",
 )

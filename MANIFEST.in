@@ -1,4 +1,8 @@
-include requirements.txt
-include spdx.json
-graft tests
+include laia/VERSION
 
+exclude .pre-commit-config.yaml
+exclude CONTRIBUTING.md
+
+prune .github
+prune benchmarks
+prune tests

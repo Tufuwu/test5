@@ -1,3 +1,14 @@
-PyJWT>=2.0
-requests>=2.22.0
-wheel>=0.35.1
+textdistance
+natsort
+numpy<2
+scipy
+matplotlib
+# cpu version: nnutils-pytorch
+nnutils-pytorch-cuda
+pytorch-lightning==1.1.7
+torch>=1.13,<1.14
+torchvision>=0.14,<0.15
+torchaudio>=0.13,<0.14
+jsonargparse[signatures]==4.7
+imagesize==1.4.1
+dataclasses; python_version < '3.7'
