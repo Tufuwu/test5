@@ -1,6 +1,7 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+*$py.class
 
 # C extensions
 *.so
@@ -51,23 +52,10 @@ coverage.xml
 *.log
 
 # Sphinx documentation
-doc/_build/
-doc/modules/generated/
+docs/_build/
 
 # PyBuilder
 target/
 
-.idea*
-.ipynb_checkpoints/
-*.swp
-
-# Skip sphinx-gallery build directory
-doc/auto_examples
-
-.pytest_cache
-.vscode
-doc/backreferences
-doc/apiref/
-
-# Avoid poetry lockfiles
-poetry.lock
+# pytype
+.pytype/
