@@ -1,3 +1,0 @@
-docutils==0.21.2
-pygments==2.18.0
--e ./renpy_pygments

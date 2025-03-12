@@ -1,0 +1,37 @@
+# Iterate over triggers defined in passed moira_triggers variable
+# with pre-defined default variables
+- name: manage moira triggers
+  moira_trigger:
+    api_url: '{{ moira_api }}' # Url of Moira API (string)
+    auth_custom: '{{ moira_auth_custom | default(omit) }}' # Custom authorization headers (dictionary)
+    auth_user: '{{ moira_auth_user | default(omit) }}' # Auth User (Basic Auth) (string)
+    auth_pass: '{{ moira_auth_pass | default(omit) }}' # Auth Password (Basic Auth) (string)
+    login: '{{ moira_auth_login | default(omit) }}' # Auth Login (Basic Auth) (string)
+    state: '{{ item.state | default("present") }}' # Desired state of a trigger (string)
+    id: '{{ item.id }}' # Trigger id (string)
+    name: '{{ item.name }}' # Trigger name (string)
+    targets: '{{ item.targets }}' # List of trigger tags (list)
+    tags: '{{ item.tags }}' # List of trigger targets (list)
+    warn_value: '{{ item.warn_value | default(omit) }}' # Value to set WARN status (float)
+    error_value: '{{ item.error_value | default(omit) }}' # Value to set ERROR status (float)
+    trigger_type: '{{ item.trigger_type | default(omit) }}' # Type of a trigger (string)
+    expression: '{{ item.expression | default(omit) }}' # C-like expression (string)
+    ttl: '{{ item.ttl | default(omit) }}' # Time to Live (in seconds) (int)
+    ttl_state: '{{ item.ttl_state | default(omit) }}' # Trigger state at the expiration of 'ttl' (string)
+    is_remote: '{{ item.is_remote | default(omit) }}' # Use remote storage (bool)
+    trigger_source: '{{ item.trigger_source | default(omit) }}' # Specify trigger source, override is_remote (str)
+    cluster_id: '{{ item.cluster_id | default(omit) }}' # Specify cluster_id (str)
+    desc: '{{ item.desc | default(omit) }}' # Trigger description (string)
+    mute_new_metrics: '{{ item.mute_new_metrics | default(omit) }}' # Mute new metrics (bool)
+    disabled_days: '{{ item.disabled_days | default(omit) }}' # Days for trigger to be in silent mode (list)
+    timezone_offset: '{{ item.timezone_offset | default(omit) }}' # Timezone offset in minutes (int)
+    start_hour: '{{ item.start_hour | default(omit) }}' # Start hour to send alerts (int)
+    start_minute: '{{ item.start_minute | default(omit) }}' # Start minute to send alerts (int)
+    end_hour: '{{ item.end_hour | default(omit) }}' # End hour to send alerts (int)
+    end_minute: '{{ item.end_minute | default(omit) }}' # End minute to send alerts (int)
+    alone_metrics: '{{ item.alone_metrics | default(omit) }}' # Targets with alone metrics (list)
+  check_mode: '{{ dry_run | default(True) }}'
+  with_items:
+    - '{{ moira_triggers }}'
+  tags:
+    - moira
