@@ -1,0 +1,213 @@
+Unreleased
+
+* Add index to Link (David Venhoff, #202)
+* Add support for Django 5.1
+* Add support for Python 3.13
+* Remove support for Django < 4.2
+* Remove support for Python 3.8
+
+2.3.0 (2023-12-27)
+
+* Fix encoding of utf-8 domain names (Timo Brembeck, #190)
+* Move coverage view to management command (Timo Brembeck, #187)
+  * Add new management command `linkcheck_suggest_config`
+  * Delete coverage view
+* Improve formatting for `NameResolutionError` (Timo Brembeck, #192)
+* Fix internal redirect checker (Timo Ludwig, #180)
+* Fix SSL status of unreachable domains (Timo Ludwig, #184)
+* Fix URL message for internal server errorrs (Timo Ludwig, #182)
+* Add support for Django 4.2 and 5.0
+* Add support for Python 3.12
+* Remove support for Django 4.0
+* Remove support for Python 3.7
+
+2.2.1 (2023-04-03)
+
+* Include the compiled translations in the released package (#177)
+
+2.2.0 (2023-04-01)
+
+* Enable internationalization for URL status messages (Timo Ludwig, #125)
+* Enable re-checking after rate limit was hit (Timo Ludwig, #153)
+* Ignore raw `post_save` signal (Timo Ludwig, #106)
+* Retry with fallback user agent on forbidden response (Timo Ludwig, #159)
+* Also set `redirect_to` on internal redirects (Timo Ludwig, #163)
+* Add new fields to `Url` model:
+  * `status_code`: The HTTP status code of the initial request
+  * `redirect_status_code`: The HTTP status code of the final request
+  * `anchor_status`: The validity of the HTML hash anchor
+  * `ssl_status` The validity of the SSL certificate
+  * `error_message` The error message if the request failed
+* Add new properties to `Url` model:
+  * `anchor_message`: The human-readable meaning of the `anchor_status`
+  * `ssl_message` The human-readable meaning of the `ssl_status`
+* Add French translations.
+
+2.1.0 (2023-02-05)
+
+* Fix `SSL Error` for missing root certificates (Timo Ludwig, #157)
+* Fix `NotImplementedError`/`AssertionError` when checking
+  video links with hash anchors (Timo Ludwig, #150)
+* Skip checking of hash anchors for non-html files
+* Avoid decorating the `report` view with `csrf_exempt` (#155)
+* recheck/ignore/unignore requests were using an obsolete `request.is_ajax` call
+  (#147)
+
+2.0.0 (2022-12-17)
+
+* Add German translations for filebrowser integration
+* Fix django-filebrowser integration (Timo Ludwig, #144)
+* Use `django.db.models.BigAutoField` as default auto field
+  (Timo Ludwig, #137)
+* Add German translations for the templates
+* Fix `type` property for internal URLs (Timo Ludwig, #141)
+* Fix incorrect message when redirect has broken anchor
+  (Timo Ludwig, #128)
+* Breaking change: Treat broken hash anchors as valid
+  unless `LINKCHECK_TOLERATE_BROKEN_ANCHOR` is manually
+  set to `False` (Timo Ludwig, #98)
+* Remove unused field `still_exists` from `Url` model
+* Delete outdated `Url` and `Link` objects when
+  running `findlinks` command (Timo Ludwig, #101)
+* Avoid crash when unexpected error in signal listener occurs
+  (Sven Seeberg, #117)
+* Ignore Urls longer than `MAX_URL_LENGTH` in signal listeners
+  (Timo Ludwig, #115)
+* Verify SSL certificates (Timo Ludwig, #118)
+* Added support for Python 3.10/3.11 and Django 4.1.
+* Dropped support for Python 3.6 and Django < 3.2.
+
+1.9.1 (2022-03-23)
+
+* Added `Linklist.filter_callable` optional hook to allow for more
+  flexible link list filtering (Giuliano Mele).
+
+1.9 (2021-12-23)
+
+* Added support for Django 3.2 and 4.0 and removed support for Django < 2.2.
+* Ignore raw `pre_save` signal (Timo Ludwig, #106).
+
+1.8.1 (2021-04-01)
+
+* The 1.8 release contained unwanted temporary stuff and was
+  therefore a broken release. Many thanks to Stefan Borer for
+  noticing that.
+
+1.8 (2021-02-25)
+
+* Added explicit `listeners.register_listeners` and
+  `listeners.unregister_listeners` functions.
+* Added `listeners.enable_listeners` and `listeners.disable_listeners` context
+  managers.
+* Avoid crash when looking for anchors in response content.
+* Avoid possible failures when checking internal links depending on
+  ALLOWED_HOSTS setting.
+* Confirmed compatibility with Django 3.1.
+* Dropped support for Python 3.4.
+
+1.7 (2020-01-13)
+
+* Dropped support for Python 2 and Django < 1.11.
+* Added support for Django 3.0.
+* Made more usage of the requests library.
+
+1.6 (2019-03-20)
+
+* Use requests library when getting 'certificate verify failed' errors.
+* Fixed compatibility issues with newer versions of Django.
+* Fixed pip installation issues with encoding errors (#87).
+
+1.5 (2017-09-16)
+
+* Added support for `tel:` links.
+* For redirecting links, linkcheck now reports the status of the redirect
+  target (#78).
+* Dropped South migrations.
+* 'Url.redirect_to' was migrated to a TextField to not limit its length (#75).
+* Fixed handling of the '--limit' argument of the 'checklinks' command (#73).
+* Fixed the task queue of links to check (#69).
+
+1.4 (2017-01-13)
+
+* Dropped support for Django 1.6 and Django 1.7, the minimal Python version is
+  now Python 2.7. Django 1.10 is also supported.
+* Listeners registration and post_delete signal are now happening in the app
+  config ready() method. This means that the process can be customized by
+  having custom AppConfig classes and referring to those classes in the
+  INSTALLED_APPS setting.
+* A new DISABLE_LISTENERS setting has been added to ease deactivation of
+  listeners registration.
+* A task queue is now used to process link checking, so as to prevent exhaustion
+  of available threads during massive updates.
+
+1.3 (2016-06-05)
+
+* Django 1.9 compatibility added.
+* When checking internal links, redirects are not followed any longer.
+* Added support for the django-admin-tools dashboard, if present.
+* Fixed a bug where internal links were skipped based on the external interval
+  setting.
+* Handle situations where content_type.model_class() returns None.
+* Allow extra field types to be added via settings. (Used for coverage view only).
+* Improve coverage suggested configs - include 'ignore_empty' settings plus a
+  raw code view via /linkcheck/coverage?config=1.
+* Fix - correctly handle tags that are inside tags.
+* Fix - don't run pre_save if it's a new instance.
+
+1.2 (2015-11-13)
+
+* Added migration folders (missing in the 1.1 package). Also added support for
+  South migrations (compatibility).
+* When a link produces a 301 Moved Permanently redirection, the redirect target
+  is stored in Url.redirect_to and displayed in the link report.
+* Better support for URLs containing non-ASCII characters.
+
+1.1 (2015-06-03)
+
+* Minimal software requirements are now Python 2.6 / Django 1.6 (and South 1.0 if
+  you still use Django 1.6).
+* Python 3 is supported.
+* Django 1.7 / 1.8 compatibility added.
+* notifications.py is now based on django-admin-blocks.
+* Linklist classes now support an ignore_empty list to ignore empty URLField values.
+
+1.0
+
+Changes:
+
+Bug fixes since 0.6 Please see commit log here: https://github.com/andybak/django-linkcheck/commits/master
+
+0.6.0
+
+Changes:
+
+* Support ignoring (and unignoring) external broken links via buttons in the linkcheck report
+* 'Recheck' button in the linkcheck report
+* External links with anchors were being reported as broken because we switched to a HEAD request
+* One particular url caused a crash in urllib2 when doing a HEAD request. Implemented a workaround: catch the exception and run a normal GET
+* Inconsistant use of seconds in some places and minutes in others. Switch to minutes for all parameters.
+* Clean up CSS
+* Use normal links for navigating between report types instead of javascript+radio buttons
+* Removed some unused javascript
+* Fixed some issues with anchor links
+* Broken link notification count was counting urls rather than links
+* Mark length of url field configurable for those not cursed with MySQl
+* Remove the pointless disinguishing images/documents/other in Url.type
+* Document settings properly
+* Remove unused pagination tag from template and thus dependency on django-pagination
+* All tests now pass ( because I commented out the one that didn't :-P )
+
+0.5.0
+
+Start this changelog
+Added some more comments throughout
+Fixed dependency on django-filebrowser by wrapping it in an exception check
+Handle get_absolute_url returning None
+Use HEAD requests for checking external URLs
+Handle HREF="#" correctly
+Cleaner display of hashtag links in reports
+Handle 'Bad Status Line' responses from remote servers.
+Don't spawn a thread if running from tests as this prevents the new thread from seeing the same database transaction as the parent thread
+Fix some tests from prior to the big refactor. nb Tests are still incomplete and many are broken :(
+document filebrowser dependency
+

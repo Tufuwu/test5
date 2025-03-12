@@ -1,10 +1,7 @@
 include LICENSE
-include documentation.ipynb
-include README.md
-include Makefile
-graft tests
-graft docs
-prune docs/build
-
-global-exclude .ipynb_checkpoints
-global-exclude *.pyc
+include CHANGELOG
+include README.rst
+include linkcheck/locale/*/LC_MESSAGES/django.mo
+exclude linkcheck/locale/*/LC_MESSAGES/django.po
+recursive-include linkcheck/templates/linkcheck *
+recursive-include linkcheck/tests/media *
