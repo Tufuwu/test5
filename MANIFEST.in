@@ -1,8 +1,21 @@
+global-exclude *pyc *pyo __pycache__
+# Git files
+exclude .gitignore
+# CI/CD files
+exclude .travis.yml.bak
+exclude .clog.toml
+prune .github
+
+exclude Makefile
+exclude run_failure.py
+
+include CHANGES.md
+include CONTRIBUTING.md
+include README.md
 include LICENSE
-include README.rst
-include VERSION
-recursive-include avocado_vt/conf.d *
-recursive-include virttest/test-providers.d *
-recursive-include virttest/backends *
-recursive-include virttest/shared *
-recursive-exclude virttest/shared/scripts/pmsocat *
+include MANIFEST.in
+
+include tox.ini
+
+recursive-include kazoo *
+recursive-include docs *
