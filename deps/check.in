@@ -1,5 +1,0 @@
-# Top-level dependencies for `tox -e check`
-flake8
-ruff
-mypy
-shed

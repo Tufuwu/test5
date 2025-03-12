@@ -1,5 +1,0 @@
-include LICENSE
-include *.json
-include *.py
-include tox.ini
-recursive-include deps *.in *.md *.txt
