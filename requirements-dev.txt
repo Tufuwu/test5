@@ -1,6 +1,0 @@
-coverage
-flake8
-flask
-fido2
-pylint
-pytest
