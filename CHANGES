@@ -1,0 +1,155 @@
+
+.. py:currentmodule:: pcaspy
+
+0.8.1 (15-03-2024)
+------------------
+    * Fixed asyn write crash, which was introduced in 0.8.0. (Issue #95)
+    * Building process can use an out-of-tree pcas module given by *PCAS* environment variable.
+
+0.8.0 (27-03-2023)
+------------------
+    * Added optional argument *timestamp* to :meth:`Driver.setParam`. (Issue #54)
+    * Added logging of CA client host and user names in *pcaspy.SimplePV.writeValue* logger. (Issue #72)
+      To enable it::
+
+        logging.getLogger('pcaspy.SimplePV.writeValue').setLevel(logging.INFO)
+
+    * Migrated from travis CI to github actions.
+
+0.7.3 (15-10-2020)
+------------------
+    * Fixed alarm/severity checking for short type. (Issue #62)
+
+0.7.2 (20-12-2018)
+------------------
+    * Added docs about installation on epics base 7+. (Issue #57)
+    * Fixed the alarm limits checking for numeric array type. (Issue #52)
+    * Fixed the exception when decoding non-utf8 PV searches. (Issue #59)
+
+0.7.1 (12-01-2018)
+------------------
+    * Fixed spurious value update after startup. (Issue #50)
+    * Mitigated the race condition in :meth:`Driver.updatePV`. It could cause one event to fire twice in rare cases. This is not a total fix but good enough. (PR #49)
+    * Changed :meth:`SimplePV.writeValue` to post the update event only on the this specific PV. (Issue #48)
+    * Changed :meth:`Driver.setParamInfo` and :meth:`Driver.setParamEnums` not to call meth:`Driver.updatePVs`, and leave that to the user.
+
+0.7.0 (21-09-2017)
+------------------
+    * Changed :meth:`gdd.get` to return empty string if char(int8/uin8) type scalar is 0. It used to return ``'\x00'``, this confuses the check for an empty string.
+    * Changed :meth:`Driver.setParam` so that waveform PV always posts monitor/archive events. It used to check the equality.
+    * Fixed numpy array checking. (Issue #44)
+    * Added adel/mdel fields in scalar PV configuration in analog to EPICS IOC records. (Issue #46)
+    * Added :meth:`Driver.getParamInfo` to retrieve the current PV configuration. (PR #45)
+    * Added an example *rpi_gpio.py* to control GPIO on RaspberryPi.
+
+0.6.5 (09-05-2017)
+------------------
+    * Fixed the anaconda upload on Travis Linux.
+    * Rebuilt PyPI/Anaconda packages to fix the wrong number of elements transfer when ``ca_array_get_backack`` requests with ``0`` count. (Issue #43)
+
+0.6.4 (26-04-2017)
+------------------
+    * Fixed the crash on Windows when epics base libraies are compiled using different visual studio version than python. (Issue #41)
+    * Fixed the sphinx docs build. (Issue #37)
+    * Added a spec file for rpmbuild.
+
+0.6.3 (28-02-2017)
+------------------
+    * Fixed that string type is wrongly converted to number. (Issue #24)
+    * Fixed that gdd.put crashes when input is string but primitiveType is other that Int8 or Uint8. (Issue #26)
+    * Added support of numpy array in gdd.put (Issue #28)
+    * Changed Python 3 support from 2to3 conversion to direct compatible source code. (Issue #30)
+    * Binary packages on PyPI is built with EPICS base 3.14.12.6. (Issue #25 and #29)
+    * Continuous integration/deployment configured at Travis and AppVeyor.
+
+0.6.2 (02-08-2016)
+------------------
+    * Fixed that the alarm/severity of string type PVs remain UDF/INVALID. (Issue #23)
+    * Fixed that the monitor event of string type PVs are wrongly posted as double. (Issue #24)
+
+0.6.1 (01-07-2016)
+------------------
+    * Fixed that PV graphics/control meta properties are not posted. See https://bugs.launchpad.net/epics-base/+bug/1510955 for the failure.
+    * Added support of EPICS 3.15
+    * Added :meth:`Driver.setParamInfo` to set PV graphics/control meta properties, e.g. limits, units, precision.
+
+0.6.0 (06-06-2016)
+------------------
+    * Added support of request type DBR_CLASS_NAME in casPV base class. It is not overloaded in :class:`SimplePV`. The default implementation returns an empty string.
+    * Warns and truncates if enums type PV has more than 16 states or any state string length > 25. (Issue #18)
+    * Fixed that PV of char type cannot be set to empty string. (Issue #14)
+    * Fixed that DBE_ALARM event was not posted. (Issue #13)
+
+0.5.1 (10-10-2014)
+-------------------
+    * Fixed that alarm and warn limits are taken from *lolo*/*hihi* and *low*/*high* fields. (Issue #11).
+    * Fixed `example/alarm_severity.py` so that `MTEST:STATUS` and `MTEST:RAND` are writable.
+
+0.5.0 (06-10-2014)
+------------------
+    * Fixed that cas.py is not installed (Issue #10).
+    * Fixed that put callback may fail if driver invokes :meth:`Driver.callbackPV` too soon(Issue #9). Thanks to Kay Kasemir.
+    * Added 16bit short integer type.
+    * Added printout of exceptions that are raised inside Python code.
+    * Added :meth:`Driver.setParamEnums` to change the states of enumerate PV at runtime (Issue #4).
+    * Added basic logging support. To enable console logging::
+
+        logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(name)s: %(message)s')
+
+    * Changed so that timestamp is updated whenever :meth:`Driver.setParam` is called.
+      It was only updated when the values are new. The new behavior is the same as EPICS IOC.
+    * Packaging changes:
+        * Binary packages are distributed through `PyPI <https://pypi.python.org/pypi/pcaspy>`_.
+        * Document is hosted at `Read the Docs <https://pcaspy.readthedocs.org>`_.
+
+0.4.1 (23-04-2013)
+------------------
+    * Fixed PV initial status. By startup, it is UDF/INVALID.
+    * :meth:`Driver.setParam` makes a copy of list/numpy.ndarray objects.
+      This solves the racing condition, in which the value could be in the middle of updating
+      while CA client reads the value. Thanks to Kay Kasemir.
+
+0.4 (14-01-2013)
+----------------
+    * Change from GPL to New BSD License for broader audience.
+    * Added __version__ info
+    * Added access security control
+        access security control file can be loaded using :meth:`SimpleServer.initAccessSecurityFile`.
+        The loaded rules can then be assigned to PV's *asg* field.
+        `example/access_control.py` provides an example and better explained in :ref:`tutorial-access-security-control`.
+
+    * Added new type char. 
+        It is used to represent a long string (>40 chars). And it behaves just like string parameters in driver.
+        example/pysh.py provides a concrete example, in PV `COMMAND` and `OUTPUT`.
+
+    * Added timestamp info. 
+        The timestamp is set at each setParam call with new value different to current value.
+    
+    * Added alarm/severity info.
+        * For *enum* type PV, the severity is configured by its *states* field.
+          It is a list of severity states, which can be NO_ALARM, MINOR_ALARM, MAJOR_ALARM, INVALID_ALARM.
+          If current state's severity is other than NO_ALARM, alarm is STATE_ALARM.
+        * For *int* or *float* type PV, the alarm state is configured by its *low*, *high*, *lolo*, *hihi* fields,
+          in analogue to EPICS database.
+        * `example/alarm_severity` provides an example.
+
+0.3 (21-09-2011)
+----------------
+    * Fixed gdd vector memory leak introduced in 0.2
+    * Added casPV's writeNotify method for EPICS base 3.14.11+
+    * Release GIL for each C function call
+    * Added tools.ServerThread running server process in separate thread
+    * Added preliminary Qt GUI integration example using tools.ServerThread
+
+0.2 (16-08-2011)
+----------------
+    * Added Python 3 support
+    * Added numpy data types support
+    * Fixed the driver registration issue.
+    * Rework gdd put/get methods
+    * Added gdd unittest cases
+    * Remove Makefile in favor of setup.py
+
+0.1 (19-07-2011)
+----------------
+    * Initial release.
