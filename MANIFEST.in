@@ -1,2 +1,0 @@
-include *.rst LICENSE tox.ini
-recursive-include tests *.txt *.py
