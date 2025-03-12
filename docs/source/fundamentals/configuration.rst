@@ -1,8 +1,0 @@
-Configuration
-=============
-
-Profiles
---------
-
-Environments
-------------

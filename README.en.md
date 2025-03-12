@@ -1,63 +1,62 @@
-# 中国节假日
+# Chinese Calendar
 
 [![Package](https://img.shields.io/pypi/v/chinesecalendar.svg)](https://pypi.python.org/pypi/chinesecalendar)
 [![Travis](https://img.shields.io/travis/LKI/chinese-calendar.svg)](https://travis-ci.org/LKI/chinese-calendar)
 [![License](https://img.shields.io/github/license/LKI/chinese-calendar.svg)](https://github.com/LKI/chinese-calendar/blob/master/LICENSE)
-[![README](https://img.shields.io/badge/README-English-brightgreen.svg)](https://github.com/LKI/chinese-calendar/blob/master/README.en.md)
+[![README](https://img.shields.io/badge/简介-中文-brightgreen.svg)](https://github.com/LKI/chinese-calendar/blob/master/README.md)
 
-判断某年某月某一天是不是工作日/节假日。
-支持 2004年 至 2025年，包括 2020年 的春节延长。
+Check if some date is workday or holiday in China.
+Support 2004 ~ 2025.
 
-## 安装
+## Installation
 
 ```
 pip install chinesecalendar
 ```
 
-## 升级
+## Upgrade
 
 ```
 pip install -U chinesecalendar
 ```
 
-由于次年的节假日安排，取决于国务院发布的日程。
-所以本项目一般会在国务院更新以后，发布新的版本。
-按照以往的经验，一般是每年的 11月 前后发布新版本。
+Chinese government announces holiday arrangement usually during November.
+This project will release new version after official announcement.
 
-## 样例
+## Sample
 
 ``` python
 import datetime
 
-# 判断 2018年4月30号 是不是节假日
+# Check if 2018-04-30 is holiday in China
 from chinese_calendar import is_holiday, is_workday
 april_last = datetime.date(2018, 4, 30)
 assert is_workday(april_last) is False
 assert is_holiday(april_last) is True
 
-# 或者在判断的同时，获取节日名
+# or check and get the holiday name
 import chinese_calendar as calendar  # 也可以这样 import
 on_holiday, holiday_name = calendar.get_holiday_detail(april_last)
 assert on_holiday is True
 assert holiday_name == calendar.Holiday.labour_day.value
 
-# 还能判断法定节假日是不是调休
+# even check if a holiday is in lieu
 import chinese_calendar
 assert chinese_calendar.is_in_lieu(datetime.date(2006, 2, 1)) is False
 assert chinese_calendar.is_in_lieu(datetime.date(2006, 2, 2)) is True
 ```
 
-## 其它语言
+## Other Languages
 
-假如你没法使用Python，
-你也可以转译现成的[常量文件][constants.py]来获取最全的节假日安排表。
+If you fail to use Python directly,
+you can translate the [constants file][constants.py] to get the complete chinese holiday arrangement.
 
-## 贡献代码
+## Contributing
 
-1. Fork + Clone 项目到本地
-2. 修改[节假日定义][scripts/data.py]
-3. 执行[脚本][scripts/__init__.py]自动生成[常量文件][constants.py]
-4. 提交PR
+1. Fork & Clone this project
+2. Modify [calendar definition file][scripts/data.py]
+3. Run [script][scripts/__init__.py] to generate the [constants file][constants.py]
+4. Create a PR
 
 [constants.py]: https://github.com/LKI/chinese-calendar/blob/master/chinese_calendar/constants.py
 [scripts/data.py]: https://github.com/LKI/chinese-calendar/blob/master/chinese_calendar/scripts/data.py

@@ -1,47 +1,30 @@
-import os
+# -*- coding: utf-8 -*-
+from setuptools import setup
 
-from setuptools import setup, find_packages
+import chinese_calendar
 
-base_dir = os.path.dirname(__file__)
+with open("README.md", "r", encoding="utf-8") as f:
+    long_description = f.read()
 
-about = {}
-with open(os.path.join(base_dir, 'stacks', '__about__.py')) as f:
-    exec(f.read(), about)
-
-install_requires = [
-    'configargparse>=0.9.3',
-    'PyYAML>=4.2b1',
-    'Jinja2>=2.7.3',
-    'boto>=2.40.0',
-    'docker==6.1.3',
-    'openapi-spec-validator==0.5.7',
-    'tabulate>=0.7.5',
-    'setuptools',
-    'pytz',
-    'tzlocal',
-]
-
-tests_require = [
-    'moto',
-]
-
-config = {
-    'name': 'cfstacks',
-    'description': 'Manage CloudFormation sanely with templates written in YAML',
-    'url': about['__url__'],
-    'download_url': about['__url__'],
-    'version': about['__version__'],
-    'maintainer': about['__maintainer__'],
-    'maintainer_email': about['__maintainer_email__'],
-    'packages': find_packages(),
-    'install_requires': install_requires,
-    'tests_require': tests_require,
-    'entry_points': {
-        'console_scripts': [
-            'stacks = stacks.__main__:main',
-        ],
-    },
-    'python_requires': '>=3',
-}
-
-setup(**config)
+setup(
+    name="chinesecalendar",
+    version=chinese_calendar.__version__,
+    description="check if some day is holiday in China",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    author="Lirian Su",
+    author_email="liriansu@gmail.com",
+    url="https://github.com/LKI/chinese-calendar",
+    license="MIT License",
+    packages=["chinese_calendar"],
+    install_requires=[],
+    classifiers=[
+        "License :: OSI Approved :: MIT License",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+    ],
+)
