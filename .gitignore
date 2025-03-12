@@ -1,6 +1,7 @@
-# Python setuptools 
-build/
+syntax:glob
+*.py[co]
 dist/
-*egg-info/
-*__pycache__
-*.pyc
+django_picklefield.egg-info/*
+build/
+.coverage
+.tox
