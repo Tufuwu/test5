@@ -1,55 +1,104 @@
 [build-system]
-requires = ["setuptools>=42", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling>=1.26.1"]
+build-backend = "hatchling.build"
 
 [project]
-name = "td-client"
-version = "1.3.0"
-description = "Treasure Data API library for Python"
-readme = {file = "README.rst", content-type = "text/x-rst; charset=UTF-8"}
-requires-python = ">=3.8"
-license = {text = "Apache Software License"}
-authors = [{name = "Treasure Data, Inc.", email = "support@treasure-data.com"}]
-urls = {homepage = "http://treasuredata.com/"}
+name = "logya"
+dynamic = ["version"]
+description = 'Logya: easy to use and flexible static site generator.'
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+keywords = [
+  'static-site-generator',
+  'site-generator',
+  'website',
+  'cli',
+  'jinja',
+  'yaml',
+  'terminal'
+]
+authors = [
+  { name = "Ramiro Gómez", email = "code@ramiro.org" },
+]
 classifiers = [
-    "Development Status :: 4 - Beta",
-    "Environment :: Web Environment",
-    "Intended Audience :: Developers",
-    "License :: OSI Approved :: Apache Software License",
-    "Operating System :: OS Independent",
-    "Topic :: Internet",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: Implementation :: CPython",
-    "Programming Language :: Python :: Implementation :: PyPy",
+  "Development Status :: 5 - Production/Stable",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Programming Language :: Python :: Implementation :: PyPy",
+  "Topic :: Internet :: WWW/HTTP :: Dynamic Content :: News/Diary",
+  "Topic :: Internet :: WWW/HTTP :: Site Management",
+  "Topic :: Text Processing :: Markup :: HTML"
 ]
-
 dependencies = [
-  "python-dateutil",
-  "msgpack>=0.6.2",
-  "urllib3",
+  "Jinja2>=3.1.4",
+  "Markdown>=3.7",
+  "PyYAML>=6.0.2"
 ]
 
-[project.optional-dependencies]
-dev = ["ruff"]
-docs = ["sphinx", "sphinx_rtd_theme"]
+[project.scripts]
+logya = "logya.main:main"
 
-[tool.setuptools]
-packages = ["tdclient"]
+[project.urls]
+Documentation = "https://ramiro.org/logya/docs/"
+Issues = "https://github.com/yaph/logya/issues"
+Source = "https://github.com/yaph/logya"
 
-[tool.ruff]
-line-length = 88
+[tool.hatch.version]
+path = "logya/__init__.py"
+
+[tool.hatch.envs.logya-dev]
+extra-dependencies = ["flake8", "ipdb", "mypy>=1.0.0", "pytest"]
+
+[tool.hatch.envs.logya-dev.scripts]
+type_check = "mypy --install-types --non-interactive {args:logya tests}"
+qa = [
+  "hatch run type_check",
+  "hatch test"
+]
+release = [
+  "hatch run qa",
+  "hatch build --clean",
+  "hatch publish",
+  "git tag -a $(hatch version) -m \"Create version $(hatch version)\"",
+  "git push --tags",
+  "git-changelog -o CHANGELOG.md",
+  "git commit -m 'Update CHANGELOG' CHANGELOG.md",
+  "git push"
+]
+test_release = [
+  "hatch run qa",
+  "hatch build --clean"
+]
+
+[tool.coverage.run]
+source_pkgs = ["logya", "tests"]
+branch = true
+parallel = true
+omit = [
+  "logya/__about__.py",
+]
+
+[tool.coverage.paths]
+logya = ["logya", "*/logya/logya"]
+tests = ["tests", "*/logya/tests"]
+
+[tool.coverage.report]
+exclude_lines = [
+  "no cov",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+]
 
 [tool.ruff.lint]
-select = [
-  "E",
-  "F",
-]
-exclude = ["tdclient/test/*"]
-ignore = ["E203", "E501"]
+ignore = ["DTZ006", "FA100", "FBT001", "FBT002", "N803", "N806", "T201"]
 
-[tool.ruff.lint.isort]
-known-third-party = ["dateutil","msgpack","pkg_resources","pytest","setuptools","urllib3"]
+[tool.ruff.format]
+quote-style = "preserve"
+skip-magic-trailing-comma = true
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["INP", "N", "S"]
