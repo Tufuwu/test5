@@ -1,0 +1,15 @@
+.dockerignore
+Dockerfile*
+.coverage
+.coveragerc
+.git/
+.gitignore
+.idea/
+.tox/
+.travis.yml
+tox.ini
+__pychache__
+htmlcov/
+tests/
+*.png
+

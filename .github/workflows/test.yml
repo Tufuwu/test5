@@ -1,37 +1,40 @@
-name: Test
+on: [push]
 
-on: [push, pull_request, workflow_dispatch]
-
-env:
-  FORCE_COLOR: 1
+permissions:
+  contents: read
 
 jobs:
-  test:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ["3.9", "3.10"]
-        os: [windows-latest, macos-latest, ubuntu-latest]
-
+  tox:
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+    - uses: actions/checkout@v3
 
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
-          cache: pip
-          cache-dependency-path: docs/requirements.txt
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.9"
 
-      - name: Install dependencies
-        run: |
-          python -m pip install -U pip
-          python -m pip install -U wheel
-          python -m pip install -r docs/requirements.txt
-          python -m pip install -U pytest
-          python -m pip install -e .
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install tox codecov
+        pip install -r requirements.txt
 
-      - name: Test
-        run: |
-          pytest
+    - name: Unit tests
+      run: |
+        tox -e py
+
+    - name: Upload Coverage to Codecov
+      uses: codecov/codecov-action@v3
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Build Docker image
+      uses: docker/build-push-action@v3
