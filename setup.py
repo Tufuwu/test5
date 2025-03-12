@@ -1,50 +1,67 @@
-import setuptools
-from pkg_resources import DistributionNotFound, get_distribution
+# The MIT License (MIT)
+# Copyright (c) 2017 Karl-Petter Lindegaard
 
-from tinytuya import __version__
+import re
+import os
+from io import open
+from setuptools import setup
 
-with open("README.md", "r") as fh:
-    long_description = fh.read()
 
-INSTALL_REQUIRES = [
-    'requests',      # Used for Setup Wizard - Tuya IoT Platform calls
-    'colorama',      # Makes ANSI escape character sequences work under MS Windows.
-    #'netifaces',     # Used for device discovery, mainly required on multi-interface machines
-]
+def read_file(fname, encoding='utf-8'):
+    with open(fname, encoding=encoding) as r:
+        return r.read()
 
-CHOOSE_CRYPTO_LIB = [
-    'cryptography',  # pyca/cryptography - https://cryptography.io/en/latest/
-    'pycryptodome',  # PyCryptodome      - https://pycryptodome.readthedocs.io/en/latest/
-    'pyaes',         # pyaes             - https://github.com/ricmoo/pyaes
-    'pycrypto',      # PyCrypto          - https://www.pycrypto.org/
-]
 
-pref_lib = CHOOSE_CRYPTO_LIB[0]
-for cryptolib in CHOOSE_CRYPTO_LIB:
-    try:
-        get_distribution(cryptolib)
-        pref_lib = cryptolib
-        break
-    except DistributionNotFound:
-        pass
+def find_version(*file_paths):
+    fpath = os.path.join(os.path.dirname(__file__), *file_paths)
+    version_file = read_file(fpath)
+    version_match = re.search(r"^__version__ = ['\"]([^'\"]*)['\"]",
+                              version_file, re.M)
+    if version_match:
+        return version_match.group(1)
 
-INSTALL_REQUIRES.append( pref_lib )
+    err_msg = 'Unable to find version string in {}'.format(fpath)
+    raise RuntimeError(err_msg)
 
-setuptools.setup(
-    name="tinytuya",
-    version=__version__,
-    author="Jason Cox",
-    author_email="jason@jasonacox.com",
-    description="Python module to interface with Tuya WiFi smart devices",
-    long_description=long_description,
+
+README = read_file('README.md')
+version = find_version('smbus2', '__init__.py')
+
+setup(
+    name="smbus2",
+    version=version,
+    author="Karl-Petter Lindegaard",
+    author_email="kp.lindegaard@gmail.com",
+    description="smbus2 is a drop-in replacement for smbus-cffi/smbus-python in pure Python",
+    license="MIT",
+    keywords=['smbus', 'smbus2', 'python', 'i2c', 'raspberrypi', 'linux'],
+    url="https://github.com/kplindegaard/smbus2",
+    packages=['smbus2'],
+    package_data={'smbus2': ['py.typed', 'smbus2.pyi']},
+    long_description=README,
     long_description_content_type="text/markdown",
-    url='https://github.com/jasonacox/tinytuya',
-    packages=setuptools.find_packages(exclude=("sandbox",)),
-    install_requires=INSTALL_REQUIRES,
-    entry_points={"console_scripts": ["tinytuya=tinytuya.__main__:dummy"]},
+    extras_require={
+        'docs': [
+            'sphinx >= 1.5.3'
+        ],
+        'qa': [
+            'flake8'
+        ]
+    },
     classifiers=[
-        "Programming Language :: Python :: 3",
+        "Development Status :: 4 - Beta",
+        "Topic :: Utilities",
         "License :: OSI Approved :: MIT License",
-        "Operating System :: OS Independent",
+        "Programming Language :: Python :: 2",
+        "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13"
     ],
 )
