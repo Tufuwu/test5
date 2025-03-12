@@ -1,10 +1,37 @@
-.DS_Store
 *.py[co]
-.cache
-__pycache__
-*.html
-/tmp/
-.idea/
-.scannerwork/
-.env
-.pytest_cache/
+
+# Packages
+*.egg
+*.egg-info
+dist
+build
+eggs
+parts
+bin
+var
+sdist
+develop-eggs
+.installed.cfg
+.eggs
+# Installer logs
+pip-log.txt
+
+
+*~
+\#*\#
+
+# Unit test / coverage reports
+.coverage
+.tox
+.mypy_cache
+htmlcov
+
+#Translations
+*.mo
+
+#Mr Developer
+.mr.developer.cfg
+
+docs/build
+coverage.xml
+.vscode
