@@ -1,0 +1,5 @@
+---
+platform: osx
+generator: Xcode
+build_tool: cmake
+build_type: Debug

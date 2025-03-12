@@ -1,0 +1,5 @@
+---
+platform: linux
+generator: Ninja
+build_tool: vscode
+build_type: Release

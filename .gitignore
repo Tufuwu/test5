@@ -1,12 +1,5 @@
+*.swp
 *.pyc
-*.egg-info
-dist/
-.DS_Store
-.mypy_cache
-.coverage
-env/
-build/
-.39venv/
-.venv/
-.python-version
+test/build/*
 .vscode
+

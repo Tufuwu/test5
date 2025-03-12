@@ -1,0 +1,7 @@
+---
+platform: wasisdk
+generator: Ninja
+build_tool: vscode
+build_type: Debug
+cmake-toolchain: wasisdk.toolchain.cmake
+

@@ -1,0 +1,7 @@
+---
+platform: wasisdk 
+generator: Unix Makefiles
+build_tool: make
+build_type: Release
+cmake-toolchain: wasisdk.toolchain.cmake
+

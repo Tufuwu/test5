@@ -1,0 +1,9 @@
+---
+platform: android
+generator: Unix Makefiles
+build_tool: make
+build_type: Release
+cmake-toolchain: android.toolchain.cmake
+defines:
+    ANDROID_ABI: mips
+    ANDROID_PLATFORM: android-28
