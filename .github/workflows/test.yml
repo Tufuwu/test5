@@ -1,95 +1,43 @@
-name: CI
+name: Lint and Tests
 
-# Controls when the action will run. 
-on:
-  # Triggers the workflow on push or pull request events but only for the master branch
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+on: [push, pull_request]
 
 jobs:
-  code-quality:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        toxenv:
-          - black
-          - flake8
-          - mypy
-          - isort
-    env:
-      TOXENV: ${{ matrix.toxenv }}
-    
-    name: "Tox ${{ matrix.toxenv }}"
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      
-      - name: setup python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.9'
-        
-      - name: Install Requirements [${{ matrix.toxenv }}]
-        run: pip install tox
-      
-      - name: Tox-${{ matrix.toxenv }}
-        run: tox
-  # This workflow contains a single job called "build"
-  test:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        toxenv:
-          - py38
-          - py39
-          - py310
-        include:
-          - toxenv: py38
-            python-version: '3.9'
-          - toxenv: py39
-            python-version: '3.9'
-          - toxenv: py310
-            python-version: '3.9'
-          - toxenv: py311
-            python-version: '3.9'
-          - toxenv: py312
-            python-version: '3.9'
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      TOXENV: ${{ matrix.toxenv }}
-    name: "Python ${{ matrix.python-version }} | Tox ${{ matrix.toxenv }}"
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
+  test:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.10"]
+
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+
+      - name: "Pull the repository"
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 2
-      
-      - name: setup python
-        uses: actions/setup-python@v2
+          submodules: true
+
+      - name: "Install OS Dependencies"
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essentials python3-dev
+
+      - name: "Set up Python ${{ matrix.python-version }}"
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-        
-      - name: Install Requirements [Python-${{ matrix.python-version }}]
-        run: pip install tox
-      
-      - name: Tox-${{ matrix.toxenv }}
-        run: tox
-      
-      - name: Upload coverage to Codecov
-        # see https://github.com/codecov/codecov-action/blob/master/README.md
-        uses: codecov/codecov-action@v2
-        with:
-          flags: unittests-${{ matrix.python-version }}
-          fail_ci_if_error: true  # default = false
-          os: toxenv
-          verbose: true  # default = false
+
+      - name: "Install Nox"
+        run: |
+          pip3 install setuptools
+          pip3 install nox
+
+      - name: "Lint with Flake8 and Black"
+        run: |
+          python3 -m nox --session lint
+
+      - name: "Check PyPAPI can be built"
+        run: |
+          python setup.py build
