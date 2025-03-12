@@ -1,15 +1,2 @@
-*.pyc
-*.swp
-*.egg-info
-**/.DS_Store
-build/
-dist/
-.tox/
-venv/
-.venv/
-
-db.sqlite3
-.coverage
-.coverage.*
-tests/testapp/static/
-.ruff_cache/
+.venv
+public_suffix_list.dat
