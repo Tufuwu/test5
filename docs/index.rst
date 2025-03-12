@@ -1,19 +1,17 @@
-Welcome to flask-pyoidc's documentation!
-========================================
+=============================================
+ amqp - Python AMQP low-level client library
+=============================================
 
-In addition to this documentation, you may have a look on some 
-`example code`_
+.. include:: includes/introduction.txt
 
-.. _example code: https://github.com/zamzterz/Flask-pyoidc/tree/master/example
+Contents
+========
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+    :maxdepth: 2
 
-   quickstart
-   configuration
-   api
-
+    reference/index
+    changelog
 
 Indices and tables
 ==================
@@ -21,3 +19,4 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+

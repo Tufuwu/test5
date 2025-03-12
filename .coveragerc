@@ -1,19 +1,16 @@
 [run]
-branch = True
-source = src/flask_pyoidc
-
-[paths]
-source =
-    src/flask_pyoidc
-    */site-packages/flask_pyoidc
+branch = 1
+cover_pylib = 0
+include=*amqp/*
+omit = t.*
 
 [report]
-exclude_lines =
-    raise NotImplementedError()
-    if __name__ == .__main__.: 
-ignore_errors = True
 omit =
-    tests/*
-    setup.py
-show_missing = true
-precision = 2
+    */python?.?/*
+    */site-packages/*
+    */pypy/*
+    *amqp/five.py
+exclude_lines =
+    pragma: no cover
+
+    for infinity
