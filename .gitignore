@@ -1,66 +1,15 @@
-*.py[cod]
-
-# C extensions
-*.so
-
-# Packages
-*.egg
-*.egg-info
-dist
-build
-eggs
-parts
-bin
-var
-sdist
-develop-eggs
-.installed.cfg
-lib
-lib64
-MANIFEST
-
-# Installer logs
-pip-log.txt
-
-# Unit test / coverage reports
-.coverage
-.tox
-nosetests.xml
-
-# Patch files
-*.patch
-
-# Translations
+*.pyc
+*.pyo
 *.mo
-
-# Mr Developer
-.mr.developer.cfg
-
-# OSX files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-Icon?
-
-# PyCharm Files
+*.db
+*.egg-info/
 .idea
-
-# eclipse
-.settings
 .project
 .pydevproject
-
-# Emacs backup files
-*~
-
-# Virtual Studio Code
-.vscode
-
-# setuptools_scm
-src/nexusformat/_version.py
-
-# miscellaneous system files
-.directoryhash
- 
+.idea/workspace.xml
+.DS_Store
+.coverage
+.tox/
+build/
+dist/
+docs/_build/

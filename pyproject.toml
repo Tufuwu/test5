@@ -1,6 +1,17 @@
 [build-system]
-requires = ["setuptools>=45", "wheel", "setuptools_scm[toml]>=6.2"]
-build-backend = "setuptools.build_meta"
+requires = ["setuptools", "wheel", "Django"]
 
-[tool.setuptools_scm]
-write_to = "src/nexusformat/_version.py"
+[tool.isort]
+profile = "black"
+line_length = 99
+
+[tool.black]
+line-length = 99
+exclude = '''
+/(
+    \.git
+  | \.venv
+  | \.tox
+  | dist
+)/
+'''
