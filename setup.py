@@ -1,46 +1,52 @@
-import io
+#!/usr/bin/env python
+
 import os
+import setuptools
 
-from setuptools import find_packages, setup
 
-VERSION = "0.2.11"
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-
-with io.open("README.md", "r", encoding="utf-8") as f:
+module_dir = os.path.dirname(os.path.abspath(__file__))
+with open(os.path.join(module_dir, 'readme.rst'), "r") as f:
     long_description = f.read()
 
-setup(
-    name="elasticsearch-dbapi",
-    description=("A DBAPI and SQLAlchemy dialect for Elasticsearch"),
-    long_description=long_description,
-    long_description_content_type="text/markdown",
-    version=VERSION,
-    packages=find_packages(),
-    include_package_data=True,
-    zip_safe=False,
-    entry_points={
-        "sqlalchemy.dialects": [
-            "elasticsearch = es.elastic.sqlalchemy:ESHTTPDialect",
-            "elasticsearch.http = es.elastic.sqlalchemy:ESHTTPDialect",
-            "elasticsearch.https = es.elastic.sqlalchemy:ESHTTPSDialect",
-            "odelasticsearch = es.opendistro.sqlalchemy:ESHTTPDialect",
-            "odelasticsearch.http = es.opendistro.sqlalchemy:ESHTTPDialect",
-            "odelasticsearch.https = es.opendistro.sqlalchemy:ESHTTPSDialect",
-        ]
-    },
-    install_requires=["elasticsearch>7, <7.14", "packaging>=21.0", "sqlalchemy"],
-    extras_require={"opendistro": ["requests_aws4auth", "boto3"]},
-    author="Preset Inc.",
-    author_email="daniel@preset.io",
-    url="http://preset.io",
-    download_url="https://github.com/preset-io/elasticsearch-dbapi/releases/tag/"
-    + VERSION,
-    classifiers=[
-        "Programming Language :: Python :: 3.6",
-        "Programming Language :: Python :: 3.7",
-        "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",
-    ],
-    tests_require=["nose>=1.0"],
-    test_suite="nose.collector",
-)
+with open("requirements.txt", "r") as f:
+    requires = f.readlines()
+    install_requires = requires[:requires.index("EXTRAS_REQUIRE\n")]
+    extras_require = {}
+    extra = ""
+    for extra_require in requires[requires.index("EXTRAS_REQUIRE\n") + 1:]:
+        if extra_require.startswith("-"):
+            extra = extra_require.strip().lstrip("-")
+            continue
+        if extra in extras_require:
+            extras_require[extra].append(extra_require)
+        else:
+            extras_require[extra] = [extra_require]
+
+test_requires = ['pytest']
+
+if __name__ == "__main__":
+    setuptools.setup(
+        name='uf3',
+        version='0.4.0',
+        description='Ultra-Fast Force Fields for molecular dynamics',
+        long_description=long_description,
+        url='https://github.com/uf3/uf3',
+        author='Stephen R. Xie, Matthias Rupp',
+        author_email='sxiexie@ufl.edu',
+        license='Apache 2.0',
+        packages=setuptools.find_packages(exclude=["tests"]),
+        install_requires=install_requires,
+        extras_require=extras_require,
+        classifiers=[
+            "Programming Language :: Python :: 3.9",
+            "Programming Language :: Python :: 3.10",
+            "Programming Language :: Python :: 3.11",
+            "Programming Language :: Python :: 3.12",
+            'Development Status :: 3 - Alpha',
+            'Intended Audience :: Science/Research',
+            'Operating System :: OS Independent',
+            'Topic :: Scientific/Engineering'
+        ],
+        python_requires='>=3.9, <3.13',
+        tests_require=test_requires,
+    )

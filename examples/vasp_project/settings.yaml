@@ -1,0 +1,96 @@
+# General #####################################################################
+element_list:
+    - W
+    
+output_directory: "./output"
+
+experiment_path: "."
+
+filename_pattern: "*vasprun.xml"
+
+degree: 2
+
+verbose: 2
+
+random_seed: 1234
+
+progress_bars: True
+
+
+# Preprocess ##################################################################
+
+cache_data: True
+
+max_samples_per_file: -1
+
+min_diff: 0
+
+analyze_pair_distribution: False
+
+analyze_fraction: 1.0
+
+vasp_pressure: False
+
+energy_key: "energy"
+
+force_key: "force"
+
+# Featurization ###############################################################
+read_knots: False
+
+write_knots: True
+
+
+r_min_map:  # angstroms
+    W-W: 1.5
+    
+r_max_map:  # angstroms
+    W-W: 6.0
+    
+resolution_map:  # number of unique knots
+    W-W: 12
+
+n_jobs: 1
+
+parallel: "python"
+
+cache_features: True
+
+knot_spacing: "linear"
+
+
+# Learning ####################################################################
+frac_train: 0.8
+
+kappa: 0.99
+
+regularization_params:
+    ridge_1b: 1e-8
+    ridge_2b: 1e-9
+    ridge_3b: 1e-6
+    curve_2b: 1e-9
+    curve_3b: 1e-6
+    
+zero_tail: True
+
+fit_self_energy: True
+
+
+# Postprocess #################################################################
+core_correction: 0.0  # no core correction for simple example
+
+plot_fit: True
+
+plot_2B: True
+
+# Filenames  ##################################################################
+data_filename: "data_all.db"
+
+knots_file: "knots.json"
+
+features_filename: "features_all.h5"
+
+training_filename: "training.txt"
+
+model_filename: "model.json"
+

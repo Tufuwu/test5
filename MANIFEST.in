@@ -1,4 +1,2 @@
-prune *.pyc
-include LICENSE.txt
-include README.md
-recursive-include es/ *
+include requirements.txt
+include readme.rst
