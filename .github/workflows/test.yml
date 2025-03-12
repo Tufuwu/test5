@@ -1,37 +1,37 @@
-name: Python Package using Conda
-
-on: [push]
+name: Tests
+on:
+  push:
+    branches:
+      - main
+  pull_request:
 
 jobs:
-  build-linux:
+  build:
     runs-on: ubuntu-latest
     strategy:
-      max-parallel: 5
-
+      matrix:
+        python-version: ["3.9", "3.10"]
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python 3.10
-      uses: actions/setup-python@v3
-      with:
-        python-version: '3.9'
-    - name: Add conda to system path
-      run: |
-        # $CONDA is an environment variable pointing to the root of the miniconda directory
-        echo $CONDA/bin >> $GITHUB_PATH
-    - name: Install dependencies
-      run: |
-        conda env update --file env-dev.yml --name base
-        sudo apt-get update
-        sudo apt-get install -y xvfb
-    - name: build Eelbrain
-      run: |
-        pip install -e .
-    - name: Start virtual display
-      run: |
-        Xvfb :99 -screen 0 1024x768x16 &
-        export DISPLAY=:99
-    - name: Test with pytest
-      env:
-        DISPLAY: :99
-      run: |
-        pytest
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: |
+          npm install -g elm
+          pip install tox
+      - name: Run Tox
+        run: |
+          if [[ "${{ matrix.python-version }}" == "3.7" ]]; then
+            if [[ "${{ github.event_name }}" == "push" ]]; then
+              echo "Running tests for cover and black"
+              tox -e cover
+              tox -e black
+            else
+              tox
+            fi
+          else
+            tox
+          fi
+      - name: Coveralls
+        if: success() && github.event_name == 'push' && matrix.python-version == '3.7'
+        run: coveralls

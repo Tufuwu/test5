@@ -1,0 +1,23 @@
+# Changelog
+
+**0.2.1**
+  * Fixed issue with PyPI packaging
+**0.2.0**
+  * Added support for Elm 0.19 (including `--optimize` and `--debug` options)
+  * Drop support for Elm 0.18 and older Elm versions
+  * Drop support for Python 3.3 and 3.4
+  * Drop `ELM_MAKE_CHANGE_DIRECTORY` setting
+**0.1.7**
+  * Add option to change directory before running `elm-make`
+**0.1.6**
+  * Remove support for Python 2
+**0.1.5**
+  * Support for Python 3.6
+**0.1.4**
+  * Fix a big related to read/write files in Windows
+**0.1.3**
+  * Support for (actually tests ran also with) Python 3.3
+**0.1.2**
+  * Better handling of temporary files
+**0.1.1**
+  * Minor (possible) bugs fixes: avoid redefining `bin`

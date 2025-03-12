@@ -1,3 +1,0 @@
-include dsyevh3C/*
-include *.txt
-recursive-include . *.pyx
