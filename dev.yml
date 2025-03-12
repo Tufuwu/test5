@@ -1,0 +1,21 @@
+name: pyreferrer
+
+up:
+  - python: 2.7.17
+  - python: 3.7.9
+  - pip:
+    - requirements.txt
+  - python_develop
+
+commands:
+  clean:
+    run: find . | grep -E "(__pycache__|\.pyc|\.pyo$)" | xargs rm -rf
+
+  test:
+    run: tox
+
+  release:
+    run: pyreleaser create --only-on master --push
+
+  publish:
+    run: pyreleaser upload

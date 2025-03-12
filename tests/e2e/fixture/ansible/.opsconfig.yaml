@@ -1,2 +1,0 @@
-ansible.config_path: ansible.cfg
-ansible.filter_plugins: plugins/filter_plugins
