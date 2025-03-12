@@ -1,5 +1,0 @@
-# Maybe send a webmention every minute.
-* * * * * python /project/manage.py automention
-
-# Show that cron is working.
-* * * * * echo "cron heartbeat"

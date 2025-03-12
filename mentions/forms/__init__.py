@@ -1,1 +1,0 @@
-from .submit_webmention import SubmitWebmentionForm
