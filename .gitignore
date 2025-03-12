@@ -1,50 +1,7 @@
-### Files
-
-# Compiled library files
-*.o
-*.so
-*.pyd
-*.dll
-
-# Python byte files *.pyc
-*.pyc
-
-# Specific files
-docs/index.html.lnk
-docs/run.bat
-qmeq/pylintrc
-qmeq/specfunc/c_specfunc.c
-qmeq/specfunc/c_specfunc_elph.c
-qmeq/approach/c_aprclass.c
-qmeq/approach/c_kernel_handler.c
-qmeq/approach/base/c_pauli.c
-qmeq/approach/base/c_lindblad.c
-qmeq/approach/base/c_redfield.c
-qmeq/approach/base/c_neumann1.c
-qmeq/approach/base/c_neumann2.c
-qmeq/approach/base/c_RTD.c
-qmeq/approach/base/_complex_redfield.py
-qmeq/approach/base/_complex_neumann1.py
-qmeq/approach/elph/c_pauli.c
-qmeq/approach/elph/c_lindblad.c
-qmeq/approach/elph/c_redfield.c
-qmeq/approach/elph/c_neumann1.c
-qmeq/wrappers/c_lapack.c
-qmeq/wrappers/c_mytypes.c
-
-### Directories
-
-# Build directories
-.cache/
-build/
+__pycache__
+.idea
+build
+*.egg-info/
+venv/
 dist/
-docs/build
-qmeq.egg-info/
-qmeq/build
-qmeq/tests/__pycache__
-
-# Specific directories
-instructions/
-project/
-qmeq/tests_
-.idea/
+*.egg
