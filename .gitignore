@@ -1,15 +1,73 @@
-*.pyc
-*.pyo
+*.py[cod]
+
+# C extensions
+*.so
+
+# Packages
+*.egg
+*.egg-info
+dist
+build
+eggs
+parts
+bin
+var
+sdist
+develop-eggs
+.installed.cfg
+lib
+lib64
+__pycache__
+
+# Installer logs
+pip-log.txt
+
+# Unit test / coverage reports
+.coverage
+.tox
+nosetests.xml
+unittests.xml
+
+# Translations
 *.mo
-*.db
-*.egg-info/
-.idea
+
+# Mr Developer
+.mr.developer.cfg
 .project
 .pydevproject
-.idea/workspace.xml
+
+# QA
+coverage.xml
+diff_*.html
+*.report
+report
+edx_analytics.log
+venv
+
+# Override config files
+override.cfg
+
+# JetBrains
+.idea
+
+
 .DS_Store
-.coverage
-.tox/
-build/
-dist/
-docs/_build/
+
+*.trace
+.eggs
+
+*.swp
+catalog_test.json
+course_structure.json
+
+# Sphinx docs
+docs/*
+docs/source/all.rst
+docs/source/toctree.rst
+docs/source/workflow_entry_point.rst
+!docs/source/
+!docs/source/_themes/*
+
+*.java
+TempStatsStore/
+derby.log

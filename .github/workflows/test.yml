@@ -1,54 +1,61 @@
-name: CI Testing
+name: Python CI
+
 on:
-  pull_request:
-    branches:
-      - master
   push:
     branches:
       - master
+  pull_request:
+    branches:
+      - '**'
 
 jobs:
-  test:
-    name: "Python ${{ matrix.python }} Django ${{ matrix.django }}"
-    runs-on: ubuntu-latest
+  run_tests:
+    name: Tests
+    runs-on: ${{ matrix.os }}
     strategy:
-      # max-parallel: 8  # default is max available
-      fail-fast: false
       matrix:
-        include:
-          # Django 2.2
-          - django: "2.2"
-            python: "3.9"
-          # Django 3.1
-          - django: "3.1"
-            python: "3.9"
-          # Django 3.2
-          - django: "3.2"
-            python: "3.9"
-          # Django 4.0
-          - django: "4.0b1"
-            python: "3.9"
+        os:
+          - ubuntu-latest
+        python-version: ["3.9", "3.10"]
 
     steps:
-      - name: Install gettext
-        run: sudo apt-get install -y gettext
+    - uses: actions/checkout@v1
+    - name: setup python
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
 
-      - name: Checkout code
-        uses: actions/checkout@v2
+    - name: Pull the docker image
+      run: make docker-pull
 
-      - name: Setup Python ${{ matrix.python }}
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python }}
+    - name: Create Coverage dest
+      run: mkdir -p coverage
 
-      - name: Install Packages
-        run: |
-          python -m pip install -U pip
-          python -m pip install "Django~=${{ matrix.django }}" codecov -e .[tests]
+    - name: Run Elastic Search
+      run: make test.start_elasticsearch
 
-      - name: Run Tests
-        run: |
-          echo "Python ${{ matrix.python }} / Django ${{ matrix.django }}"
-          coverage run --rcfile=.coveragerc runtests.py
-          codecov
-        continue-on-error: ${{ contains(matrix.django, '4.0') }}
+    - name: Run Docker test
+      shell: 'script -q -e -c "bash {0}"'
+      run: make test-docker
+
+    - name: Run Quality Check
+      shell: 'script -q -e -c "bash {0}"'
+      run: make quality-docker
+
+    - name: Create Coverage Report
+      shell: 'script -q -e -c "bash {0}"'
+      run: make coverage-docker
+
+    - name: Run Docs Check
+      run: sudo make docs
+
+    - name: Stop elastic search Check
+      run: make test.stop_elasticsearch
+
+    - name: Install Codecov
+      run: pip install --upgrade codecov
+
+    - name: Run Coverage
+      uses: codecov/codecov-action@v2
+      with:
+        fail_ci_if_error: true

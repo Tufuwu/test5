@@ -1,4 +1,13 @@
 [run]
-source = fluent_blogs/
-omit =
-    */migrations/*
+data_file = .coverage
+source = edx/analytics
+
+[report]
+ignore_errors = True
+
+[html]
+title = EdX Analytics Platform Python Test Coverage Report
+directory = report
+
+[xml]
+output = coverage.xml
