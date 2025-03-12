@@ -1,3 +1,0 @@
-[codespell]
-skip = .git/*,./doc/_build/*,./doc/gallery/*,.tox/*,./reports/*,./issues/*,*.sublime-workspace,./test_container/*
-ignore-words-list = nd
