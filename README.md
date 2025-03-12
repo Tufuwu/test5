@@ -1,160 +1,101 @@
-# <img height="24" src="https://raw.githubusercontent.com/yezyilomo/django-restql/master/docs/img/icon.svg" /> [  Django RESTQL](https://yezyilomo.github.io/django-restql)
+# SIFT
 
-![Build Status](https://github.com/yezyilomo/django-restql/actions/workflows/main.yml/badge.svg?branch=master)
-[![Latest Version](https://img.shields.io/pypi/v/django-restql.svg)](https://pypi.org/project/django-restql/) 
-[![Python Versions](https://img.shields.io/pypi/pyversions/django-restql.svg)](https://pypi.org/project/django-restql/) 
-[![License](https://img.shields.io/pypi/l/django-restql.svg)](https://pypi.org/project/django-restql/)
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-[![Downloads](https://pepy.tech/badge/django-restql)](https://pepy.tech/project/django-restql) 
-[![Downloads](https://pepy.tech/badge/django-restql/month)](https://pepy.tech/project/django-restql) 
-[![Downloads](https://pepy.tech/badge/django-restql/week)](https://pepy.tech/project/django-restql)
+[![Coverage Status](https://coveralls.io/repos/github/ssec/sift/badge.svg)](https://coveralls.io/github/ssec/sift)
+[![PyPI version](https://badge.fury.io/py/uwsift.svg)](https://badge.fury.io/py/uwsift)
+![CI](https://github.com/ssec/sift/actions/workflows/ci.yaml/badge.svg)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.2587907.svg)](https://doi.org/10.5281/zenodo.2587907)
+[![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/gitterHQ/gitter)
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/ssec/sift/master.svg)](https://results.pre-commit.ci/latest/github/ssec/sift/master)
 
 
-**Django RESTQL** is a python library which allows you to turn your API made with **Django REST Framework(DRF)** into a GraphQL like API. With **Django RESTQL** you will be able to
+SIFT (Satellite Information Familiarization Tool) is a visualization tool
+for satellite data. It provides a graphical interface that can be used for
+e.g. fast visualization, scientific data analysis, training, cal/val activities
+and operations.
 
-* Send a query to your API and get exactly what you need, nothing more and nothing less.
+SIFT is built on open source technologies like Python, OpenGL, PyQt5, and
+makes use of the [Pytroll framework](https://pytroll.github.io/) for reading
+and processing the input data.
+It can be run from Mac, Windows, and Linux. The SIFT application is provided as
+a python library called "uwsift". It can also be installed as a standalone
+application.
 
-* Control the data you get, not the server.
+SIFT's main website is http://sift.ssec.wisc.edu/.
 
-* Get predictable results, since you control what you get from the server.
+The Git repository where you can find SIFT's source code, issue tracker, and
+other documentation is on GitHub: https://github.com/ssec/sift
 
-* Get nested resources in a single request.
+The project wiki with some in-depth usage and installation instructions can
+also be found on GitHub: https://github.com/ssec/sift/wiki
 
-* Avoid Over-fetching and Under-fetching of data.
+Developer and configuration documentation can be found on
+https://sift.readthedocs.io/en/latest/.
 
-* Write(create & update) nested data of any level in a single request.
+The recording of a SIFT Short Course organised by EUMETSAT can be found [here](https://classroom.eumetsat.int/course/view.php?id=478).
 
-Isn't it cool?.
+## What's new in SIFT 2.0
 
-Want to see how this library is making all that possible? 
+Many new features have been added starting from the version 2.0 of SIFT, including:
+- reading of data from both geostationary (GEO) as well as low-Earth-orbit (LEO)
+  satellite instruments
+- visualization of point data (e.g. lightning)
+- support for composite (RGB) visualization
+- an improved timeline manager
+- integration of a statistics module
+- full resampling functionalities using Pyresample
+- an automatic update/monitoring mode
+- partial redesign of the UI/UX
+- ... many more small but useful features!
 
-Check out the full documentation at [https://yezyilomo.github.io/django-restql](https://yezyilomo.github.io/django-restql)
+Note that SIFT v2.0 is still in Beta phase (see [Releases](https://github.com/ssec/sift/releases)). Until a full release is reached, the
+packaged builds are available in the [experimental ftp folder](https://bin.ssec.wisc.edu/pub/sift/dist/experimental/).
+See the Installatio section below for more information.
 
-Or try a live demo on [Django RESTQL Playground](https://django-restql-playground.yezyilomo.me)
+## History
 
+SIFT was originally created and designed at [SSEC/CIMSS at the University of
+Wisconsin - Madison](https://cimss.ssec.wisc.edu/) as a training tool for US
+NWS forecasters. Later, [EUMETSAT, European Organization for the Exploitation
+of Meteorological Satellites](https://www.eumetsat.int/),
+joined the project contributing many new features and refactoring various
+portions of the project to support instrument calibration/validation workflows
+as well as additional scientific analysis. CIMSS and EUMETSAT now work on the
+project together as well as accepting contributions from users outside these
+groups.
 
-## Requirements
-* Python >= 3.6
-* Django >= 1.11
-* Django REST Framework >= 3.5
+EUMETSAT contributions, leading up to SIFT 2.0, were carried out by
+[ask – Innovative Visualisierungslösungen GmbH](https://askvisual.de/).
 
+## Data Access and Reading
 
-## Installing
-```py
-pip install django-restql
-```
+SIFT uses the open source python library Satpy to read input data. By using
+Satpy, SIFT is able to read many satellite instrument file formats,
+especially in the meteorology domain. The full list of available Satpy readers
+can be found in
+[Satpy's documentation](https://satpy.readthedocs.io/en/stable/index.html#id1).
+Note however that SIFT may not be able to display or understand all data formats
+that Satpy can read.
+SIFT defaults to a limited set of readers; head to the
+[configuration documentation](https://sift.readthedocs.io/en/latest/configuration/index.html)
+for customizing your SIFT.
 
+## Installation
 
-## Getting Started
-Using **Django RESTQL** to query data is very simple, you just have to inherit the `DynamicFieldsMixin` class when defining a serializer that's all.
-```py
-from rest_framework import serializers
-from django.contrib.auth.models import User
-from django_restql.mixins import DynamicFieldsMixin
+SIFT can be installed as an all-in-one bundled application or the python
+library "uwsift" can be installed in a traditional python environment.
 
+Detailed installation instructions can be found on the
+[installation documentation](https://sift.readthedocs.io/en/latest/installation.html).
 
-class UserSerializer(DynamicFieldsMixin, serializer.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['id', 'username', 'email']
-```
+## Contributors
 
-**Django RESTQL** handle all requests with a `query` parameter, this parameter is the one used to pass all fields to be included/excluded in a response. For example to select `id` and `username` fields from User model, send a request with a ` query` parameter as shown below.
+SIFT is an open source project welcoming all contributions. See the
+[Contributing Guide](https://sift.readthedocs.io/en/latest/dev_guide/contributing.html)
+for more information on how you can help.
 
-`GET /users/?query={id, username}`
-```js
-[
-    {
-        "id": 1,
-        "username": "yezyilomo"
-    },
-    ...
-]
-```
+### Building and releasing
 
-**Django RESTQL** support querying both flat and nested resources, so you can expand or query nested fields at any level as defined on a serializer. In an example below we have `location` as a nested field on User model.
-
-```py
-from rest_framework import serializers
-from django.contrib.auth.models import User
-from django_restql.mixins import DynamicFieldsMixin
-
-from app.models import GroupSerializer, LocationSerializer
-
-
-class LocationSerializer(DynamicFieldsMixin, serializer.ModelSerializer):
-    class Meta:
-        model = Location
-        fields = ['id', 'country',  'city', 'street']
-
-
-class UserSerializer(DynamicFieldsMixin, serializer.ModelSerializer):
-    location = LocationSerializer(many=False, read_only=True) 
-    class Meta:
-        model = User
-        fields = ['id', 'username', 'email', 'location']
-```
-
-If you want only `country` and `city` fields on a `location` field when retrieving users here is how you can do it
-
-`GET /users/?query={id, username, location{country, city}}`
-```js
-[
-    {
-        "id": 1,
-        "username": "yezyilomo",
-        "location": {
-            "contry": "Tanzania",
-            "city": "Dar es salaam"
-        }
-    },
-    ...
-]
-```
-
-You can even rename your fields when querying data, In an example below the field `location` is renamed to `address`
-
-`GET /users/?query={id, username, address: location{country, city}}`
-```js
-[
-    {
-        "id": 1,
-        "username": "yezyilomo",
-        "address": {
-            "contry": "Tanzania",
-            "city": "Dar es salaam"
-        }
-    },
-    ...
-]
-```
-
-
-## [Documentation :pencil:](https://yezyilomo.github.io/django-restql)
-You can do a lot with **Django RESTQL** apart from querying data, like
-- Rename fields
-- Restrict some fields on nested fields
-- Define self referencing nested fields
-- Optimize data fetching on nested fields
-- Data filtering and pagination by using query arguments
-- Data mutation(Create and update nested data of any level in a single request)
-
-Full documentation for this project is available at [https://yezyilomo.github.io/django-restql](https://yezyilomo.github.io/django-restql), you are advised to read it inorder to utilize this library to the fullest.
-
-
-## [Django RESTQL Play Ground](https://django-restql-playground.yezyilomo.me)
-[**Django RESTQL Play Ground**](https://django-restql-playground.yezyilomo.me) is a graphical, interactive, in-browser tool which you can use to test **Django RESTQL** features like data querying, mutations etc to get the idea of how the library works before installing it. It's more like a [**live demo**](https://django-restql-playground.yezyilomo.me) for **Django RESTQL**, it's available at [https://django-restql-playground.yezyilomo.me](https://django-restql-playground.yezyilomo.me)
-
-
-## Running Tests
-`python runtests.py`
-
-
-## Credits
-* Implementation of this library is based on the idea behind [GraphQL](https://graphql.org/).
-* My intention is to extend the capability of [drf-dynamic-fields](https://github.com/dbrgn/drf-dynamic-fields) library to support more functionalities like allowing to query nested fields both flat and iterable at any level and allow writing on nested fields while maintaining simplicity.
-
-
-## Contributing [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
-
-We welcome all contributions. Please read our [CONTRIBUTING.md](https://github.com/yezyilomo/django-restql/blob/master/CONTRIBUTING.md) first. You can submit any ideas as [pull requests](https://github.com/yezyilomo/django-restql/pulls) or as [GitHub issues](https://github.com/yezyilomo/django-restql/issues). If you'd like to improve code, check out the [Code Style Guide](https://github.com/yezyilomo/django-restql/blob/master/CONTRIBUTING.md#styleguides) and have a good time!.
+For instructions on how SIFT is built and packaged see the
+[releasing instructions](RELEASING.md). Note that these instructions
+are mainly for SIFT developers and may require technical understanding of
+SIFT and the libraries it depends on.
