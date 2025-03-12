@@ -1,6 +1,0 @@
-[run]
-source =
-    adhocracy4
-omit =
-    */migrations/*
-    */autofixtures.py

@@ -1,0 +1,45 @@
+{% load lib_tags i18n %}
+<div class="row">
+
+  <div class="col-xs-7 col-md-5 col-lg-4">
+    <div class="btn-group" title="{% trans 'Select' %}">
+      <a class="btn btn-default"><input type="checkbox" id="selectall" /></a>
+      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        {% for type, label in msg_types.items %}
+        <li><a name="selectmsgs" href="{{ type }}"">{{ label }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+    
+    <div class="btn-group" title="{% trans 'Release' %}">
+      <a name="release-multi" href="{% url 'modoboa_amavis:mail_process' %}" class="btn btn-success disabled">
+        <span class="fa fa-check"></span> {% trans 'Release' %}
+      </a>
+    </div>
+    <div class="btn-group" title="{% trans 'Delete' %}">
+      <a name="delete-multi" href="{% url 'modoboa_amavis:mail_process' %}" class="btn btn-danger disabled">
+        <span class="fa fa-trash"></span> {% trans 'Delete' %}
+      </a>
+    </div>
+    {% if manual_learning %}
+    <div class="btn-group" title="{% trans 'Manual learning' %}">
+      <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+        <span class="fa fa-cog"></span> <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li><a name="mark-as-spam-multi" href="{% url 'modoboa_amavis:mail_process' %}">{% trans "Mark as spam" %}</a></li>
+        <li><a name="mark-as-ham-multi" href="{% url 'modoboa_amavis:mail_process' %}">{% trans "Mark as non-spam" %}</a></li>
+      </ul>
+    </div>
+    {% endif %}
+
+  </div>
+  
+  <div class="col-xs-5 col-lg-4">
+    {% include "common/email_searchbar.html" with extraopts=extraopts %}
+  </div>
+  
+</div>

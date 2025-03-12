@@ -1,0 +1,534 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-01-25 11:17+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: checks/settings_checks.py:12
+msgid ""
+"AMAVIS_DEFAULT_DATABASE_ENCODING does not match the character encoding used "
+"by the Amavis database."
+msgstr ""
+
+#: checks/settings_checks.py:14
+msgid ""
+"Check your database character encoding and set/update "
+"AMAVIS_DEFAULT_DATABASE_ENCODING."
+msgstr ""
+
+#: checks/settings_checks.py:20
+msgid "Modoboa Amavis has not been tested using the selected database engine."
+msgstr ""
+
+#: checks/settings_checks.py:21
+msgid "Try using PostgreSQL, MySQL or MariaDB."
+msgstr ""
+
+#: constants.py:13
+msgid "Clean"
+msgstr ""
+
+#: constants.py:14
+msgid "Spam"
+msgstr ""
+
+#: constants.py:15
+msgid "Spammy"
+msgstr ""
+
+#: constants.py:16
+msgid "Virus"
+msgstr ""
+
+#: constants.py:17
+msgid "Bad Header"
+msgstr ""
+
+#: constants.py:18
+msgid "Bad MIME"
+msgstr ""
+
+#: constants.py:19
+msgid "Banned"
+msgstr ""
+
+#: constants.py:20
+msgid "Over sized"
+msgstr ""
+
+#: constants.py:21
+msgid "MTA error"
+msgstr ""
+
+#: constants.py:22
+msgid "Unchecked"
+msgstr ""
+
+#: forms.py:92
+msgid "Global database"
+msgstr ""
+
+#: forms.py:95
+msgid "Domain's database"
+msgstr ""
+
+#: forms.py:97
+msgid "User's database"
+msgstr ""
+
+#: forms.py:107
+msgid "Amavis settings"
+msgstr ""
+
+#: forms.py:110
+msgid "Localpart is case sensitive"
+msgstr ""
+
+#: forms.py:112 forms.py:119
+#, python-format
+msgid "Value should match amavisd.conf variable %s"
+msgstr ""
+
+#: forms.py:117
+msgid "Recipient delimiter"
+msgstr ""
+
+#: forms.py:125
+msgid "Quarantine settings"
+msgstr ""
+
+#: forms.py:128
+msgid "Maximum message age"
+msgstr ""
+
+#: forms.py:131
+msgid "Quarantine messages maximum age (in days) before deletion"
+msgstr ""
+
+#: forms.py:135
+msgid "Messages releasing"
+msgstr ""
+
+#: forms.py:138
+msgid "Remove released messages"
+msgstr ""
+
+#: forms.py:141
+msgid "Remove messages marked as released while cleaning up the database"
+msgstr ""
+
+#: forms.py:147
+msgid "Amavis connection mode"
+msgstr ""
+
+#: forms.py:150
+msgid "Mode used to access the PDP server"
+msgstr ""
+
+#: forms.py:155
+msgid "PDP server address"
+msgstr ""
+
+#: forms.py:157
+msgid "PDP server address (if inet mode)"
+msgstr ""
+
+#: forms.py:162
+msgid "PDP server port"
+msgstr ""
+
+#: forms.py:164
+msgid "PDP server port (if inet mode)"
+msgstr ""
+
+#: forms.py:168
+msgid "PDP server socket"
+msgstr ""
+
+#: forms.py:170
+msgid "Path to the PDP server socket (if unix mode)"
+msgstr ""
+
+#: forms.py:174
+msgid "Allow direct release"
+msgstr ""
+
+#: forms.py:177
+msgid "Allow users to directly release their messages"
+msgstr ""
+
+#: forms.py:181
+msgid "Enable self-service mode"
+msgstr ""
+
+#: forms.py:183
+msgid "Activate the 'self-service' mode"
+msgstr ""
+
+#: forms.py:187
+msgid "Notifications sender"
+msgstr ""
+
+#: forms.py:190
+msgid "The e-mail address used to send notitications"
+msgstr ""
+
+#: forms.py:193 templates/modoboa_amavis/main_action_bar.html:28
+msgid "Manual learning"
+msgstr ""
+
+#: forms.py:196
+msgid "Enable manual learning"
+msgstr ""
+
+#: forms.py:199
+msgid "Allow super administrators to manually train Spamassassin"
+msgstr ""
+
+#: forms.py:204
+msgid "Is Spamassassin local?"
+msgstr ""
+
+#: forms.py:207
+msgid "Tell if Spamassassin is running on the same server than modoboa"
+msgstr ""
+
+#: forms.py:212
+msgid "Default user"
+msgstr ""
+
+#: forms.py:215
+msgid "Name of the user owning the default bayesian database"
+msgstr ""
+
+#: forms.py:220
+msgid "Spamd address"
+msgstr ""
+
+#: forms.py:222
+msgid "The IP address where spamd can be reached"
+msgstr ""
+
+#: forms.py:226
+msgid "Spamd port"
+msgstr ""
+
+#: forms.py:228
+msgid "The TCP port spamd is listening on"
+msgstr ""
+
+#: forms.py:232
+msgid "Enable per-domain manual learning"
+msgstr ""
+
+#: forms.py:235
+msgid ""
+"Allow domain administrators to train Spamassassin (within dedicated per-"
+"domain databases)"
+msgstr ""
+
+#: forms.py:241
+msgid "Enable per-user manual learning"
+msgstr ""
+
+#: forms.py:244
+msgid ""
+"Allow simple users to personally train Spamassassin (within a dedicated "
+"database)"
+msgstr ""
+
+#: forms.py:268 templates/modoboa_amavis/quarantine.html:10
+msgid "Display"
+msgstr ""
+
+#: forms.py:272
+msgid "Number of displayed emails per page"
+msgstr ""
+
+#: forms.py:274
+msgid "Set the maximum number of messages displayed in a page"
+msgstr ""
+
+#: handlers.py:34 modo_extension.py:39
+msgid "Quarantine"
+msgstr ""
+
+#: handlers.py:176
+msgid "Pending requests"
+msgstr ""
+
+#: handlers.py:187
+msgid "Content filter"
+msgstr ""
+
+#: lib.py:71
+#, python-format
+msgid "Connection to amavis failed: %s"
+msgstr ""
+
+#: lib.py:141
+msgid "Failed to find {} binary"
+msgstr ""
+
+#: lib.py:155
+msgid "No recipient found"
+msgstr ""
+
+#: lib.py:167
+msgid "Local domain not found"
+msgstr ""
+
+#: management/commands/amnotify.py:61
+msgid "[modoboa] Pending release requests"
+msgstr ""
+
+#: models.py:99
+msgid "Virus filter"
+msgstr ""
+
+#: models.py:100 models.py:111 models.py:122
+msgid "yes"
+msgstr ""
+
+#: models.py:101 models.py:112 models.py:123
+msgid "no"
+msgstr ""
+
+#: models.py:102 models.py:113 models.py:124
+#: templates/modoboa_amavis/domain_content_filter.html:17
+msgid "default"
+msgstr ""
+
+#: models.py:105
+msgid "Bypass virus checks or not. Choose 'default' to use global settings."
+msgstr ""
+
+#: models.py:110
+msgid "Spam filter"
+msgstr ""
+
+#: models.py:116
+msgid "Bypass spam checks or not. Choose 'default' to use global settings."
+msgstr ""
+
+#: models.py:121
+msgid "Banned filter"
+msgstr ""
+
+#: models.py:127
+msgid "Bypass banned checks or not. Choose 'default' to use global settings."
+msgstr ""
+
+#: models.py:191
+msgid "Spam marker"
+msgstr ""
+
+#: models.py:194
+msgid ""
+"Modify spam subject using the specified text. Choose 'default' to use global "
+"settings."
+msgstr ""
+
+#: modo_extension.py:30
+msgid "Amavis frontend"
+msgstr ""
+
+#: modo_extension.py:32
+msgid "Simple amavis management frontend"
+msgstr ""
+
+#: templates/modoboa_amavis/domain_content_filter.html:5
+msgid "Thresholds"
+msgstr ""
+
+#: templates/modoboa_amavis/domain_content_filter.html:9
+msgid "or more is spam"
+msgstr ""
+
+#: templates/modoboa_amavis/domain_content_filter.html:15
+msgid "or more throw spam message away"
+msgstr ""
+
+#: templates/modoboa_amavis/email_list.html:14
+msgid "Score"
+msgstr ""
+
+#: templates/modoboa_amavis/email_list.html:17 templatetags/amavis_tags.py:121
+msgid "To"
+msgstr ""
+
+#: templates/modoboa_amavis/email_list.html:20
+msgid "From"
+msgstr ""
+
+#: templates/modoboa_amavis/email_list.html:23
+msgid "Subject"
+msgstr ""
+
+#: templates/modoboa_amavis/email_list.html:26
+msgid "Date"
+msgstr ""
+
+#: templates/modoboa_amavis/emails_page.html:15
+msgid "Released"
+msgstr ""
+
+#: templates/modoboa_amavis/emails_page.html:17
+msgid "Marked as spam"
+msgstr ""
+
+#: templates/modoboa_amavis/emails_page.html:19
+msgid "Marked as non-spam"
+msgstr ""
+
+#: templates/modoboa_amavis/empty_quarantine.html:6
+msgid "Empty quarantine"
+msgstr ""
+
+#: templates/modoboa_amavis/index.html:4
+msgid "Quarantine management"
+msgstr ""
+
+#: templates/modoboa_amavis/main_action_bar.html:5
+msgid "Select"
+msgstr ""
+
+#: templates/modoboa_amavis/main_action_bar.html:17
+#: templates/modoboa_amavis/main_action_bar.html:19
+#: templatetags/amavis_tags.py:36 templatetags/amavis_tags.py:102
+msgid "Release"
+msgstr ""
+
+#: templates/modoboa_amavis/main_action_bar.html:22
+#: templates/modoboa_amavis/main_action_bar.html:24
+#: templatetags/amavis_tags.py:43 templatetags/amavis_tags.py:107
+msgid "Delete"
+msgstr ""
+
+#: templates/modoboa_amavis/main_action_bar.html:33
+#: templatetags/amavis_tags.py:56
+msgid "Mark as spam"
+msgstr ""
+
+#: templates/modoboa_amavis/main_action_bar.html:34
+#: templatetags/amavis_tags.py:64
+msgid "Mark as non-spam"
+msgstr ""
+
+#: templates/modoboa_amavis/notifications/pending_requests.html:3
+#, python-format
+msgid "%(counter)s release request is pending for action."
+msgid_plural "%(counter)s release requests are pending for action."
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/modoboa_amavis/notifications/pending_requests.html:8
+msgid "Sketch:"
+msgstr ""
+
+#: templates/modoboa_amavis/notifications/pending_requests.html:10
+msgid "From:"
+msgstr ""
+
+#: templates/modoboa_amavis/notifications/pending_requests.html:11
+msgid "To:"
+msgstr ""
+
+#: templates/modoboa_amavis/notifications/pending_requests.html:12
+msgid "Date:"
+msgstr ""
+
+#: templates/modoboa_amavis/notifications/pending_requests.html:13
+msgid "Subject:"
+msgstr ""
+
+#: templates/modoboa_amavis/notifications/pending_requests.html:14
+msgid "Act on this message:"
+msgstr ""
+
+#: templates/modoboa_amavis/notifications/pending_requests.html:16
+#, python-format
+msgid "Please visit %(listingurl)s for a full listing."
+msgstr ""
+
+#: templates/modoboa_amavis/quarantine.html:13
+msgid "All messages"
+msgstr ""
+
+#: templates/modoboa_amavis/quarantine.html:13
+msgid "All"
+msgstr ""
+
+#: templatetags/amavis_tags.py:29
+msgid "Back"
+msgstr ""
+
+#: templatetags/amavis_tags.py:47
+msgid "View full headers"
+msgstr ""
+
+#: views.py:172 views.py:226 views.py:230 views.py:262 views.py:267
+#: views.py:269
+msgid "Invalid request"
+msgstr ""
+
+#: views.py:231
+msgid "Message deleted"
+msgstr ""
+
+#: views.py:248
+#, python-format
+msgid "%(count)d message deleted successfully"
+msgid_plural "%(count)d messages deleted successfully"
+msgstr[0] ""
+msgstr[1] ""
+
+#: views.py:272
+msgid "Request sent"
+msgstr ""
+
+#: views.py:278
+msgid "Message released"
+msgstr ""
+
+#: views.py:305
+#, python-format
+msgid "%(count)d request sent"
+msgid_plural "%(count)d requests sent"
+msgstr[0] ""
+msgstr[1] ""
+
+#: views.py:327
+#, python-format
+msgid "%(count)d message released successfully"
+msgid_plural "%(count)d messages released successfully"
+msgstr[0] ""
+msgstr[1] ""
+
+#: views.py:364
+#, python-format
+msgid "%(count)d message processed successfully"
+msgid_plural "%(count)d messages processed successfully"
+msgstr[0] ""
+msgstr[1] ""
+
+#: views.py:398
+msgid "Select a database"
+msgstr ""
+
+#: views.py:402
+msgid "Validate"
+msgstr ""
