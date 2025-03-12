@@ -1,0 +1,4 @@
+# py310
+# Requirements for CI
+tox
+tox-gh-actions

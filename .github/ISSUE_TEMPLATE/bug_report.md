@@ -4,33 +4,49 @@ about: Create a report to help us improve
 
 ---
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+<!--
 
-**To Reproduce**
+👋 Thanks for visiting Flake8-AAA GitHub.
 
-```python
-# Steps to reproduce the behavior (code snippet):
-# Should include imports, dataset loading, and execution
-# Add the traceback below
-```
+📝 Here's a template to help fill out a bug report
 
-**Dataset**
-Did you use a specific dataset to produce the bug? Where can we access it?
+-->
 
-**Expected behavior**
+## Current behaviour
+<!--
+Please provide a clear and concise description of what the bug is.
+
+If you can copy and paste a test file, or the test itself that is unexpectedly
+passing or failing here, that would be great.
+-->
+
+## Expected behaviour
+<!--
 A clear and concise description of what you expected to happen.
+-->
 
-**Traceback**
+
+## Debugging info
+<!--
+Add some extra information about your system here if possible.
+-->
+
+Output of `python --version`:
 
 ```
-If applicable, add the traceback from the exception.
+[paste python version string from above command here]
 ```
 
-**Desktop (please complete the following information):**
- - OS: [e.g. macOS]
- - Python Version [e.g. 2.7, 3.6, miniconda]
- - Yellowbrick Version [e.g. 0.7]
+Output of `flake8 --version`:
 
-**Additional context**
-Add any other context about the problem here.
+```
+[paste flake8's version string from above command here]
+```
+
+## Additional context
+<!--
+Please share any extra helpful content if possible
+
+Output of `pip freeze` or other installed packages / system information is
+helpful.
+-->

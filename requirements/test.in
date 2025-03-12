@@ -1,0 +1,10 @@
+# py38
+faker
+flake8
+isort
+mypy
+pygments
+pytest
+pytest-icdiff
+restructuredtext-lint
+yapf

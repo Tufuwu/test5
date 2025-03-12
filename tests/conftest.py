@@ -1,98 +1,95 @@
-# tests.conftest
-# Global definitions for Yellowbrick pytest
-#
-# Author:  Benjamin Bengfort <bbengfort@districtdatalabs.com>
-# Created: Fri Mar 02 11:53:55 2018 -0500
-#
-# Copyright (C) 2016 The scikit-yb developers
-# For license information, see LICENSE.txt
-#
-# ID: conftest.py [957cd53] benjamin@bengfort.com $
+import ast
+import tokenize
+from typing import List
 
-"""
-Global definitions for Yellowbrick PyTest
-"""
-
-##########################################################################
-## Imports
-##########################################################################
-
-import os
-import matplotlib as mpl
-
-from pytest_flakes import FlakesItem
+import asttokens
+import pytest
+from flake8.defaults import MAX_LINE_LENGTH  # type: ignore
+from flake8.processor import FileProcessor  # type: ignore
 
 
-##########################################################################
-## Configure tests
-##########################################################################
+class FakeOptions:
+    hang_closing: bool
+    indent_size: int
+    max_line_length: int
+    max_doc_length: int
+    verbose: bool
 
 
-def pytest_configure(config):
+@pytest.fixture
+def fake_options() -> FakeOptions:
+    options = FakeOptions()
+    options.hang_closing = False
+    options.indent_size = 4
+    options.max_line_length = MAX_LINE_LENGTH
+    options.max_doc_length = MAX_LINE_LENGTH
+    options.verbose = False
+    return options
+
+
+@pytest.fixture
+def file_tokens(code_str: str, tmpdir, fake_options: FakeOptions) -> List[tokenize.TokenInfo]:
     """
-    This function is called by pytest for every plugin and conftest file
-    after the command line arguments have been passed but before the
-    session object is created and all of the tests are created. It is used
-    to set a global configuration before all tests are run.
+    Args:
+        code_str: Code to be tokenized.
 
-    Yellowbrick uses this function primarily to ensure that the matplotlib
-    environment is setup correctly for all tests.
+    Returns:
+        Tokens for code to be checked. This emulates the behaviour of Flake8's
+        ``FileProcessor`` which is using ``tokenize.generate_tokens``.
     """
-    # This is redundant with the line in tests/__init__.py but ensures that
-    # the backend is correctly set across all tests and plugins.
-    mpl.use("Agg")
-
-    # Travis-CI does not have san-serif so ensure standard fonts are used.
-    # TODO: this is currently being reset before each test; needs fixing.
-    mpl.rcParams["font.family"] = "DejaVu Sans"
-
-##########################################################################
-## PyTest Hooks
-##########################################################################
+    code_file = tmpdir.join('code_file.py')
+    code_file.write(code_str)
+    file_processor = FileProcessor(str(code_file), options=fake_options)
+    tokens = file_processor.generate_tokens()
+    return list(tokens)
 
 
-def docline(obj):
+@pytest.fixture
+def first_token(file_tokens: List[tokenize.TokenInfo]) -> tokenize.TokenInfo:
     """
-    Returns the first line of the object's docstring or None if
-    there is no __doc__ on the object.
+    Returns:
+        First token of provided list.
     """
-    if not obj.__doc__:
-        return None
-    lines = list(filter(None, obj.__doc__.split("\n")))
-    return lines[0].strip()
+    return file_tokens[0]
 
 
-def pytest_itemcollected(item):
+@pytest.fixture
+def tree(code_str: str) -> ast.Module:
+    return ast.parse(code_str)
+
+
+@pytest.fixture
+def asttok(code_str: str, tree: ast.Module) -> asttokens.ASTTokens:
+    return asttokens.ASTTokens(code_str, tree=tree)
+
+
+@pytest.fixture
+def first_node_with_tokens(code_str: str, tree: ast.Module, asttok: asttokens.ASTTokens):
     """
-    A reporting hook that is called when a test item is collected.
+    Given ``code_str`` fixture, parse that string with ``ast.parse`` and then
+    augment it with ``asttokens.ASTTokens``.
 
-    This function can do many things to modify test output and test
-    handling and in the future can be modified with those tasks. Right now
-    we're currently only using this function to create node ids that
-    pytest-spec knows how to parse and display as spec-style output.
-
-    .. seealso:: https://stackoverflow.com/questions/28898919/use-docstrings-to-list-tests-in-py-test
+    Returns:
+        ast.node: First node in parsed tree.
     """
+    return tree.body[0]
 
-    # Ignore Session and PyFlake tests that are generated automatically
-    if not hasattr(item.parent, "obj") or isinstance(item, FlakesItem):
-        return
 
-    # Collect test objects to inspect
-    parent = item.parent.obj
-    node = item.obj
+@pytest.fixture
+def tokens(asttok, first_node_with_tokens) -> List[tokenize.TokenInfo]:
+    return list(asttok.get_tokens(
+        first_node_with_tokens,
+        include_extra=True,
+    ))
 
-    # Goal: produce a parsable string of the relative path, parent docstring
-    # or class name, and the docstring of the test case, then set the nodeid
-    # so that pytest-spec will correctly parse the information.
-    path = os.path.relpath(str(item.fspath))
-    prefix = docline(parent) or getattr(parent, "__name__", parent.__class__.__name__)
-    suffix = docline(node) or node.__name__
 
-    # Add parametrize or test generation id to distinguish it in output
-    # TODO: this is broken with pytest 4.2 (no attribute _genid)
-    if hasattr(item, "_genid") and item._genid:
-        suffix += " ({})".format(item._genid)
+@pytest.fixture
+def lines(code_str) -> List[str]:
+    """
+    Given ``code_str`` chop it into lines as Flake8 would pass to a plugin -
+    each line includes its newline terminator.
 
-    if prefix or suffix:
-        item._nodeid = "::".join((path, prefix.strip(), suffix.strip()))
+    Returns:
+        list
+    """
+    return code_str.splitlines(True)

@@ -1,0 +1,30 @@
+examples/bad/file_pattern_test.py:4:1: AAA01 no Act block found in test
+examples/bad/test.py:4:1: AAA01 no Act block found in test
+examples/bad/test_aaa01.py:8:1: AAA01 no Act block found in test
+examples/bad/test_aaa01_cm_import.py:11:1: AAA01 no Act block found in test
+examples/bad/test_aaa01_cm_import.py:18:1: AAA01 no Act block found in test
+examples/bad/test_aaa02.py:19:1: AAA02 multiple Act blocks found in test
+examples/bad/test_aaa02.py:5:1: AAA02 multiple Act blocks found in test
+examples/bad/test_aaa03.py:10:9: AAA03 expected 1 blank line before Act block, found none
+examples/bad/test_aaa03.py:3:5: AAA03 expected 1 blank line before Act block, found none
+examples/bad/test_aaa03_04.py:10:5: AAA04 expected 1 blank line before Assert block, found none
+examples/bad/test_aaa03_04.py:3:5: AAA03 expected 1 blank line before Act block, found none
+examples/bad/test_aaa03_04.py:4:5: AAA04 expected 1 blank line before Assert block, found none
+examples/bad/test_aaa03_04.py:9:9: AAA03 expected 1 blank line before Act block, found none
+examples/bad/test_aaa04.py:12:5: AAA04 expected 1 blank line before Assert block, found none
+examples/bad/test_aaa04.py:5:5: AAA04 expected 1 blank line before Assert block, found none
+examples/bad/test_aaa05.py:22:1: AAA05 blank line in block
+examples/bad/test_aaa05.py:37:1: AAA05 blank line in block
+examples/bad/test_aaa05.py:48:1: AAA05 blank line in block
+examples/bad/test_aaa05.py:54:1: AAA05 blank line in block
+examples/bad/test_aaa05.py:63:1: AAA05 blank line in block
+examples/bad/test_aaa05.py:67:1: AAA05 blank line in block
+examples/bad/test_aaa05.py:71:1: AAA05 blank line in block
+examples/bad/test_aaa06.py:16:5: AAA06 comment in Act block
+examples/bad/test_aaa06.py:29:9: AAA06 comment in Act block
+examples/bad/test_aaa06.py:38:5: AAA06 comment in Act block
+examples/bad/test_aaa06.py:9:5: AAA06 comment in Act block
+examples/bad/test_example.py:4:5: AAA03 expected 1 blank line before Act block, found none
+examples/bad/test_noqa_flake8.py:11:17: E225 missing whitespace around operator
+examples/bad/test_noqa_flake8.py:5:10: E201 whitespace after '('
+examples/bad/tests.py:4:1: AAA01 no Act block found in test
