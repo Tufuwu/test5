@@ -1,135 +1,242 @@
-# Goftests
+# Unrpyc, the Ren'Py script decompiler
+[![Python Version][py]][l_py] [![Python Version][renpy]][l_renpy] [![MIT][b_licence]][l_licence] ![Downloads][b_downloads]<br>
+**Unrpyc** is a tool to decompile Ren'Py (http://www.renpy.org) compiled .rpyc script files. It will
+not extract files from .rpa archives. For that, use [rpatool](https://github.com/Shizmob/rpatool) or [UnRPA](https://github.com/Lattyware/unrpa).
 
-[![Build Status](https://travis-ci.org/posterior/goftests.svg?branch=master)](https://travis-ci.org/posterior/goftests)
-[![Code Quality](http://img.shields.io/scrutinizer/g/posterior/goftests.svg)](https://scrutinizer-ci.com/g/posterior/goftests/code-structure/master/hot-spots)
-[![PyPI Version](https://badge.fury.io/py/goftests.svg)](https://pypi.python.org/pypi/goftests)
-[![Anaconda Version](https://anaconda.org/conda-forge/goftests/badges/version.svg)](https://anaconda.org/conda-forge/goftests)
-[![DOI](https://zenodo.org/badge/30935971.svg)](https://zenodo.org/badge/latestdoi/30935971)
+## Status
+![Python Version][b_py3] [![Latest Version][b_release_2]][l_releases] [![check][b_check_master]][l_workflow] [![check][b_check_dev]][l_workflow]<br>
+![Python Version][b_py2] [![Latest Version][b_release_1]][l_releases] [![check][b_check_legacy]][l_workflow] [![check][b_check_legacy_dev]][l_workflow]
 
-Generic goodness of fit tests for random plain old data.
+<!-- Badge-link prefixe: b_ = badge source; l_ = link source -->
 
-Goftests is intended for unit testing random samplers that generate arbitrary
-plain-old-data, and focuses on robustness rather than statistical efficiency.
-In contrast to [scipy.stats][] and [statsmodels][],
-goftests does not make assumptions on the distribution being tested,
-and requires only a simple (sample, prob) interface provided by MCMC samplers.
+[py]: https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=fff&style=flat-square
+[l_py]: https://python.org
+[renpy]: https://img.shields.io/badge/Ren'Py-ac6464?logo=renpy&logoColor=fff&style=flat-square
+[l_renpy]: https://renpy.org
+<!-- Licence -->
+[b_licence]: https://img.shields.io/badge/license-MIT-yellow?style=flat-square&color=darkred
+[l_licence]: LICENSE
+<!-- Download count -->
+[b_downloads]: https://img.shields.io/github/downloads/CensoredUsername/unrpyc/total?style=flat-square&color=darkgreen
+<!-- Python minimal version info -->
+[b_py3]: https://img.shields.io/badge/3.9-gold?style=flat-square&logo=python&logoColor=fff&labelColor=3776AB
+[b_py2]: https://img.shields.io/badge/2.7-gold?style=flat-square&logo=python&logoColor=fff&labelColor=3776AB
+<!-- Release version info -->
+[b_release_2]: https://img.shields.io/github/v/release/CensoredUsername/unrpyc?style=flat-square
+[b_release_1]: https://img.shields.io/github/v/release/CensoredUsername/unrpyc?filter=v1*&style=flat-square
+[l_releases]: https://github.com/CensoredUsername/unrpyc/releases
+<!-- Tests -->
+[b_check_master]: https://img.shields.io/github/actions/workflow/status/CensoredUsername/unrpyc/python-app.yaml?branch=master&style=flat-square&logo=github&label=Tests:%20master
+[b_check_dev]: https://img.shields.io/github/actions/workflow/status/CensoredUsername/unrpyc/python-app.yaml?branch=dev&style=flat-square&logo=github&label=Tests:%20dev
+[b_check_legacy]: https://img.shields.io/github/actions/workflow/status/CensoredUsername/unrpyc/python-app.yaml?branch=legacy&style=flat-square&logo=github&label=Tests:%20legacy
+[b_check_legacy_dev]: https://img.shields.io/github/actions/workflow/status/CensoredUsername/unrpyc/python-app.yaml?branch=legacy-dev&style=flat-square&logo=github&label=Tests:%20legacy-dev
+[l_workflow]: https://github.com/CensoredUsername/unrpyc/actions/workflows/python-app.yaml
 
-## Installing
+## Usage
+This tool can either be ran as a command line tool, as a library, or injected into the game itself.
+To use it as a command line tool, a local python installation is required. To use it for its
+default function (decompiling) you can simply pass it the files you want to decompile as arguments,
+or pass it the folder containing them. For example, `python unrpyc.py file1.rpyc file2.rpyc` or
+`python unrpyc.py folder/`.
 
-    pip install goftests
+### Additional features
+#### Translation:
+For easier reading of decompiled script files, unrpyc can use translation data contained in a game
+to automatically convert the emitted script files to another language. You can find the supported
+languages for a game by looking in the `game/tl` folder of said game (`None` being the default)
 
-## Using goodness of fit tests
+To use this feature, simply pass the name of the target language (which has to match the name found
+in the tl folder) with the `-t`/`--translate` option. For example, if a game has a folder
+`path/to/renpyapp/game/tl/french`, then you can run the command:
+`python unrpyc.py /path/to/renpyapp/ -t french`
 
-Goftests implements generic statistical tests for Monte Carlo samplers that
-generate (sample, probability) pairs.
-The four basic generic tests are
+#### Raw ast view:
+Instead of decompiling, the tool can simply show the contents of a rpyc file. This is mainly useful
+for bug reports and the development of unrpyc. You can pass the `-d`/`--dump` flag to activate this
+feature.
 
--   `discrete_goodness_of_fit(samples, probs_dict, ...)` -
-    for discrete-valued data with most of the mass on a few values.
+Note: this generates a _lot_ of output.
 
--   `density_goodness_of_fit(samples, probs, ...)` -
-    for continuously distributed univariate data with no discrete component.
+## Compatibility
+You are currently reading the documentation for the `master` branch of this tool. *Ren'Py* switched
+to using Python 3 in *Ren'Py 8*. This required significant changes to the decompiler, and
+necessitated splitting it into two to maintain support for older games. Development and releases
+for this tool are now split into the `master` branch (Unrpyc v2.x, using Python 3) and the
+`legacy` branch (Unrpyc v1.x, using Python 2). Additionally, support for some very ancient *Ren'Py*
+features has been dropped from the `master` branch to simplify continued development of unrpyc.
+In practice this means that games before Ren'Py `6.18.0` are no longer supported by the
+`master` branch, and games from before `6.99.10` should use the `--no-init-offset` option. Any
+game using *Ren'Py* versions before `6.18.0` should instead use the `legacy` branch of unrpyc,
+which supports up to and including *Ren'Py 7*.
 
--   `vector_density_goodness_of_fit(samples, probs, ...)` -
-    for continuously distributed multivariate data with no discrete component.
+When using the injectors (`un.rpyc`, `un.rpy`, `bytecode.rpyb`), compatibility is more stringent,
+as these tools use the python version bundled by *Ren'Py*. Use un.rpyc v2 (`2.*.*`) for Ren'Py 8
+games, and un.rpyc v1 (`1.*.*`) for *Ren'Py* 7 and 6.
 
--   `mixed_density_goodness_of_fit(samples, probs, ...)` -
-    for discretely-indexed continuously distributed data,
-    subsuming the all the other tests.
+Summarized:
+- unrpyc v2:
+  - Requires python `3.9` or above to work.
+  - Releases use version numbers `2.x`
+  - Uses branches `master` for the last release, and `dev` for development.
+  - Command line supports *Ren'Py* `8.x` (most recent) down to `6.18.0` (below `6.99.10` requires
+  option --no-init-offset)*
+    - Injectors (`un.rpyc` and friends) support only *Ren'Py* `8.x`
 
-Each test outputs a goodness of fit number, say `gof`,
-which should be uniformly distributed in the interval [0,1],
-and which tends to fail with numbers close to zero.
-Thus to test a sampler we usually write
+- unrpyc v1:
+  - Requires python `2.7` to work.
+  - Releases use version numbers `1.x`
+  - Uses branches `legacy` for the last release, and `legacy-dev` for development.
+  - Command line supports Ren'Py `7.x` (most recent) and *Ren'Py* `6.x`.
+  - Injectors (`un.rpyc` and friends) support *Ren'Py* `6.x` and `7.x`.
 
-    TEST_FAILURE_RATE = 1e-3
+*Ren'Py 5* or earlier are not supported currently.
 
-    def test_my_sampler(count=100):
-        seed_all(0)
-        samples = [my_sampler.rvs() for _ in xrange(count)]
-        probs = [my_sampler.pdf(x) for x in samples]
-        gof = mixed_density_goodness_of_fit(samples, probs)
-        assert gof > TEST_FAILURE_RATE
+### Command line tool usage
+Depending on your system setup, you should use one of the following commands to run the tool:
+```
+python unrpyc.py [options] script1 script2 ...
+python3 unrpyc.py [options] script1 script2 ...
+py -3 unrpyc.py [options] script1 script2 ...
+./unrpyc.py [options] script1 script2 ...
+```
 
-By specifying a global `TEST_FAILURE_RATE` for a suite of tests,
-we can tune the number of tests expected to fail.
-In a large suite of tests, some may fail at the specified seeds despite the distribution being correct, typically with gof just below the threshold.
-In this case we usually increment the seed on those tests.
-In a suite of 1000 tests with `TEST_FAILURE_RATE = 1e-3`,
-we should expect to have to increment the seed on 1 test, on average.
+Options:
+```
+$ py -3 unrpyc.py --help
+usage: unrpyc.py [-h] [-c] [-d] [-p {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15}]
+                 [-t TRANSLATION_FILE] [-T WRITE_TRANSLATION_FILE]
+                 [-l LANGUAGE] [--sl1-as-python] [--comparable] [--no-pyexpr]
+                 [--no-init-offset] [--try-harder]
+                 [--register-sl-displayable SL_CUSTOM_NAMES [SL_CUSTOM_NAMES ...]]
+                 file [file ...]
 
-### Diagnosing common errors
+Decompile .rpyc/.rpymc files
 
-#### Too few samples
+positional arguments:
+  file                  The filenames to decompile. All .rpyc files in any
+                        directories passed or their subdirectories will also
+                        be decompiled.
 
-The discrete tests only look at the most-likely few values,
-and requires enough samples in the top few values to be able to use
-Pearson's &chi;<sup>2</sup> test.
-This is typically at least 100 samples.
+optional arguments:
+  -h, --help            show this help message and exit
+  -c, --clobber         overwrites existing output files
+  -d, --dump            instead of decompiling, pretty print the ast to a file
+  -p, --processes
+                        use the specified number or processes to
+                        decompile. Defaults to the amount of hw threads
+                        available minus one, disabled when muliprocessing is
+                        unavailable.
+  -t TRANSLATION_FILE, --translation-file TRANSLATION_FILE
+                        use the specified file to translate during
+                        decompilation
+  -T WRITE_TRANSLATION_FILE, --write-translation-file WRITE_TRANSLATION_FILE
+                        store translations in the specified file instead of
+                        decompiling
+  -l LANGUAGE, --language LANGUAGE
+                        if writing a translation file, the language of the
+                        translations to write
+  --comparable          Only for dumping, remove several false differences
+                        when comparing dumps. This suppresses attributes that
+                        are different even when the code is identical, such as
+                        file modification times.
+  --no-pyexpr           Only for dumping, disable special handling of PyExpr
+                        objects, instead printing them as strings. This is
+                        useful when comparing dumps from different versions of
+                        Ren'Py. It should only be used if necessary, since it
+                        will cause loss of information such as line numbers.
+  --no-init-offset      By default, unrpyc attempt to guess when init offset
+                        statements were used and insert them. This is always safe
+                        to do for ren'py 8, but as it is based on a heuristic it
+                        can be disabled.
+                        The generated code is exactly equivalent, only slightly more cluttered.
+  --try-harder          Tries some workarounds against common obfuscation
+                        methods. This is a lot slower.
+  --register-sl-displayable SL_CUSTOM_NAMES [SL_CUSTOM_NAMES ...]
+                        Accepts mapping separated by '=', where the first
+                        argument is the name of the user-defined displayable
+                        object, and the second argument is a string containing
+                        the name of the displayable,potentially followed by a
+                        '-', and the amount of children the displayable
+                        takes(valid options are '0', '1' or 'many', with
+                        'many' being the default)
+```
 
-The univariate tests require around 100 samples,
-and the multivariate require at least 1000 per dimension.
+You can give several .rpyc files on the command line. Each script will be decompiled to a
+corresponding .rpy on the same directory. Additionally, you can pass directories. All .rpyc files
+in these directories or their subdirectories will be decompiled. By default, the program will not
+overwrite existing files, use option `-c` to do that.
 
-#### Too many samples
+This script will try to disassemble all AST nodes. In the case it encounters an unknown node type,
+which may be caused by an update to *Ren'Py* somewhere in the future, a warning will be printed and
+a placeholder inserted in the script when it finds a node it doesn't know how to handle. If you
+encounter this, please open an issue to alert us of the problem.
 
-When testing for millions of samples or more,
-tests can fail due to numeric imprecision rather than poor distribution.
-We have had success testing with 10<sup>2</sup>-10<sup>5</sup> samples.
+For the script to run correctly it is required for the unrpyc.py file to be in the same directory
+as the modules directory.
 
-#### Poorly mixing Markov chains
+### Game injection
+The tool can be injected directly into a running game by placing either the `un.rpyc` file or the
+`bytecode.rpyb` file from the most recent release into the `game` directory inside a Ren'Py game.
+When the game is then ran the tool will automatically extract and decompile all game script files
+into the `game` directory. The tool writes logs to the file `unrpyc.log.txt`.
 
-When testing samples generated by MCMC,
-the samples are often correlated so that testing the entire chain fails.
-In this case, try running the chain for longer and subsampling only every
-k<sup>th</sup> step in the chain.
+### Library usage
+You can import the module from python and call unrpyc.decompile_rpyc(filename, ...) directly.
 
-#### Sticky Markov chains
+warning: this has changed with python 3 and might not work. This is under active development.
 
-The density tests are sensitive to Sticky Markov chains.
-As with poorly mixing chains, try running for longer.
+## Notes on support
+The *Ren'Py* engine has changed a lot through the years. While this tool tries to support all
+available *Ren'Py* versions since the creation of this tool, we do not actively test it against
+every engine release. Furthermore the engine does not have perfect backwards compatibility itself,
+so issues can occur if you try to run decompiled files with different engine releases. Most
+attention is given to recent engine versions so if you encounter an issues with older games, please
+report it.
 
-#### Spuriously failing tests
+Additionally, with the jump to python 3 in *Ren'Py 8*, it became difficult to support all *Ren'Py*
+versions with a single tool. Therefore, please consult the compatibility section above to find out
+which version of the tool you need.
 
-Be sure to set a deterministic seed via `seed_all(...)`
-before generating each dataset.
-In particular, some test runners run tests in a nondeterministic order,
-so setting the seed before generating each sample ensures deterministic behavior.
+## Issue reports
+As *Ren'Py* is being continuously developed itself it often occurs that this tool might break on
+newer engine releases. This is most likely due to us not being aware of these features existing in
+the first place. To get this fixed you can make an issue report to this repository. However, we
+work on this tool in our free time and therefore we strongly request performing the following steps
+when making an issue report.
 
-## Implementing new tests
+### Before making an issue report:
+If you are making an issue report because decompilation errors out, please do the following.
+(If there's simply an error in the decompiled file, you can skip these steps.)
 
-The goodness of fit tests are mostly implemented by reduction to other tests,
-eventually reducing to the multinomial goodness of fit test which uses Pearson's &chi;<sup>2</sup> test on each of the multinomial's bins.
+1. Test your .rpyc files with the command line tool and both game injection methods. Please do this
+directly, do not use wrapper tools incorporating unrpyc for the report.
+2. Run the command line tool with the anti-obfuscation option `--try-harder`.
 
-![Reductions](/doc/reductions.png)
+### When making an issue report:
+1. List the used version of unrpyc and the version of *Ren'Py* used to create the .rpyc file you're
+trying to decompile (and if applicable, what game).
+2. Describe exactly what you're trying to do, and what the issue is (is it not decompiling at all,
+is there an omission in the decompiled file, or is the decompiled file invalid).
+3. Attach any relevant output produced by the tool (full command line output is preferred, if
+output is generated attach that as well).
+4. Attach the .rpyc file that is failing to decompile properly.
 
-To implement a new test, you can implement from scratch,
-reduce to another test in goftests,
-or reduce to standard tests in another package like
-[scipy.stats][] or [statsmodels][].
+Please perform all these steps, and write your issue report in legible English. Otherwise it is
+likely that your issue report will just receive a reminder to follow these steps.
 
+## Feature and pull requests
+Feature and pull requests are welcome. Feature requests will be handled whenever we feel like it,
+so if you really want a feature in the tool a pull request is usually the right way to go. Please
+do your best to conform to the style used by the rest of the code base and only affect what's
+absolutely necessary, this keeps the process smooth.
 
-[scipy.stats]: http://docs.scipy.org/doc/scipy/reference/stats.html#statistical-functions
-[statsmodels]: http://statsmodels.sourceforge.net/stable/stats.html#goodness-of-fit-tests-and-measures
+### Notes on deobfuscation
+Recently a lot of modifications of *Ren'Py* have turned up that slightly alter the *Ren'Py* file
+format to block this tool from working. The tool now includes a basic framework for deobfuscation,
+but feature requests to create deobfuscation support for specific games are not likely to get a
+response from us as this is essentially just an arms race, and it's trivial to figure out a way to
+obfuscate the file that blocks anything that is supported right now. If you make a pull request
+with it we'll happily put it in mainline or a game-specific branch depending on how many games it
+affects, but we have little motivation ourselves to put time in this arms race.
 
-## References
-
--   [1] <name=1>
-    Peter J Bickel, Leo Breiman (1983)
-    "Sums of functions of nearest neighbor distancess, moment bounds,
-    limit theorems and a goodness of fit test"
-    [pdf](http://projecteuclid.org/download/pdf_1/euclid.aop/1176993668)
-
--   [2] <name=2>
-    Mike Williams (2010)
-    "How good are your fits? Unbinned multivariate goodness-of-fit tests
-    in high energy physics"
-    [pdf](http://arxiv.org/pdf/1006.3019v2.pdf)
-
-## License
-
-Copyright (c) 2014 Salesforce.com, Inc. All rights reserved. <br/>
-Copyright (c) 2015 Gamelan Labs, Inc. <br/>
-Copyright (c) 2016 Google, Inc. <br/>
-Copyright (c) 2019 Gamalon, Inc. <br/>
-Licensed under the Revised BSD License.
-See [LICENSE.txt](LICENSE.txt) for details.
+https://github.com/CensoredUsername/unrpyc

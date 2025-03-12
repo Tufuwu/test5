@@ -1,34 +1,27 @@
 # This workflow will install Python dependencies, run tests and lint with a single version of Python
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
 
-name: Python application
+name: Test build and run tests
 
 on:
   push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
-
-permissions:
-  contents: read
+    branches: [ master, dev ]
 
 jobs:
-  build:
-
+  tests-py2:
+    name: Runs tests that require python 2
     runs-on: ubuntu-latest
+    container:
+      image: python:3.9.18-buster
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python 3.10
-      uses: actions/setup-python@v3
+    - uses: actions/checkout@v4
       with:
-        python-version: "3.9"
-    - name: Install dependencies
+        submodules: recursive
+    # - name: Set up Python 2.7
+    #   uses: actions/setup-python@v2
+    #   with:
+    #     python-version: "3.9"
+    - name: Test by decompiling a script and building un.rpyc
       run: |
-        python -m pip install --upgrade pip
-        pip install flake8
-        pip install -r requirements-test.txt
-    - name: Lint with flake8
-      run: flake8 goftests/
-    - name: Test with unittest
-      run: python -m unittest
+        ./unrpyc.py --clobber testcases/script.rpyc
