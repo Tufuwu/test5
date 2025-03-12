@@ -1,5 +1,0 @@
-content email sponsors
-
-STATEMENT OF WORK
-
-{{ sponsorship }}
