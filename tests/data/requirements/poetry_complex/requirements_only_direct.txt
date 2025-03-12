@@ -1,8 +1,0 @@
-#
-# Default dependencies
-#
-python-dateutil==2.8.1
-#
-# Dev dependencies
-#
-freezegun==1.1.0

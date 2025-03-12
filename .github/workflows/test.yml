@@ -1,72 +1,39 @@
-on:
-  push:
-    branches:
-    - master
-    - ci-test
-  pull_request:
-    branches:
-    - master
+name: SolveBio Python Package
 
-name: Run Tox tests
+on: push
 
 jobs:
-  tox_test:
-    name: Tox test
-    steps:
-    - uses: actions/checkout@v2
-    - name: Run Tox tests
-      id: test
-      uses: fedora-python/tox-github-action@master
-      with:
-        tox_env: ${{ matrix.tox_env }}
-        dnf_install: /usr/bin/make
+  build:
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        tox_env: [
-          # This list has to be maintained manually :(
-          # You can get it from `tox -l | sed "s/$/,/"`
-          py36-pip90-toml,
-          py36-pip191-toml,
-          py36-pip192-toml,
-          py36-pip193-toml,
-          py36-pip200-toml,
-          py36-pip201-toml,
-          py36-piplatest-toml,
-          py36-pipgit-toml,
-          py37-pip90-toml,
-          py37-pip191-toml,
-          py37-pip192-toml,
-          py37-pip193-toml,
-          py37-pip200-toml,
-          py37-pip201-toml,
-          py37-piplatest-toml,
-          py37-pipgit-toml,
-          py38-pip90-toml,
-          py38-pip191-toml,
-          py38-pip192-toml,
-          py38-pip193-toml,
-          py38-pip200-toml,
-          py38-pip201-toml,
-          py38-piplatest-toml,
-          py38-pipgit-toml,
-          py39-pip90-toml,
-          py39-pip191-toml,
-          py39-pip192-toml,
-          py39-pip193-toml,
-          py39-pip200-toml,
-          py39-pip201-toml,
-          py39-piplatest-toml,
-          py39-pipgit-toml,
-          py36-pip90-pytoml,
-          py36-piplatest-pytoml,
-          py36-pipgit-pytoml,
-          py38-pip90-pytoml,
-          py38-piplatest-pytoml,
-          py38-pipgit-pytoml,
-          py39-pip90-pytoml,
-          py39-piplatest-pytoml,
-          py39-pipgit-pytoml,
-        ]
-
-    # Use GitHub's Linux Docker host
-    runs-on: ubuntu-latest
+        python-version: ["3.9", "3.10"]
+    env:
+      SOLVEBIO_API_HOST: ${{ secrets.SOLVEBIO_API_HOST }}
+      SOLVEBIO_API_KEY: ${{ secrets.SOLVEBIO_API_KEY }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Setup Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Display Python version
+        run: python -c "import sys; print(sys.version)"
+      - name: Export pythonpath
+        run: |
+          export PYTHONPATH=$PYTHONPATH:$(pwd)
+      - name: Install Tox and any other packages
+        run: |
+          pip install -U wheel --user
+          pip install setuptools
+          pip install nose flake8 pytest
+      - name: Install dependencies
+        run: |
+          pip install -r requirements-dev.txt
+          pip install PyVCF==0.6.8 XlsxWriter===0.9.3
+      - name: Scripts
+        run: |
+          nosetests -e test_solvebio_auth -e recipes
+          python -m pytest recipes/tests/test_recipes_sync.py
+          python -m flake8 solvebio

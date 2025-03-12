@@ -1,4 +1,0 @@
---index-url https://pypi.org/simple
-
-# No hashes, raw pip method is used.
-git+https://github.com/jd/daiquiri@2.1.0#egg=daiquiri
