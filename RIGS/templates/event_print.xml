@@ -1,5 +1,0 @@
-{% extends 'base_print.xml' %}
-
-{% block content %}
-{% include "event_print_page.xml" %}
-{% endblock %}
