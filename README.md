@@ -1,94 +1,76 @@
-# pywnedPasswords
+JARVIS
+======
 
-[![Build Status](https://travis-ci.org/xmatthias/pywnedpasswords.svg?branch=master)](https://travis-ci.org/xmatthias/pywnedpasswords)
+![Build Status](https://github.com/mpolden/jarvis2/workflows/ci/badge.svg)
 
-This script uses the pwnedpasswords.com v2 api to check your password in
-a secure way (using the [K-anonymity](https://en.wikipedia.org/wiki/K-anonymity) method)
+JARVIS is a dashboard framework designed to run on the Raspberry Pi.
 
-The full Hash is never transmitted over the wire, only the first 5 characters.
-The comparison happens offline.
+It features live-updating widgets using
+[server-sent events](https://en.wikipedia.org/wiki/Server-sent_events) and can be
+easily extended to fit your needs.
 
-Special thanks to Troy Hunt ([@troyhunt](https://twitter.com/troyhunt)) for making this project possible.
+Screenshots
+-----------
+![Screenshot 1](docs/jarvis2.png)
+![Screenshot 2](docs/jarvis2_1.png)
 
-## Installation
+Dependencies
+------------
+JARVIS requires Python 3.6+ to run.
 
-``` bash
-pip install pywnedpasswords
-```
+Install requirements:
 
-## Usage
+    pip install -r requirements.txt
 
-### Interactive 
+For development it's recommended to use [virtualenv](https://virtualenv.pypa.io).
 
-``` bash
-pywnedpasswords
-```
+Configuration
+-------------
+All configuration of widgets is done in a single Python source file. The
+configuration is specified by setting the `JARVIS_SETTINGS` environment
+variable.
 
-Insert your password when asked.
+A sample config (`jarvis/config.py.sample`) is provided. This file can be used as a
+starting point for your own configuration.
 
-the output will either be:
+Copy `jarvis/config.py.sample` to `jarvis/config.py` and edit it to suit your needs.
 
-> Password to check:
-> 
-> Found your password 47205 times.
+Usage
+-----
+After installing dependencies and creating a config file, the app can be started
+by running:
 
-or in case your password is secure
+    JARVIS_SETTINGS=config.py make run
 
-> Password to check:
-> 
-> Your password did not appear in PwnedPasswords yet.
+To start the app in debug mode, use:
 
+    JARVIS_SETTINGS=config.py make debug
 
-### Passing the password as a command line argument
+Run a job standalone and pretty-print output (useful for debugging):
 
-**Discouraged - as it might leaves the password in your shell history**
+    JARVIS_SETTINGS=config.py make run-job
 
-``` bash
-pywnedpasswords Passw0rd
-```
+Create Google API credentials (required for calendar and gmail widget):
 
-> Found your password 46980 times.
+    JARVIS_SETTINGS=config.py make google-api-auth
 
+Create a new widget:
 
-### Piping the password 
+    make widget
 
-**Discouraged - as it might leaves the password in your shell history**
+Create a new dashboard:
 
-``` bash
-echo -n 'Passw0rd!' | pywnedpasswords 
-```
+    make dashboard
 
-> Found your password 46980 times.
+Widgets
+-------
+See [WIDGETS.md](docs/WIDGETS.md) for documentation on available widgets.
 
-### Reading passwords from a file 
+Deployment
+----------
+See [INSTALL.md](docs/INSTALL.md) for a basic deployment guide.
 
-
-``` bash
-pywnedpasswords -f list-of-passwords.txt
-```
-
-Result is in the form: `<line number>: <number of time the password was found>`. `0` meaning the password is not known from Have I Been Pwned yet.
-
-> <pre>
-> 0: 7026
-> 1: 45337
-> 2: 376
-> 3: 51
-> 4: 27
-> 5: 11
-> 6: 136
-> 7: 1
-> 8: 6
-> 9: 1
-> 10: 0
-> 11: 0
-> 12: 0
-> </pre>
-
-
-
-## Exit code
-
-The `pywnedpasswords` exits with code `2` if the password is know of Have I Been Pwned already, and exit code `0` otherwise.
-
-© xmatthias 2018
+License
+-------
+Licensed under the MIT license. See the [LICENSE](LICENSE) file if you've never
+seen it before.
