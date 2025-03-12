@@ -1,14 +1,28 @@
-# general things to ignore
-build/
-dist/
-*.egg-info/
 *.egg
-*.py[cod]
-__pycache__/
-*.so
+*.egg-info
+*.EGG
+*.EGG-INFO
+*.mo
+*.pyc
+*.pyo
+*.swp
+bin
+build
+dist
 *~
-venv/
+v/
 
-# due to using nox and pytest
-.nox
-.cache
+# dotenv
+.env
+
+# virtualenv
+.venv
+venv/
+ENV/
+
+.idea
+
+.coverage
+docs/html
+.tox
+cover/
