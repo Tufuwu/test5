@@ -1,6 +1,0 @@
--
-  name: Award Brief
-  editable: True
-  questions:
-    - awardedContractStartDate
-    - awardedContractValue

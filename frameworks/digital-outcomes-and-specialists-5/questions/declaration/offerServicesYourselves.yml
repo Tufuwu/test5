@@ -1,8 +1,0 @@
-name: What your team will deliver
-question: >
-  Will you or your organisation deliver the services you offer directly yourselves and not solely source staff for
-  others?
-type: boolean
-assessment:
-  passIfIn:
-    - True

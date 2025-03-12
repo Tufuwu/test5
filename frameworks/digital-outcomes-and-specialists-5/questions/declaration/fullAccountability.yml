@@ -1,8 +1,0 @@
-name: Contractual responsibility and accountability
-question: >
-  Will you or your organisation take direct contractual responsibility and full accountability for delivering the
-  services you’re offering?
-type: boolean
-assessment:
-  passIfIn:
-    - True

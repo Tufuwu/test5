@@ -1,14 +1,62 @@
-# Node stuff
-node_modules
-
-# Python stuff
-__pycache__
+# Packaging
 *.pyc
-.hypothesis/eval_source
-venv*
-.cache
+__pycache__
+*.egg-info
+/dist/
+/build/
+/node_modules/
 
-# Nix stuff
-local.nix
+# venv
+/bin/
+/lib/
+/share
+/pyvenv.cfg
+/pip-selfcheck.json
 
-.idea/
+# Vagrant
+.vagrant
+
+# Temporary/OS files
+*.swp
+*.swo
+*.*~
+.~lock.*
+*.DS_Store
+.python-version
+
+# IDE files
+.project
+.pydevproject
+.settings
+.idea
+.vscode
+
+# Docs
+/docs/build/*
+/src/oscar/static/
+*.pdf
+TODO
+venv
+
+# Test files
+.coverage
+.coverage\.*
+.noseids
+coverage.xml
+violations.txt
+nosetests.xml
+/.cache/
+/.pytest_cache/
+/htmlcov/*
+/.tox/*
+
+# Sandbox content
+settings_local.py
+/sandbox/*.sqlite
+/sandbox/assets/
+/sandbox/public/
+/sandbox/whoosh_index/
+/sandbox/logs/
+
+# test stuff
+/tests/whoosh_index/

@@ -1,6 +1,0 @@
-name: Skills and capability assessment
-question: Do you assess the skills and capabilities of people you select to work for your organisation and could you provide evidence of how you do this, if requested?
-type: boolean
-assessment:
-  passIfIn:
-    - True
