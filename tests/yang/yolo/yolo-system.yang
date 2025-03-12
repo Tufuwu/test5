@@ -1,0 +1,221 @@
+module yolo-system {
+  yang-version 1.1;
+  namespace "urn:yang:yolo:system";
+  prefix sys;
+
+  import omg-extensions { prefix ext; }
+  import wtf-types { prefix types; }
+
+  description
+    "YOLO.";
+
+  revision 1999-04-01 {
+    description
+      "Version update.";
+    reference "RFC 2549 - IP over Avian Carriers with Quality of Service.";
+    ext:human-name "2549";
+  }
+
+  revision 1990-04-01 {
+    description
+      "Initial version.";
+    reference "RFC 1149 - A Standard for the Transmission of IP Datagrams on Avian Carriers.";
+    ext:human-name "1149";
+  }
+
+  feature turbo-boost {
+    description
+      "Goes faster.";
+  }
+
+  feature networking {
+    description
+      "Supports networking.";
+  }
+
+  grouping tree {
+    leaf hostname {
+      description
+        "The hostname.";
+      type types:host;
+    }
+
+    leaf hostname-ref {
+      type leafref {
+        path "../hostname";
+        require-instance false;
+      }
+    }
+
+    leaf deprecated-leaf {
+      status deprecated;
+      description
+        "A deprecated leaf.";
+      type string;
+    }
+
+    leaf obsolete-leaf {
+      status obsolete;
+      description
+        "An obsolete leaf.";
+      type string;
+    }
+
+    choice pill {
+      case red {
+        leaf out {
+          type boolean;
+        }
+      }
+      case blue {
+        leaf in {
+          type boolean;
+        }
+      }
+      default red;
+    }
+
+    list url {
+      description
+        "An URL.";
+      key "proto host";
+      leaf proto {
+        type types:protocol {
+          ext:type-desc "<protocol>";
+        }
+        ext:parse-validation;
+      }
+      leaf host {
+        type string {
+          pattern "[a-z.]+" {
+            error-message "ERROR1";
+          }
+          pattern "1" {
+            modifier "invert-match";
+          }
+        }
+      }
+      leaf port {
+        type uint16;
+      }
+      leaf path {
+        type string;
+      }
+      leaf enabled {
+        type boolean;
+      }
+      action fetch {
+        input {
+          leaf timeout {
+            type uint16;
+          }
+        }
+        output {
+          leaf result {
+            type string;
+          }
+        }
+        ext:compile-validation;
+      }
+    }
+
+    leaf-list number {
+      description
+        "A number.";
+      type types:number;
+    }
+
+    leaf speed {
+      description
+        "The speed.";
+      if-feature turbo-boost;
+      type uint32;
+      default 4321;
+    }
+
+    leaf offline {
+      description
+        "When networking is disabled.";
+      if-feature "not networking";
+      type uint32;
+    }
+
+    leaf full {
+      description
+        "Fast and online.";
+      if-feature "turbo-boost and networking";
+      type uint32;
+    }
+
+    leaf isolation-level {
+      description
+        "The level of isolation.";
+      if-feature "turbo-boost or networking";
+      type uint32;
+    }
+  }
+
+  container conf {
+    description
+      "Configuration.";
+    uses tree;
+  }
+
+  container state {
+    description
+      "State.";
+    config false;
+    uses tree;
+  }
+
+  rpc chmod {
+    description
+      "Change permissions on path.";
+    ext:require-admin;
+    input {
+      leaf path {
+        type string;
+      }
+      leaf perms {
+        type types:permissions;
+      }
+    }
+  }
+
+  rpc format-disk {
+    description
+      "Format disk.";
+    ext:require-admin;
+    input {
+      leaf disk {
+        ext:human-name "Disk";
+        type types:str;
+      }
+      anyxml html-info;
+    }
+    output {
+      leaf duration {
+        type uint32;
+      }
+    }
+  }
+
+  notification alarm-triggered {
+    description
+      "Notification about a new alarm.";
+    leaf description {
+      type string;
+    }
+    leaf severity {
+      type uint32;
+    }
+  }
+
+  notification config-change {
+    list edit {
+      leaf target {
+        type string;
+      }
+    }
+  }
+}

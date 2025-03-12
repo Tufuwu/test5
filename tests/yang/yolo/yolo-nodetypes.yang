@@ -1,0 +1,171 @@
+module yolo-nodetypes {
+  yang-version 1.1;
+  namespace "urn:yang:yolo:nodetypes";
+  prefix sys;
+
+  import ietf-inet-types {
+    prefix inet;
+    revision-date 2013-07-15;
+  }
+
+  description
+    "YOLO Nodetypes.";
+
+  revision 2024-01-25 {
+    description
+      "Initial version.";
+  }
+
+  list records {
+    key id;
+    leaf id {
+      type string;
+    }
+    leaf name {
+      type string;
+      default "ASD";
+    }
+    ordered-by user;
+  }
+
+  container conf {
+    presence "enable conf";
+    description
+      "Configuration.";
+    leaf percentage {
+      type decimal64 {
+        fraction-digits 2;
+      }
+      default 10.2;
+      must ". = 10.6" {
+        error-message "ERROR1";
+      }
+    }
+
+    leaf-list ratios {
+      type decimal64 {
+        fraction-digits 2;
+      }
+      default 2.5;
+      default 2.6;
+    }
+
+    leaf-list bools {
+      type boolean;
+      default true;
+    }
+
+    leaf-list integers {
+      type uint32;
+      default 10;
+      default 20;
+    }
+
+    list list1 {
+      key leaf1;
+      unique "leaf2 leaf3";
+      min-elements 2;
+      max-elements 10;
+      leaf leaf1 {
+        type string;
+      }
+      leaf leaf2 {
+        type string;
+      }
+      leaf leaf3 {
+        type string;
+      }
+    }
+
+    list list2 {
+      key leaf1;
+      leaf leaf1 {
+        type string;
+      }
+    }
+
+    leaf-list leaf-list1 {
+      type string;
+      min-elements 3;
+      max-elements 11;
+    }
+
+    leaf-list leaf-list2 {
+      type string;
+    }
+  }
+
+  leaf test1 {
+    type uint8 {
+      range "2..20";
+    }
+  }
+
+  grouping grp1 {
+    container cont3 {
+      leaf leaf1 {
+        type string;
+      }
+    }
+  }
+
+  container cont2 {
+    presence "special container enabled";
+    uses grp1 {
+      refine cont3/leaf1 {
+        mandatory true;
+      }
+      augment cont3 {
+        leaf leaf2 {
+          type int8;
+        }
+      }
+    }
+    notification interface-enabled {
+      leaf by-user {
+        type string;
+      }
+    }
+  }
+
+  anydata any1 {
+    when "../cont2";
+  }
+
+  extension identity-name {
+    description
+      "Extend an identity to provide an alternative name.";
+    argument name;
+  }
+
+  identity base1 {
+    description
+      "Base 1.";
+    reference "Some reference.";
+  }
+  identity base2;
+
+  identity derived1 {
+    base base1;
+  }
+
+  identity derived2 {
+    base base1;
+    sys:identity-name "Derived2";
+  }
+
+  identity derived3 {
+    base derived1;
+  }
+
+  leaf identity_ref {
+    type identityref {
+      base base1;
+      base base2;
+    }
+  }
+
+  leaf ip-address {
+    type inet:ipv4-address;
+  }
+}
