@@ -1,37 +1,40 @@
-#!/usr/bin/env python
-
-from os import path
-
+import os
 from setuptools import setup
 
-install_requires = [
-    "gdspy>=1.5",
-    "numpy",
-    "matplotlib",
-]
+with open(os.path.join(os.path.dirname(__file__), 'README.rst'), encoding='utf-8') as f:
+    README = f.read()
 
-extras_require = {}
-extras_require["all"] = ["freetype-py", "klayout", "rectpack", "scipy"]
-extras_require["test"] = extras_require["all"] + ["pytest"]
-
-# read the contents of your README file
-
-this_directory = path.abspath(path.dirname(__file__))
-with open(path.join(this_directory, "README.md"), encoding="utf-8") as f:
-    long_description = f.read()
-
+# allow setup.py to be run from any path
+os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
-    name="phidl",
-    version="1.7.2",
-    description="PHIDL",
-    long_description=long_description,
-    long_description_content_type="text/markdown",
-    install_requires=install_requires,
-    extras_require=extras_require,
-    author="Adam McCaughan",
-    author_email="amccaugh@gmail.com",
-    packages=["phidl"],
-    py_modules=["phidl.geometry", "phidl.routing", "phidl.utilities", "phidl.path"],
-    package_dir={"phidl": "phidl"},
+    name='django-thumborstorage',
+    version='2.0.0',
+    license='MIT Licence',
+    author='Stanislas Guerra',
+    author_email='stanislas.guerra@gmail.com',
+    description='Django custom storage for Thumbor backend.',
+    long_description=README,
+    url='https://github.com/Starou/django-thumborstorage',
+    project_urls={
+        'Source Code': 'https://github.com/Starou/django-thumborstorage',
+        'Issue Tracker': 'https://github.com/Starou/django-thumborstorage/issues',
+    },
+    install_requires=['requests', 'libthumbor'],
+    packages=['django_thumborstorage'],
+    classifiers=[
+        'Environment :: Web Environment',
+        'Framework :: Django',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: BSD License',
+        'Operating System :: OS Independent',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
+        'Topic :: Internet :: WWW/HTTP',
+        'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
+    ],
 )

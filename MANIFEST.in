@@ -1,1 +1,7 @@
 include LICENSE
+include AUTHORS
+graft tests
+exclude tests/.coverage
+exclude tests/coverage.lcov
+global-exclude *.pyc
+global-exclude .DS_Store
