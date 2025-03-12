@@ -1,5 +1,0 @@
----
-platform: linux
-generator: Eclipse CDT4 - Unix Makefiles
-build_tool: make
-build_type: Debug

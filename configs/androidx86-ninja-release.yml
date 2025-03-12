@@ -1,9 +1,0 @@
----
-platform: android
-generator: Ninja
-build_tool: ninja
-build_type: Release
-cmake-toolchain: android.toolchain.cmake
-defines:
-    ANDROID_ABI: x86
-    ANDROID_PLATFORM: android-28
