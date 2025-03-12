@@ -1,9 +1,0 @@
-.jugstatus.sqlite3
-*pyc
-*.jugdata/
-jugdata
-build
-Jug.egg-info
-dist/
-.tox
-.pytest_cache/
