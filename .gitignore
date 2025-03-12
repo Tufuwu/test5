@@ -1,24 +1,9 @@
-*.pyc
-*.pyo
-*.log
-*~
-/.cache
-/.coverage
-/.project
-/.pydevproject
-/.vagrant
-/.idea
-/.vscode
+# Byte-compiled / optimized / DLL files
 __pycache__/
-/build/
-/dist/
-/pghoard.egg-info/
-/pghoard-rpm-src.tar
-/rpm/
-.vagrant
-/venv/
-/.venv/
-*.orig
-/pghoard-rpm-src/
-coverage.xml
-.hypothesis
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
