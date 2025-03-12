@@ -1,27 +1,21 @@
-# -*- coding: utf-8 -*-
-# Copyright (C) 2010-2012, eskerda <eskerda@gmail.com>
-# Distributed under the AGPL license, see LICENSE.txt
+import setuptools
 
-from setuptools import setup
+with open("README.md", "r") as fh:
+    long_description = fh.read()
 
-setup(
-    name="pybikes",
-    version="1.0",
-    author="Lluis Esquerda",
-    author_email="eskerda@gmail.com",
-    packages=["pybikes"],
-    package_data={
-        'pybikes': ['data/*.json', 'geojson/*.json'],
-    },
-    license="LICENSE.txt",
-    description="A python library for scrapping bike sharing data",
-    long_description=open('README.md').read(),
-    install_requires=[
-        'requests>=2.20.0',
-        'lxml',
-        'shapely>=1.5.13',
-        'future',
-        "importlib_resources; python_version < '3.9'",
-        'cssselect'
+setuptools.setup(
+    name="currency-symbols",
+    version="2.0.2",
+    author="Arshad Kazmi",
+    author_email="arshadkazmi42@gmail.com",
+    description="Get currency symbol by currency code",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    url="https://github.com/arshadkazmi42/currency-symbols",
+    packages=setuptools.find_packages(),
+    classifiers=[
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
     ],
 )
