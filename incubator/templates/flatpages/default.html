@@ -1,8 +1,0 @@
-{% extends "base.html" %}
-{% load formatting %}
-
-{% block title %}UrLab - {{ flatpage.title  }}{% endblock %}
-
-{% block content %}
-{{ flatpage.content|unsafeMarkdown }}
-{% endblock %}

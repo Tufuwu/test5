@@ -1,50 +1,95 @@
-name: Run tests
+name: Generate sink service and Transport wheel
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+  release:
+    types: [created]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        pyversion: [3.8]
-
     steps:
-      - uses: actions/checkout@v2
-
-      - uses: actions/setup-python@v2
+      - name: checkout code
+        uses: actions/checkout@v2
         with:
-          python-version: ${{ matrix.pyversion }}
+          submodules: true
 
-      - name: Install Python dependencies
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Build and extract sinkService
+        uses: docker/build-push-action@v2
+        with:
+            context: .
+            file: docker/sink_service/Dockerfile
+            platforms: linux/amd64, linux/arm
+            push: false
+            target: export
+            outputs: ./artifacts/sinkService/
+
+      - name: Build and extract transportService wheel
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: docker/transport_service/Dockerfile
+          platforms: linux/amd64, linux/arm
+          push: false
+          target: export
+          outputs: ./artifacts/transportService/
+
+      - name: Get wheel name
+        id: wheel_name
         run: |
-          pip install --upgrade pip
-          pip install -r requirements.txt
+          WHEEL_NAME=$(find ./artifacts/transportService/linux_arm_v7/ -maxdepth 1 -type f -name '*.tar.gz' -printf "%f")
+          echo "::set-output name=wheel_name::$WHEEL_NAME"
 
-      - name: Lint python code
-        run: flake8 --ignore=E501,F401,E402,F811,E731,F403 .
-      
-      - name: Run django checks
-        run: ./manage.py check
+      - name: Store artefacts localy
+        uses: actions/upload-artifact@v4
+        with:
+          name: binaries
+          path: ./artifacts/
 
-      - name: Check migrations
-        run: ./manage.py makemigrations --dry-run --check
+      - name: Get release url
+        id: get_release
+        uses: bruceadams/get-release@v1.2.1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
 
-      - name: Run tests
-        run: FAKE_REDIS=1 DEBUG=1 py.test
+      - name: Upload Armv7 SinkService
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.get_release.outputs.upload_url }}
+          asset_path: ./artifacts/sinkService/linux_arm_v7/sinkService
+          asset_name: sinkService-${{ github.event.release.tag_name }}-arm
+          asset_content_type: application/octet-stream
 
-  docker:
-    runs-on: ubuntu-latest
+      - name: Upload amd64 SinkService
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.get_release.outputs.upload_url }}
+          asset_path: ./artifacts/sinkService/linux_amd64/sinkService
+          asset_name: sinkService-${{ github.event.release.tag_name }}-amd64
+          asset_content_type: application/octet-stream
 
-    steps:
-      - uses: actions/checkout@v2
+      - name: Upload tar.gz wheel
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.get_release.outputs.upload_url }}
+          asset_path: ./artifacts/transportService/linux_amd64/${{ steps.wheel_name.outputs.wheel_name }}
+          asset_name: ${{ steps.wheel_name.outputs.wheel_name }}
+          asset_content_type: application/octet-stream
 
-      - name: Build docker image
-        run: docker build -t urlab/incubator .
+      - name: Publish package to PyPI
+        uses: pypa/gh-action-pypi-publish@v1.4.1
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_PWD }}
+          packages_dir: ./artifacts/transportService/linux_amd64/
