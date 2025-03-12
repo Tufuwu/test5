@@ -1,31 +1,81 @@
 #!/usr/bin/env python
 
-from setuptools import setup
-from textwrap import dedent
+# Prepare a release:
+#
+#  - git pull --rebase  # check that there is no incoming changesets
+#  - check version in ptrace/version.py and doc/conf.py
+#  - set release date in doc/changelog.rst
+#  - check that "python3 setup.py sdist" contains all files tracked by
+#    the SCM (Git): update MANIFEST.in if needed
+#  - git commit -a -m "prepare release VERSION"
+#  - Remove untracked files/dirs: git clean -fdx
+#  - run tests, type: tox --parallel auto
+#  - git push
+#  - check GitHub Actions status:
+#    https://github.com/vstinner/python-ptrace/actions
+#
+# Release a new version:
+#
+#  - git tag VERSION
+#  - Remove untracked files/dirs: git clean -fdx
+#  - python3 setup.py sdist bdist_wheel
+#  - git push --tags
+#  - twine upload dist/*
+#
+# After the release:
+#
+#  - increment version in  ptrace/version.py and doc/conf.py
+#  - git commit -a -m "post-release"
+#  - git push
 
-setup(
-    version = '2.1.3',
-    name = 'telingo',
-    description = 'System to solve dynamic temporal logic programs.',
-    long_description = dedent('''\
-        Telingo is a solver for temporal programs. It leaverages clingo's input
-        language and scripting cababilities to parse and solve programs with
-        temporal formulas. As such the input of telingo is valid clingo input
-        supporting all clingo language features like for example aggregates;
-        only the way programs are grounded and solved is adjusted.
-        '''),
-    long_description_content_type='text/markdown',
-    author = 'Roland Kaminski & Francois Laferriere',
-    author_email='kaminski@cs.uni-potsdam.de',
-    url='https://github.com/potassco/telingo',
-    license = 'MIT',
-    install_requires=['clingo>=5.6'],
-    packages = ['telingo', 'telingo.theory', 'telingo.transformers'],
-    test_suite = 'telingo.tests',
-    zip_safe = False,
-    entry_points = {
-        'console_scripts': [
-            'telingo = telingo:main',
-        ]
-    }
-)
+import importlib.util
+from os import path
+try:
+    # setuptools supports bdist_wheel
+    from setuptools import setup
+except ImportError:
+    from distutils.core import setup
+
+
+MODULES = ["ptrace", "ptrace.binding", "ptrace.syscall", "ptrace.syscall.linux", "ptrace.debugger"]
+
+SCRIPTS = ("strace.py", "gdb.py")
+
+CLASSIFIERS = [
+    'Intended Audience :: Developers',
+    'Development Status :: 4 - Beta',
+    'Environment :: Console',
+    'License :: OSI Approved :: GNU General Public License v2 (GPLv2)',
+    'Operating System :: OS Independent',
+    'Natural Language :: English',
+    'Programming Language :: Python',
+    'Programming Language :: Python :: 3',
+]
+
+with open('README.rst') as fp:
+    LONG_DESCRIPTION = fp.read()
+
+ptrace_spec = importlib.util.spec_from_file_location("version", path.join("ptrace", "version.py"))
+ptrace = importlib.util.module_from_spec(ptrace_spec)
+ptrace_spec.loader.exec_module(ptrace)
+
+PACKAGES = {}
+for name in MODULES:
+    PACKAGES[name] = name.replace(".", "/")
+
+install_options = {
+    "name": ptrace.PACKAGE,
+    "version": ptrace.__version__,
+    "url": ptrace.WEBSITE,
+    "download_url": ptrace.WEBSITE,
+    "author": "Victor Stinner",
+    "description": "python binding of ptrace",
+    "long_description": LONG_DESCRIPTION,
+    "classifiers": CLASSIFIERS,
+    "license": ptrace.LICENSE,
+    "packages": list(PACKAGES.keys()),
+    "package_dir": PACKAGES,
+    "scripts": SCRIPTS,
+}
+
+setup(**install_options)
