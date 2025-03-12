@@ -1,7 +1,0 @@
-.mypy_cache
-.pytest_cache
-.tox
-dist
-htmlcov
-*/build
-*/node_modules

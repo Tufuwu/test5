@@ -1,141 +1,125 @@
 [build-system]
-requires = ["setuptools"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling", "hatch-fancy-pypi-readme"]
+build-backend = "hatchling.build"
 
 [project]
-name = "sqllineage"
-dependencies = [
-    "sqlparse==0.5.3",
-    "networkx>=2.4",
-    "sqlfluff==3.3.1",
-    "sqlalchemy>=2.0.0",
-]
-requires-python = ">=3.9"
+name = "growhat"
+dynamic = ["version", "readme"]
+description = "Grow HAT Mini. A plant valet add-on for the Raspberry Pi"
+license = {file = "LICENSE"}
+requires-python = ">= 3.7"
 authors = [
-    { name = "Reata", email = "reddevil.hjw@gmail.com" },
+    { name = "Philip Howard", email = "phil@pimoroni.com" },
+    { name = "Paul Beech", email = "paul@pimoroni.com" },
 ]
 maintainers = [
-    { name = "Reata", email = "reddevil.hjw@gmail.com" },
+    { name = "Philip Howard", email = "phil@pimoroni.com" },
 ]
-description = "SQL Lineage Analysis Tool powered by Python"
-readme = "README.md"
-license = { file = "LICENSE" }
 keywords = [
-    "metadata",
-    "sql",
-    "data-discovery",
-    "lineage",
-    "data-governance",
-    "data-lineage",
+    "Pi",
+    "Raspberry",
 ]
 classifiers = [
-    "Development Status :: 5 - Production/Stable",
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
+    "Operating System :: POSIX :: Linux",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: 3.13",
-    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Software Development",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: System :: Hardware",
 ]
-dynamic = ["version"]
-
-[project.optional-dependencies]
-ci = [
-    "bandit",
-    "black",
-    "flake8",
-    "flake8-blind-except",
-    "flake8-builtins",
-    "flake8-import-order",
-    "flake8-logging-format",
-    "flake8-pyproject",
-    "mypy",
-    "pytest",
-    "pytest-cov",
-    "tox",
-    "twine",
-    "wheel",
+dependencies = [
+	"ltr559",
+	"st7735>=0.0.5",
+	"pyyaml",
+	"fonts",
+	"font-roboto"
 ]
-docs = [
-    "Sphinx>=3.2.0",
-    "sphinx_rtd_theme>=0.5.0",
-]
-
-[project.scripts]
-sqllineage = "sqllineage.cli:main"
-
-[project.gui-scripts]
-sqllineage = "sqllineage.cli:main"
 
 [project.urls]
-Homepage = "https://reata.github.io/sqllineage/"
-Documentation = "https://sqllineage.readthedocs.io/en/latest/"
-Repository = "https://github.com/reata/sqllineage.git"
-Issues = "https://github.com/reata/sqllineage/issues"
-Changelog = "https://github.com/reata/sqllineage/releases"
+GitHub = "https://www.github.com/pimoroni/grow-python"
+Homepage = "https://www.pimoroni.com"
 
-[tool.setuptools.packages.find]
-include = ["sqllineage*"]
+[tool.hatch.version]
+path = "grow/__init__.py"
 
-[tool.setuptools.package-data]
-"sqllineage.build" = [
-    "*",
-    "**/**/*"
-]
-"sqllineage.data" = [
-    "**/*",
+[tool.hatch.build]
+include = [
+    "grow",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
 ]
 
-[tool.setuptools.dynamic]
-version = { attr = "sqllineage.VERSION" }
-
-[tool.tox]
-requires = ["tox>=4.19"]
-env_list = ["3.9", "3.10", "3.11", "3.12", "3.13"]
-
-[tool.tox.env_run_base]
-deps = [".[ci]"]
-commands = [
-    ["black", ".", "--check", "--diff"],
-    ["flake8"],
-    ["bandit", "-r", "sqllineage"],
-    ["mypy"],
-    ["pytest", "--cov"],
+[tool.hatch.build.targets.sdist]
+include = [
+    "*"
 ]
-
-[tool.flake8]
 exclude = [
-    ".tox",
-    ".git",
-    "__pycache__",
-    "build",
-    "sqllineagejs",
-    "venv",
-    "env"
+    ".*",
+    "dist"
 ]
-max-line-length = 120
+
+[tool.hatch.metadata.hooks.fancy-pypi-readme]
+content-type = "text/markdown"
+fragments = [
+  { path = "README.md" },
+  { text = "\n" },
+  { path = "CHANGELOG.md" }
+]
+
+[tool.ruff]
+exclude = [
+    '.tox',
+    '.egg',
+    '.git',
+    '__pycache__',
+    'build',
+    'dist'
+]
+line-length = 200
+
+[tool.codespell]
+skip = """
+./service/install.sh,\
+./.tox,\
+./.egg,\
+./.git,\
+./__pycache__,\
+./build,\
+./dist.\
+"""
+
+[tool.isort]
+line_length = 200
+
+[tool.black]
+line-length = 200
+
+[tool.check-manifest]
 ignore = [
-    "A005",
-    "W503"
+    '.stickler.yml',
+    'boilerplate.md',
+    'check.sh',
+    'install.sh',
+    'uninstall.sh',
+    'Makefile',
+    'tox.ini',
+    'tests/*',
+    'examples/*',
+    '.coveragerc',
+    'requirements-dev.txt',
+    'requirements-examples.txt'
 ]
-show-source = true
-enable-extensions = "G"
-application-import-names = "sqllineage"
-import-order-style = "pycharm"
 
-[tool.mypy]
-files = "sqllineage"
-ignore_missing_imports = true
-disallow_untyped_calls = true
-warn_return_any = true
-strict_optional = true
-warn_no_return = true
-warn_redundant_casts = true
-warn_unused_ignores = true
-disallow_any_generics = true
-
-[tool.coverage.run]
-source = ["sqllineage"]
+[tool.pimoroni]
+apt_packages = []
+configtxt = []
+commands = []

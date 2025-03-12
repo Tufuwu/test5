@@ -1,5 +1,5 @@
-include LICENSE
+include CHANGELOG.txt
+include LICENSE.txt
 include README.md
-recursive-include sqllineage/build *
-recursive-include sqllineagejs/ *
-prune sqllineagejs/node_modules
+include setup.py
+recursive-include grow *.py
