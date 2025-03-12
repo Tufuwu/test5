@@ -1,19 +1,17 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
-*.py.orig
+*$py.class
 
 # C extensions
 *.so
 
 # Distribution / packaging
 .Python
-env/
 build/
 develop-eggs/
 dist/
 downloads/
-eggs/
 eggs/
 .eggs/
 lib/
@@ -21,14 +19,15 @@ lib64/
 parts/
 sdist/
 var/
+wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+MANIFEST
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.
-MANIFEST
 *.manifest
 *.spec
 
@@ -40,15 +39,13 @@ pip-delete-this-directory.txt
 htmlcov/
 .tox/
 .coverage
+.coverage.*
 .cache
-.pytest_cache
 nosetests.xml
 coverage.xml
-
-# Eclipse
-.project
-.pydevproject
-.settings/
+*.cover
+.hypothesis/
+.pytest_cache/
 
 # Translations
 *.mo
@@ -56,17 +53,60 @@ coverage.xml
 
 # Django stuff:
 *.log
+local_settings.py
+db.sqlite3
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
 
 # Sphinx documentation
-doc/_build/
+docs/_build/
 
 # PyBuilder
 target/
-.ropeproject
-*~
 
-# OSX
-.DS_Store
+# Jupyter Notebook
+.ipynb_checkpoints
 
-.vscode
+# pyenv
 .python-version
+
+# celery beat schedule file
+celerybeat-schedule
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+
+# Exported Strava data
+activities.csv
+activities/
+export_*
+
+cookies.txt
+fit2gpx
