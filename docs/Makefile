@@ -4,9 +4,9 @@
 # You can set these variables from the command line.
 SPHINXOPTS    =
 SPHINXBUILD   = python -msphinx
-SPHINXPROJ    = e3-core
+SPHINXPROJ    = riskparity.py
 SOURCEDIR     = source
-BUILDDIR      = build
+BUILDDIR      = ../../riskparity.py-www
 
 # Put it first so that "make" without argument is like "make help".
 help:

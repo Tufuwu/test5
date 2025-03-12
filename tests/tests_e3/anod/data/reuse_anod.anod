@@ -1,5 +1,0 @@
-from e3.anod.spec import Anod
-
-
-class Anod(Anod):
-    pass

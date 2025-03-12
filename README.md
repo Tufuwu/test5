@@ -1,87 +1,77 @@
-The `e3` Project
-================
+# riskparity.py
 
-[![Build Status](https://github.com/AdaCore/e3-core/workflows/build/badge.svg)](https://github.com/AdaCore/e3-core/actions?query=branch%3Amaster)
-[![Checked with mypy](http://www.mypy-lang.org/static/mypy_badge.svg)](http://mypy-lang.org/)
-[![Documentation Status](https://readthedocs.org/projects/e3-core/badge/?version=latest)](http://e3-core.readthedocs.io/en/latest/?badge=latest)
-[![codecov](https://codecov.io/gh/AdaCore/e3-core/branch/master/graph/badge.svg)](https://codecov.io/gh/AdaCore/e3-core)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/979/badge)](https://bestpractices.coreinfrastructure.org/projects/979)
-
-This present project (`e3`) is a Python framework to ease the development
-of portable automated build systems (compilation, dependencies management,
-binary code packaging, and automated testing).
-
-The `e3` framework is split across multiple Python packages named `e3-<name>`
-and sharing the same namespace: `e3`.
-
-`e3-core` content
-=================
-
-`e3-core` package is organized in several packages and modules:
-
-- *anod*: build system handling dependencies management and binary code
-  packaging. This includes a driver that can parse `.anod` specification
-  files.
-- *archive*: support for reading and writing tar and zip archives
-- *collection*: generic collections, e.g. an implementation of Direct Acyclic
-  Graphs
-- *cve*: small interface to NVD API to query CVE impacting a CPE
-- *decorator*: Python decorators, e.g. a memoize decorator
-- *diff*: functions to compute a diff or apply it
-- *electrolyt*: support for parsing build plans
-- *env*: global environment handling
-- *error*: `e3` exceptions
-- *event*: interface for notifying external services
-- *fingerprint*: support for creating a synthetic view of set of
-  conditions and determining whether those conditions have changed
-  or not.
-- *fs*: high-level file system operations, using globbing, walk,...
-- *hash*: computation of sha1, md5
-- *log*: logging helpers
-- *main*: main program initialization, command line parsing,...
-- *mainloop*: generic loop for running jobs
-- *net*: network utilities
-  - *net.http*: helper for sending http requests and downloading files
-  - *net.smtp*: helper for sending emails through smtp
-- *os*: platform independent interface to Operating System functions
-  - *os.fs*: low-level file system operations, no logging involved
-  - *os.platform*: tools to detect the platform
-  - *os.process*: interface to run process, to control the execution time,...
-  - *os.timezone*: platform independent interface to get the machine timezone
-- *platform*: generic interface for providing platform information
-- *platform_db*: knowledge base for computing platform information
-- *spdx*: simple interface for generating SPDX files
-- *store*: interface to download and store resources in a store
-- *sys*: `e3` information, sanity check, ...
-- *text*: text formatting and transformation
-- *vcs*: high level interface to VCS repositories
-- *yaml*: helpers for parsing yaml data
-
-See [e3-core documentation](http://e3-core.readthedocs.io/en/latest/) for
-more details.
+[![PyPI version](https://badge.fury.io/py/riskparityportfolio.svg)](https://badge.fury.io/py/riskparityportfolio)
+[![Downloads](https://pepy.tech/badge/riskparityportfolio)](https://pepy.tech/project/riskparityportfolio)
+[![codecov](https://codecov.io/gh/mirca/riskparity.py/branch/master/graph/badge.svg)](https://codecov.io/gh/mirca/riskparity.py)
 
 
-Install
-=======
+**riskparityportfolio** provides solvers to design risk parity portfolios.
+In its simplest form, we consider the convex formulation with a unique solution proposed by
+[Spinu (2013)](https://dx.doi.org/10.2139/ssrn.2297383) and use cyclical methods inspired by
+[Griveau-Billion et al. (2013)](https://arxiv.org/pdf/1311.4057.pdf)
+and [Choi & Chen (2022)](https://www.emerald.com/insight/content/doi/10.1108/JDQS-12-2021-0031/full/pdf). For more general formulations,
+which are usually nonconvex, we implement the successive convex approximation
+method proposed by [Feng & Palomar (2015)](https://doi.org/10.1109/TSP.2015.2452219).
 
-requires: Python >=3.9
+**Documentation:** [**https://mirca.github.io/riskparity.py**](https://mirca.github.io/riskparity.py)
 
-e3-core releases are available on PyPI and can be installed by running:
+**R version:** [**https://mirca.github.io/riskParityPortfolio**](https://mirca.github.io/riskParityPortfolio)
 
-```bash
-pip install e3-core
+**Rust version:** [**https://github.com/mirca/riskparity.rs**](https://github.com/mirca/riskparity.rs)
+
+**Talks**: [**slides HKML meetup 2020**](https://speakerdeck.com/mirca/breaking-down-risk-parity-portfolios-a-practical-open-source-implementation),
+[**tutorial - Data-driven Portfolio Optimization Course (HKUST)**](https://www.youtube.com/watch?v=xb1Xxf5LQks)
+
+## Installation
+
+* **development version**
+
+```
+$ git clone https://github.com/dppalomar/riskparity.py.git
+$ cd riskparity.py
+$ pip install -e .
 ```
 
-To install from the source package, run:
+* **stable version**
 
-```bash
-python setup.py install
+```
+$ pip install riskparityportfolio
 ```
 
-All `e3` dependencies will also be installed.
+### Windows requirements
 
-Contributing
-============
+Make sure to install [Microsoft C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/)
+prior to ``riskparityportfolio``.
 
-See [CONTRIBUTING.md](CONTRIBUTING.md).
+``riskparityportfolio`` depends on ``jaxlib`` which can be installed following these
+[instructions](https://github.com/cloudhan/jax-windows-builder).
+
+
+## References
+
+* Spinu, Florin. An Algorithm for Computing Risk Parity Weights (July 30, 2013). Available at SSRN: [https://ssrn.com/abstract=2297383](https://ssrn.com/abstract=2297383).
+
+* Griveau-Billion, Théophile et al. A Fast Algorithm for Computing High-dimensional Risk Parity Portfolios. [https://arxiv.org/abs/1311.4057](https://arxiv.org/abs/1311.4057)
+
+* Feng, Yiyong et al. SCRIP: Successive Convex Optimization Methods for Risk Parity Portfolio Design.
+IEEE Transactions on Signal Processing, 2015. [https://ieeexplore.ieee.org/document/7145485](https://ieeexplore.ieee.org/document/7145485)
+
+* Choi, J., & Chen, R. (2022). Improved iterative methods for solving risk parity portfolio. Journal of Derivatives and Quantitative Studies 30(2), 114–124. [https://doi.org/10.1108/JDQS-12-2021-0031](https://doi.org/10.1108/JDQS-12-2021-0031)
+
+
+## License
+
+Copyright 2022 [Ze Vinicius](https://mirca.github.io) and [Daniel Palomar](https://www.danielppalomar.com)
+
+This project is licensed under the terms of the MIT License.
+
+## Disclaimer
+
+The information, software, and any additional resources contained in this repository are not intended as,
+and shall not be understood or construed as, financial advice. Past performance is not a reliable indicator
+of future results and investors may not recover the full amount invested.
+The [authors](https://github.com/dppalomar/riskParityPortfolio/blob/master/AUTHORS.md) of this repository
+accept no liability whatsoever for any loss or damage you may incur.  Any opinions expressed in this repository
+are from the personal research and experience of the
+[authors](https://github.com/dppalomar/riskParityPortfolio/blob/master/AUTHORS.md) and are intended as
+educational material.

@@ -1,6 +1,0 @@
-from e3.anod.spec import Anod
-from e3.anod.loader import spec
-
-
-class Child(spec('parent')):
-    pass

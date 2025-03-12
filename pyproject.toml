@@ -1,162 +1,22 @@
 [build-system]
-requires = ["setuptools >= 61.0"]
+requires = [
+  "setuptools>=40.6.0",
+  "wheel",
+  "setuptools_scm",
+  "oldest-supported-numpy",
+  "pybind11>=2.4",
+]
 build-backend = "setuptools.build_meta"
 
-[project]
-name = "e3-core"
-authors = [{name="AdaCore's IT Team"}]
-dynamic = ["version"]
-description = "E3 core. Tools and library for building and testing software"
-readme = "README.md"
-license = {text = "GPLv3"}
-classifiers = [
-  "Development Status :: 5 - Production/Stable",
-  "Intended Audience :: Developers",
-  "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
-  "Programming Language :: Python :: 3.9",
-  "Programming Language :: Python :: 3.10",
-  "Programming Language :: Python :: 3.11",
-  "Programming Language :: Python :: 3.12",
-  "Topic :: Software Development :: Build Tools"
-]
+[tool.black]
+line-length = 79
 
-# Even if they are used by the pytest driver, the pytest and coverage
-# dependencies are not installed by default. This is on purpose to avoid
-# importing test/coverage packages in a release install.
-dependencies = [
-  "colorama",
-  "pyyaml",
-  "python-dateutil",
-  "requests",
-  "requests-cache",
-  "requests_toolbelt",
-  "tqdm",
-  "stevedore>1.20.0",
-  "setuptools",
-  "packaging",
-  "resolvelib",
-  "psutil; sys_platform=='win32'",
-  "psutil; sys_platform=='linux'",
-  "psutil; sys_platform=='linux2'",
-  "psutil; sys_platform=='darwin'",
-  "distro; sys_platform=='linux'",
-  "distro; sys_platform=='linux2'",
-]
-
-[project.urls]
-Repository = "https://github.com/AdaCore/e3-core"
-
-[project.optional-dependencies]
-test = [
-  "mock",
-  "requests-mock",
-  "pytest",
-  "pytest-html",
-  "pytest-socket",
-  "ansi2html",
-  "ptyprocess; sys_platform!='win32'",
-  "requests-mock"
-]
-check = [
-  "mypy==1.14.1",
-  "pytest",  # for the pytest plugin
-  "bandit",
-  "pip-audit",
-  "types-colorama",
-  "types-mock",
-  "types-psutil",
-  "types-python-dateutil",
-  "types-PyYAML",
-  "types-requests",
-  "types-setuptools",
-  "distro; sys_platform=='darwin'",  # for type checking
-]
-
-[project.scripts]
-e3 = "e3.sys:main"
-e3-sandbox = "e3.anod.sandbox.main:main"
-e3-pypi-closure = "e3.python.pypiscript:main"
-
-[project.entry-points."e3.anod.sandbox.sandbox_action"]
-exec = "e3.anod.sandbox.action:SandBoxExec"
-create = "e3.anod.sandbox.action:SandBoxCreate"
-show-config = "e3.anod.sandbox.action:SandBoxShowConfiguration"
-migrate = "e3.anod.sandbox.migrate:SandBoxMigrate"
-
-[project.entry-points."e3.event.handler"]
-smtp = "e3.event.handler.smtp:SMTPHandler"
-logging = "e3.event.handler.logging:LoggingHandler"
-file = "e3.event.handler.file:FileHandler"
-s3 = "e3.event.handler.s3:S3Handler"
-
-[project.entry-points."e3.store"]
-http-simple-store = "e3.store.backends.http_simple_store:HTTPSimpleStore"
-          
-[project.entry-points."e3.store.cache.backend"]
-file-cache = "e3.store.cache.backends.filecache:FileCache"
-
-[project.entry-points."sandbox_scripts"]
-anod = "e3.anod.sandbox.scripts:anod"
-
-[project.entry-points."pytest11"]
-pytest = "e3.pytest"
-
-[tool.setuptools.dynamic]
-version = {file = "VERSION"}
-
-[tool.coverage.report]
-fail_under = 90
-
-[tool.coverage.run]
-branch = false
-omit = [
-   "*mypy.py"
-]
-
-[tool.coverage.html]
-title = "e3 coverage report"
+[tool.isort]
+line_length = 79
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
 
 [tool.pytest.ini_options]
-addopts = "--failed-first --disable-socket --e3"
-
-
-[tool.mypy]
-# Ensure mypy works with namespace in which there is no toplevel
-# __init__.py. Explicit_package_bases means that that mypy_path
-# will define which directory is the toplevel directory of the
-# namespace.
-mypy_path = "src"
-namespace_packages = true
-explicit_package_bases = true
-
-warn_redundant_casts = true
-# do not warn when there are unused ignores, it is currently too difficult
-# to have this setting working and mypy running on Linux, macOS, and Windows
-#warn_unused_ignores = True
-warn_unused_configs = true
-disallow_untyped_calls = true
-disallow_untyped_defs = true
-warn_unreachable = true
-disallow_incomplete_defs = true
-disallow_any_unimported = true
-disallow_subclassing_any = true
-no_implicit_optional = true
-
-[[tool.mypy.overrides]]
-module = [
-    "coverage.*",
-    "ld.*",
-    "requests_toolbelt.*",
-    "stevedore.*",
-    "tqdm.*"
-]
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = [
-  "tests.tests_e3.*",
-  "e3.anod.driver.*",
-  "e3.os.windows.native_api.*",
-  "e3.yaml.*"
-]
-disallow_untyped_defs = false
+addopts = "-v"

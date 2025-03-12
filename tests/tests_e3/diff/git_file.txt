@@ -1,1 +1,0 @@
-This is file that will be patched using git diff format !
