@@ -1,69 +1,151 @@
-# To increment version
-# Check you have ~/.pypirc filled in
-# git tag x.y.z
-# git push && git push --tags
-# rm -rf dist; python setup.py sdist bdist_wheel
-# TEST: twine upload --repository-url https://test.pypi.org/legacy/ dist/*
-# twine upload dist/*
-
-from codecs import open
-import re
-
-from setuptools import setup, find_packages
+from collections import defaultdict
 import sys
+import os
+import os.path as path
+from pathlib import Path
+import multiprocessing
+import numpy
+from setuptools import setup, find_packages, Extension
+from Cython.Build import cythonize
 
-author = "Danny Price, Ellert van der Velden and contributors"
+multiprocessing.set_start_method('fork')
 
-with open("README.md", "r") as fh:
-    long_description = fh.read()
+force = False
+profile = False
+line_profile = False
+install_rates = False
 
-with open("requirements.txt", 'r') as fh:
-    requirements = fh.read().splitlines()
+if "--force" in sys.argv:
+    force = True
+    del sys.argv[sys.argv.index("--force")]
 
-with open("requirements_test.txt", 'r') as fh:
-    test_requirements = fh.read().splitlines()
+if "--profile" in sys.argv:
+    profile = True
+    del sys.argv[sys.argv.index("--profile")]
 
-# Read the __version__.py file
-with open('hickle/__version__.py', 'r') as f:
-    vf = f.read()
+if "--line-profile" in sys.argv:
+    line_profile = True
+    del sys.argv[sys.argv.index("--line-profile")]
 
-# Obtain version from read-in __version__.py file
-version = re.search(r"^_*version_* = ['\"]([^'\"]*)['\"]", vf, re.M).group(1)
+if "--install-rates" in sys.argv:
+    install_rates = True
+    del sys.argv[sys.argv.index("--install-rates")]
 
-setup(name='hickle',
-      version=version,
-      description='Hickle - an HDF5 based version of pickle',
-      long_description=long_description,
-      long_description_content_type='text/markdown',
-      author=author,
-      author_email='dan@thetelegraphic.com',
-      url='http://github.com/telegraphic/hickle',
-      download_url=('https://github.com/telegraphic/hickle/archive/v%s.zip'
-                    % (version)),
-      platforms='Cross platform (Linux, Mac OSX, Windows)',
-      classifiers=[
-          'Development Status :: 5 - Production/Stable',
-          'Intended Audience :: Developers',
-          'Intended Audience :: Science/Research',
-          'License :: OSI Approved',
-          'Natural Language :: English',
-          'Operating System :: MacOS',
-          'Operating System :: Microsoft :: Windows',
-          'Operating System :: Unix',
-          'Programming Language :: Python',
-          'Programming Language :: Python :: 3',
-          'Programming Language :: Python :: 3.7',
-          'Programming Language :: Python :: 3.8',
-          'Programming Language :: Python :: 3.9',
-          'Programming Language :: Python :: 3.10',
-          'Programming Language :: Python :: 3.11',
-          'Topic :: Software Development :: Libraries :: Python Modules',
-          'Topic :: Utilities',
-          ],
-      keywords=['pickle', 'hdf5', 'data storage', 'data export'],
-      install_requires=requirements,
-      tests_require=test_requirements,
-      python_requires='>=3.7',
-      packages=find_packages(),
-      zip_safe=False,
+source_paths = ["cherab", "demos"]
+compilation_includes = [".", numpy.get_include()]
+compilation_args = ["-O3", "-Wno-unreachable-code-fallthrough"]
+cython_directives = {"language_level": 3}
+macros = [("NPY_NO_DEPRECATED_API", "NPY_1_7_API_VERSION")]
+setup_path = path.dirname(path.abspath(__file__))
+num_processes = int(os.getenv("CHERAB_NCPU", "-1"))
+if num_processes == -1:
+    num_processes = multiprocessing.cpu_count()
+
+if line_profile:
+    compilation_args.append("-DCYTHON_TRACE=1")
+    compilation_args.append("-DCYTHON_TRACE_NOGIL=1")
+    cython_directives["linetrace"] = True
+if profile:
+    cython_directives["profile"] = True
+
+
+extensions = []
+for package in source_paths:
+    for root, dirs, files in os.walk(path.join(setup_path, package)):
+        for file in files:
+            if path.splitext(file)[1] == ".pyx":
+                pyx_file = path.relpath(path.join(root, file), setup_path)
+                module = path.splitext(pyx_file)[0].replace("/", ".")
+                extensions.append(
+                    Extension(
+                        module,
+                        [pyx_file],
+                        include_dirs=compilation_includes,
+                        extra_compile_args=compilation_args,
+                        define_macros=macros,
+                    ),
+                )
+
+
+# generate .c files from .pyx
+extensions = cythonize(
+    extensions,
+    nthreads=multiprocessing.cpu_count(),
+    force=force,
+    compiler_directives=cython_directives,
 )
+
+# Include demos in a separate directory in the distribution as data_files.
+demo_parent_path = Path("share/cherab/demos/core")
+data_files = defaultdict(list)
+demos_source = Path("demos")
+for item in demos_source.rglob("*"):
+    if item.is_file():
+        install_dir = demo_parent_path / item.parent.relative_to(demos_source)
+        data_files[str(install_dir)].append(str(item))
+data_files = list(data_files.items())
+
+# parse the package version number
+with open(path.join(path.dirname(__file__), "cherab/core/VERSION")) as version_file:
+    version = version_file.read().strip()
+
+with open("README.md") as f:
+    long_description = f.read()
+
+setup(
+    name="cherab",
+    version=version,
+    license="EUPL 1.1",
+    namespace_packages=["cherab"],
+    description="Cherab spectroscopy framework",
+    classifiers=[
+        "Development Status :: 5 - Production/Stable",
+        "Intended Audience :: Science/Research",
+        "Intended Audience :: Education",
+        "Intended Audience :: Developers",
+        "Natural Language :: English",
+        "Operating System :: POSIX :: Linux",
+        "Programming Language :: Cython",
+        "Programming Language :: Python :: 3",
+        "Topic :: Scientific/Engineering :: Physics",
+    ],
+    url="https://github.com/cherab",
+    project_urls=dict(
+        Tracker="https://github.com/cherab/core/issues",
+        Documentation="https://cherab.github.io/documentation/",
+    ),
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    install_requires=[
+        "numpy>=1.14,<2.0",
+        "scipy",
+        "matplotlib",
+        "raysect==0.8.1.*",
+    ],
+    extras_require={
+        # Running ./dev/build_docs.sh runs setup.py, which requires cython.
+        "docs": ["cython~=3.0", "sphinx", "sphinx-rtd-theme", "sphinx-tabs"],
+    },
+    packages=find_packages(include=["cherab*"]),
+    package_data={"": [
+        "**/*.pyx", "**/*.pxd",  # Needed to build Cython extensions.
+        "**/*.json", "**/*.cl", "**/*.npy", "**/*.obj",  # Supplementary data
+    ],
+                  "cherab.core": ["VERSION"],  # Used to determine version at run time
+    },
+    data_files=data_files,
+    zip_safe=False,
+    ext_modules=extensions,
+    options=dict(
+        build_ext={"parallel": num_processes},
+    ),
+)
+
+# setup a rate repository with common rates
+if install_rates:
+    try:
+        from cherab.openadas import repository
+
+        repository.populate()
+    except ImportError:
+        pass
