@@ -1,0 +1,6 @@
+coverage
+ipdb
+lxml
+mock
+pylint
+suds-py3

@@ -1,36 +1,51 @@
-name: CI/CD
+name: SimpleIDML C.I.
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
+  workflow_dispatch:
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: ["3.9", "3.10"]
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python 3.9
+    - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
-        python-version: 3.9
-    - name: Set up Chromedriver for e2e
-      uses: nanasess/setup-chromedriver@v1
+        python-version: ${{ matrix.python-version }}
+
     - name: Install Dependencies
       run: |
-        pip install pipenv
-        pipenv install --dev
-    - name: Run Tests
+        python -m pip install --upgrade pip
+        pip install mock coverage coveralls
+        pip install .
+
+    - name: Test Python-${{ matrix.python-version }}
       run: |
-        pipenv run python manage.py test
-        pipenv run python manage.py collectstatic --noinput
-        pipenv run python manage.py behave
-    - name: Build, Push and Deploy to Heroku
-      if: ${{ github.event_name == 'push' }}
-      uses: jctaveras/heroku-deploy@v2.1.3
+        cd tests && make coverage
+
+    - name: Coveralls Parallel
+      uses: coverallsapp/github-action@master
       with:
-        email: ${{ secrets.HEROKU_EMAIL }}
-        api_key: ${{ secrets.HEROKU_API_KEY }}
-        app_name: 'myrecommendations'
-        dockerfile_path: ''
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        flag-name: run-py${{ matrix.python-version }}
+        path-to-lcov: tests/coverage.lcov
+        parallel: true
+
+  finish:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+    - name: Coveralls Finished
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.github_token }}
+        path-to-lcov: tests/coverage.lcov
+        parallel-finished: true

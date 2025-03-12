@@ -1,6 +1,10 @@
-*.iml
-.idea/*
-.venv/*
-staticfiles/
-*.log
 *.pyc
+*.log
+.vagrant
+build
+dist
+src/SimpleIDML.egg-info
+tests/regressiontests/outputs
+tests/.coverage
+tests/coverage.lcov
+tests/htmlcov
