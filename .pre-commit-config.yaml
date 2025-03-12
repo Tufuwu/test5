@@ -1,62 +1,24 @@
----
-ci:
-  # format compatible with commitlint
-  autoupdate_commit_msg: "chore: pre-commit autoupdate"
-  autoupdate_schedule: monthly
-  autofix_commit_msg: |
-    chore: auto fixes from pre-commit.com hooks
-
-    for more information, see https://pre-commit.ci
-# exclude: >
-#   (?x)^(
-#   )$
 repos:
-  - repo: meta
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.9.1
     hooks:
-      - id: check-useless-excludes
-  - repo: https://github.com/pre-commit/pre-commit-hooks.git
-    rev: v4.4.0
-    hooks:
-      - id: end-of-file-fixer
-      - id: trailing-whitespace
-      - id: mixed-line-ending
-      - id: fix-byte-order-marker
-      - id: check-executables-have-shebangs
-      - id: check-merge-conflict
-      - id: debug-statements
-        language_version: python3
-  - repo: https://github.com/PyCQA/isort
-    rev: 5.12.0
-    hooks:
-      - id: isort
+      - id: ruff
         args:
-          # https://github.com/pre-commit/mirrors-isort/issues/9#issuecomment-624404082
-          - --filter-files
-  - repo: https://github.com/psf/black
-    rev: 22.10.0
+          - --fix
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
     hooks:
-      - id: black
-        language_version: python3
-  - repo: https://github.com/pycqa/flake8.git
-    rev: 6.0.0
-    hooks:
-      - id: flake8
-        language_version: python3
-        additional_dependencies:
-          - flake8-bugbear
-          - flake8-comprehensions
-          - flake8-debugger
-          - flake8-logging-format
-          - flake8-pep3101
-          - flake8-print
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.4.1
-    hooks:
-      - id: mypy
-        # empty args needed in order to match mypy cli behavior
-        additional_dependencies:
-          - types-paramiko
-          - types-setuptools
-          - setuptools-scm
-          - alabaster
-          - pytest
+      - id: check-added-large-files
+      - id: check-docstring-first
+        exclude: (docs/conf.py)
+      - id: check-json
+      - id: check-yaml
+      - id: debug-statements
+        exclude: (tests/messages/data/)
+      - id: end-of-file-fixer
+        exclude: (tests/messages/data/)
+      - id: name-tests-test
+        args: [ '--django' ]
+        exclude: (tests/messages/data/|.*(consts|utils).py)
+      - id: requirements-txt-fixer
+      - id: trailing-whitespace

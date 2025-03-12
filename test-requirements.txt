@@ -1,7 +1,0 @@
-pytest-cov
-pytest-xdist
-paramiko
-types-paramiko
-salt
-pywinrm
-ansible

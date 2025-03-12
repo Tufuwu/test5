@@ -1,21 +1,11 @@
-recursive-include testinfra *.py
-recursive-include test *.py ssh_key
-recursive-include images Dockerfile
-recursive-include doc *.py *.rst *.svg
-include doc/source/_templates/piwik.html
-include doc/Makefile
-include tox.ini
-include .flake8
-include mypy.ini
-include Makefile
-include *.yaml
-include README.rst CONTRIBUTING.rst CHANGELOG.rst
-include MANIFEST.in
-include ansible.cfg
-include dev-requirements.txt
-include test-requirements.txt
-include LICENSE
-exclude .editorconfig
-exclude .gitignore
-prune doc/build
-prune .github
+include Makefile CHANGES.rst LICENSE AUTHORS
+include conftest.py tox.ini
+include babel/global.dat
+include babel/locale-data/*.dat
+include babel/locale-data/LICENSE*
+recursive-include docs *
+recursive-exclude docs/_build *
+include scripts/*
+recursive-include tests *
+recursive-exclude tests *.pyc
+recursive-exclude tests *.pyo
