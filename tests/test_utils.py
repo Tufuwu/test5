@@ -1,117 +1,84 @@
-import os
-import unittest
+from unittest import TestCase
+
+from twisted.web.http_headers import Headers
+
+from daphne.utils import parse_x_forwarded_for
 
 
-class Test_escape(unittest.TestCase):
-    def test_escape(self):
-        from pyramid_debugtoolbar.utils import escape
+class TestXForwardedForHttpParsing(TestCase):
+    """
+    Tests that the parse_x_forwarded_for util correctly parses twisted Header.
+    """
 
-        class Foo(str):
-            def __html__(self):
-                return self
+    def test_basic(self):
+        headers = Headers(
+            {
+                b"X-Forwarded-For": [b"10.1.2.3"],
+                b"X-Forwarded-Port": [b"1234"],
+                b"X-Forwarded-Proto": [b"https"],
+            }
+        )
+        result = parse_x_forwarded_for(headers)
+        self.assertEqual(result, (["10.1.2.3", 1234], "https"))
+        self.assertIsInstance(result[0][0], str)
+        self.assertIsInstance(result[1], str)
 
-        assert escape(None) == ''
-        assert escape(42) == '42'
-        assert escape('<>') == '&lt;&gt;'
-        assert escape('"foo"') == '"foo"'
-        assert escape('"foo"', True) == '&quot;foo&quot;'
-        assert escape(Foo('<foo>')) == '<foo>'
+    def test_address_only(self):
+        headers = Headers({b"X-Forwarded-For": [b"10.1.2.3"]})
+        self.assertEqual(parse_x_forwarded_for(headers), (["10.1.2.3", 0], None))
 
+    def test_v6_address(self):
+        headers = Headers({b"X-Forwarded-For": [b"1043::a321:0001, 10.0.5.6"]})
+        self.assertEqual(parse_x_forwarded_for(headers), (["1043::a321:0001", 0], None))
 
-class Test_format_fname(unittest.TestCase):
-    def _callFUT(self, value, sys_path=None):
-        from pyramid_debugtoolbar.utils import format_fname
+    def test_multiple_proxys(self):
+        headers = Headers({b"X-Forwarded-For": [b"10.1.2.3, 10.1.2.4"]})
+        self.assertEqual(parse_x_forwarded_for(headers), (["10.1.2.3", 0], None))
 
-        return format_fname(value, sys_path)
-
-    def test_builtin(self):
-        self.assertEqual(self._callFUT('{a}'), '{a}')
-
-    def test_relpath(self):
-        val = '.' + os.path.sep + 'foo'
-        self.assertEqual(self._callFUT(val), val)
-
-    def test_unknown(self):
-        val = '..' + os.path.sep + 'foo'
+    def test_original(self):
+        headers = Headers({})
         self.assertEqual(
-            self._callFUT(val), './../foo'.replace('/', os.path.sep)
+            parse_x_forwarded_for(headers, original_addr=["127.0.0.1", 80]),
+            (["127.0.0.1", 80], None),
         )
 
-    def test_module_file_path(self):
-        sys_path = [
-            '/foo/',
-            '/foo/bar',
-            '/usr/local/python/site-packages/',
-        ]
+    def test_no_original(self):
+        headers = Headers({})
+        self.assertEqual(parse_x_forwarded_for(headers), (None, None))
 
-        sys_path = map(lambda path: path.replace('/', os.path.sep), sys_path)
-        modpath = self._callFUT(
-            '/foo/bar/pyramid_debugtoolbar/tests/debugfoo.py'.replace(
-                '/', os.path.sep
-            ),
-            sys_path,
-        )
+
+class TestXForwardedForWsParsing(TestCase):
+    """
+    Tests that the parse_x_forwarded_for util correctly parses dict headers.
+    """
+
+    def test_basic(self):
+        headers = {
+            b"X-Forwarded-For": b"10.1.2.3",
+            b"X-Forwarded-Port": b"1234",
+            b"X-Forwarded-Proto": b"https",
+        }
+        self.assertEqual(parse_x_forwarded_for(headers), (["10.1.2.3", 1234], "https"))
+
+    def test_address_only(self):
+        headers = {b"X-Forwarded-For": b"10.1.2.3"}
+        self.assertEqual(parse_x_forwarded_for(headers), (["10.1.2.3", 0], None))
+
+    def test_v6_address(self):
+        headers = {b"X-Forwarded-For": [b"1043::a321:0001, 10.0.5.6"]}
+        self.assertEqual(parse_x_forwarded_for(headers), (["1043::a321:0001", 0], None))
+
+    def test_multiple_proxies(self):
+        headers = {b"X-Forwarded-For": b"10.1.2.3, 10.1.2.4"}
+        self.assertEqual(parse_x_forwarded_for(headers), (["10.1.2.3", 0], None))
+
+    def test_original(self):
+        headers = {}
         self.assertEqual(
-            modpath,
-            '<pyramid_debugtoolbar/tests/debugfoo.py>'.replace(
-                '/', os.path.sep
-            ),
+            parse_x_forwarded_for(headers, original_addr=["127.0.0.1", 80]),
+            (["127.0.0.1", 80], None),
         )
 
-    def test_no_matching_sys_path(self):
-        val = '/foo/bar/pyramid_debugtoolbar/foo.py'
-        sys_path = ['/bar/baz']
-        self.assertEqual(
-            self._callFUT(val, sys_path),
-            '</foo/bar/pyramid_debugtoolbar/foo.py>',
-        )
-
-
-class Test_format_sql(unittest.TestCase):
-    def _callFUT(self, query):
-        from pyramid_debugtoolbar.utils import format_sql
-
-        return format_sql(query)
-
-    def test_it(self):
-        result = self._callFUT('SELECT * FROM TBL')
-        self.assertTrue(result.startswith('<div'))
-
-
-class Test_addr_in(unittest.TestCase):
-    def _callFUT(self, addr, hosts):
-        from pyramid_debugtoolbar.utils import addr_in
-
-        return addr_in(addr, hosts)
-
-    def test_empty_hosts(self):
-        self.assertFalse(self._callFUT('127.0.0.1', []))
-
-    def test_not_in(self):
-        self.assertFalse(self._callFUT('127.0.0.1', ['192.168.1.1']))
-
-    def test_in(self):
-        self.assertTrue(self._callFUT('127.0.0.1', ['127.0.0.1']))
-
-    def test_in_multi(self):
-        self.assertTrue(self._callFUT('127.0.0.1', ['10.1.1.1', '127.0.0.1']))
-
-    def test_in_network(self):
-        self.assertTrue(self._callFUT('127.0.0.1', ['127.0.0.0/24']))
-
-    def test_empty_hosts_ipv6(self):
-        self.assertFalse(self._callFUT('::1', []))
-
-    def test_in_ipv6(self):
-        self.assertTrue(self._callFUT('::1', ['::1']))
-
-    def test_in_multi_ipv6(self):
-        self.assertTrue(self._callFUT('::1', ['fc00::', '::1']))
-
-    def test_in_network_ipv6(self):
-        self.assertTrue(self._callFUT('::1', ['::1/128']))
-
-    def test_in_network_ipv6_interface(self):
-        self.assertTrue(
-            self._callFUT('fe80::e556:2a1a:91e2:7023%15', ['::/0'])
-        )
+    def test_no_original(self):
+        headers = {}
+        self.assertEqual(parse_x_forwarded_for(headers), (None, None))

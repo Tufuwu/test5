@@ -1,27 +1,2 @@
-graft src
-graft tests
-graft docs
-graft demo
-prune docs/_build
-prune demo/mako_modules
-
-include README.rst
-include CHANGES.txt
-include LICENSE.txt
-include CONTRIBUTORS.txt
-include contributing.md
-include RELEASING.txt
-include TODO.txt
-
-include setup.cfg
-include pyproject.toml
-
-include .coveragerc
-include .flake8
-include pytest.ini
-include tox.ini
-include .readthedocs.yaml
-
-graft .github
-
-recursive-exclude * __pycache__ *.py[cod]
+include LICENSE
+recursive-include tests *.py

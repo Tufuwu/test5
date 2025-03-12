@@ -1,103 +1,137 @@
-pyramid_debugtoolbar
-====================
+daphne
+======
 
-``pyramid_debugtoolbar`` provides a debug toolbar useful while you're
-developing your Pyramid application.
+.. image:: https://img.shields.io/pypi/v/daphne.svg
+    :target: https://pypi.python.org/pypi/daphne
 
-Note that ``pyramid_debugtoolbar`` is a blatant rip-off of Michael van
-Tellingen's ``flask-debugtoolbar`` (which itself was derived from Rob Hudson's
-``django-debugtoolbar``). It also includes a lightly sanded down version of the
-Werkzeug debugger code by Armin Ronacher and team.
+Daphne is a HTTP, HTTP2 and WebSocket protocol server for
+`ASGI <https://github.com/django/asgiref/blob/main/specs/asgi.rst>`_ and
+`ASGI-HTTP <https://github.com/django/asgiref/blob/main/specs/www.rst>`_,
+developed to power Django Channels.
 
-
-Documentation
--------------
-
-The documentation of the current stable release of ``pyramid_debugtoolbar`` is
-available at
-https://docs.pylonsproject.org/projects/pyramid-debugtoolbar/en/latest/.
+It supports automatic negotiation of protocols; there's no need for URL
+prefixing to determine WebSocket endpoints versus HTTP endpoints.
 
 
-Demonstration
--------------
-
-For a demonstration:
-
-- Clone the ``pyramid_debugtoolbar`` trunk.
-
-  .. code-block:: bash
-
-      $ git clone https://github.com/Pylons/pyramid_debugtoolbar.git
-
-- Create a virtual environment in the workspace.
-
-  .. code-block:: bash
-
-      $ cd pyramid_debugtoolbar
-      $ python3 -m venv env
-
-- Install the ``pyramid_debugtoolbar`` trunk into the virtualenv.
-
-  .. code-block:: bash
-
-      $ env/bin/pip install -e .
-
-- Install the ``pyramid_debugtoolbar/demo`` package into the virtualenv.
-
-  .. code-block:: bash
-
-      $ env/bin/pip install -e demo
-
-- Run the ``pyramid_debugtoolbar`` package's ``demo/demo.py`` file using the
-  virtual environment's Python.
-
-  .. code-block:: bash
-
-      $ env/bin/python demo/demo.py
-
-Visit http://localhost:8080 in a web browser to see a page full of test
-options.
-
-
-Testing
+Running
 -------
 
-If you have ``tox`` installed, run all tests with:
+Simply point Daphne to your ASGI application, and optionally
+set a bind address and port (defaults to localhost, port 8000)::
 
-.. code-block:: bash
+    daphne -b 0.0.0.0 -p 8001 django_project.asgi:application
 
-    $ tox
+If you intend to run daphne behind a proxy server you can use UNIX
+sockets to communicate between the two::
 
-To run only a specific Python environment:
+    daphne -u /tmp/daphne.sock django_project.asgi:application
 
-.. code-block:: bash
+If daphne is being run inside a process manager, you might
+want it to bind to a file descriptor passed down from a parent process.
+To achieve this you can use the --fd flag::
 
-    $ tox -e py311
+    daphne --fd 5 django_project.asgi:application
 
-If you don't have ``tox`` installed, you can install the testing requirements,
-then run the tests.
+If you want more control over the port/socket bindings you can fall back to
+using `twisted's endpoint description strings
+<http://twistedmatrix.com/documents/current/api/twisted.internet.endpoints.html#serverFromString>`_
+by using the `--endpoint (-e)` flag, which can be used multiple times.
+This line would start a SSL server on port 443, assuming that `key.pem` and `crt.pem`
+exist in the current directory (requires pyopenssl to be installed)::
 
-.. code-block:: bash
+    daphne -e ssl:443:privateKey=key.pem:certKey=crt.pem django_project.asgi:application
 
-    $ python3 -m venv env
-    $ env/bin/pip install -e ".[testing]"
-    $ env/bin/py.test
+Endpoints even let you use the ``txacme`` endpoint syntax to get automatic certificates
+from Let's Encrypt, which you can read more about at http://txacme.readthedocs.io/en/stable/.
+
+To see all available command line options run daphne with the ``-h`` flag.
 
 
-Building documentation
-----------------------
+HTTP/2 Support
+--------------
 
-If you have ``tox`` installed, build the docs with:
+Daphne supports terminating HTTP/2 connections natively. You'll
+need to do a couple of things to get it working, though. First, you need to
+make sure you install the Twisted ``http2`` and ``tls`` extras::
 
-.. code-block:: bash
+    pip install -U "Twisted[tls,http2]"
 
-    $ tox -e docs
+Next, because all current browsers only support HTTP/2 when using TLS, you will
+need to start Daphne with TLS turned on, which can be done using the Twisted endpoint syntax::
 
-If you don't have ``tox`` installed, you can install the requirements to build
-the docs, then build them.
+    daphne -e ssl:443:privateKey=key.pem:certKey=crt.pem django_project.asgi:application
 
-.. code-block:: bash
+Alternatively, you can use the ``txacme`` endpoint syntax or anything else that
+enables TLS under the hood.
 
-    $ env/bin/pip install -e ".[docs]"
-    $ cd docs
-    $ make clean html SPHINXBUILD=../env/bin/sphinx-build
+You will also need to be on a system that has **OpenSSL 1.0.2 or greater**; if you are
+using Ubuntu, this means you need at least Ubuntu 16.04.
+
+Now, when you start up Daphne, it should tell you this in the log::
+
+    2017-03-18 19:14:02,741 INFO     Starting server at ssl:port=8000:privateKey=privkey.pem:certKey=cert.pem, channel layer django_project.asgi:channel_layer.
+    2017-03-18 19:14:02,742 INFO     HTTP/2 support enabled
+
+Then, connect with a browser that supports HTTP/2, and everything should be
+working. It's often hard to tell that HTTP/2 is working, as the log Daphne gives you
+will be identical (it's HTTP, after all), and most browsers don't make it obvious
+in their network inspector windows. There are browser extensions that will let
+you know clearly if it's working or not.
+
+Daphne only supports "normal" requests over HTTP/2 at this time; there is not
+yet support for extended features like Server Push. It will, however, result in
+much faster connections and lower overheads.
+
+If you have a reverse proxy in front of your site to serve static files or
+similar, HTTP/2 will only work if that proxy understands and passes through the
+connection correctly.
+
+
+Root Path (SCRIPT_NAME)
+-----------------------
+
+In order to set the root path for Daphne, which is the equivalent of the
+WSGI ``SCRIPT_NAME`` setting, you have two options:
+
+* Pass a header value ``Daphne-Root-Path``, with the desired root path as a
+  URLencoded ASCII value. This header will not be passed down to applications.
+
+* Set the ``--root-path`` commandline option with the desired root path as a
+  URLencoded ASCII value.
+
+The header takes precedence if both are set. As with ``SCRIPT_ALIAS``, the value
+should start with a slash, but not end with one; for example::
+
+    daphne --root-path=/forum django_project.asgi:application
+
+
+Python Support
+--------------
+
+Daphne requires Python 3.9 or later.
+
+
+Contributing
+------------
+
+Please refer to the
+`main Channels contributing docs <https://github.com/django/channels/blob/main/CONTRIBUTING.rst>`_.
+
+To run tests, make sure you have installed the ``tests`` extra with the package::
+
+    cd daphne/
+    pip install -e '.[tests]'
+    pytest
+
+
+Maintenance and Security
+------------------------
+
+To report security issues, please contact security@djangoproject.com. For GPG
+signatures and more security process information, see
+https://docs.djangoproject.com/en/dev/internals/security/.
+
+To report bugs or request new features, please open a new GitHub issue.
+
+This repository is part of the Channels project. For the shepherd and maintenance team, please see the
+`main Channels readme <https://github.com/django/channels/blob/main/README.rst>`_.
