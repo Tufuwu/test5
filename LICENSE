@@ -1,23 +1,6 @@
-The files of the JMdict/EDICT project are copyright, and distributed in
-accordance with the Licence Statement, which can found at http://www.edrdg.org/
-who are the current owners of the copyright. As explained in the licence, the
-files are available for use for most purposes provided acknowledgement and
-distribution of the documentation is made.
+MIT License
 
-
-The files of the Tatoeba project are copyright, and distributed in accordance
-with the Licence Statement, which can found athttps://tatoeba.org/ who are the
-current owners of the copyright. As explained in the licence, the files are
-distributed under the creative commons licence (CC BY).  The files can be used,
-even commercially, as long as the copyright holder is acknowledged.
-
-
-The files used for pronunciations are downloaded from
-https://github.com/javdejong/nhk-pronunciation
-
-
-The Python scripts are
-Copyright (c) 2014-2021 José Fonseca
+Copyright (c) 2018 Tommy
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
