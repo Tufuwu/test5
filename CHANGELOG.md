@@ -1,125 +1,427 @@
+# Unreleased
 
-<a id='changelog-0.3.6'></a>
-# 0.3.6 (2024-12-09)
+## Added
 
-## 🐛 Bug Fixes
+## Fixed
 
-- BF: Explicitly cast to simple float from numpy.float32 which is now returned by smth (nibabel?).  [PR #134](https://github.com/datalad/datalad-neuroimaging/pull/134) (by [@yarikoptic](https://github.com/yarikoptic))
+## Changed
 
-<a id='changelog-0.3.5'></a>
-# 0.3.5 (2024-03-19)
+# v0.27.0
 
-## 🐛 Bug Fixes
+## Added
 
-- Add codespell config and workflow, and use it to typos found throughout the codebase.  [PR #131](https://github.com/datalad/datalad-neuroimaging/pull/131) (by [@yarikoptic](https://github.com/yarikoptic))
+* Added new fields for global, acct_params_get, and block ([#722](https://github.com/algorand/pyteal/pull/722)))
+  * Added new fields for global, acct_params_get, and block
+  * online_state and voter_params_get
+  * mimc opcode
 
-## 📝 Documentation
+## Changed
 
-- Fixup intersphinx_mapping for python.  [PR #132](https://github.com/datalad/datalad-neuroimaging/pull/132) (by [@yarikoptic](https://github.com/yarikoptic))
+* Update recurring_swap.py ([#721](https://github.com/algorand/pyteal/pull/721))
+* Bump setuptools from 69.0.2 to 70.0.0 ([#725](https://github.com/algorand/pyteal/pull/725))
+* Upgrade Black to 24.8.0. ([#724](https://github.com/algorand/pyteal/pull/724))
 
-## 🏠 Internal
+# v0.26.1
 
-- Set up releasing workflows.  Fixes [#127](https://github.com/datalad/datalad-neuroimaging/issues/127) via [PR #130](https://github.com/datalad/datalad-neuroimaging/pull/130) (by [@jwodder](https://github.com/jwodder))
-## 0.3.4 (Oct 24, 2023) -- Make BIDS great again
+## Fixed
 
-- BIDS metadata extractor(s): do not require `participants.tsv` file to be present
-  (it is RECOMMENDED not REQUIRED in BIDS)
-- `cfg_bids` procedure: do not annex any `README*`, `LICENSE`, or
-  `.bids-validator-config.json` files
-- documentation: fix builds on RTD
+* Correct `EcPairingCheck` & `EcSubgroupCheck` return types ([#717](https://github.com/algorand/pyteal/pull/717))
 
-## 0.3.3 (Oct 28, 2022) -- Oktoberfest
+# v0.26.0
 
-- raise dependency on datalad-deprecated which was prematurely released
+## Added
 
-## 0.3.2 (Oct 25, 2022) -- ... but grandparents always are
+* Support for AVM v10 programs. ([#714](https://github.com/algorand/pyteal/pull/714))
+  * New box operations:
+    * `App.box_resize`
+    * `App.box_splice`
+  * New `Global` fields:
+    * `Global.asset_create_min_balance()`
+    * `Global.asset_opt_in_min_balance()`
+    * `Global.genesis_hash()`
+  * New elliptic curve operations:
+    * `EcAdd`
+    * `EcScalarMul`
+    * `EcPairingCheck`
+    * `EcMultiScalarMul`
+    * `EcSubgroupCheck`
+    * `EcMapTo`
+* Support for Python 3.12. ([#713](https://github.com/algorand/pyteal/pull/713))
 
-- increase dependency on datalad to 0.16.7
-- depend on datalad-metalad and datalad-deprecated for both styles of metadata
-  extractors
-- update the metadata extractors to work with current numpy versions
-- BIDS extractor compatible with pybids>=0.15.1 and BIDS v1.6.0
-- fix nifti1 metadata extractor not dealing properly with byte strings
-- various internal changes and fixes around testing and CI setup
+# v0.25.0
 
-## 0.3.1 (Jun 3, 2020) -- Uncles aren't always nice either
+## Added
 
-- be compatible with pydicom 2.0.0
+* Support for compiling AVM v9 programs. ([#707](https://github.com/algorand/pyteal/pull/707))
 
-## 0.3.0 (Feb 26, 2020) -- ... and parents become grumpier
+# v0.24.1
 
-- DataLad 0.12 series is now minimal supported
+## Fixed
 
-## 0.2.4 (Feb 05, 2020) -- Kids are growing
+* Fixed sourcemap errors related to TMPL usage. ([#696](https://github.com/algorand/pyteal/pull/696))
 
-Minor bugfix release to account for changes in pybids and datalad
+## Changed
 
-- pybids:
-  - demand pybids >=0.9.2
-  - account for new field  "extension" provided by BIDS now
-  - use get_dataset_description if available
-- pandas:
-  - use .iloc instead of deprecated .ix
-- datalad
-  - use -d^ instead of deprecated (in 0.12) -S in an example script
+* Stop using slot indexes for assets and apps when accessing properties of ABI reference type arguments. ([#701](https://github.com/algorand/pyteal/pull/701))
 
-## 0.2.3 (May 24, 2019) -- Old is not bad
+# v0.24.0
 
-Minor quick bugfix release to demand pybids < 0.9 since we are not yet fully
-ready for its full glory
+## Added
 
-## 0.2.2 (May 20, 2019) -- It was like that way before!
+* Clarify that `Approve` and `Reject` always exit in the documentation. ([#660](https://github.com/algorand/pyteal/pull/660))
+* Added frame pointer support for router. ([#600](https://github.com/algorand/pyteal/pull/600))
+  * NOTE: a backwards incompatable change was imposed in this PR: previous `build_program` method in `Router` was exported and public, now this method is hidden. Use `compile_program` only.
+* Experimental source mapping capability. ([#650](https://github.com/algorand/pyteal/pull/650))
 
-Minor bugfix release
-- revert back to old ways of installing package data so test data and procedures
-  get properly installed
+## Changed
 
-## 0.2.1 (May 17, 2019) -- Why wasn't it that way before?
+* Enable source maps using the new `FeatureGate` class. See `examples/applications/sourcemap.py` for a usage example. ([#687](https://github.com/algorand/pyteal/pull/687))
 
-- include a procedure 'cfg_bids' to configure BIDS datasets
-- fix several issues with troublesome dependency declarations
+# v0.23.0
 
-## 0.2.0 (Feb 09, 2019) -- Am I compatible with you honey?
+## Added
 
-- Make compatible with (and demand) pybids 0.7.{0,1}.  0.7.0 introduced
-  change of terms: modality -> suffix, and type -> datatype, which would now
-  require to either reaggregate all previous metadata or somehow fixup
-  in-place existing metadata files. And for 0.7.1 workaround was added to
-  not return `suffix` at least when participants.tsv was queried.
-- Make compatible with pydicom 1.0 in treatment of MultiValue
-- Refactorings:
-  - tests: 
-    - use `export_archive` instead of plain `tarfile.open`
-    - make compatible with recent (0.11.x) DataLad which now extract annex
-      keys etc
+* Improved error handling for tuple type mismatch: added information on position and expected type. ([#655](https://github.com/algorand/pyteal/pull/655))
+* Added an `asdict()` method to `ast.router.BareCallActions`. ([#656](https://github.com/algorand/pyteal/pull/656))
 
-## 0.1.5 (Sep 28, 2018) -- BIDS robustness
+## Fixed
 
-- Assorted improvements of the BIDS metadata extractor performance on datasets
-  in the wild.
+* Fixed wrong encoding result in tuple get last item. ([#663](https://github.com/algorand/pyteal/pull/663))
 
-## 0.1.4 (Aug 02, 2018) -- PyBIDS
+# v0.22.0
 
-- Fixed compatibility with pybids 0.6.4 and now demand it as the minimal
-  PyBIDS version
+## Changed
+* Improved Router clear state program generation. ([#636](https://github.com/algorand/pyteal/pull/636))
+  * NOTE: a backwards incompatable change was imposed in this PR: previous Clear State Program (CSP) can be constructed in router by registering ABI methods or bare app calls, now one has to use `clear_state` argument in `Router.__init__` to construct the CSP.
 
-## 0.1 (Apr 28, 2018) -- The Release
+# v0.21.0
 
-### Major refactoring and deprecations
+## Added
+* Added frame pointer support for subroutine arguments, replacing the previous usage of scratch. ([#562](https://github.com/algorand/pyteal/pull/562))
+* Added frame pointer support for local ABI variables in subroutine. ([#606](https://github.com/algorand/pyteal/pull/606))
+* Added `frame_pointers` property in `OptimizeOptions` to optimize away scratch slots during subroutine calls. This defaults to frame pointer usage when not specified for AVM version 8+. ([#613](https://github.com/algorand/pyteal/pull/613))
 
-- This is the first separate release of DataLad's neuroimaging functionality as an
-  extension module.
-- Metadata
-  - BIDS metadata now uniformly refers to subjects and participants using the
-    metadata key 'subject' 
+## Fixed
+* Allowing the `MethodCall` and `ExecuteMethodCall` to be passed `None` as app_id argument in the case of an app create transaction ([#592](https://github.com/algorand/pyteal/pull/592))
+* No longer accidentally include additional package folders in release ([#610](https://github.com/algorand/pyteal/pull/610), [#614](https://github.com/algorand/pyteal/pull/614))
+* Fixed mistakes in docs ([#612](https://github.com/algorand/pyteal/pull/612), [#625](https://github.com/algorand/pyteal/pull/625), [#627](https://github.com/algorand/pyteal/pull/627))
 
-### Enhancements and new features
+## Changed
+* Introducing `AbstractVar` to abstract value access: store, load, and stack type. ([#584](https://github.com/algorand/pyteal/pull/584))
+  * NOTE: a backwards incompatable change was imposed in this PR: previous ABI value's public member `stored_value` with type `ScratchVar`, is now changed to protected member `_stored_value` with type `AbstractVar`.
+* Starting with program version 9, when `scratch_slots` flag isn't provided to `OptimizeOptions`, default to optimizing. For versions 8 and earlier the default is and remains to _not_ optimize. ([#613](https://github.com/algorand/pyteal/pull/613))
+* Replaced the usage of `typing.NamedTuple` with `dataclass` for `class OpType` in the **ir** package in order to avoid [a regression coming in Python 3.11.1](https://github.com/python/cpython/issues/100098). ([#615](https://github.com/algorand/pyteal/pull/615))
+* Upgrade mypy to v0.991. ([#618](https://github.com/algorand/pyteal/pull/618))
+* Upgrade py-algorand-sdk to v2.0.0. ([#626](https://github.com/algorand/pyteal/pull/626))
 
-- Extractors now report progress (with DataLad 0.10+)
-- BIDS participant metadata is now read via pybids
+# 0.20.1
 
-### Fixes
+## Added
+* adding program page related ops ([#412](https://github.com/algorand/pyteal/pull/412))
+* Add Replace ([#413](https://github.com/algorand/pyteal/pull/413))
+* Add Block ([#415](https://github.com/algorand/pyteal/pull/415))
+* Add JsonRef ([#417](https://github.com/algorand/pyteal/pull/417))
+* Add Base64Decode ([#418](https://github.com/algorand/pyteal/pull/418))
+* Support Secp256r1 curve ([#423](https://github.com/algorand/pyteal/pull/423))
+* Add VrfVerify ([#419](https://github.com/algorand/pyteal/pull/419))
+* Add Sha3_256 ([#425](https://github.com/algorand/pyteal/pull/425))
+* Support FirstValidTime transaction field ([#424](https://github.com/algorand/pyteal/pull/424))
+* Add Ed25519Verify_Bare ([#426](https://github.com/algorand/pyteal/pull/426))
+* AVM Boxes Ops in Pyteal ([#438](https://github.com/algorand/pyteal/pull/438))
+* Support new AVM 8 account parameters ([#555](https://github.com/algorand/pyteal/pull/555))
 
-- Fix issue with unicode characters in BIDS metadata
-- DICOM metadata now also contains the 'PatientName' field that was previously
-  excluded due to a too restrictive data type filter
+## Changed
+* Changes to avm8 docs ([#546](https://github.com/algorand/pyteal/pull/546))
+
+# 0.19.0
+
+## Added
+* Added option to `OpUp` utility to allow specification of source for fees ([#566](https://github.com/algorand/pyteal/pull/566))
+
+## Fixed
+* Erroring on constructing an odd length hex string. ([#539](https://github.com/algorand/pyteal/pull/539))
+* Incorrect behavior when overriding a method name ([#550](https://github.com/algorand/pyteal/pull/550))
+* Add missing `abi.NamedTupleTypeSpec` equality override, such that equality holds only when `instance_class` and `value_type_specs` match. ([#540](https://github.com/algorand/pyteal/pull/540))
+* Prohibited instantiating `abi.NamedTuple` from inheriting subclasses of `abi.NamedTuple`, for fields in subclasses are not inherited. ([#540](https://github.com/algorand/pyteal/pull/540))
+* Fixed bug in app arg tupling and detupling when a Txn argument is present ([#577](https://github.com/algorand/pyteal/pull/577))
+
+## Changed
+* Subroutines that take ABI type of Transaction now allow any Transaction type to be passed. ([#531](https://github.com/algorand/pyteal/pull/531))
+* Relaxing exact type check in `InnerTxnFieldExpr.MethodCall` by applying `abi.type_spec_is_assignable_to`. ([#561](https://github.com/algorand/pyteal/pull/561))
+
+# 0.18.1
+
+## Fixed
+* ABI methods without a docstring now have their arguments in the output Contract object. ([#524](https://github.com/algorand/pyteal/pull/524))
+
+# 0.18.0
+
+## Added
+
+* ABI Methods will now parse the docstring for the method and set the description for any parameters that are described. ([#518](https://github.com/algorand/pyteal/pull/518))
+  * Note: the docstring must adhere to one of google, rst, numpy , or epy formatting styles.
+
+## Fixed
+* Subroutines annotated with a `TupleX` class are now invoked with an instance of that exact class, instead of the more general `Tuple` class ([#519](https://github.com/algorand/pyteal/pull/519))
+
+# 0.17.0
+
+## Added
+* Static and Dynamic Byte Array convenience classes ([#500](https://github.com/algorand/pyteal/pull/500), [#514](https://github.com/algorand/pyteal/pull/514))
+* Add the ability to insert comments in TEAL source file with the `Comment` method ([#410](https://github.com/algorand/pyteal/pull/410))
+* Add a `comment` keyword argument to the Assert expression that will place the comment immediately above the `assert` op in the resulting TEAL ([#510](https://github.com/algorand/pyteal/pull/510))
+
+## Fixed
+* Fix AST duplication bug in `String.set` when called with an `Expr` argument ([#508](https://github.com/algorand/pyteal/pull/508))
+
+# 0.16.0
+
+## Added
+* Add the ability to pass foreign reference arrays directly into inner transactions ([#384](https://github.com/algorand/pyteal/pull/384))
+
+* NamedTuple Implementation ([#473](https://github.com/algorand/pyteal/pull/473))
+
+* ExecuteMethodCall helper ([#501](https://github.com/algorand/pyteal/pull/501))
+
+## Fixed
+
+* CI: Fail readthedocs build on warning ([#478](https://github.com/algorand/pyteal/pull/478))
+
+* Windows Compatibility ([#499](https://github.com/algorand/pyteal/pull/499))
+
+## Changed
+* Update `Block` docs to match spec change ([#503](https://github.com/algorand/pyteal/pull/503))
+
+# 0.15.0
+
+## Added
+* Support AVM 7 updates:
+  * New opcodes:
+    * `base64_decode` ([#418](https://github.com/algorand/pyteal/pull/418))
+    * `block` ([#415](https://github.com/algorand/pyteal/pull/415))
+    * `ed25519verify_bare` ([#426](https://github.com/algorand/pyteal/pull/426))
+    * `json_ref` ([#417](https://github.com/algorand/pyteal/pull/417))
+    * `replace2`, `replace3` ([#413](https://github.com/algorand/pyteal/pull/413))
+    * `sha3_256` ([#425](https://github.com/algorand/pyteal/pull/425))
+    * `vrf_verify` ([#419](https://github.com/algorand/pyteal/pull/419))
+  * `Secp256r1` curve for ECDSA opcodes ([#423](https://github.com/algorand/pyteal/pull/423))
+  * Program page transaction field access ([#412](https://github.com/algorand/pyteal/pull/412))
+
+# 0.14.0
+
+## Added
+* Add [ARC-0004](https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0004.md) support for building and calling Apps.  See user guide for a walkthrough of capabilities and limitations ([#264](https://github.com/algorand/pyteal/pull/264)).
+* Introduce ABI Router to simplify ARC-0004 App construction and JSON descriptor generation.  See user guide for a walkthrough ([#170](https://github.com/algorand/pyteal/pull/170)).
+* Support declaring PyTeal version compatibility with a new pragma directive ([#429](https://github.com/algorand/pyteal/pull/429)).
+* Add `Execute` method to simplify inner transaction creation and submission ([#444](https://github.com/algorand/pyteal/pull/444)).
+* Add `py.typed` marker to allow downstream use of mypy with PyTeal ([#465](https://github.com/algorand/pyteal/pull/465)).
+
+## Fixed
+* Fix misspelled function names (`localNumUint`, `globalNumUint`) and corresponding internal field references ([#431](https://github.com/algorand/pyteal/pull/431)).
+* Fix stale user guide references ([#359](https://github.com/algorand/pyteal/pull/359)).
+
+## Changed
+* Make PyTeal stack traces easier to debug ([#371](https://github.com/algorand/pyteal/pull/371)).
+* Streamline multi-expression clause construction ([#442](https://github.com/algorand/pyteal/pull/442)).
+
+# 0.13.0
+
+## Added
+* Add opcode support for ECDSA verify, decompress, and recover ([#307](https://github.com/algorand/pyteal/pull/307)).
+
+## Fixed
+* Fix bug where `Continue` skips `While` condition check ([#332](https://github.com/algorand/pyteal/pull/332)).
+* Fix `If` construction using builder syntax ([#329](https://github.com/algorand/pyteal/pull/329)).
+
+## Changed
+* Correct multiple doc typos ([#324](https://github.com/algorand/pyteal/pull/324), [#330](https://github.com/algorand/pyteal/pull/330)).
+
+# 0.12.1
+
+## Fixed
+* Resolve PyPi upload issue introduced in v0.12.0 ([#317](https://github.com/algorand/pyteal/pull/317)).
+
+# 0.12.0
+
+## Added
+* Introduce a utility for increasing opcode budget referred to as OpUp ([#274](https://github.com/algorand/pyteal/pull/274)).
+* Introduce dryrun testing facilities referred to as blackbox testing ([#249](https://github.com/algorand/pyteal/pull/249)). 
+
+## Changed
+* Make various user guide updates/corrections ([#291](https://github.com/algorand/pyteal/pull/291), [#295](https://github.com/algorand/pyteal/pull/295), [#301](https://github.com/algorand/pyteal/pull/301)).
+* Install flake8 linter ([#273](https://github.com/algorand/pyteal/pull/273), [#283](https://github.com/algorand/pyteal/pull/283)).
+
+# 0.11.1
+
+## Fixed
+* Fix readthedocs build issue introduced in v0.11.0 ([#276](https://github.com/algorand/pyteal/pull/276), [#279](https://github.com/algorand/pyteal/pull/279)).
+
+# 0.11.0
+
+## Added
+* Introduce optional compiler optimization to remove redundant sequential `ScratchSlot` store/load invocations ([#247](https://github.com/algorand/pyteal/pull/247)).  The optimization is disabled by default.
+* Expose `DynamicScratchVar` to reference arbitrary `ScratchVar` instances ([#198](https://github.com/algorand/pyteal/pull/198)). 
+
+## Changed
+* Bump minimum supported Python version to v3.10 ([#269](https://github.com/algorand/pyteal/pull/269)).
+* Add `@Subroutine` support for `ScratchVar` parameters ([#198](https://github.com/algorand/pyteal/pull/198)).
+* Make minor doc updates ([#248](https://github.com/algorand/pyteal/pull/248)) and ([#265](https://github.com/algorand/pyteal/pull/265)).
+* Remove outdated Jupyter notebook demo ([#268](https://github.com/algorand/pyteal/pull/268)).
+* Fix docs warning about multiple OptimizeOptions targets ([#271](https://github.com/algorand/pyteal/pull/271)).
+
+# 0.10.1
+
+## Fixed
+* Fixed a bug which caused incorrect TEAL code to be produced for mutually recursive subroutines
+  with different argument counts ([#234](https://github.com/algorand/pyteal/pull/234))
+* Minor docs updates ([#211](https://github.com/algorand/pyteal/pull/211), [#210](https://github.com/algorand/pyteal/pull/210), [#229](https://github.com/algorand/pyteal/pull/229))
+
+# 0.10.0
+
+## Added
+* Support for new TEAL 6 features:
+  * Increase maximum TEAL version ([#146](https://github.com/algorand/pyteal/pull/146))
+  * New `Gitxn` expression, inner transaction group creation with `InnerTxnBuilder.Next()`, inner
+    transaction array field setting, and allow using dynamic slot IDs with `ImportScratchValue` ([#149](https://github.com/algorand/pyteal/pull/149))
+  * New `BytesSqrt` expression ([#163](https://github.com/algorand/pyteal/pull/163))
+  * New `Global` fields `opcode_budget`, `caller_app_id`, and `caller_app_address` ([#168](https://github.com/algorand/pyteal/pull/168))
+  * New `AccountParam` expressions for getting information about accounts ([#165](https://github.com/algorand/pyteal/pull/165))
+  * New `Divw` expression, new transaction fields `last_log` and `state_proof_pk`, and dynamic index
+    support for `InnerTxn` array fields ([#174](https://github.com/algorand/pyteal/pull/174))
+* Added a new `MethodSignature` expression ([#153](https://github.com/algorand/pyteal/pull/153))
+* Added a new `Suffix` expression and optimized existing `Substring` and `Extract` expressions ([#126](https://github.com/algorand/pyteal/pull/126))
+* Added the `MultiValue` class as an alternative to `MaybeValue` ([#196](https://github.com/algorand/pyteal/pull/196))
+
+## Fixed
+* Various documentation fixes ([#140](https://github.com/algorand/pyteal/pull/140), [#142](https://github.com/algorand/pyteal/pull/142), [#191](https://github.com/algorand/pyteal/pull/191), [#202](https://github.com/algorand/pyteal/pull/202), [#207](https://github.com/algorand/pyteal/pull/207))
+* Clearer error messages when non-PyTeal expressions are present ([#151](https://github.com/algorand/pyteal/pull/151))
+
+## Changed
+* **WARNING**: Due to code generation improvements, programs compiled with this version will likely
+  produce different TEAL code than previous versions, but their functionality will be the same. Be
+  aware that even small differences in generated TEAL code will change the address associated with
+  escrow LogicSig contracts.
+* Optimized constant assembly for small integers ([#128](https://github.com/algorand/pyteal/pull/128))
+* Generated TEAL code for subroutines is more human-readable ([#148](https://github.com/algorand/pyteal/pull/148))
+* Subroutine argument and return type annotations, if present, **MUST** be `Expr` ([#182](https://github.com/algorand/pyteal/pull/182))
+* Transaction field documentation now separates fields by transaction type ([#204](https://github.com/algorand/pyteal/pull/204))
+* Added documentation about how to generate the documentation ([#205](https://github.com/algorand/pyteal/pull/205))
+
+# 0.9.1
+
+## Added
+* Documentation for exponent operator ([#134](https://github.com/algorand/pyteal/pull/134))
+* Documentation for using `Seq` with lists ([#135](https://github.com/algorand/pyteal/pull/135))
+
+## Fixed
+* Fixed use of wildcard import in Pylance ([#133](https://github.com/algorand/pyteal/pull/133))
+
+# 0.9.0
+
+## Added
+* Support for new TEAL 5 features:
+  * `AppParam` expressions ([#107](https://github.com/algorand/pyteal/pull/107), [#123](https://github.com/algorand/pyteal/pull/123))
+  * New `nonparticipation` transaction field ([#106](https://github.com/algorand/pyteal/pull/106))
+  * Inner transactions, zero-element `Seq` expressions, dynamic transaction array access ([#115](https://github.com/algorand/pyteal/pull/115))
+  * Logs, dynamic LogicSig argument indexes, single-element `NaryExpr`s, and creating `Bytes` from `bytes` and `bytearray` ([#117](https://github.com/algorand/pyteal/pull/117))
+  * Extract expressions ([#118](https://github.com/algorand/pyteal/pull/118))
+  * More efficient implementation of recursive subroutines in TEAL 5+ ([#114](https://github.com/algorand/pyteal/pull/114))
+* Add `WideRatio`, an expression which exposes `mulw` and `divmodw` ([#121](https://github.com/algorand/pyteal/pull/121), [#122](https://github.com/algorand/pyteal/pull/122))
+
+## Changed
+* **WARNING**: Due to code generation improvements, programs compiled with this version will likely
+  produce different TEAL code than previous versions, but their functionality will be the same. Be
+  aware that even small differences in generated TEAL code will change the address associated with
+  escrow LogicSig contracts.
+* Some unnecessary branch conditions have been removed ([#120](https://github.com/algorand/pyteal/pull/120))
+
+# 0.8.0
+
+## Added
+* Support for new TEAL 4 features:
+  * Basic ops ([#67](https://github.com/algorand/pyteal/pull/67))
+  * Byteslice arithmetic ([#75](https://github.com/algorand/pyteal/pull/75))
+  * Importing scratch slot values from previous app calls ([#79](https://github.com/algorand/pyteal/pull/79), [#83](https://github.com/algorand/pyteal/pull/83))
+  * Direct reference support for applications/accounts/assets ([#90](https://github.com/algorand/pyteal/pull/90))
+  * `While` and `For` loops ([#95](https://github.com/algorand/pyteal/pull/95))
+  * Subroutines ([#99](https://github.com/algorand/pyteal/pull/99))
+* New logo ([#88](https://github.com/algorand/pyteal/pull/88), [#91](https://github.com/algorand/pyteal/pull/91))
+* Added the `assembleConstants` option to `compileTeal`. When enabled, the compiler will assemble
+int and byte constants in the most efficient way to reduce program size ([#57](https://github.com/algorand/pyteal/pull/57), [#61](https://github.com/algorand/pyteal/pull/61), [#66](https://github.com/algorand/pyteal/pull/66)).
+* Added an alternative syntax for constructing `If` statements ([#77](https://github.com/algorand/pyteal/pull/77), [#82](https://github.com/algorand/pyteal/pull/82)).
+* Align `Seq` with the rest of the API ([#96](https://github.com/algorand/pyteal/pull/96)).
+
+## Fixed
+* Fixed `NaryExpr.__str__` method ([#102](https://github.com/algorand/pyteal/pull/102)).
+
+## Changed
+* **WARNING**: Due to code generation changes required to support TEAL 4 loops and subroutines,
+  programs compiled with this version will likely produce different TEAL code than previous
+  versions, but their functionality will be the same. Be aware that even small differences in
+  generated TEAL code will change the address associated with escrow LogicSig contracts.
+* Improved crypto cost docs ([#81](https://github.com/algorand/pyteal/pull/81)).
+* Applied code formatter ([#100](https://github.com/algorand/pyteal/pull/100)).
+
+# 0.7.0
+
+## Added
+* Support for new TEAL 3 features:
+  * Bit/byte manipulation and new transaction and global fields ([#50](https://github.com/algorand/pyteal/pull/50)).
+  * Dynamic `Gtxn` indexes ([#53](https://github.com/algorand/pyteal/pull/53)).
+  * `MinBalance` expression ([#54](https://github.com/algorand/pyteal/pull/54)).
+  * Documentation for new features ([#55](https://github.com/algorand/pyteal/pull/55)).
+* Added the ability to specify the TEAL version target when using `compileTeal` ([#45](https://github.com/algorand/pyteal/pull/45)).
+* Added `ScratchVar`, an interface for storing and loading values from scratch space ([#33](https://github.com/algorand/pyteal/pull/33)).
+* Added a warning when scratch slots are loaded before anything has been stored ([#47](https://github.com/algorand/pyteal/pull/47)).
+
+## Changed
+* Rewrote internal code generation to produce smaller programs and make future optimization easier
+([#26](https://github.com/algorand/pyteal/pull/26)). Programs compiled with this version will likely
+produce different TEAL code than previous versions, but their functionality will be the same.
+
+# 0.6.2
+
+## Fixed
+* Corrected documentation and examples that incorrectly used the `Txn.accounts` array ([#42](https://github.com/algorand/pyteal/pull/42)).
+* Fixed improper base32 validation and allow the use of padding ([#34](https://github.com/algorand/pyteal/pull/34)
+and [#37](https://github.com/algorand/pyteal/pull/37)).
+
+# 0.6.1
+
+## Added
+* An application deployment example, `vote_deploy.py`.
+
+## Fixed
+* Internal modules no longer pollute the global namespace when importing with `from pyteal import *`
+([#29](https://github.com/algorand/pyteal/pull/29)).
+* Fixed several documentation typos.
+
+## Changed
+* Moved signature and application mode examples into separate folders.
+
+# 0.6.0
+
+## Added
+* TEAL v2 `Txn` and `Gtxn` fields
+* TEAL v2 `Global` fields
+* `TxnType` enum
+* `Pop` expression
+* `Not` expression
+* `BitwiseNot` expression
+* `BitwiseAnd` expression
+* `BitwiseOr` expression
+* `BitwiseXor` expression
+* `Neq` (not equal) expression
+* `Assert` expression
+* `AssetHolding` expressions
+* `AssetParam` expressions
+* State manipulation with `App` expressions
+* `Concat` expression
+* `Substring` expression
+* `Bytes` constructor now accepts UTF-8 strings
+* `If` expression now allows single branches
+
+## Changed
+* Compiling a PyTeal program must now be done with the `compileTeal(program, mode)` function. The `.teal()` method no longer exists.
+* The API for group transactions has changed from `Gtxn.field(transaction_index)` to `Gtxn[transaction_index].field()`.
+* `Tmpl` syntax has changed from `Type(Tmpl("TMPL_NAME"))` to `Tmpl.Type("TMPL_NAME")`.

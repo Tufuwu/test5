@@ -1,27 +1,45 @@
-name: docs
-
-on: [push, pull_request]
-
+name: "Build workflow"
+on:
+  pull_request:
+  push:
+    branches:
+      - master
 jobs:
-  build:
-
+  build-test:
     runs-on: ubuntu-latest
-
+    container: python:${{ matrix.python }}-slim
+    strategy:
+      matrix:
+        python: ["3.9", "3.10"]
     steps:
-    - name: Set up environment
-      run: |
-        git config --global user.email "test@github.land"
-        git config --global user.name "GitHub Almighty"
-    - uses: actions/checkout@v1
-    - name: Set up Python 3.8
-      uses: actions/setup-python@v1
-      with:
-        python-version: 3.9
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements-devel.txt
-        pip install .
-    - name: Build docs
-      run: |
-        make -C docs html
+      - run: python3 --version
+      - name: Check out code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Install pip dependencies
+        run: pip install -r requirements.txt
+      - name: Build and Test
+        run: |
+          pytest
+          mypy pyteal
+          python3 -c "import pyteal" scripts/generate_init.py --check
+          black --check .
+  upload-to-pypi:
+    runs-on: ubuntu-latest
+    needs: ['build-test']
+    if: ${{ github.event_name == 'push' && contains(github.ref, 'master') && startsWith(github.ref, 'refs/tags') }}
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Install dependencies
+        run: pip install wheel
+      - name: Build package
+        run: python setup.py sdist bdist_wheel
+      - name: Release
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_API_TOKEN }}
