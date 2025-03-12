@@ -1,0 +1,6 @@
+﻿visions.functional.infer\_type
+==============================
+
+.. currentmodule:: visions.functional
+
+.. autofunction:: infer_type

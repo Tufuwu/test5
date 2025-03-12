@@ -1,0 +1,402 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API &mdash; visions 0.7.7 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=35f4697d"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Types" href="api/types.html" />
+    <link rel="prev" title="About" href="background/about.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            visions
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="getting_started/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started/concepts.html">Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started/usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started/examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started/extending.html">Extending</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started/testing.html">Typeset testing</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Applications</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="applications/applications.html">Applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="applications/summarizer.html">Data Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="applications/validation.html">Data Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="applications/machine_learning.html">Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="applications/compression.html">Data Compression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="applications/integration.html">Data Discovery and Data Integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="applications/users.html">Users</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contribution</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="contributing/support.html">Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing/contributing.html">Community contributions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing/type.html">Contributions new types to visions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Background</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="background/background.html">Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="background/theory.html">Theory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="background/nested_set_view.html">Nested set view</a></li>
+<li class="toctree-l1"><a class="reference internal" href="background/graph_view.html">Graph view</a></li>
+<li class="toctree-l1"><a class="reference internal" href="background/about.html">About</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/types.html">Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/relations.html">Relations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/typesets.html">Typesets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/functional.html">Functional API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/declarative.html">Declarative API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/utils.html">Utils</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">visions</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">API</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/visions/api.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="api">
+<h1>API<a class="headerlink" href="#api" title="Link to this heading"></a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/types.html">Types</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/types.html#abstract-types">Abstract Types</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/visions.types.type.VisionsBaseType.html">visions.types.type.VisionsBaseType</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/visions.types.type.VisionsBaseType.html#visions.types.type.VisionsBaseType"><code class="docutils literal notranslate"><span class="pre">VisionsBaseType</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="api/_autosummary/visions.types.type.VisionsBaseType.html#visions.types.type.VisionsBaseType.__init__"><code class="docutils literal notranslate"><span class="pre">VisionsBaseType.__init__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/types.html#semantic-types">Semantic Types</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/visions.types.generic.html">visions.types.generic</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/visions.types.generic.html#visions.types.generic.Generic"><code class="docutils literal notranslate"><span class="pre">Generic</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/visions.types.integer.html">visions.types.integer</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/visions.types.integer.html#visions.types.integer.Integer"><code class="docutils literal notranslate"><span class="pre">Integer</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/visions.types.float.html">visions.types.float</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/visions.types.float.html#visions.types.float.Float"><code class="docutils literal notranslate"><span class="pre">Float</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/visions.types.boolean.html">visions.types.boolean</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/visions.types.boolean.html#visions.types.boolean.Boolean"><code class="docutils literal notranslate"><span class="pre">Boolean</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/visions.types.categorical.html">visions.types.categorical</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/visions.types.categorical.html#visions.types.categorical.Categorical"><code class="docutils literal notranslate"><span class="pre">Categorical</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/visions.types.ordinal.html">visions.types.ordinal</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/visions.types.ordinal.html#visions.types.ordinal.Ordinal"><code class="docutils literal notranslate"><span class="pre">Ordinal</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/visions.types.complex.html">visions.types.complex</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/visions.types.complex.html#visions.types.complex.Complex"><code class="docutils literal notranslate"><span class="pre">Complex</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/visions.types.date_time.html">visions.types.date_time</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/visions.types.date_time.html#visions.types.date_time.DateTime"><code class="docutils literal notranslate"><span class="pre">DateTime</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/visions.types.time_delta.html">visions.types.time_delta</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/visions.types.time_delta.html#visions.types.time_delta.TimeDelta"><code class="docutils literal notranslate"><span class="pre">TimeDelta</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="api/_autosummary/visions.types.time_delta.html#visions.types.time_delta.TimeDelta.contains_op"><code class="docutils literal notranslate"><span class="pre">TimeDelta.contains_op()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/visions.types.date.html">visions.types.date</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/visions.types.date.html#visions.types.date.Date"><code class="docutils literal notranslate"><span class="pre">Date</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/visions.types.time.html">visions.types.time</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/visions.types.time.html#visions.types.time.Time"><code class="docutils literal notranslate"><span class="pre">Time</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/visions.types.object.html">visions.types.object</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/visions.types.object.html#visions.types.object.Object"><code class="docutils literal notranslate"><span class="pre">Object</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/visions.types.string.html">visions.types.string</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/visions.types.string.html#visions.types.string.String"><code class="docutils literal notranslate"><span class="pre">String</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/visions.types.geometry.html">visions.types.geometry</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/visions.types.geometry.html#visions.types.geometry.Geometry"><code class="docutils literal notranslate"><span class="pre">Geometry</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/visions.types.path.html">visions.types.path</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/visions.types.path.html#visions.types.path.Path"><code class="docutils literal notranslate"><span class="pre">Path</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/visions.types.file.html">visions.types.file</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/visions.types.file.html#visions.types.file.File"><code class="docutils literal notranslate"><span class="pre">File</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/visions.types.image.html">visions.types.image</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/visions.types.image.html#visions.types.image.Image"><code class="docutils literal notranslate"><span class="pre">Image</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/visions.types.url.html">visions.types.url</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/visions.types.url.html#visions.types.url.URL"><code class="docutils literal notranslate"><span class="pre">URL</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/visions.types.ip_address.html">visions.types.ip_address</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/visions.types.ip_address.html#visions.types.ip_address.IPAddress"><code class="docutils literal notranslate"><span class="pre">IPAddress</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/visions.types.count.html">visions.types.count</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/visions.types.count.html#visions.types.count.Count"><code class="docutils literal notranslate"><span class="pre">Count</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/visions.types.uuid.html">visions.types.uuid</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/visions.types.uuid.html#visions.types.uuid.UUID"><code class="docutils literal notranslate"><span class="pre">UUID</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/relations.html">Relations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/_autosummary/visions.relations.relations.TypeRelation.html">visions.relations.relations.TypeRelation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/visions.relations.relations.TypeRelation.html#visions.relations.relations.TypeRelation"><code class="docutils literal notranslate"><span class="pre">TypeRelation</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/visions.relations.relations.TypeRelation.html#visions.relations.relations.TypeRelation.__init__"><code class="docutils literal notranslate"><span class="pre">TypeRelation.__init__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/_autosummary/visions.relations.relations.IdentityRelation.html">visions.relations.relations.IdentityRelation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/visions.relations.relations.IdentityRelation.html#visions.relations.relations.IdentityRelation"><code class="docutils literal notranslate"><span class="pre">IdentityRelation</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/visions.relations.relations.IdentityRelation.html#visions.relations.relations.IdentityRelation.__init__"><code class="docutils literal notranslate"><span class="pre">IdentityRelation.__init__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/_autosummary/visions.relations.relations.InferenceRelation.html">visions.relations.relations.InferenceRelation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/visions.relations.relations.InferenceRelation.html#visions.relations.relations.InferenceRelation"><code class="docutils literal notranslate"><span class="pre">InferenceRelation</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/visions.relations.relations.InferenceRelation.html#visions.relations.relations.InferenceRelation.__init__"><code class="docutils literal notranslate"><span class="pre">InferenceRelation.__init__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/typesets.html">Typesets</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/typesets.html#abstract-typesets">Abstract Typesets</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/visions.typesets.VisionsTypeset.html">visions.typesets.VisionsTypeset</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/visions.typesets.VisionsTypeset.html#visions.typesets.VisionsTypeset"><code class="docutils literal notranslate"><span class="pre">VisionsTypeset</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="api/_autosummary/visions.typesets.VisionsTypeset.html#visions.typesets.VisionsTypeset.types"><code class="docutils literal notranslate"><span class="pre">VisionsTypeset.types</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="api/_autosummary/visions.typesets.VisionsTypeset.html#visions.typesets.VisionsTypeset.base_graph"><code class="docutils literal notranslate"><span class="pre">VisionsTypeset.base_graph</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="api/_autosummary/visions.typesets.VisionsTypeset.html#visions.typesets.VisionsTypeset.relation_graph"><code class="docutils literal notranslate"><span class="pre">VisionsTypeset.relation_graph</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="api/_autosummary/visions.typesets.VisionsTypeset.html#visions.typesets.VisionsTypeset.__init__"><code class="docutils literal notranslate"><span class="pre">VisionsTypeset.__init__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/typesets.html#concrete-typesets">Concrete Typesets</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/visions.typesets.standard_set.html">visions.typesets.standard_set</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/visions.typesets.standard_set.html#visions.typesets.standard_set.StandardSet"><code class="docutils literal notranslate"><span class="pre">StandardSet</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/visions.typesets.geometry_set.html">visions.typesets.geometry_set</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/visions.typesets.geometry_set.html#visions.typesets.geometry_set.GeometrySet"><code class="docutils literal notranslate"><span class="pre">GeometrySet</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/visions.typesets.complete_set.html">visions.typesets.complete_set</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/visions.typesets.complete_set.html#visions.typesets.complete_set.CompleteSet"><code class="docutils literal notranslate"><span class="pre">CompleteSet</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/typesets.html#functional-api">Functional API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/visions.functional.detect_type.html">visions.functional.detect_type</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/visions.functional.detect_type.html#visions.functional.detect_type"><code class="docutils literal notranslate"><span class="pre">detect_type()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/visions.functional.infer_type.html">visions.functional.infer_type</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/visions.functional.infer_type.html#visions.functional.infer_type"><code class="docutils literal notranslate"><span class="pre">infer_type()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/visions.functional.cast_to_detected.html">visions.functional.cast_to_detected</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/visions.functional.cast_to_detected.html#visions.functional.cast_to_detected"><code class="docutils literal notranslate"><span class="pre">cast_to_detected()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/visions.functional.cast_to_inferred.html">visions.functional.cast_to_inferred</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/visions.functional.cast_to_inferred.html#visions.functional.cast_to_inferred"><code class="docutils literal notranslate"><span class="pre">cast_to_inferred()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/visions.functional.compare_detect_inference_frame.html">visions.functional.compare_detect_inference_frame</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/visions.functional.compare_detect_inference_frame.html#visions.functional.compare_detect_inference_frame"><code class="docutils literal notranslate"><span class="pre">compare_detect_inference_frame()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/visions.functional.type_inference_report_frame.html">visions.functional.type_inference_report_frame</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/visions.functional.type_inference_report_frame.html#visions.functional.type_inference_report_frame"><code class="docutils literal notranslate"><span class="pre">type_inference_report_frame()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/functional.html">Functional API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/functional.html#typesets">Typesets</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/visions.functional.detect_type.html">visions.functional.detect_type</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/visions.functional.detect_type.html#visions.functional.detect_type"><code class="docutils literal notranslate"><span class="pre">detect_type()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/visions.functional.infer_type.html">visions.functional.infer_type</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/visions.functional.infer_type.html#visions.functional.infer_type"><code class="docutils literal notranslate"><span class="pre">infer_type()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/visions.functional.cast_to_detected.html">visions.functional.cast_to_detected</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/visions.functional.cast_to_detected.html#visions.functional.cast_to_detected"><code class="docutils literal notranslate"><span class="pre">cast_to_detected()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/visions.functional.cast_to_inferred.html">visions.functional.cast_to_inferred</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/visions.functional.cast_to_inferred.html#visions.functional.cast_to_inferred"><code class="docutils literal notranslate"><span class="pre">cast_to_inferred()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/functional.html#type-changes">Type changes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/visions.functional.compare_detect_inference_frame.html">visions.functional.compare_detect_inference_frame</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/visions.functional.compare_detect_inference_frame.html#visions.functional.compare_detect_inference_frame"><code class="docutils literal notranslate"><span class="pre">compare_detect_inference_frame()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/visions.functional.type_inference_report_frame.html">visions.functional.type_inference_report_frame</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/visions.functional.type_inference_report_frame.html#visions.functional.type_inference_report_frame"><code class="docutils literal notranslate"><span class="pre">type_inference_report_frame()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/declarative.html">Declarative API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/_autosummary/visions.declarative.create_type.html">visions.declarative.create_type</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/visions.declarative.create_type.html#visions.declarative.create_type"><code class="docutils literal notranslate"><span class="pre">create_type()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/utils.html">Utils</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/_autosummary/visions.utils.images.image_utils.html">visions.utils.images.image_utils</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/visions.utils.images.image_utils.html#visions.utils.images.image_utils.decode_byte_exif"><code class="docutils literal notranslate"><span class="pre">decode_byte_exif()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/visions.utils.images.image_utils.html#visions.utils.images.image_utils.extract_exif"><code class="docutils literal notranslate"><span class="pre">extract_exif()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/visions.utils.images.image_utils.html#visions.utils.images.image_utils.get_image_shape"><code class="docutils literal notranslate"><span class="pre">get_image_shape()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/visions.utils.images.image_utils.html#visions.utils.images.image_utils.hash_image"><code class="docutils literal notranslate"><span class="pre">hash_image()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/visions.utils.images.image_utils.html#visions.utils.images.image_utils.is_image_truncated"><code class="docutils literal notranslate"><span class="pre">is_image_truncated()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/visions.utils.images.image_utils.html#visions.utils.images.image_utils.open_image"><code class="docutils literal notranslate"><span class="pre">open_image()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/_autosummary/visions.utils.monkeypatches.pathlib_patch.html">visions.utils.monkeypatches.pathlib_patch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/_autosummary/visions.utils.graph.html">visions.utils.graph</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/visions.utils.graph.html#visions.utils.graph.output_graph"><code class="docutils literal notranslate"><span class="pre">output_graph()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/_autosummary/visions.utils.warning_handling.html">visions.utils.warning_handling</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/visions.utils.warning_handling.html#visions.utils.warning_handling.discard_stderr"><code class="docutils literal notranslate"><span class="pre">discard_stderr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/visions.utils.warning_handling.html#visions.utils.warning_handling.suppress_warnings"><code class="docutils literal notranslate"><span class="pre">suppress_warnings()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="background/about.html" class="btn btn-neutral float-left" title="About" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="api/types.html" class="btn btn-neutral float-right" title="Types" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Ian Eaves and Simon Brugman.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

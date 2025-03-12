@@ -1,0 +1,5 @@
+﻿visions.types.boolean
+=====================
+
+.. automodule:: visions.types.boolean
+    :members:

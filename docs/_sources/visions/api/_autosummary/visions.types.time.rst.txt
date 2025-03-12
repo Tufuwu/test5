@@ -1,0 +1,5 @@
+﻿visions.types.time
+==================
+
+.. automodule:: visions.types.time
+    :members:
