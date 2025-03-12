@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block body %}
+  <p class="lead">You have more than one email registered with GitHub.</p>
+  <p>Select the one that you want to be notified:</p>
+  <form method="POST">
+    <ul class="list-unstyled">
+      {% for email in emails %}
+        <li>
+          <input type="radio" {{ "checked" if email['primary'] else "" }}
+                 name="email" value="{{ email['email'] }}"
+                 id="{{ loop.index }}">
+          <label for="{{ loop.index }}">{{ email['email'] }}</label>
+        </li>
+      {% endfor %}
+    </ul>
+    <p class="offset">
+      <button class="btn btn-primary" type="submit">Next &raquo;</button>
+    </p>
+  </form>
+{% endblock %}

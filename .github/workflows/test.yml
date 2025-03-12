@@ -1,27 +1,19 @@
-name: build
+name: push
 on:
   push:
     branches:
       - master
   pull_request:
-    branches:
-      - master
+
 jobs:
-  build:
-    runs-on: '${{ matrix.os }}'
-    strategy:
-      matrix:
-        os:
-          - ubuntu-latest
-        python-version: ["3.9", "3.10"]
+  test:
+    runs-on: ubuntu-latest
     steps:
-      - name: 'Set up Python ${{ matrix.python-version }}'
-        uses: actions/setup-python@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
         with:
-          python-version: '${{ matrix.python-version }}'
-      - uses: actions/checkout@v2
-      - run: pip install -r requirements.txt
-      - run: pip install pytest pytest-cov
-      - run: pip install coverage
-      - run: pytest --cov=./
-      - run: 'bash <(curl -s https://codecov.io/bash)'
+          python-version: '3.9'
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Run tests
+        run: pytest
