@@ -1,0 +1,11 @@
+config.status
+config.log
+Makefile
+*.cache
+*.o
+*.so
+*.lo
+*.mod
+*_test
+qdipole_info
+qdipole_conf.h
