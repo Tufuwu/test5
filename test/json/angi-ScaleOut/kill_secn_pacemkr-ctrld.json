@@ -1,0 +1,64 @@
+{
+    "test": "kill_secn_pacemkr-ctrld",
+    "name": "kill pacemaker-controld on secondary master node",
+    "purpose": [
+        "angi",
+        "ScaleOut",
+        "secondary",
+        "master",
+        "kill",
+        "cluster"
+    ],
+    "start": "prereq10",
+    "steps": [
+        {
+            "step": "prereq10",
+            "name": "test prerequisites",
+            "next": "step20",
+            "loop": 1,
+            "wait": 1,
+            "post": "shell sct_test_kill_secn_pacemkr-ctrld",
+            "pSite": "pSiteUp",
+            "sSite": "sSiteUp",
+            "pHost": "pHostUp",
+            "sHost": "sHostUp",
+            "pWorker": "pWorkerUp",
+            "sWorker": "sWorkerUp"
+        },
+        {
+            "step": "step20",
+            "name": "failure detected",
+            "next": "final40",
+            "loop": 90,
+            "wait": 2,
+            "pSite": "pSiteUp",
+            "pHost": "pHostUp",
+            "pWorker": "pWorkerUp",
+            "sSite": [
+                "srHook == SOK",
+                "lpt == 30",
+                "srr is S"
+            ],
+            "sHost": [
+                "clone_state is None",
+                "roles is None",
+                "score is None"
+            ],
+            "sWorker": "sWorkerUp"
+        },
+        {
+            "step": "final40",
+            "name": "end recover",
+            "next": "END",
+            "loop": 120,
+            "wait": 2,
+            "post": "cleanup",
+            "pSite": "pSiteUp",
+            "sSite": "sSiteUp",
+            "pHost": "pHostUp",
+            "sHost": "sHostUp",
+            "pWorker": "pWorkerUp",
+            "sWorker": "sWorkerUp"
+        }
+    ]
+}

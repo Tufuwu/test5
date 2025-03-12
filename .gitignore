@@ -1,10 +1,6 @@
-.coverage
-.idea/
-bin/
-dist/
-*.egg-info/
-__pycache__/
-venv/
-practice/
-.vscode
-build/
+*.tgz
+*.tar.gz
+osc
+ibs
+test.log
+misc
