@@ -1,0 +1,11 @@
+{
+    "start_time": "1574166931",
+    "end_time": "1574166931",
+    "total_runtime": 0,
+    "vcf_record_clustering": {
+        "success": true,
+        "error_message": null,
+        "Run time": 0
+    },
+    "current_working_directory": "/home/kryten/"
+}

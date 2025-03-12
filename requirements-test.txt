@@ -1,4 +1,0 @@
-pycodestyle
-coverage
-pytest
-setuptools

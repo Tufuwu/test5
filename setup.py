@@ -1,47 +1,31 @@
-from setuptools import setup
+from setuptools import setup, find_packages
+import shutil
 
-try:
-    import pypandoc
-    long_description = pypandoc.convert_file('README.md', 'rst')
-except (IOError, ImportError):
-    long_description = open('README.md').read()
+
+if shutil.which("gramtools") is None:
+    raise RuntimeError("Please install gramtools. Cannot continue")
+
+with open("requirements.txt") as f:
+    install_requires = [x.rstrip() for x in f]
 
 setup(
-    name='pyvault',
-    version='2.4.5',
-    description='Python password manager',
-    long_description=long_description,
-    author='Gabriel Bordeaux',
-    author_email='pypi@gab.lc',
-    url='https://github.com/gabfl/vault',
-    license='MIT',
-    packages=['vault', 'vault.lib', 'vault.models',
-              'vault.modules', 'vault.views'],
-    package_dir={'vault': 'src'},
-    install_requires=[
-        'pycryptodome==3.20.0',
-        'pyperclip',
-        'tabulate',
-        'passwordgenerator',
-        'SQLAlchemy==1.4.41',
-        'sqlcipher3==0.5.3'
-    ],  # external dependencies
-    entry_points={
-        'console_scripts': [
-            'vault = vault.vault:main',
-        ],
-    },
-    classifiers=[  # see https://pypi.org/pypi?%3Aaction=list_classifiers
-        'Topic :: Security',
-        'Topic :: Security :: Cryptography',
-        'License :: OSI Approved :: MIT License',
-        'Operating System :: MacOS',
-        'Operating System :: POSIX :: Linux',
-        'Natural Language :: English',
-        #  'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python',
-        'Development Status :: 4 - Beta',
-        #  'Development Status :: 5 - Production/Stable',
+    name="bio-minos",
+    version="0.12.5",
+    description="Variant call adjudication",
+    packages=find_packages(),
+    package_data={"minos": ["test_data_files/*"]},
+    author="Martin Hunt",
+    author_email="mhunt@ebi.ac.uk",
+    url="https://github.com/iqbal-lab-org/minos",
+    test_suite="nose.collector",
+    tests_require=["pytest"],
+    entry_points={"console_scripts": ["minos = minos.__main__:main"]},
+    install_requires=install_requires,
+    license="MIT",
+    classifiers=[
+        "Development Status :: 4 - Beta",
+        "Topic :: Scientific/Engineering :: Bio-Informatics",
+        "Programming Language :: Python :: 3 :: Only",
+        "License :: OSI Approved :: MIT License",
     ],
 )

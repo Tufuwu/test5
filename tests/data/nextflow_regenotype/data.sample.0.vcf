@@ -1,0 +1,38 @@
+##fileformat=VCFv4.2
+##FILTER=<ID=PASS,Description="All filters passed">
+##bcftoolsVersion=1.10.2+htslib-1.10.2
+##bcftoolsCommand=mpileup -f data.ref.fa data.sample.0.bam
+##reference=file://data.ref.fa
+##contig=<ID=ref,length=1999>
+##ALT=<ID=*,Description="Represents allele(s) other than observed.">
+##INFO=<ID=INDEL,Number=0,Type=Flag,Description="Indicates that the variant is an INDEL.">
+##INFO=<ID=IDV,Number=1,Type=Integer,Description="Maximum number of raw reads supporting an indel">
+##INFO=<ID=IMF,Number=1,Type=Float,Description="Maximum fraction of raw reads supporting an indel">
+##INFO=<ID=DP,Number=1,Type=Integer,Description="Raw read depth">
+##INFO=<ID=VDB,Number=1,Type=Float,Description="Variant Distance Bias for filtering splice-site artefacts in RNA-seq data (bigger is better)",Version="3">
+##INFO=<ID=RPB,Number=1,Type=Float,Description="Mann-Whitney U test of Read Position Bias (bigger is better)">
+##INFO=<ID=MQB,Number=1,Type=Float,Description="Mann-Whitney U test of Mapping Quality Bias (bigger is better)">
+##INFO=<ID=BQB,Number=1,Type=Float,Description="Mann-Whitney U test of Base Quality Bias (bigger is better)">
+##INFO=<ID=MQSB,Number=1,Type=Float,Description="Mann-Whitney U test of Mapping Quality vs Strand Bias (bigger is better)">
+##INFO=<ID=SGB,Number=1,Type=Float,Description="Segregation based metric.">
+##INFO=<ID=MQ0F,Number=1,Type=Float,Description="Fraction of MQ0 reads (smaller is better)">
+##FORMAT=<ID=PL,Number=G,Type=Integer,Description="List of Phred-scaled genotype likelihoods">
+##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+##INFO=<ID=AF1,Number=1,Type=Float,Description="Max-likelihood estimate of the first ALT allele frequency (assuming HWE)">
+##INFO=<ID=AF2,Number=1,Type=Float,Description="Max-likelihood estimate of the first and second group ALT allele frequency (assuming HWE)">
+##INFO=<ID=AC1,Number=1,Type=Float,Description="Max-likelihood estimate of the first ALT allele count (no HWE assumption)">
+##INFO=<ID=MQ,Number=1,Type=Integer,Description="Root-mean-square mapping quality of covering reads">
+##INFO=<ID=FQ,Number=1,Type=Float,Description="Phred probability of all samples being the same">
+##INFO=<ID=PV4,Number=4,Type=Float,Description="P-values for strand bias, baseQ bias, mapQ bias and tail distance bias">
+##INFO=<ID=G3,Number=3,Type=Float,Description="ML estimate of genotype frequencies">
+##INFO=<ID=HWE,Number=1,Type=Float,Description="Chi^2 based HWE test P-value based on G3">
+##INFO=<ID=DP4,Number=4,Type=Integer,Description="Number of high-quality ref-forward , ref-reverse, alt-forward and alt-reverse bases">
+##bcftools_callVersion=1.10.2+htslib-1.10.2
+##bcftools_callCommand=call -cv; Date=Sun Sep 20 21:46:35 2020
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	data.sample.0.bam
+ref	50	.	A	G	158.007	.	DP=11;VDB=0.032944;SGB=-0.670168;MQ0F=0;AF1=1;AC1=2;DP4=0,0,10,0;MQ=60;FQ=-56.9861	GT:PL	1/1:191,30,0
+ref	100	.	G	C	221.999	.	DP=16;VDB=0.551312;SGB=-0.688148;MQSB=1;MQ0F=0;AF1=1;AC1=2;DP4=0,0,12,3;MQ=60;FQ=-71.9863	GT:PL	1/1:255,45,0
+ref	500	.	A	T	221.999	.	DP=26;VDB=0.294584;SGB=-0.692717;MQSB=1;MQ0F=0;AF1=1;AC1=2;DP4=0,0,13,10;MQ=60;FQ=-95.9866	GT:PL	1/1:255,69,0
+ref	1000	.	C	A	221.999	.	DP=24;VDB=0.302598;SGB=-0.692717;MQSB=1;MQ0F=0;AF1=1;AC1=2;DP4=0,0,10,13;MQ=60;FQ=-95.9866	GT:PL	1/1:255,69,0
+ref	1251	.	AT	ATT	217.002	.	INDEL;IDV=33;IMF=0.916667;DP=36;VDB=0.461607;SGB=-0.693127;MQSB=1;MQ0F=0;AF1=1;AC1=2;DP4=2,1,18,15;MQ=60;FQ=-38.5256;PV4=1,1,1,1	GT:PL	1/1:255,4,0
+ref	1499	.	G	GCGCAGACGGCA	217.576	.	INDEL;IDV=14;IMF=0.583333;DP=24;VDB=0.848942;SGB=-0.688148;MQSB=0.872891;MQ0F=0;AF1=0.512852;AC1=1;DP4=5,4,6,9;MQ=54;FQ=-21.5552;PV4=0.675175,1,4.53893e-08,1	GT:PL	0/1:255,0,13
