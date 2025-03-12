@@ -1,136 +1,90 @@
-![ALNS logo](docs/source/assets/images/logo.svg)
+[![pytest](https://github.com/amccaugh/phidl/actions/workflows/pytest.yml/badge.svg)](https://github.com/amccaugh/phidl/actions/workflows/pytest.yml)
+[![pre-commit](https://github.com/amccaugh/phidl/actions/workflows/pre-commit.yml/badge.svg)](https://github.com/amccaugh/phidl/actions/workflows/pre-commit.yml)
 
-[![PyPI version](https://badge.fury.io/py/alns.svg)](https://badge.fury.io/py/alns)
-[![ALNS](https://github.com/N-Wouda/ALNS/actions/workflows/alns.yaml/badge.svg)](https://github.com/N-Wouda/ALNS/actions/workflows/alns.yaml)
-[![Documentation Status](https://readthedocs.org/projects/alns/badge/?version=latest)](https://alns.readthedocs.io/en/latest/?badge=latest)
-[![codecov](https://codecov.io/gh/N-Wouda/ALNS/branch/master/graph/badge.svg)](https://codecov.io/gh/N-Wouda/ALNS)
-[![DOI](https://joss.theoj.org/papers/10.21105/joss.05028/status.svg)](https://doi.org/10.21105/joss.05028)
+# PHIDL
+GDS scripting for Python that's intuitive, fast, and powerful.
 
-``alns`` is a general, well-documented and tested implementation of the adaptive
-large neighbourhood search (ALNS) metaheuristic in Python. ALNS is an algorithm
-that can be used to solve difficult combinatorial optimisation problems. The
-algorithm begins with an initial solution. Then the algorithm iterates until a
-stopping criterion is met. In each iteration, a destroy and repair operator are
-selected, which transform the current solution into a candidate solution. This
-candidate solution is then evaluated by an acceptance criterion, and the
-operator selection scheme is updated based on the evaluation outcome.
+- [**Installation / requirements**](#installation--requirements)
+- [**Tutorial + examples**](https://phidl.readthedocs.io/en/latest/tutorials.html) (or [try an interactive notebook](https://mybinder.org/v2/gh/amccaugh/phidl/master?filepath=phidl_tutorial_example.ipynb))
+- [**Geometry library + function documentation**](https://phidl.readthedocs.io/en/latest/geometry_reference.html)
+- [Changelog](https://github.com/amccaugh/phidl/blob/master/CHANGELOG.md) (latest update 1.7.2 on July 3, 2024)
+  -  New KLayout-based boolean/offset/outline functions!  These are under the name `pg.kl_boolean()`, `pg.kl_offset`, `pg.kl_outline()`, `pg.kl_invert()`.  They utilize the excellent KLayout tile processor, which allows breaking down & parallelizing these operations--in a nutshell, these operations should be much, much faster, and they also are more robust than the gdspy/clipper implementation. To use these new functions, you must first `pip install klayout`
+  - Path.interpolate() now allows easy placement of objects alongside a path (e.g. for placing vias).  See [the tutorial](https://phidl.readthedocs.io/en/latest/tutorials/waveguides.html#Interpolating-/-placing-objects-along-a-path) for more information
 
-### Installing `alns`
 
-The `alns` package depends on `numpy` and `matplotlib`. It may be installed in the
-usual way as
+# Citation
+
+If you found PHIDL useful, please consider citing it in (just one!) of your publications -- we appreciate it greatly. ([BibTeX](https://raw.githubusercontent.com/amccaugh/phidl/master/CITATION.bib))
+ - McCaughan, A. N., et. al. PHIDL: Python-based layout and geometry creation for nanolithography. *J. Vac. Sci. Technol. B* 39, 062601 (2021). http://dx.doi.org/10.1116/6.0001203
+
+# Gallery
+
+<img src="https://amccaugh.github.io/phidl/phidl1.png" width="30%"></img> <img src="https://amccaugh.github.io/phidl/phidl2.png" width="30%"></img> <img src="https://amccaugh.github.io/phidl/phidl3.png" width="30%"></img> <img src="https://amccaugh.github.io/phidl/phidl4.png" width="30%"></img> <img src="https://amccaugh.github.io/phidl/phidl5.png" width="30%"></img> <img src="https://amccaugh.github.io/phidl/phidl6.png" width="30%"></img> <img src="https://amccaugh.github.io/phidl/phidl7.png" width="30%"></img> <img src="https://amccaugh.github.io/phidl/phidl8.png" width="30%"></img> <img src="https://amccaugh.github.io/phidl/phidl9.png" width="30%"></img> <img src="https://amccaugh.github.io/phidl/phidl10.png" width="30%"></img> <img src="https://amccaugh.github.io/phidl/phidl11.png" width="30%"></img> <img src="https://amccaugh.github.io/phidl/phidl12.png" width="30%"></img>
+
+# Installation / requirements
+- Install or upgrade with `pip install -U phidl`
+- Install with `pip install -U phidl[all]` to include optional dependencies (e.g. freetype-py, klayout, rectpack)
+- Python version >=3.6
+
+## Testing
+- Install with test dependencies with `pip install -U phidl[test]` (includes `all` extras as well)
+- Run tests with `pytest` (or `python -m pytest`)
+
+# About PHIDL
+
+*fiddle (verb) - /ˈfidl/ - to make minor manual movements, especially to adjust something*
+
+PHIDL is an open-source GDS-based CAD tool for Python that significantly extends the excellent [gdspy](https://github.com/heitzmann/gdspy).  The base installation includes a large library of simple shapes (e.g. rectangles, circles), photonic structures (e.g. sine curve waveguides), and superconducting nanowire shapes (e.g. single photon detectors) that are fully parameterized. It also has a built-in quick-plotting function based on matplotlib (or Qt) that allows you view the state of any GDS object, useful when scripting geometry-making functions. It also has a [__geometry library reference__](https://phidl.readthedocs.io/) and a set of [__very thorough tutorials__](https://phidl.readthedocs.io/en/latest/tutorials.html) that will walk you through the process of getting acquainted with PHIDL.
+
+The goal is to bring the usability of Illustrator / Inkscape drawing programs to the GDS scripting world. Like Python itself, it aims to be readable, and intuitive.  For instance, when building a geometry you don't have to worry about what the exact coordinates are anymore. If you want to separate two ellipses in the x direction by 5 units, you can do things like this:
+
+`ellipse1.xmin = ellipse2.xmax + 5`
+
+or if you want to move then rotate one ellipse by 45 degrees you can do
+
+`ellipse2.move([1,7]).rotate(45)`
+
+There's a few dozen shortcuts like this that make life easier built into PHIDL--they're simple, but they make a world of difference when you just want to e.g. space a ring resonator some distance from a waveguide without having to track each and every coordinate of the shape.
+
+[](http://amccaugh.github.io/phidl)
+
+![phidl example image](https://amccaugh.github.io/phidl/readme_1.png)
+
+
+There's also a "port" functionality that allows you to snap together geometry like Legos without caring about where exactly the absolute coordinates of either geometry is.  For instance, connecting the above misaligned rectangles is a two-line command:
+
+![phidl example image](https://amccaugh.github.io/phidl/readme_2.png)
+
+It also allows you to do things like add text and create smooth or straight routing curves between "ports" of different devices, convenient for making electrical or optical connections:
+
+![phidl example image](https://amccaugh.github.io/phidl/readme_3.png)
+![phidl example image](https://amccaugh.github.io/phidl/readme_4.png)
+
+
+Other useful functionality available are standard operations like booleans:
+
+![phidl example image](https://amccaugh.github.io/phidl/readme_8.png)
+
+ and less standard ones like creating outlines. A whole layout can be outlined directly in the GDS without requiring you to use Beamer (useful for positive-tone resist structures):
+
+`pg.outline(D, distance = 0.7, layer = 4)`
+
+![phidl example image](https://amccaugh.github.io/phidl/readme_5.png)
+
+The geometry library also has useful resolution test-structures built into it, for instance
+
 ```
-pip install alns
-```
-Additionally, to enable more advanced operator selection schemes using 
-multi-armed bandit algorithms, `alns` may be installed with the optional 
-[MABWiser][12] dependency:
-```
-pip install alns[mabwiser]
-```
-
-### Getting started
-
-The documentation is available [here][1]. If you are new to metaheuristics or 
-ALNS, you might benefit from reading the [introduction to ALNS][11] page.
-
-The `alns` library provides the ALNS algorithm and various acceptance criteria,
-operator selection schemes, and stopping criteria. To solve your own problem,
-you should provide the following:
-
-- A solution state for your problem that implements an `objective()` function.
-- An initial solution.
-- One or more destroy and repair operators tailored to your problem.
-
-A "quickstart" code template is available [here][10].
-
-### Examples
-
-We provide several example notebooks showing how the ALNS library may be used.
-These include:
-
-- The travelling salesman problem (TSP), [here][2]. We solve an instance of 131
-  cities using very simple destroy and repair heuristics.
-- The capacitated vehicle routing problem (CVRP), [here][8]. We solve an
-  instance with 241 customers using a combination of a greedy repair operator,
-  and a _slack-induced substring removal_ destroy operator.
-- The cutting-stock problem (CSP), [here][4]. We solve an instance with 180
-  beams over 165 distinct sizes in only a very limited number of iterations.
-- The resource-constrained project scheduling problem (RCPSP), [here][6]. We
-  solve an instance with 90 jobs and 4 resources using a number of different
-  operators and enhancement techniques from the literature.
-- The permutation flow shop problem (PFSP), [here][9]. We solve an instance with
-  50 jobs and 20 machines. Moreover, we demonstrate multiple advanced features
-  of ALNS, including auto-fitting the acceptance criterion and adding local
-  search to repair operators. We also demonstrate how one could tune ALNS
-  parameters.
-
-Finally, the features notebook gives an overview of various options available in
-the `alns` package. In the notebook we use these different options to solve a
-toy 0/1-knapsack problem. The notebook is a good starting point for when you
-want to use different schemes, acceptance or stopping criteria yourself. It is
-available [here][5].
-
-### Contributing
-
-We are very grateful for any contributions you are willing to make. Please have
-a look [here][3] to get started. If you aim to make a large change, it is
-helpful to discuss the change first in a new GitHub issue. Feel free to open
-one!
-
-### Getting help
-
-Feel free to open an issue or a new discussion thread here on GitHub.
-Please do not e-mail us with questions, modelling issues, or code examples.
-Those are much easier to discuss via GitHub than over e-mail.
-When writing your issue or discussion, please follow the instructions [here][7].
-
-### How to cite `alns`
-
-If you use `alns` in your research, please consider citing the following paper:
-
-> Wouda, N.A., and L. Lan (2023). 
-> ALNS: a Python implementation of the adaptive large neighbourhood search metaheuristic. 
-> _Journal of Open Source Software_, 8(81): 5028. 
-> https://doi.org/10.21105/joss.05028
-
-Or, using the following BibTeX entry:
-
-```bibtex
-@article{Wouda_Lan_ALNS_2023, 
-  doi = {10.21105/joss.05028}, 
-  url = {https://doi.org/10.21105/joss.05028}, 
-  year = {2023}, 
-  publisher = {The Open Journal}, 
-  volume = {8}, 
-  number = {81}, 
-  pages = {5028}, 
-  author = {Niels A. Wouda and Leon Lan}, 
-  title = {{ALNS}: a {P}ython implementation of the adaptive large neighbourhood search metaheuristic}, 
-  journal = {Journal of Open Source Software} 
-}
+pg.litho_calipers(num_notches = 7, offset_per_notch = 0.1)
+pg.litho_steps(line_widths = [1,2,4,8,16])
+pg.litho_star(num_lines = 16, line_width = 3)
 ```
 
-[1]: https://alns.readthedocs.io/en/latest/
+![phidl example image](https://amccaugh.github.io/phidl/readme_7.png)
 
-[2]: https://alns.readthedocs.io/en/latest/examples/travelling_salesman_problem.html
+There are also handy functions to help pack shapes into as small an area as possible:
 
-[3]: https://alns.readthedocs.io/en/latest/setup/contributing.html
+```
+pg.packer(D_list, spacing = 1.25, aspect_ratio = (2,1))
+```
 
-[4]: https://alns.readthedocs.io/en/latest/examples/cutting_stock_problem.html
-
-[5]: https://alns.readthedocs.io/en/latest/examples/alns_features.html
-
-[6]: https://alns.readthedocs.io/en/latest/examples/resource_constrained_project_scheduling_problem.html
-
-[7]: https://alns.readthedocs.io/en/latest/setup/getting_help.html
-
-[8]: https://alns.readthedocs.io/en/latest/examples/capacitated_vehicle_routing_problem.html
-
-[9]: https://alns.readthedocs.io/en/latest/examples/permutation_flow_shop_problem.html
-
-[10]: https://alns.readthedocs.io/en/latest/setup/template.html
-
-[11]: https://alns.readthedocs.io/en/latest/setup/introduction_to_alns.html
-
-[12]: https://github.com/fidelity/mabwiser
+![phidl example image](https://amccaugh.github.io/phidl/packer.png)

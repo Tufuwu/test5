@@ -1,10 +1,27 @@
+MANIFEST
+test.sh
+debug.py
+winbuild*
+docs/_build
+.*.swp
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
-*$py.class
 
 # C extensions
 *.so
+
+# Developer
+venv
+venvinfo
+*.sublime-project
+*.sublime-workspace
+.pytest_cache
+
+
+# IPython notebooks
+.ipynb_checkpoints
 
 # Distribution / packaging
 .Python
@@ -43,9 +60,7 @@ htmlcov/
 nosetests.xml
 coverage.xml
 *,cover
-
-# Unit tests for matplotlib images
-result_images/
+.pytest_cache
 
 # Translations
 *.mo
@@ -60,17 +75,13 @@ docs/_build/
 # PyBuilder
 target/
 
-# IDEs
-.idea/
-.vscode/
 
-# Virtualenv
-venv/
-
-# Jupyter
-.ipynb_checkpoints/
-
-*.lock
-
-# macOS
+# Extra
+*.gds
 *.DS_Store
+*.gds
+*.bat
+*.lyp
+*.oas
+
+.vscode/

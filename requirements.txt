@@ -1,0 +1,6 @@
+gdspy
+klayout
+numpy
+matplotlib
+rectpack
+six
