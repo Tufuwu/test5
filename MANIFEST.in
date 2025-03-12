@@ -1,7 +1,7 @@
-recursive-include psslib *.py
-recursive-include scripts *.py pss
-prune test
-include README.rst
-include LICENSE
-include CHANGES
-include __main__.py
+include *.py
+include *.rst
+include *.txt
+include tzlocal/py.typed
+recursive-include tests/test_data *
+include tests/*.py
+exclude Makefile

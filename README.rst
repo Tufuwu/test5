@@ -1,70 +1,212 @@
-===
-pss
-===
+tzlocal
+=======
 
-.. image:: https://github.com/eliben/pss/workflows/pss-tests/badge.svg
-  :align: center
-  :target: https://github.com/eliben/pss/actions
+API CHANGE!
+-----------
 
-Introduction: what is pss?
---------------------------
+With version 3.0 of tzlocal, tzlocal no longer returned `pytz` objects, but
+`zoneinfo` objects, which has a different API. Since 4.0, it now restored
+partial compatibility for `pytz` users through Paul Ganssle's
+`pytz_deprecation_shim`.
 
-**pss** is a power-tool for searching inside source code files. **pss**
-searches recursively within a directory tree, knows which extensions and
-file names to search and which to ignore, automatically skips directories
-you wouldn't want to search in (for example ``.git`` or ``.svn``), colors
-its output in a helpful way, and does much more.
+tzlocal 4.0 also adds an official function `get_localzone_name()` to get only
+the timezone name, instead of a timezone object. On unix, it can raise an
+error if you don't have a timezone name configured, where `get_localzone()`
+will succeed, so only use that if you need the timezone name.
 
-If you're familiar with the **ack** tool, then you will find **pss** very
-similar (see https://github.com/eliben/pss/wiki/pss-and-ack).
+4.0 also adds way more information on what is going wrong in your
+configuration when the configuration files are unclear or contradictory.
 
-Pre-requisites
---------------
+Version 5.0 removes the `pytz_deprecation_shim`, and now only returns
+`zoneinfo` objects, like verion 3.0 did. If you need `pytz` objects, you have
+to stay on version 4.0. If there are bugs in version 4.0, I will release
+updates, but there will be no further functional changes on the 4.x branch.
 
-**pss** needs only Python to run. It's being tested with several of the latest
-Python 3.x versions on Linux, Mac OS and Windows. Earlier versions of Python 3.x
-may work as well, but this isn't guaranteed. Python 2 is no longer supported
-(but you may download pss version 1.43 or older if you need it to work with
-Python 2).
 
-Installing
+Info
+----
+
+This Python module returns the `IANA time zone name
+<https://www.iana.org/time-zones>`_ for your local time zone or a ``tzinfo``
+object with the local timezone information, under Unix and Windows.
+
+This module attempts to fix a glaring hole in the ``pytz`` and ``zoneinfo``
+modules, that there is no way to get the local timezone information, unless
+you know the zoneinfo name, and under several Linux distros that's hard or
+impossible to figure out.
+
+With ``tzlocal`` you only need to call ``get_localzone()`` and you will get a
+``tzinfo`` object with the local time zone info. On some Unices you will
+still not get to know what the timezone name is, but you don't need that when
+you have the tzinfo file. However, if the timezone name is readily available
+it will be used.
+
+What it's not for
+-----------------
+
+It's not for converting the current time between UTC and your local time. There are
+other, simpler ways of doing this. This is if you need to know things like the name
+of the time zone, or if you need to be able to convert between your time zone and
+another time zone for times that are in the future or in the past.
+
+For current time conversions to and from UTC, look in the Python ``time`` module.
+
+
+Supported systems
+-----------------
+
+These are the systems that are in theory supported:
+
+ * Windows 2000 and later
+
+ * Any unix-like system with a ``/etc/localtime`` or ``/usr/local/etc/localtime``
+
+If you have one of the above systems and it does not work, it's a bug.
+Please report it.
+
+Please note that if you are getting a time zone called ``local``, this is not
+a bug, it's actually the main feature of ``tzlocal``, that even if your
+system does NOT have a configuration file with the zoneinfo name of your time
+zone, it will still work.
+
+You can also use ``tzlocal`` to get the name of your local timezone, but only
+if your system is configured to make that possible. ``tzlocal`` looks for the
+timezone name in ``/etc/timezone``, ``/var/db/zoneinfo``,
+``/etc/sysconfig/clock`` and ``/etc/conf.d/clock``. If your
+``/etc/localtime`` is a symlink it can also extract the name from that
+symlink.
+
+If you need the name of your local time zone, then please make sure your
+system is properly configured to allow that.
+
+If your unix system doesn't have a timezone configured, tzlocal will default
+to UTC.
+
+Notes on Docker
+---------------
+
+It turns out that Docker images frequently have broken timezone setups.
+This usually results in a warning that the configuration is wrong, or that
+the timezone offset doesn't match the found timezone.
+
+The easiest way to fix that is to set a TZ variable in your docker setup
+to whatever timezone you want, which is usually the timezone your host
+computer has.
+
+Usage
+-----
+
+Load the local timezone:
+
+    >>> from tzlocal import get_localzone
+    >>> tz = get_localzone()
+    >>> tz
+    zoneinfo.ZoneInfo(key='Europe/Warsaw')
+
+Create a local datetime:
+
+    >>> from datetime import datetime
+    >>> dt = datetime(2015, 4, 10, 7, 22, tzinfo=tz)
+    >>> dt
+    datetime.datetime(2015, 4, 10, 7, 22, tzinfo=zoneinfo.ZoneInfo(key='Europe/Warsaw'))
+
+Lookup another timezone with ``zoneinfo``:
+
+    >>> from zoneinfo import ZoneInfo
+    >>> eastern = ZoneInfo('US/Eastern')
+
+Convert the datetime:
+
+    >>> dt.astimezone(eastern)
+    datetime.datetime(2015, 4, 10, 1, 22, tzinfo=zoneinfo.ZoneInfo(key='US/Eastern'))
+
+If you just want the name of the local timezone, use `get_localzone_name()`:
+
+    >>> from tzlocal import get_localzone_name
+    >>> get_localzone_name()
+    "Europe/Warsaw"
+
+Please note that under Unix, `get_localzone_name()` may fail if there is no zone
+configured, where `get_localzone()` would generally succeed.
+
+Troubleshooting
+---------------
+
+If you don't get the result you expect, try running it with debugging turned on.
+Start a python interpreter that has tzlocal installed, and run the following code::
+
+    import logging
+    logging.basicConfig(level="DEBUG")
+    import tzlocal
+    tzlocal.get_localzone()
+
+The output should look something like this, and this will tell you what
+configurations were found::
+
+    DEBUG:root:/etc/timezone found, contents:
+     Europe/Warsaw
+
+    DEBUG:root:/etc/localtime found
+    DEBUG:root:2 found:
+     {'/etc/timezone': 'Europe/Warsaw', '/etc/localtime is a symlink to': 'Europe/Warsaw'}
+    zoneinfo.ZoneInfo(key='Europe/Warsaw')
+
+
+Development
+-----------
+
+For ease of development, there is a Makefile that will help you with basic tasks,
+like creating a development environment with all the necessary tools (although
+you need a supported Python version installed first)::
+
+    $ make devenv
+
+To run tests::
+
+    $ make test
+
+Check the syntax::
+
+    $ make check
+
+
+Maintainer
 ----------
 
-**pss** can be installed from PyPI (Python Package Index)::
+* Lennart Regebro, regebro@gmail.com
 
-    > pip install pss
+Contributors
+------------
 
-Alternatively, you can download the source distribution either from PyPI or
-from the main Github project page. When you unzip the source distribution, run::
+* Marc Van Olmen
+* Benjamen Meyer
+* Manuel Ebert
+* Xiaokun Zhu
+* Cameris
+* Edward Betts
+* McK KIM
+* Cris Ewing
+* Ayala Shachar
+* Lev Maximov
+* Jakub Wilk
+* John Quarles
+* Preston Landers
+* Victor Torres
+* Jean Jordaan
+* Zackary Welch
+* Mickaël Schoentgen
+* Gabriel Corona
+* Alex Grönholm
+* Julin S
+* Miroslav Šedivý
+* revansSZ
+* Sam Treweek
+* Peter Di Pasquale
+* Rongrong
 
-    > python setup.py install
-
-Running without installing
---------------------------
-
-**pss** supports direct invocation even without installing it. This may
-be useful if you're on a machine without administrator rights, or want to
-experiment with a source distribution of **pss**.
-
-Just unzip the **pss** distribution into some directory. Let's assume its full
-path is ``/path/to/pss``. You can now run::
-
-    > /path/to/python /path/to/pss
-
-And this will invoke **pss** as expected. This command can also be tied to an
-alias or placed in a shell (or batch) script for convenience.
-
-How to use it?
---------------
-
-**pss** is meant to be executed from the command line. Running it with no
-arguments or with ``-h`` will print a detailed usage message.
-
-For some detailed usage examples, check out the
-Usage wiki page - https://github.com/eliben/pss/wiki/Usage-samples
+(Sorry if I forgot someone)
 
 License
 -------
 
-**pss** is open-source software. Its code is in the public domain. See the
-``LICENSE`` file for more details.
+* MIT https://opensource.org/licenses/MIT

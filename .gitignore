@@ -1,8 +1,6 @@
 *.pyc
-MANIFEST
-dist
-build
-*.orig
-tags
+*.wpr
+*.wpu
+*.egg-info
+*.egg
 .tox
-pss.egg-info
