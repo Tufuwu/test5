@@ -1,0 +1,18 @@
+{% extends 'base_main.html' %}
+
+{% block title %}Settings{% endblock %}
+
+{% block main %}
+<ul id="settings-menu" class="block clearfix">
+    <a href="{{ url_for('users.settings_profile') }}"><li><i class="fa fa-edit"></i> Profile</li></a>
+    <a href="{{ url_for('auth.change_email') }}"><li><i class="fa fa-envelope"></i> E-Mail Address</li></a>
+    <a href="{{ url_for('auth.change_password') }}"><li><i class="fa fa-lock"></i> Password</li></a>
+    <a href="{{ url_for('auth.dump_account') }}"><li><i class="fa fa-download"></i> Data Dump</li></a>
+    <a href="{{ url_for('auth.delete_account') }}"><li class="last"><i class="fa fa-remove"></i> Delete Account</li></a>
+</ul>
+
+<div id="content" class="block clearfix">
+    {% block settings %}
+    {% endblock %}
+</div>
+{% endblock %}

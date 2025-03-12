@@ -1,2 +1,0 @@
-include 'sac_actrepeat_fetch.gin'
-create_environment.env_name='FetchSlide-v1'

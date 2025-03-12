@@ -1,0 +1,15 @@
+{% extends 'emails/base.html' %}
+
+{% block content %}
+<p>Hi,</p>
+
+<p>You've asked to change your email.</p>
+
+<p>If you click the link below we will update your data.</p>
+
+<p><a href="{{ url_for('auth.confirm_email', token=token, _external=True) }}" target="_blank">Update e-mail</a></p>
+{% endblock %}
+
+{% block content_footer %}
+<p>If you have received this e-mail but have not signed up for the Pjuu then you can simply ignore this e-mail.</p>
+{% endblock %}

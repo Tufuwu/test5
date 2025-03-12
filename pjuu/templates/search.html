@@ -1,0 +1,22 @@
+{% extends 'base_main.html' %}
+
+{% block title %}Search{% endblock %}
+
+{% block main %}
+{% if config.TESTING %}
+<!-- author search -->
+{% endif %}
+<div id="author" class="block search clearfix">
+    <form action="{{ url_for('users.search') }}" method="GET">
+        {{ form.query(placeholder='Search for a users and hashtags...') }}
+        <button type="submit"><i class="fa fa-search"></i> Search</button>
+    </form>
+</div>
+
+{% if query %}
+<div id="content" class="clearfix">
+    <h1>Search results: {{ query }}</h1>
+    {% include 'list.html' %}
+</div>
+{% endif %}
+{% endblock %}

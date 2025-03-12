@@ -1,3 +1,0 @@
-include 'sarsa_sac_mujoco.gin'
-
-create_environment.env_name="Hopper-v2"

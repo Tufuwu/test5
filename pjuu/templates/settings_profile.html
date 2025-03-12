@@ -1,0 +1,193 @@
+{% extends 'settings.html' %}
+
+
+{% block settings %}
+<h1>Profile settings</h1>
+<div id="setting" class="clearfix">
+    <div class="details">
+        <div class="detail">
+            <div class="header">User Name</div>
+            <div class="content">{{ current_user.username }}</div>
+        </div>
+        <div class="detail">
+            <div class="header">E-mail address</div>
+            <div class="content">{{ current_user.email }}</div>
+        </div>
+        <div class="detail">
+            <div class="header">Member since</div>
+            <div class="content">{{ current_user.created|datetime }}</div>
+        </div>
+    </div>
+
+    <form action="{{ url_for('users.settings_profile') }}" method="post" enctype="multipart/form-data">
+        <div class="details">
+            <div class="detail avatar">
+                <div class="header">Avatar</div>
+                <div class="content">
+                    {% if config.TESTING  %}
+                        {% if current_user.avatar %}
+                        <!-- user:avatar:{{ current_user.avatar }} -->
+                        {% else %}
+                        <!-- user:avatar:default -->
+                        {% endif %}
+                    {% endif %}
+                    <div>
+                        {% if current_user.avatar %}
+                        <img class="size96" src="{{ storage_url_for('posts.get_upload', filename=current_user.avatar) }}" />
+                        {% else %}
+                        <img class="size96" src="{{ url_for('static', filename='img/otter_avatar.png') }}" />
+                        {% endif %}
+                    </div>
+                    <div class="clearfix">
+                        <label id="upload-label" for="upload" style="display: none;">
+                            {{ form.upload(accept='image/*') }}
+                            <i class="fa fa-picture-o"></i> Upload an avatar
+                        </label>
+                    </div>
+                    <div>
+                        <p>We will ensure the image is <b>96px by 96px</b>. For best results please ensure your avatar file is that size.</p>
+                        <p><i>This will not take effect until you "Update Profile" at the bottom.</i></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="details clearfix">
+            <div class="detail">
+                <div class="header">{{ form.about.label }}</div>
+                <div class="content">
+                    <textarea id="about" name="about" rows="5" maxlength="{{ form.about.validators[0].max }}" placeholder="Set your about me...">{{ current_user.about }}</textarea>
+                    <div id="count">
+                        {{ current_user.about|length }} / {{ form.about.validators[0].max }}
+                    </div>
+                    {% if form.about.errors %}
+                    <ul class="errorlist">
+                        {% for error in form.about.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="details">
+            <div class="detail">
+                <div class="header">Additional information</div>
+                <div class="content">
+                    <div>
+                        {{ form.homepage.label }}
+                        {{ form.homepage }}
+                        {% if form.homepage.errors %}
+                        <ul class="errorlist">
+                            {% for error in form.homepage.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+                    <div>
+                        {{ form.location.label }}
+                        {{ form.location }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail">
+                <div class="header">
+                    Display settings
+                </div>
+                <div class="content">
+                    <div>
+                        {{ form.hide_feed_images(checked=current_user.hide_feed_images or False) }}
+                        {{ form.hide_feed_images.label }}
+                    </div>
+                    <div>
+                        {{ form.feed_pagination_size.label }}
+                        {{ form.feed_pagination_size }}
+                    </div>
+                    <div>
+                        {{ form.replies_pagination_size.label }} {{ form.replies_pagination_size }}
+                    </div>
+                    <div>
+                        {{ form.alerts_pagination_size.label }} {{ form.alerts_pagination_size }}
+                    </div>
+                    <div>
+                        {{ form.reply_sort_order(checked=current_user.reply_sort_order == 1 or False) }}
+                        {{ form.reply_sort_order.label }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail clearfix">
+                <div class="header">
+                    Default post permission
+                </div>
+                <div class="content">
+                    <div>
+                        <ul id="permission">
+                            <li>
+                                <label>
+                                    <input name="permission"
+                                        {% if current_user.default_permission == 0 %}checked="true"{% endif %} value="0" type="radio" />
+                                    <i title="Public" class="fa fa-fw fa-globe"></i>
+                                </label>
+                                <div>
+                                Allow all users including non-pjuu users to view the post and see it on your profile.
+                                </div>
+                            </li>
+                            <li>
+                                <label>
+                                    <input name="permission"
+                                        {% if current_user.default_permission == 1 %}checked="true"{% endif %} value="1" type="radio" />
+                                    <i title="Pjuu" class="fa fa-fw fa-shield"></i>
+                                </label>
+                                <div>
+                                Only allow Pjuu users to view the post and see it on your profile.
+                                </div>
+                            </li>
+                            <li>
+                                <label>
+                                    <input name="permission"
+                                        {% if current_user.default_permission == 2 %}checked="true"{% endif %} value="2" type="radio" />
+                                    <i title="Approved" class="fa fa-fw fa-check"></i>
+                                </label>
+                                <div>
+                                Only allow users you have marked as trusted followers to view the post and see it on your profile.
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="detail clearfix">
+                {{ form.csrf_token }}
+                <button type="submit"><i class="fa fa-edit"></i> Update Profile</button>
+            </div>
+        </div>
+    </form>
+    <div class="details">
+        <div class="detail clearfix">
+            <div class="header">Tips</div>
+            <div class="content">
+                {% if config.TESTING  %}
+                    {% if current_user.avatar %}
+                    <!-- user:avatar:{{ current_user.avatar }} -->
+                    {% else %}
+                    <!-- user:avatar:default -->
+                    {% endif %}
+                {% endif %}
+                <div>
+                    Reset all tips on the site as if you had never seen them.
+                </div>
+            </div>
+        </div>
+        <div class="detail clearfix">
+            <form action="{{ url_for('users.reset_tips') }}" method="post">
+                {{ form.csrf_token }}
+                <button type="submit"><i class="fa fa-undo"></i> Reset tips</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends 'emails/base.txt' %}
+
+{% block content %}
+Hi,
+
+Your account is now being deleted.
+
+Thank you for using Pjuu. We hope you enjoyed using it.
+{% endblock %}
+
+{% block content_footer %}
+{% endblock %}

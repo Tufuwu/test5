@@ -1,4 +1,0 @@
-include 'sac_fetchreach.gin'
-
-# environment config
-create_environment.env_name='FetchSlide-v1'

@@ -1,0 +1,10 @@
+{% extends 'emails/base.txt' %}
+
+{% block content %}
+Hi,
+
+We have now updated your email to the one your reading this in :)
+{% endblock %}
+
+{% block content_footer %}
+{% endblock %}

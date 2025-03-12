@@ -1,33 +1,32 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
-*$py.class
+*.bak
 
 # C extensions
 *.so
 
 # Distribution / packaging
 .Python
+env/
+venv/
+venv3/
+venvpypy/
 build/
 develop-eggs/
 dist/
 downloads/
 eggs/
-.eggs/
-lib/
-lib64/
 parts/
 sdist/
 var/
-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
-MANIFEST
 
 # PyInstaller
-#  Usually these files are written by a python script from a template
-#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+# Usually these files are written by a python script from a template
+# before PyInstaller builds the exe, so as to inject date/other infos into it.
 *.manifest
 *.spec
 
@@ -39,13 +38,9 @@ pip-delete-this-directory.txt
 htmlcov/
 .tox/
 .coverage
-.coverage.*
 .cache
 nosetests.xml
 coverage.xml
-*.cover
-.hypothesis/
-.pytest_cache/
 
 # Translations
 *.mo
@@ -53,75 +48,22 @@ coverage.xml
 
 # Django stuff:
 *.log
-local_settings.py
-db.sqlite3
-
-# Flask stuff:
-instance/
-.webassets-cache
-
-# Scrapy stuff:
-.scrapy
 
 # Sphinx documentation
 docs/_build/
-docs/api/
 
 # PyBuilder
 target/
 
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# pyenv
-.python-version
-
-# celery beat schedule file
-celerybeat-schedule
-
-# SageMath parsed files
-*.sage.py
-
-# Environments
-.env
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
-
-# Spyder project settings
-.spyderproject
-.spyproject
-
-# Rope project settings
-.ropeproject
-
-# mkdocs documentation
-/site
-
-# mypy
-.mypy_cache/
-
-# idea
-.idea
-
-# sample files
-*.sample
-
-# ~
+# Editor files
+.DS_Store
 *~
+.idea/
+.vscode/
+*.sublime*
+*.swp
+tags
 
-# .DS_Store
-*.DS_Store
-
-data_m/
-data_c10/
-
-# Nix build artifacts. This can be a result of nix-build.
-**/result
-
-# Direnv artifacts. Developer may have different direnv settings so do not check them in.
-.envrc
-.direnv
+# Other files
+.vagrant
+.env
