@@ -1,0 +1,15 @@
+{
+    "title": "Capytaine",
+    "upload_type": "software",
+    "creators": [
+        {
+            "affiliation": "Eurobios Mews Labs",
+            "name": "Matthieu Ancellin",
+            "orcid": "0000-0002-0316-3230"
+        },
+        {
+            "name": "the Capytaine contributors"
+        }
+    ],
+    "access_right": "open"
+}

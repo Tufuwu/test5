@@ -1,224 +1,48 @@
-## whodap
+# Capytaine: a linear potential flow BEM solver with Python.
 
-[![PyPI version](https://badge.fury.io/py/whodap.svg)](https://badge.fury.io/py/whodap)
-![example workflow](https://github.com/pogzyb/whodap/actions/workflows/run-build-and-test.yml/badge.svg)
-[![codecov](https://codecov.io/gh/pogzyb/whodap/branch/main/graph/badge.svg?token=NCfdf6ftb9)](https://codecov.io/gh/pogzyb/whodap)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+![CI status](https://github.com/capytaine/capytaine/actions/workflows/test_new_commits.yaml/badge.svg?event=push)
+![CI status](https://github.com/capytaine/capytaine/actions/workflows/test_with_latest_dependencies.yaml/badge.svg)
 
-`whodap` | Simple RDAP Utility for Python
 
-- Support for asyncio HTTP requests ([`httpx`](https://www.python-httpx.org/))
-- Leverages the [`SimpleNamespace`](https://docs.python.org/3/library/types.html#types.SimpleNamespace) type for cleaner RDAP Response traversal
-- Keeps the familiar look of WHOIS via the `to_whois_dict` method for DNS lookups
+Capytaine is Python package for the simulation of the interaction between water waves and floating bodies in frequency domain.
+It is built around a full rewrite of the open source Boundary Element Method (BEM) solver Nemoh for the linear potential flow wave theory.
 
-#### Quickstart
+## Installation
 
-```python
-import asyncio
-from pprint import pprint
+[![PyPI](https://img.shields.io/pypi/v/capytaine)](https://pypi.org/project/capytaine)
+[![Conda-forge](https://img.shields.io/conda/vn/conda-forge/capytaine)](https://github.com/conda-forge/capytaine-feedstock)
 
-import whodap
+Packages for Windows, macOS and Linux are available on PyPI:
 
-# Looking up a domain name
-response = whodap.lookup_domain(domain='bitcoin', tld='org') 
-# Equivalent asyncio call
-loop = asyncio.get_event_loop()
-response = loop.run_until_complete(whodap.aio_lookup_domain(domain='bitcoin', tld='org'))
-# "response" is a DomainResponse object. It contains the output from the RDAP lookup.
-print(response)
-# Traverse the DomainResponse via "dot" notation
-print(response.events)
-"""
-[{
-  "eventAction": "last update of RDAP database",
-  "eventDate": "2021-04-23T21:50:03"
-},
- {
-  "eventAction": "registration",
-  "eventDate": "2008-08-18T13:19:55"
-}, ... ]
-"""
-# Retrieving the registration date from above:
-print(response.events[1].eventDate)
-"""
-2008-08-18 13:19:55
-"""
-# Don't want "dot" notation? Use `to_dict` to get the RDAP response as a dictionary
-pprint(response.to_dict())
-# Use `to_whois_dict` for the familiar look of WHOIS output
-pprint(response.to_whois_dict())
-"""
-{abuse_email: 'abuse@namecheap.com',
- abuse_phone: 'tel:+1.6613102107',
- admin_address: 'P.O. Box 0823-03411, Panama, Panama, PA',
- admin_email: '2603423f6ed44178a3b9d728827aa19a.protect@whoisguard.com',
- admin_fax: 'fax:+51.17057182',
- admin_name: 'WhoisGuard Protected',
- admin_organization: 'WhoisGuard, Inc.',
- admin_phone: 'tel:+507.8365503',
- billing_address: None,
- billing_email: None,
- billing_fax: None,
- billing_name: None,
- billing_organization: None,
- billing_phone: None,
- created_date: datetime.datetime(2008, 8, 18, 13, 19, 55),
- domain_name: 'bitcoin.org',
- expires_date: datetime.datetime(2029, 8, 18, 13, 19, 55),
- nameservers: ['dns1.registrar-servers.com', 'dns2.registrar-servers.com'],
- registrant_address: 'P.O. Box 0823-03411, Panama, Panama, PA',
- registrant_email: '2603423f6ed44178a3b9d728827aa19a.protect@whoisguard.com',
- registrant_fax: 'fax:+51.17057182',
- registrant_name: 'WhoisGuard Protected',
- registrant_organization: None,
- registrant_phone: 'tel:+507.8365503',
- registrar_address: '4600 E Washington St #305, Phoenix, Arizona, 85034',
- registrar_email: 'support@namecheap.com',
- registrar_fax: None,
- registrar_name: 'NAMECHEAP INC',
- registrar_phone: 'tel:+1.6613102107',
- status: ['client transfer prohibited'],
- technical_address: 'P.O. Box 0823-03411, Panama, Panama, PA',
- technical_email: '2603423f6ed44178a3b9d728827aa19a.protect@whoisguard.com',
- technical_fax: 'fax:+51.17057182',
- technical_name: 'WhoisGuard Protected',
- technical_organization: 'WhoisGuard, Inc.',
- technical_phone: 'tel:+507.8365503',
- updated_date: datetime.datetime(2019, 11, 24, 13, 58, 35)}
-"""
+```bash
+pip install capytaine
+```
+and Conda-forge
+
+```bash
+conda install -c conda-forge capytaine
 ```
 
-#### Exported Functions and Classes
+or as a standalone executable (with some drawbacks) at https://github.com/capytaine/capytaine-standalone.
 
-| Object      | Description |
-| ----------- | ----------- |
-|  `lookup_domain`      | Performs an RDAP query for the given Domain and TLD                     |
-|  `lookup_ipv4`        | Performs an RDAP query for the given IPv4 address                       |
-|  `lookup_ipv6`        | Performs an RDAP query for the given IPv6 address                       |
-|  `lookup_asn`         | Performs an RDAP query for the Autonomous System with the given Number  |
-|  `aio_lookup_domain`  | async counterpart to `lookup_domain`  |
-|  `aio_lookup_ipv4`    | async counterpart to `lookup_ipv4`    |
-|  `aio_lookup_ipv6`    | async counterpart to `lookup_ipv6`    |
-|  `aio_lookup_asn`     | async counterpart to `lookup_asn`     |
-|  `DNSClient`     | Reusable client for RDAP DNS queries    |
-|  `IPv4Client`     | Reusable client for RDAP IPv4 queries     |
-|  `IPv6Client`     | Reusable client for RDAP IPv6 queries     |
-|  `ASNClient`     | Reusable client for RDAP ASN queries     |
+## Documentation
 
+[https://capytaine.github.io/](https://capytaine.github.io/)
 
-#### Common Usage Patterns
+[![DOI](http://joss.theoj.org/papers/10.21105/joss.01341/status.svg)](https://doi.org/10.21105/joss.01341)
 
-- Using the DNSClient:
-```python
-import whodap
+## License
 
-# Initialize an instance of DNSClient using classmethods: `new_client` or `new_aio_client`
-dns_client = whodap.DNSClient.new_client()
-for domain, tld in [('google', 'com'), ('google', 'buzz')]:
-    response = dns_client.lookup(domain, tld)
-    
-# Equivalent asyncio call
-dns_client = await whodap.DNSClient.new_aio_client()
-for domain, tld in [('google', 'com'), ('google', 'buzz')]:
-    response = await dns_client.aio_lookup(domain, tld)
-    
-# Use the DNSClient contextmanagers: `new_client_context` or `new_aio_client_context`
-with whodap.DNSClient.new_client_context() as dns_client:
-    for domain, tld in [('google', 'com'), ('google', 'buzz')]:
-        response = dns_client.lookup(domain, tld)
+Copyright (C) 2017-2024, Matthieu Ancellin
 
-# Equivalent asyncio call
-async with whodap.DNSClient.new_aio_client_context() as dns_client:
-    for domain, tld in [('google', 'com'), ('google', 'buzz')]:
-        response = await dns_client.aio_lookup(domain, tld)
-```
+Since April 2022, the development of Capytaine is funded by the Alliance for Sustainable Energy, LLC, Managing and Operating Contractor for the National Renewable Energy Laboratory (NREL) for the U.S. Department of Energy.
 
-- Configurable `httpx` client:
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
-```python
-import asyncio
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
-import httpx
-import whodap
+It is based on version 2 of [Nemoh](https://lheea.ec-nantes.fr/logiciels-et-brevets/nemoh-presentation-192863.kjsp), which has been developed by Gérard Delhommeau, Aurélien Babarit et al., (École Centrale de Nantes) and was distributed under the Apache License 2.0.
 
-# Initialize a custom, pre-configured httpx client ...
-httpx_client = httpx.Client(proxies=httpx.Proxy('https://user:pw@proxy_url.net'))
-# ... or an async client
-aio_httpx_client = httpx.AsyncClient(proxies=httpx.Proxy('http://user:pw@proxy_url.net'))
+Some core Fortran routines of Capytaine coming from Nemoh version 2 are also available under the Apache License 2.0. They can be found in the [`capytaine/green_functions/libDelhommeau`](https://github.com/capytaine/capytaine/tree/master/capytaine/green_functions/libDelhommeau) directory of Capytaine's repository.
 
-# Three common methods for leveraging httpx clients are outlined below:
-
-# 1) Pass the httpx client directly into the convenience functions: `lookup_domain` or `aio_lookup_domain`
-# Important: In this scenario, you are responsible for closing the httpx client.
-# In this example, the given httpx client is used as a contextmanager; ensuring it is "closed" when finished.
-async with aio_httpx_client:
-    futures = []
-    for domain, tld in [('google', 'com'), ('google', 'buzz')]:
-        task = whodap.aio_lookup_domain(domain, tld, httpx_client=aio_httpx_client)
-        futures.append(task)
-    await asyncio.gather(*futures)
-
-# 2) Pass the httpx_client into the DNSClient classmethod: `new_client` or `new_aio_client`
-aio_dns_client = await whodap.DNSClient.new_aio_client(aio_httpx_client)
-result = await aio_dns_client.aio_lookup('google', 'buzz')
-await aio_httpx_client.aclose()
-
-# 3) Pass the httpx_client into the DNSClient contextmanagers: `new_client_context` or `new_aio_client_context`
-# This method ensures the underlying httpx_client is closed when exiting the "with" block.
-async with whodap.DNSClient.new_aio_client_context(aio_httpx_client) as dns_client:
-    for domain, tld in [('google', 'com'), ('google', 'buzz')]:
-        response = await dns_client.aio_lookup(domain, tld)
-```
-
-- Using the `to_whois_dict` method and `RDAPConformanceException`
-```python
-import logging
-
-from whodap import lookup_domain
-from whodap.errors import RDAPConformanceException
-
-logger = logging.getLogger(__name__)
-
-# strict = False (default)
-rdap_response = lookup_domain("example", "com")
-whois_format = rdap_response.to_whois_dict()
-logger.info(f"whois={whois_format}")
-# Given a valid RDAP response, the `to_whois_dict` method will attempt to
-# convert the RDAP format into a flattened dictionary of WHOIS key/values
-
-# strict = True
-try:
-    # Unfortunately, there are instances in which the RDAP protocol is not
-    # properly implemented by the registrar. By default, the `to_whois_dict`
-    # will still attempt to parse the into the WHOIS dictionary. However,
-    # there is no guarantee that the information will be correct or non-null. 
-    # If your applications rely on accurate information, the `strict=True`
-    # parameter will raise an `RDAPConformanceException` when encountering
-    # invalid or incorrectly formatted RDAP responses.
-    rdap_response = lookup_domain("example", "com")
-    whois_format = rdap_response.to_whois_dict(strict=True)
-except RDAPConformanceException:
-    logger.exception("RDAP response is incorrectly formatted.")
-```
-
-#### Contributions
-- Interested in contributing? 
-- Have any questions or comments? 
-- Anything that you'd like to see?
-- Anything that doesn't look right?
-
-Please post a question or comment.
-
-#### Roadmap
-
-[alpha] 0.1.X Release:
-- ~~Support for RDAP "domain" queries~~
-- ~~Support for RDAP "ipv4" and "ipv6" queries~~
-- ~~Support for RDAP ASN queries~~
-- Abstract the HTTP Client (`httpx` is the defacto client for now)
-- Add parser utils/helpers for IPv4, IPv6, and ASN Responses (if someone shows interest)
-- Add RDAP response validation support leveraging [ICANN's tool](https://github.com/icann/rdap-conformance-tool/)
-
-#### RDAP Resources:
-- [rdap.org](https://rdap.org/)
-- [RFC 9082](https://datatracker.ietf.org/doc/html/rfc9082) 
+Capytaine includes code from [meshmagick](https://github.com/LHEEA/meshmagick/) by François Rongère (École Centrale de Nantes), licensed under the GNU General Public License (GPL).
