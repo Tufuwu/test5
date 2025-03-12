@@ -2,7 +2,7 @@
 name: Bug report
 about: Create a report to help us improve
 title: ''
-labels: bug
+labels: ''
 assignees: ''
 
 ---
@@ -11,10 +11,13 @@ assignees: ''
 A clear and concise description of what the bug is.
 
 **To Reproduce**
-URL that triggered the bug:
+Minimal piece of Python code that reproduces the problem.
 
 **Expected behavior**
 A clear and concise description of what you expected to happen.
 
-**Additional context**
-Add any other context about the problem here.
+**Versions**
+
+- Version of package with the problem.
+- Proton server version. Version can be obtained by running `SELECT version()` query.
+- Python version.
