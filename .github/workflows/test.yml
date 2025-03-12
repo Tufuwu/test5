@@ -1,26 +1,48 @@
-name: tests
-
-on: [push, pull_request]
+name: Tests
+on:
+  push:
+    branches:
+      - master
+  pull_request:
 
 jobs:
-  test:
-    strategy:
-      matrix:
-        python: ["3.9", "3.10"]
+  core-tests:
     runs-on: ubuntu-latest
+
     steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.4.1
+        with:
+          access_token: ${{ github.token }}
+
       - uses: actions/checkout@v2
-      - name: Setup Python
+
+      - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: ${{ matrix.python }}
-      - name: Install Python dependencies
+          python-version: 3.9
+
+      - name: Before install
         run: |
-          python -m pip install Markdown python-markdown-math pymdown-extensions
-          python -m pip install docutils textile pygments codecov
-      - name: Install the project
-        run: python setup.py install
+          sudo apt-get -qq update;
+          sudo add-apt-repository ppa:ubuntu-toolchain-r/test;
+          sudo apt-get install gcc-4.8;
+          sudo apt-get install -y libeigen3-dev;
+
+      - name: Install dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest pytest-cov pytest-randomly wheel codecov
+
+      - name: Install The Walrus
+        run: |
+          pip install -e .
+
       - name: Run tests
-        run: coverage run -m unittest discover -s tests -v
-      - name: Upload reports to Codecov
-        run: codecov
+        run: python3 -m pytest thewalrus --randomly-seed=137 --cov=thewalrus --cov-report term-missing --cov-report=html:coverage_html_report --cov-report=xml:coverage.xml
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          file: ./coverage.xml

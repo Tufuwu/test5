@@ -1,39 +1,142 @@
-===================================
-Python-Markups module documentation
-===================================
+The Walrus Documentation
+########################
 
-Introduction to Python-Markups
-==============================
+.. rst-class:: lead grey-text ml-2
 
-Python-Markups is a module that provides unified interface for using
-various markup languages, such as Markdown, reStructuredText, Textile and
-AsciiDoc. It is also possible for clients to create and register their
-own markup languages.
+:Release: |release|
 
-The output language Python-Markups works with is HTML. Stylesheets and
-JavaScript sections are supported.
+.. raw:: html
 
-The abstract interface that any markup implements is
-:class:`~markups.abstract.AbstractMarkup`.
+    <style>
+        .breadcrumb {
+            display: none;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        p.lead.grey-text {
+            margin-bottom: 30px;
+        }
+        .footer-relations {
+            border-top: 0px;
+        }
+    </style>
 
-Contents
+    <div class="container mt-2 mb-2">
+        <div class="row container-fluid">
+            <div class="col-lg-4 col-12 mb-2 text-center">
+                <img src="_static/walrus.svg" class="img-fluid" alt="Responsive image" style="width:100%; max-width: 300px;"></img>
+            </div>
+            <div class="col-lg-8 col-12 mb-2" style="display: flex;justify-content: center;align-items: center;flex-flow: column;">
+                <p class="lead grey-text">
+                    A library for the calculation of hafnians, Hermite polynomials, and Gaussian boson sampling.
+                </p>
+            </div>
+        </div>
+        <div class="row mt-3">
+
+.. index-card::
+    :name: Using The Walrus
+    :link: quick_guide.html
+    :description: See the quick guide for an overview of available functions in The Walrus
+
+.. index-card::
+    :name: Background
+    :link: hafnian.html
+    :description: Learn about the hafnian, loop hafnian, and its relationship to quantum photonics
+
+.. index-card::
+    :name: API
+    :link: code.html
+    :description: Explore The Walrus Python API
+
+.. raw:: html
+
+        </div>
+    </div>
+
+Features
 ========
 
+* Fast calculation of hafnians, loop hafnians, and torontonians of general and certain structured matrices powered by `Numba <https://numba.pydata.org/>`_.
+
+* An easy to use interface to use the loop hafnian for Gaussian quantum state calculations.
+
+* Sampling algorithms for hafnian and torontonians of graphs.
+
+* Efficient classical methods for approximating the hafnian of non-negative matrices.
+
+* Easy to use implementations of the multidimensional Hermite polynomials, which can also be used to calculate hafnians of all reductions of a given matrix.
+
+Getting started
+===============
+
+To get the The Walrus installed and running on your system, begin at the :ref:`download and installation guide <installation>`. Then, familiarise yourself with some :ref:`background information on the Hafnian <hafnian>` and :ref:`the computational algorithm <algorithms>`.
+
+For getting started with using the The Walrus in your own code, have a look at the `Python tutorial <hafnian_tutorial.ipynb>`_.
+
+Finally, detailed documentation on the code and API is provided.
+
+Support
+=======
+
+- **Source Code:** https://github.com/XanaduAI/thewalrus
+- **Issue Tracker:** https://github.com/XanaduAI/thewalrus/issues
+
+If you are having issues, please let us know, either by email or by posting the issue on our Github issue tracker.
+
+Authors
+=======
+
+Nicolás Quesada, Brajesh Gupt, and Josh Izaac.
+
+If you are doing research using The Walrus, please cite `our paper <https://joss.theoj.org/papers/10.21105/joss.01705>`_:
+
+ Brajesh Gupt, Josh Izaac and Nicolás Quesada. The Walrus: a library for the calculation of hafnians, Hermite polynomials and Gaussian boson sampling. Journal of Open Source Software, 4(44), 1705 (2019)
+
+License
+=======
+
+The Walrus library is **free** and **open source**, released under the Apache License, Version 2.0.
+
 .. toctree::
+   :maxdepth: 2
+   :caption: Getting started
+   :hidden:
 
-   overview
-   interface
-   standard_markups
-   custom_markups
-   changelog
+   installing
+   research
+   quick_guide
+   gallery/gallery
 
-Links
-=====
+.. toctree::
+   :maxdepth: 2
+   :caption: Background
+   :hidden:
 
-* Python-Markups source code is hosted on GitHub_.
-* You can get the source tarball from PyPI_.
-* It is also packaged in Debian_.
+   hafnian
+   loop_hafnian
+   algorithms
+   hermite
+   gbs
+   gbs_sampling
+   notation
+   references
 
-.. _GitHub: https://github.com/retext-project/pymarkups
-.. _PyPI: https://pypi.org/project/Markups/
-.. _Debian: https://packages.debian.org/sid/source/pymarkups
+.. toctree::
+   :maxdepth: 2
+   :caption: The Walrus API
+   :hidden:
+
+   code
+   code/thewalrus
+   code/quantum
+   code/samples
+   code/csamples
+   code/symplectic
+   code/charpoly
+   code/random
+   code/fock_gradients
+   code/decompositions
+   code/reference
