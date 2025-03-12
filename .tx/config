@@ -1,8 +1,0 @@
-[main]
-host     = https://www.transifex.com
-lang_map = zh_TW: zh_Hant, sr@latin: sr_Latn, zh_CN: zh_Hans
-
-[o:django:p:django-localflavor:r:main]
-file_filter = localflavor/locale/<lang>/LC_MESSAGES/django.po
-source_file = localflavor/locale/en/LC_MESSAGES/django.po
-source_lang = en

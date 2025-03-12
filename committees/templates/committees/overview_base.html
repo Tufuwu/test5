@@ -1,0 +1,40 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% load bootstrap_tabs %}
+
+
+{% block og-title %}Squire - Committees and Orders{% endblock og-title %}
+
+{% block og-description %}
+    {# Description shown when sharing the link #}
+    View the one and only overview of all committees and orders of the Knights
+{% endblock og-description %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'css/bootstrap_tabs.css' %}">
+{% endblock css %}
+
+
+{% block title %}
+    Squire - Groups
+{% endblock title %}
+
+{% block local-nav-bar %}
+    {% bootstrap_tabs tabs %}
+    {% include "inventory/snippets/snippet_enlarged_image_modal.html" %}
+{% endblock %}
+
+
+{% block js_bottom %}
+    {{ block.super }}
+    <script src="{% static "js/enlarge_item_image.js" %}"></script>
+{% endblock %}
+
+
+{% block content-frame-class %}
+    container
+{% endblock %}
+
+
+

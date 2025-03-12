@@ -1,0 +1,61 @@
+{% extends 'inventory/catalogue_base.html' %}
+{% load render_form %}
+
+{% block content %}
+    {{ block.super }}
+    <h3>Delete {{ ownership }}</h3>
+    <p>
+        Are you sure you want to delete this link?
+    </p>
+    <div class="row mb-3">
+        <div class="col-md-3">
+            {% if item.image %}
+                <div class="w-100 h-100"
+                     style="background-image: url('{{ item.image.url }}'); background-repeat: no-repeat; background-size: contain;">
+
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="col-md-9">
+            <div class="row mb-3">
+                <div class="col-3">
+                    {{ item_type.name|capfirst }}
+                </div>
+                <div class="col-9">
+                    {{ item.name }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-3">
+                    Owned by
+                </div>
+                <div class="col-9">
+                    {{ ownership.owner }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-3">
+                    Note
+                </div>
+                <div class="col-9">
+                    {{ ownership.note|default:"-" }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    {% render_form method="post" id="submit_form"  has_submit_button=False %}
+
+    <div class="btn-group" role="group" aria-label="Form changing">
+        <button type="submit" class="btn btn-danger" form="submit_form">
+            <i class="fas fa-trash-alt"></i> Yes, delete this link
+        </button>
+        <a href="{% url "inventory:catalogue_item_links" type_id=item_type item_id=item.id %}"
+           class="btn btn-secondary px-4">
+            <i class="fas fa-times"></i> Cancel
+        </a>
+    </div>
+
+{% endblock %}

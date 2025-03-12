@@ -1,0 +1,30 @@
+{% extends 'core/base.html' %}
+
+{% load static %}
+
+{% block title %}
+  Squire - Successful Logout
+{% endblock title %}
+
+{% block og-title %}
+    Squire Logout
+{% endblock og-title %}
+{% block og-description %}
+    Why are you linking to this page? There's nothing here!
+{% endblock og-description %}
+
+{% block content %}
+  <center>
+    <h2>Successful Logout!</h2>
+    <p>
+      Nobody can view your secrets anymore if you leave your device opened up!
+    </p>
+    <img src="{% static 'images/regendans.jpg' %}" alt="Regendans" height='256px'>
+    <p>
+      Please do not perform rain dances on this page.
+    </p>
+    <p>
+      Click <a href="{% url 'user_interaction:homepage' %}">here</a> to go back to the homepage.
+    </p>
+  </center>
+{% endblock content %}

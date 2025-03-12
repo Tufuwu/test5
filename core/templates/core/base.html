@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+{% load bootstrap4 %}
+{% load static %}
+{% load build_absolute_uri %}
+{% load pwa %}
+{% load theme_tags %}
+
+<html lang="en" prefix="og: https://ogp.me/ns#">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>{% block title %}Hey! You forgot to add a title block!{% endblock %}</title>
+
+		<!-- Open Graph (for link previews in Discord, Telegram, etc.) -->
+		<meta property="og:title" content="{% block og-title %}Squire{% endblock %}" />
+		<meta property="og:description" content="{% block og-description %}Squire is the new webapp developed by the UUPS-committee of ESRG Knights of the Kitchen Table.{% endblock %}" />
+		<meta property="og:image" content="{% block og-image %}{% build_absolute_image_uri request 'images/default_logo.png' %}{% endblock %}" />
+		<meta property="og:image:alt" content="{% block og-image-alt %}Knights Logo{% endblock %}" />
+		<meta property="og:site_name" content="Squire" />
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content="{% block og-url %}{{ request.get_full_path }}{% endblock %}" />
+		<meta property="og:locale" content="en_GB" />
+		<meta property="og:locale:alternate" content="nl_NL" />
+
+		<!-- Progressive web app-->
+		{% progressive_web_app_meta %}
+
+		<!-- Form Media -->
+		{# These are loaded before the application to make overriding them easier #}
+		{% block form_media %}
+			{{ form.media }}
+		{% endblock form_media %}
+
+		<!-- Define Bootstrap imports (contains popper.js and jQuery) -->
+		{% block bootstrap_css %}
+			{% bootstrap_css %}
+		{% endblock %}
+		{% block bootstrap_js %}
+			{% bootstrap_javascript jquery='full' %}
+		{% endblock %}
+
+		<!-- Theme -->
+		{% block theme %}
+			{% theme_tags request.user.preferences.layout__theme %}
+		{% endblock theme %}
+
+		<!-- Css -->
+		{% block css %}
+			<link rel="stylesheet" href="{% static 'css/main.css' %}">
+			<link rel="stylesheet" href="{% static 'css/forms.css' %}">
+		{% endblock css %}
+        <!-- Font awesome icon font -->
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+              integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+
+		<!-- Js -->
+		{% block js %}
+		{% endblock js %}
+	</head>
+	<body class='d-flex flex-column'>
+		<nav class="navbar navbar-expand-lg navbar-dark greenify-dark">
+			<a class="navbar-brand" href="/">
+				<img src="{% static 'images/header_logo.png' %}" alt="Modified Knights Logo" height="85px" class="knights-logo-img">
+				<span class="brand-text">Squire</span>
+			</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
+					<li>
+						<a class="nav-link" href="{% url 'activity_calendar:activity_upcoming' %}">Activities</a>
+					</li>
+					<li>
+						<a class="nav-link" href="{% url 'boardgames:home' %}">Boardgames</a>
+					</li>
+                    <li>
+                        <a class="nav-link" href="{% url 'roleplaying:home' %}">Roleplay</a>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="{% url 'committees:home' %}">Committees</a>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="{% url 'nextcloud:site_downloads' %}">Downloads</a>
+                    </li>
+					<li class="nav-item">
+						<a class="nav-link" href="{% url 'achievements/all' %}">Achievements</a>
+					</li>
+				</ul>
+				<ul class="navbar-nav navbar-right">
+					{% if user.is_authenticated %}
+						<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-user"></i> {{ user }}
+							</a>
+							<div class="dropdown-menu dropdown-menu-right greenify-dropdown" aria-labelledby="navbarDropdownMenuLink">
+								<a class="dropdown-item" href="{% url 'account:site_account' %}">
+                                    <i class="fas fa-id-card"></i> My Account</a>
+								<a class="dropdown-item" href="{% url 'account:achievements' %}">
+                                    <i class="fas fa-trophy"></i> My  Achievements</a>
+                                {% if member.is_active %}
+                                    <a class="dropdown-item" href="{% url 'account:inventory:member_items' %}">
+                                        <i class="fas fa-archive"></i> My items</a>
+                                    {% if member.associationgroup_set.all %}
+                                        <a class="dropdown-item" href="{% url 'account:account_group' %}">
+                                            <i class="fas fa-users"></i> My groups</a>
+                                    {% endif %}
+                                {% endif %}
+                                {% if user.is_staff %}
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item"
+                                       target="_blank" rel="noopener noreferrer"
+                                       href="{% url 'admin:index' %}"><i class="fas fa-toolbox"></i> Admin panel</a>
+									{% if user.is_superuser %}
+										<a class="dropdown-item"
+											href="{% url 'core:status:mailcow_status' %}"><i class="fas fa-server"></i> Server Status</a>
+									{% endif %}
+                                {% endif %}
+								<div class="dropdown-divider"></div>
+								<form id="logout-form"  method="post" action="{% url 'core:user_accounts/logout' %}">
+									{% csrf_token %}
+									<button type="submit" class="dropdown-item"><i class="fas fa-power-off"></i> Sign out</button>
+								</form>
+							</div>
+						</li>
+					{% else %}
+						<li class="nav-item">
+							<a class="nav-link" href="{% url 'core:user_accounts/login' %}">Sign in</a>
+						</li>
+					{% endif %}
+				</ul>
+			</div>
+		</nav>
+
+        {% block local-nav-bar %}
+            {# Space for navigation on local sections e.g. tabs in associatingroups overview #}
+
+        {% endblock %}
+
+		<main class="mb-5 px-3">
+			<div id='mainContent'>
+                {% block content_raw %}
+                <div class="{% block content-frame-class %}contentFrame{% endblock %}">
+                    {% bootstrap_messages %}
+                    {% block content %}
+                        <!-- Other templates can add extra content here -->
+                    {% endblock %}
+                </div>
+                {% endblock %}
+			</div>
+		</main>
+
+		<!-- Show footer at bottom of the page -->
+		<footer class='greenify-dark'>
+			{% block footer %}
+				<!-- Other templates can add extra content here -->
+			{% endblock %}
+		</footer>
+
+        {% block js_bottom %}
+            {# A block for javascript codes that will trigger after the entire page has been loaded in. #}
+            {# Ideal for when you want to activate e.g. bootstrap popovers #}
+
+        {% endblock js_bottom %}
+	</body>
+</html>

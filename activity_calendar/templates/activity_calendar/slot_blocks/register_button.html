@@ -1,0 +1,33 @@
+{% load calendar_tags %}
+
+{% if form.get_base_validity_error %}
+    {% if sign_up %}
+        <a tabindex="0"  role="button" data-container="body" data-toggle="popover" data-trigger="focus" data-placement="bottom"
+           data-content="{% form_rejection_reason form %}" style="text-decoration: none">
+            <button class="btn btn-outline-success btn-block disabled">
+                <i class="fas fa-clipboard"></i> Register
+            </button>
+        </a>
+    {% else %}
+        <a tabindex="0"  role="button" data-container="body" data-toggle="popover" data-trigger="focus" data-placement="bottom"
+           data-content="{% form_rejection_reason form %}" style="text-decoration: none">
+            <button class="btn btn-outline-danger btn-block disabled">
+                <i class="fas fa-clipboard"></i> Deregister
+            </button>
+        </a>
+    {% endif %}
+{% else %}
+    <form method="post" style="width: 100%;">
+        {% csrf_token %}
+        {{ form }}
+        {% if sign_up %}
+            <button type="submit" class="btn btn-success btn-block">
+                <i class="fas fa-clipboard"></i> Register
+            </button>
+        {% else %}
+            <button type="submit" class="btn btn-danger btn-block">
+                <i class="fas fa-clipboard"></i> Deregister
+            </button>
+        {% endif %}
+    </form>
+{% endif %}

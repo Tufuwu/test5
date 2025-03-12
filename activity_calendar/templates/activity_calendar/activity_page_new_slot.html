@@ -1,0 +1,73 @@
+{% extends "activity_calendar/activity_page_base.html" %}
+{% load render_form %}
+{% load static %}
+{% load calendar_tags %}
+{% load martortags %}
+
+{% block og-title %}
+    Create Slot - {{ activity_moment.title }}
+{% endblock og-title %}
+{% block og-description %}
+    Create a slot for this activity on {{ activity_moment.start_date|date:"l j E H:i" }}. {{ activity_moment.description.as_plaintext|truncatewords:20 }}
+{% endblock og-description %}
+
+{% block sign-up-status %}
+    {% if user_subscriptions %}
+        <div class="alert alert-success">
+            <div class="row">
+                <div class="col-12">
+                    <div class="p-1">
+                        <i class="far fa-check-circle"></i>
+                        {% if user_subscriptions.count == 1 %}
+                            You are subscribed to slot '{{ user_subscriptions.first.activity_slot.title }}'
+                        {% else %}
+                            You are subscribed to slots:
+                            {% for participant_entry in user_subscriptions %}
+                                {% if forloop.last %}and {% endif %}
+                                '{{ participant_entry.activity_slot.title }}'{% if not forloop.last %},{% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="alert bg-light border border-danger">
+            <div class="row">
+                <div class="col-12">
+                        You are not registered for this activity
+                </div>
+                <div class="col-12">
+                    Go back to main page to register on a slot{% if activity_moment.slot_creation == "CREATION_USER" %}
+                    or create a slot below
+                    {% else %}. {% endif %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    <a href="{% url 'activity_calendar:activity_slots_on_day' activity_id=activity.id recurrence_id=recurrence_id %}"
+       class="btn btn-outline-secondary btn-block my-2">
+        <i class="fas fa-arrow-left"></i> Back to main page
+    </a>
+{% endblock sign-up-status %}
+
+
+{% block additional-contents %}
+    <hr>
+    <h2>Create new slot</h2>
+
+    <div class="wideContentFrame">
+        {% render_form id="create_slot_form" method="post" has_submit_button=False %}
+
+        <div class="btn-group">
+            <button type="submit" form="create_slot_form" class="btn btn-success">
+                <i class="fas fa-plus"></i> Create slot
+            </button>
+            <a class="btn btn-secondary"
+               href="{% url 'activity_calendar:activity_slots_on_day' activity_id=activity.id recurrence_id=recurrence_id %}">
+                <i class="fas fa-times"></i> Cancel
+            </a>
+        </div>
+    </div>
+
+{% endblock %}

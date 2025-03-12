@@ -1,0 +1,30 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% load bootstrap_tabs %}
+
+{% block title %}
+  Squire - Account
+{% endblock title %}
+
+{% block og-title %}
+    Squire Account
+{% endblock og-title %}
+{% block og-description %}
+    View your Squire account information.
+{% endblock og-description %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'css/bootstrap_tabs.css' %}">
+{% endblock css %}
+
+{% block local-nav-bar %}
+    {% bootstrap_tabs tabs %}
+{% endblock %}
+
+{% block content-frame-class %}
+    container
+{% endblock %}
+
+
+

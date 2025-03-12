@@ -1,0 +1,6 @@
+/*
+  This file is a copy of martor/static/martor/css/martor-admin.min.css, and overrides the
+    one from Martor, as this file loads first and is also named martor/css/martor-admin.min.css
+  Martor adds some CSS clauses using !important that we cannot easily get rid of. Removing them
+    in another CSS file is a PITA. These clauses are only really needed in the admin panel.
+*/

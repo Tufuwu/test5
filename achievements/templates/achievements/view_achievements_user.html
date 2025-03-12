@@ -1,0 +1,54 @@
+{% extends 'core/user_accounts/account_base.html' %}
+
+{% load static %}
+{% load category_has_any_achievement_unlocked_or_empty %}
+
+{% block title %}
+  Squire - Your Achievements
+{% endblock title %}
+
+{% block og-title %}
+    Personal Achievements
+{% endblock og-title %}
+{% block og-description %}
+    View all achievements earned by you at the Knights.
+{% endblock og-description %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'css/achievement_frames.css' %}">
+{% endblock css %}
+
+{% block content-frame-class %}
+    wideContentFrame
+{% endblock %}
+
+{% block content %}
+        <h1>Earned Achievements</h1>
+        <p>
+            These are all the achievement's you've earned; ever! Feel free to brag about them to other members.
+            The achievement that you unlocked the latest is shown first.
+        </p>
+        <!-- Show Achievements per Category -->
+        {% for category in categories %}
+            <h2>{{category.name}}</h2>
+            <p>{{category.description}}</p>
+            <!-- List Achievements -->
+            <div class='achievementList'>
+                {% if category|category_has_any_achievement_unlocked_or_empty %}
+                    {% for achievement in category.achievements %}
+                        <!-- Only show user claimed achievements -->
+                        {% if achievement.claimants|length > 0 %}
+                            {% include "achievements/achievement_block_user.html" %}
+                        {% endif %}
+                    {% empty %}
+                        <p>Woops! There do not seem to be any achievements in this category!</p>
+                    {% endfor %}
+                {% else %}
+                    <p style='text-align: left;'><i>You have not claimed any achievement in this category!</i></p>
+                {% endif %}
+            </div>
+        {% empty %}
+            <p>Woops! No Achievements seem to exist!</p>
+        {% endfor %}
+{% endblock content %}
