@@ -1,192 +1,115 @@
-<p align="center"><a href="#"><img width=60% alt="" src="https://github.com/lux-org/lux-resources/blob/master/readme_img/logo.png?raw=true"></a></p>
-<h2 align="center">A Python API for Intelligent Visual Discovery</h2>
+[![DOI](https://zenodo.org/badge/136110609.svg)](https://zenodo.org/badge/latestdoi/136110609)  ![GitHub release](https://img.shields.io/github/release/ECSHackWeek/impedance.py)
 
-<p align="center">
-    <a href="https://travis-ci.com/lux-org/lux">
-        <img alt="Build Status" src="https://travis-ci.com/lux-org/lux.svg?branch=master" align="center">
-    </a>
-    <a href="https://badge.fury.io/py/lux-api">
-        <img src="https://badge.fury.io/py/lux-api.svg" alt="PyPI version" height="18" align="center">
-    </a>
-    <a href='https://lux-api.readthedocs.io/en/latest/?badge=latest'>
-        <img src='https://readthedocs.org/projects/lux-api/badge/?version=latest' alt='Documentation Status'  align="center"/>
-    </a>
-    <a href='https://communityinviter.com/apps/lux-project/lux'>
-        <img src='https://img.shields.io/static/v1?label=chat&logo=slack&message=Slack&color=brightgreen' alt='Slack'  align="center"/>
-    </a>
-    <a href='https://forms.gle/XKv3ejrshkCi3FJE6'>
-        <img src='https://img.shields.io/static/v1?label=email&message=signup&color=brightgreen' alt='Mailing List'  align="center"/>
-    </a>
-    <a href='https://mybinder.org/v2/gh/lux-org/lux-binder/master?urlpath=lab'>
-        <img src='https://img.shields.io/badge/launch-binder-579ACA.svg?logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFkAAABZCAMAAABi1XidAAAB8lBMVEX///9XmsrmZYH1olJXmsr1olJXmsrmZYH1olJXmsr1olJXmsrmZYH1olL1olJXmsr1olJXmsrmZYH1olL1olJXmsrmZYH1olJXmsr1olL1olJXmsrmZYH1olL1olJXmsrmZYH1olL1olL0nFf1olJXmsrmZYH1olJXmsq8dZb1olJXmsrmZYH1olJXmspXmspXmsr1olL1olJXmsrmZYH1olJXmsr1olL1olJXmsrmZYH1olL1olLeaIVXmsrmZYH1olL1olL1olJXmsrmZYH1olLna31Xmsr1olJXmsr1olJXmsrmZYH1olLqoVr1olJXmsr1olJXmsrmZYH1olL1olKkfaPobXvviGabgadXmsqThKuofKHmZ4Dobnr1olJXmsr1olJXmspXmsr1olJXmsrfZ4TuhWn1olL1olJXmsqBi7X1olJXmspZmslbmMhbmsdemsVfl8ZgmsNim8Jpk8F0m7R4m7F5nLB6jbh7jbiDirOEibOGnKaMhq+PnaCVg6qWg6qegKaff6WhnpKofKGtnomxeZy3noG6dZi+n3vCcpPDcpPGn3bLb4/Mb47UbIrVa4rYoGjdaIbeaIXhoWHmZYHobXvpcHjqdHXreHLroVrsfG/uhGnuh2bwj2Hxk17yl1vzmljzm1j0nlX1olL3AJXWAAAAbXRSTlMAEBAQHx8gICAuLjAwMDw9PUBAQEpQUFBXV1hgYGBkcHBwcXl8gICAgoiIkJCQlJicnJ2goKCmqK+wsLC4usDAwMjP0NDQ1NbW3Nzg4ODi5+3v8PDw8/T09PX29vb39/f5+fr7+/z8/Pz9/v7+zczCxgAABC5JREFUeAHN1ul3k0UUBvCb1CTVpmpaitAGSLSpSuKCLWpbTKNJFGlcSMAFF63iUmRccNG6gLbuxkXU66JAUef/9LSpmXnyLr3T5AO/rzl5zj137p136BISy44fKJXuGN/d19PUfYeO67Znqtf2KH33Id1psXoFdW30sPZ1sMvs2D060AHqws4FHeJojLZqnw53cmfvg+XR8mC0OEjuxrXEkX5ydeVJLVIlV0e10PXk5k7dYeHu7Cj1j+49uKg7uLU61tGLw1lq27ugQYlclHC4bgv7VQ+TAyj5Zc/UjsPvs1sd5cWryWObtvWT2EPa4rtnWW3JkpjggEpbOsPr7F7EyNewtpBIslA7p43HCsnwooXTEc3UmPmCNn5lrqTJxy6nRmcavGZVt/3Da2pD5NHvsOHJCrdc1G2r3DITpU7yic7w/7Rxnjc0kt5GC4djiv2Sz3Fb2iEZg41/ddsFDoyuYrIkmFehz0HR2thPgQqMyQYb2OtB0WxsZ3BeG3+wpRb1vzl2UYBog8FfGhttFKjtAclnZYrRo9ryG9uG/FZQU4AEg8ZE9LjGMzTmqKXPLnlWVnIlQQTvxJf8ip7VgjZjyVPrjw1te5otM7RmP7xm+sK2Gv9I8Gi++BRbEkR9EBw8zRUcKxwp73xkaLiqQb+kGduJTNHG72zcW9LoJgqQxpP3/Tj//c3yB0tqzaml05/+orHLksVO+95kX7/7qgJvnjlrfr2Ggsyx0eoy9uPzN5SPd86aXggOsEKW2Prz7du3VID3/tzs/sSRs2w7ovVHKtjrX2pd7ZMlTxAYfBAL9jiDwfLkq55Tm7ifhMlTGPyCAs7RFRhn47JnlcB9RM5T97ASuZXIcVNuUDIndpDbdsfrqsOppeXl5Y+XVKdjFCTh+zGaVuj0d9zy05PPK3QzBamxdwtTCrzyg/2Rvf2EstUjordGwa/kx9mSJLr8mLLtCW8HHGJc2R5hS219IiF6PnTusOqcMl57gm0Z8kanKMAQg0qSyuZfn7zItsbGyO9QlnxY0eCuD1XL2ys/MsrQhltE7Ug0uFOzufJFE2PxBo/YAx8XPPdDwWN0MrDRYIZF0mSMKCNHgaIVFoBbNoLJ7tEQDKxGF0kcLQimojCZopv0OkNOyWCCg9XMVAi7ARJzQdM2QUh0gmBozjc3Skg6dSBRqDGYSUOu66Zg+I2fNZs/M3/f/Grl/XnyF1Gw3VKCez0PN5IUfFLqvgUN4C0qNqYs5YhPL+aVZYDE4IpUk57oSFnJm4FyCqqOE0jhY2SMyLFoo56zyo6becOS5UVDdj7Vih0zp+tcMhwRpBeLyqtIjlJKAIZSbI8SGSF3k0pA3mR5tHuwPFoa7N7reoq2bqCsAk1HqCu5uvI1n6JuRXI+S1Mco54YmYTwcn6Aeic+kssXi8XpXC4V3t7/ADuTNKaQJdScAAAAAElFTkSuQmCC' alt='Binder'  align="center"/>
-    </a>
-    <a href="https://codecov.io/gh/lux-org/lux">
-        <img src="https://codecov.io/gh/lux-org/lux/branch/master/graph/badge.svg" align="center" alt='CodeCov'/>
-    </a>
-    <a href='https://twitter.com/intent/follow?original_referer=https%3A%2F%2Fpublish.twitter.com%2F&ref_src=twsrc%5Etfw&screen_name=lux_api&tw_p=followbutton'>
-        <img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/lux_api?label=%40lux_api&style=social" alt='Twitter' align="center"/>
-    </a>
-</p>
+![PyPI - Downloads](https://img.shields.io/pypi/dm/impedance?style=flat-square)  [![All Contributors](https://img.shields.io/badge/all_contributors-11-orange.svg?style=flat-square)](#contributors)
 
-Lux is a Python library that facilitate fast and easy data exploration by automating the visualization and data analysis process. By simply printing out a dataframe in a Jupyter notebook, Lux recommends a set of visualizations highlighting interesting trends and patterns in the dataset. Visualizations are displayed via [an interactive widget](https://github.com/lux-org/lux-widget) that enables users to quickly browse through large collections of visualizations and make sense of their data.
+[![Build Status](https://github.com/ECSHackWeek/impedance.py/actions/workflows/ci.yml/badge.svg)](https://github.com/ECSHackWeek/impedance.py/actions)  [![Documentation Status](https://readthedocs.org/projects/impedancepy/badge/?version=latest&kill_cache=1)](https://impedancepy.readthedocs.io/en/latest/?badge=latest) [![Coverage Status](https://coveralls.io/repos/github/ECSHackWeek/impedance.py/badge.svg?branch=master&kill_cache=1)](https://coveralls.io/github/ECSHackWeek/impedance.py?branch=master)
 
-<img src="https://github.com/lux-org/lux-resources/blob/master/readme_img/demohighlight.gif?raw=true"
-     alt="Highlighted Visual Dataframe Workflow with Lux"
-     style="width:900px" />
-     
-Here is a [1-min video](https://www.youtube.com/watch?v=qmnYP-LmbNU) introducing Lux, and [slides](http://dorisjunglinlee.com/files/Zillow_07_2020_Slide.pdf) from a more extended talk.
+impedance.py
+------------
 
-Check out our [notebook gallery](https://lux-api.readthedocs.io/en/latest/source/reference/gallery.html) with examples of how Lux can be used with different datasets and analyses. 
-<br>Or try out Lux on your own in a [live Jupyter Notebook](https://mybinder.org/v2/gh/lux-org/lux-binder/master?urlpath=lab/tree/demo/hpi_covid_demo.ipynb)! 
+`impedance.py` is a Python package for making electrochemical impedance spectroscopy (EIS) analysis reproducible and easy-to-use.
 
-# Getting Started
+Aiming to create a consistent, [scikit-learn-like API](https://arxiv.org/abs/1309.0238) for impedance analysis, impedance.py contains modules for data preprocessing, validation, model fitting, and visualization.
 
-To start using Lux, simply add an extra import statement along with your Pandas import.
+For a little more in-depth discussion of the package background and capabilities, check out our [Journal of Open Source Software paper](https://joss.theoj.org/papers/10.21105/joss.02349).
 
-```python    
-import lux
-import pandas as pd
-```
+If you have a feature request or find a bug, please [file an issue](https://github.com/ECSHackWeek/impedance.py/issues) or, better yet, make the code improvements and [submit a pull request](https://help.github.com/articles/creating-a-pull-request-from-a-fork/)! The goal is to build an open-source tool that the entire impedance community can improve and use!
 
-Lux can be used without modifying any existing Pandas code. Here, we use Pandas's [read_csv](https://pandas.pydata.org/pandas-docs/stable/generated/pandas.read_csv.html) command to load in a [dataset of colleges](https://github.com/lux-org/lux-datasets/blob/master/data/college.csv) and their properties.
+### Installation
 
-```python    
-df = pd.read_csv("https://raw.githubusercontent.com/lux-org/lux-datasets/master/data/college.csv")
-df
-```
-When the dataframe is printed out, Lux automatically recommends a set of visualizations highlighting interesting trends and patterns in the dataset.
-
-<img src="https://github.com/lux-org/lux-resources/blob/master/readme_img/basicDemo.gif?raw=true"
-     alt="Basic recommendations in Lux"
-     style="width:900px" />
-
-Voila! Here's a set of visualizations that you can now use to explore your dataset further!
-
-### Next-step recommendations based on user intent: 
-
-In addition to dataframe visualizations at every step in the exploration, you can specify to Lux the attributes and values you're interested in. Based on this intent, Lux guides users towards potential next-steps in their exploration.
-
-For example, we might be interested in the attributes `AverageCost` and `SATAverage`.
-
-```python
-df.intent = ["AverageCost","SATAverage"]
-df
-```
-<img src="https://github.com/lux-org/lux-resources/blob/master/readme_img/contextRec.gif?raw=true"
-     alt="Next-step Recommendations Based on User Context"
-     style="width:600px" />
- 
- The left-hand side of the widget shows the current visualization, i.e., the current visualization generated based on what the user is interested in. On the right, Lux generates three sets of recommendations, organized as separate tabs on the widget:
-
- - `Enhance` adds an additional attribute to the current selection, essentially highlighting how additional variables affect the relationship of `AverageCost` and `SATAverage`. We see that if we breakdown the relationship by `FundingModel`, there is a clear separation between public colleges (shown in red) and private colleges (in blue), with public colleges being cheaper to attend and with SAT average of lower than 1400.
-    <img src="https://github.com/lux-org/lux-resources/blob/master/readme_img/enhance.png?raw=true"
-     alt="Enhance Recommendations"
-     style="width:600px" />
- - `Filter` adds a filter to the current selection, while keeping attributes (on the X and Y axes) fixed. These visualizations show how the relationship of  `AverageCost` and `SATAverage` changes for different subsets of data. For instance, we see that colleges that offer Bachelor's degree as its highest degree show a roughly linear trend between the two variables.
-    <img src="https://github.com/lux-org/lux-resources/blob/master/readme_img/filter.png?raw=true"
-     alt="Filter Recommendations"
-     style="width:600px" />
- - `Generalize` removes an attribute to display a more general trend, showing the distributions of `AverageCost` and `SATAverage` on its own. From the `AverageCost` histogram, we see that many colleges with average cost of around $20000 per year, corresponding to the bulge we see in the scatterplot view.
-    <img src="https://github.com/lux-org/lux-resources/blob/master/readme_img/generalize.png?raw=true"
-     alt="Generalize Recommendations"
-     style="width:600px" />
-
- See [this page](https://lux-api.readthedocs.io/en/latest/source/guide/intent.html) for more information on additional ways for specifying the intent.
-
-### Easy programmatic access and export of visualizations: 
-
-Now that we have found some interesting visualizations through Lux, we might be interested in digging into these visualizations a bit more or sharing it with others. We can save the visualizations generated in Lux as a [static, shareable HTML](https://lux-api.readthedocs.io/en/latest/source/guide/export.html#exporting-widget-visualizations-as-static-html) or programmatically access these visualizations further in Jupyter. Selected `Vis` objects can be translated into [Altair](http://altair-viz.github.io/), [Matplotlib](https://matplotlib.org/), or [Vega-Lite](https://vega.github.io/vega-lite/) code, so that they can be further edited.
-
-<img src="https://github.com/lux-org/lux-resources/blob/master/readme_img/export.gif?raw=true"
-     alt="Easily exportable visualization object"
-     style="width:600px" />
-     
-Learn more about how to save and export visualizations [here](https://lux-api.readthedocs.io/en/latest/source/guide/export.html#exporting-widget-visualizations-as-static-html).
-
-### Quick, on-demand visualizations with the help of automatic encoding: 
-We've seen how `Vis`s are automatically generated as part of the recommendations. Users can also create their own Vis via the same syntax as specifying the intent. Lux is built on the philosophy that users should always be able to visualize anything they want, without having to think about *how* the visualization should look like. Lux automatically determines the mark and channel mappings based on a set of [best practices](http://hosteddocs.ittoolbox.com/fourshowmeautomaticpresentations.pdf). The visualizations are rendered via [Altair](https://github.com/altair-viz/altair/tree/master/altair) into [Vega-Lite](https://github.com/vega/vega-lite) specifications.
-
-```python    
-from lux.vis.Vis import Vis
-Vis(["Region=New England","MedianEarnings"],df)
-```    
-
-<img src="https://github.com/lux-org/lux-resources/blob/master/readme_img/view.png?raw=true"
-     alt="Specified Visualization"
-     width="200px" />
-
-### Powerful language for working with collections of visualizations:
-
-Lux provides a powerful abstraction for working with collections of visualizations based on a partially specified queries. Users can provide a list or a wildcard to iterate over combinations of filter or attribute values and quickly browse through large numbers of visualizations. The partial specification is inspired by existing work on visualization query languages, including [ZQL](http://www.vldb.org/pvldb/vol10/p457-siddiqui.pdf) and [CompassQL](https://github.com/vega/compassql).
-
-For example, we are interested in how the `AverageCost` distribution differs across different `Region`s.
-
-```python    
-from lux.vis.VisList import VisList
-VisList(["Region=?","AverageCost"],df)
-```    
-
-<img src="https://github.com/lux-org/lux-resources/blob/master/readme_img/visList.gif?raw=true"
-     alt="Example Vis List"
-     style="width:600px" />
-
-
-To find out more about other features in Lux, see the complete documentation on [ReadTheDocs](https://lux-api.readthedocs.io/).
-
-# Installation & Setup
-
-> **Note**: Lux's official package name is `lux-api` (not `lux`). After installing the package, remember to run the setup instructions for your notebook IDE, e.g., [jupyter notebook](#setup-in-jupyter-notebook-vscode-jupyterhub) and [jupyter lab](#setup-in-jupyter-lab).
-
-To get started, please follow both the installation and setup instructions in your command line.
-`lux-api` can be installed through [PyPI](https://pypi.org/project/lux-api/) or [conda-forge](https://github.com/conda-forge/lux-api-feedstock). 
+The easiest way to install impedance.py is from [PyPI](https://pypi.org/project/impedance/) using pip.
 
 ```bash
-pip install lux-api
+pip install impedance
 ```
 
-If you use [conda](https://docs.conda.io/en/latest/), you can install `lux-api` via:
+See [Getting started with impedance.py](https://impedancepy.readthedocs.io/en/latest/getting-started.html) for instructions on getting started from scratch.
+
+#### Dependencies
+
+impedance.py requires:
+
+-   Python (>=3.7)
+-   SciPy (>=1.0)
+-   NumPy (>=1.22.4)
+-   Matplotlib (>=3.0)
+-   Altair (>=3.0)
+-   Pandas
+
+Several example notebooks are provided in the `docs/source/examples/` directory. Opening these will require Jupyter notebook or Jupyter lab.
+
+#### Examples and Documentation
+
+Several examples can be found in the `docs/source/examples/` directory (the [Fitting impedance spectra notebook](https://impedancepy.readthedocs.io/en/latest/examples/fitting_example.html) is a great place to start) and the documentation can be found at [impedancepy.readthedocs.io](https://impedancepy.readthedocs.io/en/latest/).
+
+## Citing impedance.py
+
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.02349/status.svg)](https://doi.org/10.21105/joss.02349)
+
+If you use impedance.py in published work, please consider citing https://joss.theoj.org/papers/10.21105/joss.02349 as
 
 ```bash
-conda install -c conda-forge lux-api
+@article{Murbach2020,
+  doi = {10.21105/joss.02349},
+  url = {https://doi.org/10.21105/joss.02349},
+  year = {2020},
+  publisher = {The Open Journal},
+  volume = {5},
+  number = {52},
+  pages = {2349},
+  author = {Matthew D. Murbach and Brian Gerwe and Neal Dawson-Elli and Lok-kun Tsui},
+  title = {impedance.py: A Python package for electrochemical impedance analysis},
+  journal = {Journal of Open Source Software}
+}
 ```
 
-Both the PyPI and conda installation include includes the Lux Jupyter widget frontend, [lux-widget](https://pypi.org/project/lux-widget/). 
+## Contributors ✨
 
-## Setup in Jupyter Notebook, VSCode, JupyterHub
+This project started at the [2018 Electrochemical Society (ECS) Hack Week in Seattle](https://www.electrochem.org/233/hack-week) and has benefited from a community of users and contributors since. Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
 
-To use Lux with any Jupyter notebook-based frontends (e.g., [Jupyter notebook](https://github.com/jupyter/notebook), [JupyterHub](https://github.com/jupyterhub/jupyterhub), or [VSCode](https://code.visualstudio.com/docs/python/jupyter-support)), activate the notebook extension:
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/lktsui"><img src="https://avatars0.githubusercontent.com/u/22246069?v=4?s=100" width="100px;" alt="Lok-kun Tsui"/><br /><sub><b>Lok-kun Tsui</b></sub></a><br /><a href="https://github.com/ECSHackWeek/impedance.py/commits?author=lktsui" title="Code">💻</a> <a href="https://github.com/ECSHackWeek/impedance.py/commits?author=lktsui" title="Tests">⚠️</a> <a href="https://github.com/ECSHackWeek/impedance.py/commits?author=lktsui" title="Documentation">📖</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/BGerwe"><img src="https://avatars3.githubusercontent.com/u/38819321?v=4?s=100" width="100px;" alt="Brian Gerwe"/><br /><sub><b>Brian Gerwe</b></sub></a><br /><a href="https://github.com/ECSHackWeek/impedance.py/commits?author=BGerwe" title="Code">💻</a> <a href="https://github.com/ECSHackWeek/impedance.py/commits?author=BGerwe" title="Tests">⚠️</a> <a href="https://github.com/ECSHackWeek/impedance.py/commits?author=BGerwe" title="Documentation">📖</a> <a href="https://github.com/ECSHackWeek/impedance.py/pulls?q=is%3Apr+reviewed-by%3ABGerwe" title="Reviewed Pull Requests">👀</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/nealde"><img src="https://avatars2.githubusercontent.com/u/25877868?v=4?s=100" width="100px;" alt="Neal"/><br /><sub><b>Neal</b></sub></a><br /><a href="https://github.com/ECSHackWeek/impedance.py/pulls?q=is%3Apr+reviewed-by%3Anealde" title="Reviewed Pull Requests">👀</a> <a href="https://github.com/ECSHackWeek/impedance.py/commits?author=nealde" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="http://mattmurbach.com"><img src="https://avatars3.githubusercontent.com/u/9369020?v=4?s=100" width="100px;" alt="Matt Murbach"/><br /><sub><b>Matt Murbach</b></sub></a><br /><a href="https://github.com/ECSHackWeek/impedance.py/commits?author=mdmurbach" title="Documentation">📖</a> <a href="https://github.com/ECSHackWeek/impedance.py/pulls?q=is%3Apr+reviewed-by%3Amdmurbach" title="Reviewed Pull Requests">👀</a> <a href="https://github.com/ECSHackWeek/impedance.py/commits?author=mdmurbach" title="Tests">⚠️</a> <a href="https://github.com/ECSHackWeek/impedance.py/commits?author=mdmurbach" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://kennyvh.com"><img src="https://avatars2.githubusercontent.com/u/29909203?v=4?s=100" width="100px;" alt="Kenny Huynh"/><br /><sub><b>Kenny Huynh</b></sub></a><br /><a href="https://github.com/ECSHackWeek/impedance.py/issues?q=author%3Ahkennyv" title="Bug reports">🐛</a> <a href="https://github.com/ECSHackWeek/impedance.py/commits?author=hkennyv" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/lawrencerenna"><img src="https://avatars0.githubusercontent.com/u/49174337?v=4?s=100" width="100px;" alt="lawrencerenna"/><br /><sub><b>lawrencerenna</b></sub></a><br /><a href="#ideas-lawrencerenna" title="Ideas, Planning, & Feedback">🤔</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Rowin"><img src="https://avatars3.githubusercontent.com/u/1727478?v=4?s=100" width="100px;" alt="Rowin"/><br /><sub><b>Rowin</b></sub></a><br /><a href="https://github.com/ECSHackWeek/impedance.py/issues?q=author%3ARowin" title="Bug reports">🐛</a> <a href="https://github.com/ECSHackWeek/impedance.py/commits?author=Rowin" title="Code">💻</a></td>
+    </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/michaelplews"><img src="https://avatars2.githubusercontent.com/u/14098929?v=4?s=100" width="100px;" alt="Michael Plews"/><br /><sub><b>Michael Plews</b></sub></a><br /><a href="#ideas-michaelplews" title="Ideas, Planning, & Feedback">🤔</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Chebuskin"><img src="https://avatars0.githubusercontent.com/u/33787723?v=4?s=100" width="100px;" alt="Chebuskin"/><br /><sub><b>Chebuskin</b></sub></a><br /><a href="https://github.com/ECSHackWeek/impedance.py/issues?q=author%3AChebuskin" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/environmat"><img src="https://avatars0.githubusercontent.com/u/9309353?v=4?s=100" width="100px;" alt="environmat"/><br /><sub><b>environmat</b></sub></a><br /><a href="https://github.com/ECSHackWeek/impedance.py/issues?q=author%3Aenvironmat" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="http://www.abdullahsumbal.com"><img src="https://avatars2.githubusercontent.com/u/12946947?v=4?s=100" width="100px;" alt="Abdullah Sumbal"/><br /><sub><b>Abdullah Sumbal</b></sub></a><br /><a href="https://github.com/ECSHackWeek/impedance.py/issues?q=author%3Aabdullahsumbal" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/nobkat"><img src="https://avatars3.githubusercontent.com/u/29077445?v=4?s=100" width="100px;" alt="nobkat"/><br /><sub><b>nobkat</b></sub></a><br /><a href="https://github.com/ECSHackWeek/impedance.py/commits?author=nobkat" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/nickbrady"><img src="https://avatars1.githubusercontent.com/u/7471367?v=4?s=100" width="100px;" alt="Nick"/><br /><sub><b>Nick</b></sub></a><br /><a href="https://github.com/ECSHackWeek/impedance.py/issues?q=author%3Anickbrady" title="Bug reports">🐛</a> <a href="https://github.com/ECSHackWeek/impedance.py/commits?author=nickbrady" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/aokomorowski"><img src="https://avatars.githubusercontent.com/u/43665474?v=4?s=100" width="100px;" alt="aokomorowski"/><br /><sub><b>aokomorowski</b></sub></a><br /><a href="https://github.com/ECSHackWeek/impedance.py/commits?author=aokomorowski" title="Code">💻</a></td>
+    </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://petermattia.com"><img src="https://avatars.githubusercontent.com/u/29551858?v=4?s=100" width="100px;" alt="Peter Attia"/><br /><sub><b>Peter Attia</b></sub></a><br /><a href="https://github.com/ECSHackWeek/impedance.py/commits?author=petermattia" title="Code">💻</a> <a href="https://github.com/ECSHackWeek/impedance.py/commits?author=petermattia" title="Tests">⚠️</a> <a href="https://github.com/ECSHackWeek/impedance.py/commits?author=petermattia" title="Documentation">📖</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="http://sdkang.org"><img src="https://avatars.githubusercontent.com/u/55116501?v=4?s=100" width="100px;" alt="sdkang"/><br /><sub><b>sdkang</b></sub></a><br /><a href="https://github.com/ECSHackWeek/impedance.py/commits?author=stephendkang" title="Tests">⚠️</a> <a href="https://github.com/ECSHackWeek/impedance.py/commits?author=stephendkang" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/lucasfdvx"><img src="https://avatars.githubusercontent.com/u/85888904?v=4?s=100" width="100px;" alt="lucasfdvx"/><br /><sub><b>lucasfdvx</b></sub></a><br /><a href="https://github.com/ECSHackWeek/impedance.py/issues?q=author%3Alucasfdvx" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/SaftMacki"><img src="https://avatars.githubusercontent.com/u/90030271?v=4?s=100" width="100px;" alt="Marcus Karlstad"/><br /><sub><b>Marcus Karlstad</b></sub></a><br /><a href="https://github.com/ECSHackWeek/impedance.py/issues?q=author%3ASaftMacki" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/markbouman"><img src="https://avatars.githubusercontent.com/u/103944120?v=4?s=100" width="100px;" alt="Mark Bouman"/><br /><sub><b>Mark Bouman</b></sub></a><br /><a href="https://github.com/ECSHackWeek/impedance.py/issues?q=author%3Amarkbouman" title="Bug reports">🐛</a> <a href="https://github.com/ECSHackWeek/impedance.py/commits?author=markbouman" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/oslopanda"><img src="https://avatars.githubusercontent.com/u/33810430?v=4?s=100" width="100px;" alt="oslopanda"/><br /><sub><b>oslopanda</b></sub></a><br /><a href="https://github.com/ECSHackWeek/impedance.py/issues?q=author%3Aoslopanda" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/pililac"><img src="https://avatars.githubusercontent.com/u/60116646?v=4?s=100" width="100px;" alt="pililac"/><br /><sub><b>pililac</b></sub></a><br /><a href="https://github.com/ECSHackWeek/impedance.py/issues?q=author%3Apililac" title="Bug reports">🐛</a></td>
+    </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/kevinsmia1939"><img src="https://avatars.githubusercontent.com/u/11407922?v=4?s=100" width="100px;" alt="Kavin Teenakul"/><br /><sub><b>Kavin Teenakul</b></sub></a><br /><a href="https://github.com/ECSHackWeek/impedance.py/commits?author=kevinsmia1939" title="Code">💻</a> <a href="https://github.com/ECSHackWeek/impedance.py/commits?author=kevinsmia1939" title="Documentation">📖</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/etrevis"><img src="https://avatars.githubusercontent.com/u/16451399?v=4?s=100" width="100px;" alt="Enrico"/><br /><sub><b>Enrico</b></sub></a><br /><a href="https://github.com/ECSHackWeek/impedance.py/commits?author=etrevis" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://ma-sadeghi.github.io"><img src="https://avatars.githubusercontent.com/u/14086031?v=4?s=100" width="100px;" alt="Amin Sadeghi"/><br /><sub><b>Amin Sadeghi</b></sub></a><br /><a href="https://github.com/ECSHackWeek/impedance.py/commits?author=ma-sadeghi" title="Code">💻</a> <a href="https://github.com/ECSHackWeek/impedance.py/issues?q=author%3Ama-sadeghi" title="Bug reports">🐛</a></td>
+    </tr>
+  </tbody>
+</table>
 
-```bash
-jupyter nbextension install --py luxwidget
-jupyter nbextension enable --py luxwidget
-```
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
 
-If the installation happens correctly, you should see two `- Validating: OK` after executing the two lines above.
-Note that you may have to restart the Jupyter Notebook server to ensure that the widget is displaying correctly.
+<!-- ALL-CONTRIBUTORS-LIST:END -->
 
-## Setup in Jupyter Lab
-
-Lux is compatible with both Jupyter Lab version 2 and 3. To use Lux in [Jupyter Lab](https://github.com/jupyterlab/jupyterlab), activate the lab extension:
-
-```bash
-jupyter labextension install @jupyter-widgets/jupyterlab-manager
-jupyter labextension install luxwidget
-```
-Note that JupyterLab and VSCode is supported only for lux-widget version >=0.1.2, if you have an earlier version, please upgrade to the latest version of [lux-widget](https://pypi.org/project/lux-widget/). Lux has only been tested with the Chrome browser. 
-
-If you encounter issues with the installation, please refer to [this page](https://lux-api.readthedocs.io/en/latest/source/guide/FAQ.html#troubleshooting-tips) to troubleshoot the installation. Follow [these instructions](https://lux-api.readthedocs.io/en/latest/source/getting_started/installation.html#manual-installation-dev-setup) to set up Lux for development purposes.
-
-# Support and Resources
-
-Lux is undergoing active development. If you are using Lux, we would love to hear from you! 
-
-Drop us a note [here](https://docs.google.com/forms/d/e/1FAIpQLSe4YL2WsblqjB13FpkNsjbKGfHTM10KCgtjz9Yui2ZkiqErcQ/viewform?usp=sf_link) to share your experiences — any feedback, suggestions, and contributions are welcome!
-
-**Links to additional resources:**
-
-- Follow us on [Twitter](https://twitter.com/intent/follow?original_referer=https%3A%2F%2Fpublish.twitter.com%2F&ref_src=twsrc%5Etfw&screen_name=lux_api&tw_p=followbutton) or sign up to our [mailing list](https://forms.gle/XKv3ejrshkCi3FJE6) to stay tuned for upcoming releases and updates. 
-- Visit [ReadTheDoc](https://lux-api.readthedocs.io/en/latest/) for more detailed documentation.
-- Try out these hands-on [exercises](https://mybinder.org/v2/gh/lux-org/lux-binder/master?urlpath=lab/tree/exercise) or [tutorials](https://mybinder.org/v2/gh/lux-org/lux-binder/master?urlpath=lab/tree/tutorial) on [Binder](https://mybinder.org/v2/gh/lux-org/lux-binder/master?urlpath=lab/). Or clone and run [lux-binder](https://github.com/lux-org/lux-binder) locally.
-- Join our community [Slack](https://communityinviter.com/apps/lux-project/lux) to discuss and ask questions.
-- Check out [our paper](https://arxiv.org/pdf/2105.00121.pdf) for more details on how Lux works under the hoods.
-- Report any bugs, issues, or requests through [Github Issues](https://github.com/lux-org/lux/issues). 
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
