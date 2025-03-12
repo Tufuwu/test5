@@ -1,20 +1,22 @@
-nashpy.egg-info
-*pyc
-.eggs
-.coverage
-dist/
-.hypothesis/
-docs/_build/
-.wily/
-coverage.xml
-build/
-env/
-.tox/
-*.DS_Store
-*.aux
-*.log
-*.fdb_latexmk
-*.fls
-*.xdv
-env*
-.pypirc
+# Ontologies and Annotations
+*.gpad
+*.owl
+*.obo
+gene_association.*
+/*.gpa
+/*.gaf
+/*.json
+gene2go
+*.gz
+.cache
+
+# Temporary working files
+*.png
+*.pyc
+/*.xlsx
+/*.txt
+*.bac
+
+# Sphinx working directories
+_static
+_templates
