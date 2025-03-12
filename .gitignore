@@ -1,11 +1,6 @@
-*.pyc
-profiles/*.pyc
-*~
-*.log
-*.pcap
-dist
-build
-*.egg-info
-.eggs
+.DS_Store/
 
-src/ptf/_version.py
+__pycache__/
+venv/
+
+node_modules/
