@@ -1,56 +1,69 @@
+[build-system]
+requires = [
+    "setuptools>=61.0",
+    "wheel",
+    "setuptools-git-versioning",
+    "cython",
+    "numpy>=2.0.0.rc1",
+]
+build-backend = "setuptools.build_meta"
+
 [project]
-name = "fimfarchive"
-version = "0.1.0"
-description = "Preserves stories from Fimfiction"
-readme = "README.md"
-requires-python = "~=3.8"
+name = "driftscan"
+description = "Transit telescope analysis with the m-mode formalism"
+license = { file = "LICENSE" }
+authors = [
+    { name = "The CHIME Collaboration", email = "lgray@phas.ubc.ca" }
+]
+maintainers = [
+    { name = "Liam Gray", email = "lgray@phas.ubc.ca" },
+    { name = "Don Wiebe", email = "dvw@phas.ubc.ca" }
+]
+dynamic = ["readme", "version"]
+requires-python = ">=3.9"
 dependencies = [
-    "arrow~=1.3",
-    "bbcode~=1.1",
-    "blinker~=1.8",
-    "jinja2~=3.1",
-    "jmespath~=1.0",
-    "jsonapi-client",
-    "requests~=2.32",
-    "tqdm~=4.66",
+    "cachetools",
+    "caput @ git+https://github.com/radiocosmology/caput.git",
+    "cora @ git+https://github.com/radiocosmology/cora.git",
+    "click",
+    "h5py",
+    "healpy>=1.8",
+    "mpi4py",
+    "numpy>=1.24",
+    "scipy>=0.10",
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
 ]
 
 [project.optional-dependencies]
-lz4 = ["lz4~=4.3"]
+test = ["pytest"]
+docs = ["Sphinx", "sphinx_rtd_theme"]
+lint = ["black", "pydocstyle"]
 
-[tool.uv]
-compile-bytecode = true
-dev-dependencies = [
-    "mypy~=1.11",
-    "pytest~=8.3",
-    "requests-mock~=1.12",
-    "ruff~=0.6",
-    "types-jmespath~=1.0",
-    "types-requests~=2.32",
-    "types-tqdm~=4.66",
-]
+[project.urls]
+Documentation = "https://radiocosmology.github.io/driftscan"
+Repository = "https://github.com/radiocosmology/driftscan"
 
-[tool.uv.sources.jsonapi-client]
-git = "https://github.com/JockeTF/jsonapi-client.git"
+[project.scripts]
+drift-makeproducts = "drift.scripts.makeproducts:cli"
+drift-runpipeline = "drift.scripts.runpipeline:cli"
 
-[tool.mypy]
-files = ["fimfarchive", "tests"]
-ignore_missing_imports = true
+[tool.setuptools.dynamic]
+readme = { file = ["README.md"], content-type = "text/markdown" }
 
-[tool.pyright]
-venvPath = "."
-venv = ".venv"
+[tool.setuptools-git-versioning]
+enabled = true
 
-[tool.pytest.ini_options]
-testpaths = ["tests"]
+[tool.setuptools.packages]
+find = {}
 
-[tool.ruff]
-extend-exclude = ["fimfarchive/__init__.py"]
-
-[tool.ruff.lint]
-select = ["A", "E", "F", "N", "RUF", "T10", "W"]
-ignore = ["N801", "RUF012", "RUF022"]
-
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+[tool.setuptools.package-data]
+"drift.telescope" = ["gmrtpositions.dat"]

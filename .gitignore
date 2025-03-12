@@ -1,53 +1,43 @@
-# Common files.
 .DS_Store
-Thumbs.db
 
-# Common extensions.
-*.diff
-*.err
-*.orig
-*.log
-*.rej
-*.swo
-*.swp
-*.vi
-*~
+*.py[cod]
 
-# Python cache.
-__pycache__/
+# C extensions
+*.so
+*.c
 
-# Lock files.
-uv.lock
+# Packages
+*.egg
+*.egg-info
+dist
+build
+eggs
+parts
+bin
+var
+sdist
+develop-eggs
+.installed.cfg
+lib
+lib64
+__pycache__
 
-# Virtual environment.
-.venv/
+# Installer logs
+pip-log.txt
 
-# Vim settings.
-.vim/
+# Unit test / coverage reports
+.coverage
+.tox
+nosetests.xml
 
-# PyCharm project.
-/.idea/
-*.iml
+# Translations
+*.mo
 
-# Eclipse project.
+# Mr Developer
+.mr.developer.cfg
 .project
 .pydevproject
-.settings/
 
-# Rope project.
-.ropeproject/
-
-# Mypy cache.
-.mypy_cache/
-
-# Coverage output.
-.coverage
-coverage.xml
-htmlcov/
-*.py,cover
-
-# Fimfarchive data.
-fimfarchive.zip
-
-# Operations configuration.
-operations/inventory.yml
+# Editor rubble
+*~
+.*.swp
