@@ -1,11 +1,10 @@
-*.eggs
-*.pyc
-*.swp
-*.un~
-*.egg-info
-*.egg/dist/
+*.py[cod]
 build/
 dist/
-.tox/
+venv/
+*.egg-info/
+
+keys.py
+.env
 
 .idea/

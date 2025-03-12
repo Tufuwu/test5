@@ -1,3 +1,0 @@
-include setup.py README MANIFEST.in LICENSE
-global-exclude *~
-exclude bitfield/tests/*
