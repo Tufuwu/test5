@@ -1,0 +1,42 @@
+{% load i18n %}
+
+{% if object_list %}
+    <table class="table table-hover table-striped">
+        <thead>
+        <tr>
+            <th>{% trans 'Description' %}</th>
+            <th class="dateWidth">{% trans 'First seen' %}</th>
+            <th class="dateWidth">{% trans 'Last seen' %}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for tagstat in object_list %}
+            <tr>
+                <td>
+                    <a href="{% url 'devices:device_detail' tagstat.device.pk %}">{{ tagstat.device.list_repr }}</a>
+                </td>
+                <td>
+                    {% if tagstat.first_installed %}
+                        <a href="{% url 'devices:event_detail' tagstat.first_installed.pk %}">{{ tagstat.first_installed.timestamp|date:"M d H:i:s Y" }}</a>
+                    {% else %}
+                        <a href="{% url 'devices:session_detail' tagstat.first_seen.pk %}">{{ tagstat.first_seen.time|date:"M d H:i:s Y" }}</a>
+                    {% endif %}
+                </td>
+                <td>
+                   {% if tagstat.last_deleted %}
+                        <a href="{% url 'devices:event_detail' tagstat.last_deleted.pk %}">{{ tagstat.last_deleted.timestamp|date:"M d H:i:s Y" }}</a>
+                        &nbsp;<i class="glyphicon glyphicon-remove-circle" rel="tooltip" title="removed"></i>
+                    {% else %}
+                        <a href="{% url 'devices:session_detail' tagstat.last_seen.pk %}">{{ tagstat.last_seen.time|date:"M d H:i:s Y" }}</a>
+                       {% if tagstat.first_installed %}
+                           &nbsp;<i class="glyphicon glyphicon-ok-circle" rel="tooltip" title="still installed"></i>
+                       {% endif %}
+                   {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>{% trans 'No files found' %}</p>
+{% endif %}

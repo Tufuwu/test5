@@ -1,0 +1,52 @@
+{% load i18n %}
+{% load text_filters %}
+
+{% if object_list %}
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>{% trans 'Unique ID' %}</th>
+            <th>{% trans 'Package name' %}</th>
+            <th>&nbsp; &nbsp;{% trans 'Version' %}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for obj in object_list %}
+            <tr>
+                <td>
+                    <a href="{% url url_name obj.pk %}{{ url_hash }}">
+                        {{ obj.list_repr|highlight:filter_query }}
+                    </a>
+                </td>
+                <td>
+                    {% if obj.get_matching_packages %}
+                        <a href="{% url 'packages:package_detail' obj.get_matching_packages.0.pk %}">
+                            {{ obj.package_name|highlight:filter_query }}
+                        </a>
+                    {% else %}
+                        <span title="{% trans 'No matching package found' %}">
+                            {{ obj.package_name|highlight:filter_query }}
+                        </span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if obj.version %}
+                        {% if obj.version.security %}
+                            <i class="glyphicon glyphicon-ban-circle text-danger" rel="tooltip" title="vulnerable"></i>
+                        {% else %}
+                            <i class="glyphicon glyphicon-ok-circle text-success" rel="tooltip" title="ok"></i>
+                        {% endif %}
+                    {% else %}
+                        &nbsp; &nbsp;
+                    {% endif %}
+                    {{ obj.version_str }}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>
+        <small>There are no entries.</small>
+    </p>
+{% endif %}

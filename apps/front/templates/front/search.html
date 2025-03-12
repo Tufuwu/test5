@@ -1,0 +1,222 @@
+{% extends "front/base.html" %}
+
+{% load i18n %}
+{% load permissions %}
+
+{% block title %}{% trans "Search Results" %}{% endblock %}
+
+{% block hero %}
+    <h1>{% trans "Search Results" %}</h1>
+{% endblock %}
+
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <form class="form-inline" action="{% url 'front:search' %}" method="get" style="margin-bottom: 20px">
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="q" value="{{ query }}" autofocus>
+                        <div class="input-group-btn">
+                            <input type="submit" class="btn btn-default" value="Search">
+                        </div>
+                    </div>
+                </form>
+
+                <div class="panel-group" id="accordion2">
+                    {% if groups %}
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <a data-toggle="collapse" data-parent="#accordion2"
+                                   href="#collapseOne">
+                                    {{ group_title }}
+                                    <span class="badge pull-right">{{ groups|length }}</span>
+                                </a>
+                            </div>
+                            <div id="collapseOne" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <p>
+                                        <small>Found <strong>{{ groups|length }}</strong> group{{ groups|pluralize }}.
+                                        </small>
+                                    </p>
+                                    <ul class="list-unstyled">
+                                        {% for group in groups %}
+                                            <li><a href="{% url 'devices:group_detail' group.pk %}">{{ group }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {% if policies %}
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <a data-toggle="collapse" data-parent="#accordion2"
+                                   href="#collapseTwo">
+                                    {{ policy_title }}
+                                    <span class="badge pull-right">{{ policies|length }}</span>
+                                </a>
+                            </div>
+                            <div id="collapseTwo" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <p>
+                                        <small>Found <strong>{{ policies|length }}</strong>
+                                            policy{{ policies|pluralize }}.
+                                        </small>
+                                    </p>
+                                    <ul class="list-unstyled">
+                                        {% for policy in policies %}
+                                            <li><a href="{% url 'policies:policy_detail' policy.pk %}">{{ policy }}</a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {% if enforcements %}
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <a data-toggle="collapse" data-parent="#accordion2"
+                                   href="#collapseThree">
+                                    {{ enforcement_title }}
+                                    <span class="badge pull-right">{{ enforcements|length }}</span>
+                                </a>
+                            </div>
+                            <div id="collapseThree" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <p>
+                                        <small>Found <strong>{{ enforcements|length }}</strong>
+                                            enforcement{{ enforcements|pluralize }}.
+                                        </small>
+                                    </p>
+                                    <ul class="list-unstyled">
+                                        {% for enforcement in enforcements %}
+                                            <li><a
+                                                href="{% url 'policies:enforcement_detail' enforcement.pk %}">{{ enforcement }}</a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {% if devices %}
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <a data-toggle="collapse" data-parent="#accordion2"
+                                   href="#collapseFour">
+                                    {{ device_title }}
+                                    <span class="badge pull-right">{{ devices|length }}</span>
+                                </a>
+                            </div>
+                            <div id="collapseFour" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <p>
+                                        <small>Found <strong>{{ devices|length }}</strong> device{{ devices|pluralize }}.
+                                        </small>
+                                    </p>
+                                    <ul class="list-unstyled">
+                                        {% for device in devices %}
+                                            <li><a href="{% url 'devices:device_detail' device.pk %}">{{ device }}</a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {% if packages %}
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <a data-toggle="collapse" data-parent="#accordion2"
+                                   href="#collapseFive">
+                                    {{ package_title }}
+                                    <span class="badge pull-right">{{ packages|length }}</span>
+                                </a>
+                            </div>
+                            <div id="collapseFive" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <p>
+                                        <small>Found <strong>{{ packages|length }}</strong>
+                                            package{{ packages|pluralize }}.
+                                        </small>
+                                    </p>
+                                    <ul class="list-unstyled">
+                                        {% for package in packages %}
+                                            <li><a
+                                                href="{% url 'packages:package_detail' package.pk %}">{{ package }}</a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {% if products %}
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <a data-toggle="collapse" data-parent="#accordion2"
+                                   href="#collapseSix">
+                                    {{ product_title }}
+                                    <span class="badge pull-right">{{ products|length }}</span>
+                                </a>
+                            </div>
+                            <div id="collapseSix" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <p>
+                                        <small>Found <strong>{{ products|length }}</strong>
+                                            product{{ products|pluralize }}.
+                                        </small>
+                                    </p>
+                                    <ul class="list-unstyled">
+                                        {% for product in products %}
+                                            <li><a
+                                                href="{% url 'devices:product_detail' product.pk %}">{{ product }}</a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {% if files %}
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <a data-toggle="collapse" data-parent="#accordion2"
+                                   href="#collapseSeven">
+                                    {{ file_title }}
+                                    <span class="badge pull-right">{{ files|length }}</span>
+                                </a>
+                            </div>
+                            <div id="collapseSeven" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <p>
+                                        <small>Found <strong>{{ files|length }}</strong> file{{ files|pluralize }}.
+                                        </small>
+                                    </p>
+                                    <ul class="list-unstyled">
+                                        {% for file in files %}
+                                            <li><a href="{% url 'filesystem:file_detail' file.pk %}">{{ file }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                </div>
+
+                {% if not groups and not policies and not enforcements and not devices and not packages and not products and not files %}
+                    <p class="text-danger">No results matched your search criteria.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
