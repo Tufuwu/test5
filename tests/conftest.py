@@ -1,67 +1,162 @@
+"""py.test config"""
+
+import sys
+import threading
+from collections import deque
+from collections.abc import Callable
+from time import sleep
+
 import pytest
-from flask import Flask, jsonify, render_template, session
-from flask.views import MethodView
-from flask_simplelogin import SimpleLogin, login_required, get_username
-from itsdangerous import URLSafeTimedSerializer
+
+from circuits import BaseComponent, Debugger, Manager, handler
+from circuits.core.manager import TIMEOUT
 
 
-@pytest.fixture
-def app():
-    """Flask Pytest uses it"""
-    myapp = Flask(__name__)
-    myapp.config["SECRET_KEY"] = "secret-here"
-    SimpleLogin(myapp)
+class Watcher(BaseComponent):
+    def init(self):
+        self._lock = threading.Lock()
+        self.events = deque()
 
-    @myapp.route("/secret")
-    @login_required
-    def secret():
-        return "This is Safe"
+    @handler(channel='*', priority=999.9)
+    def _on_event(self, event, *args, **kwargs):
+        with self._lock:
+            self.events.append(event)
 
-    @myapp.route("/username_required")
-    @login_required(username=["user1", "user2"])
-    def username_required():
-        return "This is Safe"
+    def clear(self):
+        self.events.clear()
 
-    @myapp.route("/api", methods=["POST"])
-    @login_required(basic=True)
-    def api():
-        return jsonify(data="You are logged in with basic auth")
+    def wait(self, name, channel=None, timeout=30.0):
+        for _i in range(int(timeout / TIMEOUT)):
+            with self._lock:
+                for event in self.events:
+                    if (
+                        event.name == name
+                        and event.waitingHandlers == 0
+                        and ((channel is None) or (channel in event.channels))
+                    ):
+                        return True
+            sleep(TIMEOUT)
+        return False
 
-    def be_admin(username):
-        """Validator to check if user has admin role"""
-        if username != "admin":
-            return "User does not have admin role"
-
-    def have_approval(username):
-        """Validator: all users approved, return None"""
-        return
-
-    @myapp.route("/complex")
-    @login_required(must=[be_admin, have_approval])
-    def complexview():
-        return render_template("secret.html")
-
-    class ProtectedView(MethodView):
-        decorators = [login_required]
-
-        def get(self):
-            return "You are logged in as <b>{0}</b>".format(get_username())
-
-    myapp.add_url_rule("/protected", view_func=ProtectedView.as_view("protected"))
-
-    return myapp
+    def count(self, name, channel=None, n=1, timeout=30.0):
+        n = 0
+        with self._lock:
+            for event in self.events:
+                if event.name == name and event.waitingHandlers == 0 and ((channel is None) or (channel in event.channels)):
+                    n += 1
+        return n
 
 
-@pytest.fixture
-def csrf_token_for():
-    """Based on how Flask-WTF generates it on the fly:
-    https://github.com/wtforms/flask-wtf/blob/main/src/flask_wtf/csrf.py#L54-L63
-    """
+class Flag:
+    status = False
 
-    def generator(app):
-        serilaizer = URLSafeTimedSerializer(
-            app.config["SECRET_KEY"], salt="wtf-csrf-token"
-        )
-        return serilaizer.dumps(session["csrf_token"])
 
-    return generator
+def call_event_from_name(manager, event, event_name, *channels):
+    fired = False
+    value = None
+    for _r in manager.waitEvent(event_name):
+        if not fired:
+            fired = True
+            value = manager.fire(event, *channels)
+        sleep(0.1)
+    return value
+
+
+def call_event(manager, event, *channels):
+    return call_event_from_name(manager, event, event.name, *channels)
+
+
+class WaitEvent:
+    def __init__(self, manager, name, channel=None, timeout=30.0):
+        if channel is None:
+            channel = getattr(manager, 'channel', None)
+
+        self.timeout = timeout
+        self.manager = manager
+
+        flag = Flag()
+
+        @handler(name, channel=channel)
+        def on_event(self, *args, **kwargs):
+            flag.status = True
+
+        self.handler = self.manager.addHandler(on_event)
+        self.flag = flag
+
+    def wait(self):
+        try:
+            for _i in range(int(self.timeout / TIMEOUT)):
+                if self.flag.status:
+                    return True
+                sleep(TIMEOUT)
+        finally:
+            self.manager.removeHandler(self.handler)
+
+
+def wait_for(obj, attr, value=True, timeout=30.0):
+    from circuits.core.manager import TIMEOUT
+
+    for _i in range(int(timeout / TIMEOUT)):
+        if isinstance(value, Callable):
+            if value(obj, attr):
+                return True
+        elif getattr(obj, attr) == value:
+            return True
+        sleep(TIMEOUT)
+    return None
+
+
+class SimpleManager(Manager):
+    def tick(self, timeout=-1):
+        self._running = False
+        return super().tick(timeout)
+
+
+@pytest.fixture()
+def simple_manager(request):
+    manager = SimpleManager()
+    Debugger(events=request.config.option.verbose).register(manager)
+    return manager
+
+
+@pytest.fixture()
+def manager(request):
+    manager = Manager()
+
+    def finalizer():
+        manager.stop()
+
+    request.addfinalizer(finalizer)
+
+    waiter = WaitEvent(manager, 'started')
+    manager.start()
+    assert waiter.wait()
+
+    Debugger(events=request.config.option.verbose).register(manager)
+
+    return manager
+
+
+@pytest.fixture()
+def watcher(request, manager):
+    watcher = Watcher().register(manager)
+
+    def finalizer():
+        waiter = WaitEvent(manager, 'unregistered')
+        watcher.unregister()
+        waiter.wait()
+
+    request.addfinalizer(finalizer)
+
+    return watcher
+
+
+for key, value in {
+    'WaitEvent': WaitEvent,
+    'wait_for': wait_for,
+    'call_event': call_event,
+    'PLATFORM': sys.platform,
+    'PYVER': sys.version_info[:3],
+    'call_event_from_name': call_event_from_name,
+}.items():
+    setattr(pytest, key, value)

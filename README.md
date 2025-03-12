@@ -1,38 +1,91 @@
-[![GitHub Actions](https://img.shields.io/github/actions/workflow/status/flask-extensions/Flask-SimpleLogin/tests.yaml?branch=main&style=flat-square)](https://github.com/flask-extensions/Flask-SimpleLogin/actions/workflows/tests.yml)
-[![PyPI](https://img.shields.io/pypi/v/flask_simplelogin.svg?style=flat-square)](https://pypi.org/project/flask_simplelogin/)
-[![PyPI versions](https://img.shields.io/pypi/pyversions/flask_simplelogin.svg?style=flat-square)](https://pypi.org/project/flask_simplelogin/)
-[![PyPI formats](https://img.shields.io/pypi/format/flask_simplelogin.svg?style=flat-square)](https://pypi.org/project/flask_simplelogin/)
-[![Flask](https://img.shields.io/badge/Flask-Extension-blue.svg?style=flat-square)](https://github.com/pallets/flask)
-[![Documentation](https://img.shields.io/readthedocs/flask-simple-login?style=flat-square)](https://flask-simple-login.readthedocs.io/en/latest/?badge=latest)
+[![Build Status](https://github.com/circuits/circuits/actions/workflows/python-app.yml/badge.svg)](https://github.com/circuits/circuits/actions/workflows/python-app.yml)
 
-# Login Extension for Flask
+[![codecov](https://codecov.io/gh/circuits/circuits/branch/master/graph/badge.svg)](https://codecov.io/gh/circuits/circuits)
 
-The simplest way to add login to flask!
+circuits is a **Lightweight** **Event** driven and **Asynchronous** **Application Framework** for the [Python Programming Language](http://www.python.org/) with a strong **Component** Architecture.
 
-## How it works
+circuits also includes a lightweight, high performance and scalable HTTP/WSGI compliant web server as well as various I/O and Networking components.
 
-First, install it from [PyPI](https://pypi.org/project/flask_simplelogin/):
+-   [Website](http://circuitsframework.com/)
+-   [Downloads](https://github.com/circuits/circuits/releases)
+-   [Documentation](http://circuits.readthedocs.org/en/latest/)
 
-```console
-$ pip install flask_simplelogin
-```
+Got questions?
 
-Then, use it in your app:
+-   [Ask a Question](http://stackoverflow.com/questions/ask) (Tag it: `circuits-framework`)
 
-```python
-from flask import Flask
-from flask_simplelogin import SimpleLogin
+Examples
+========
 
-app = Flask(__name__)
-SimpleLogin(app)
-```
+Features
+========
 
-## **That's it!**
+-   event driven
+-   concurrency support
+-   component architecture
+-   asynchronous I/O components
+-   no required external dependencies
+-   full featured web framework (circuits.web)
+-   coroutine based synchronization primitives
 
-Now you have `/login` and `/logout` routes in your application.
+Requirements
+============
 
-The username defaults to `admin` and the password defaults to `secret` — yeah that's not clever, check the [docs](https://flask-simple-login.readthedocs.io/en/latest/?badge=latest) to see how to configure it properly!
+-   circuits has no dependencies beyond the [Python Standard Library](http://docs.python.org/library/).
 
-![Login Screen](./login_screen.png)
+Supported Platforms
+===================
 
-Check the [documentation](https://flask-simple-login.readthedocs.io/en/latest/?badge=latest) for more details!
+-   Linux, FreeBSD, Mac OS X, Windows
+-   Python 3.7, 3.8, 3.9, 3.10, 3.11, 3.12
+-   pypy (the newer the better)
+
+Installation
+============
+
+The simplest and recommended way to install circuits is with pip. You may install the latest stable release from PyPI with pip:
+
+    $ pip install circuits
+
+If you do not have pip, you may use easy\_install:
+
+    $ easy_install circuits
+
+Alternatively, you may download the source package from the [PyPi](http://pypi.python.org/pypi/circuits) or the [Downloads](https://github.com/circuits/circuits/releases) extract it and install using:
+
+    $ python setup.py install
+
+> **note**
+>
+> You can install the [development version](https://github.com/circuits/circuits/archive/master.zip#egg=circuits-dev)
+> via `pip install circuits==dev`.
+>
+License
+=======
+
+circuits is licensed under the [MIT License](http://www.opensource.org/licenses/mit-license.php).
+
+Feedback
+========
+
+We welcome any questions or feedback about bugs and suggestions on how to improve circuits.
+
+Let us know what you think about circuits. [@pythoncircuits](http://twitter.com/pythoncircuits).
+
+Do you have suggestions for improvement? Then please [Create an Issue](https://github.com/circuits/circuits/issues/new) with details of what you would like to see. I'll take a look at it and work with you to either incorporate the idea or find a better solution.
+
+Community
+=========
+
+There are also several places you can reach out to the circuits community:
+
+-   [Mailing List](http://groups.google.com/group/circuits-users)
+-   [\#circuits IRC Channel](https://web.libera.chat/#circuits) on the [Libera.Chat IRC Network](https://libera.chat)
+-   [Ask a Question](http://stackoverflow.com/questions/ask) on [Stackoverflow](http://stackoverflow.com/) (Tag it: `circuits-framework`)
+
+------------------------------------------------------------------------
+
+Disclaimer
+==========
+
+Whilst I (James Mills) continue to contribute and maintain the circuits project I do not represent the interests or business of my employer Facebook Inc. The contributions I make are of my own free time and have no bearing or relevance to Facebook Inc.
