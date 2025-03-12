@@ -1,8 +1,0 @@
-Makefile
-.git
-.dockerignore
-.gitignore
-README.md
-cloudbuild.yaml
-setup.cfg
-pyproject.toml
