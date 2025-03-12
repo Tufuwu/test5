@@ -1,20 +1,79 @@
 [build-system]
-requires = ["setuptools>=51", "wheel>=0.36"]
-build-backend = "setuptools.build_meta"
+build-backend = "hatchling.build"
+requires = [
+  "hatch-vcs",
+  "hatchling",
+]
 
-[tool.black]
-exclude = '''
-/(
-      \.git
-    | venv
-    | __pycache__
-    | \.tox
-)/
-'''
+[project]
+name = "cherry-picker"
+description = "Backport CPython changes from main to maintenance branches"
+readme = "README.md"
+maintainers = [ { name = "Python Core Developers", email = "core-workflow@python.org" } ]
+authors = [ { name = "Mariatta Wijaya", email = "mariatta@python.org" } ]
+requires-python = ">=3.9"
+classifiers = [
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: Apache Software License",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+]
+dynamic = [ "version" ]
+dependencies = [
+  "click>=6",
+  "gidgethub",
+  "requests",
+  "stamina",
+  "tomli>=1.1; python_version<'3.11'",
+]
+optional-dependencies.dev = [
+  "pytest",
+  "pytest-cov",
+]
+urls.Homepage = "https://github.com/python/cherry-picker"
+scripts.cherry_picker = "cherry_picker.cherry_picker:cherry_pick_cli"
 
-[tool.towncrier]
-package = "aiohttp_sse"
-filename = "CHANGES.rst"
-directory = "CHANGES/"
-title_format = "{version} ({project_date})"
-issue_format = "`#{issue} <https://github.com/aio-libs/aiohttp-sse/issues/{issue}>`_"
+[tool.hatch.version]
+source = "vcs"
+# Change regex to match tags like "cherry-picker-v2.2.0".
+tag-pattern = '^cherry-picker-(?P<version>[vV]?\d+(?:\.\d+){0,2}[^\+]*)(?:\+.*)?$'
+
+[tool.hatch.build.hooks.vcs]
+version-file = "cherry_picker/_version.py"
+
+[tool.hatch.version.raw-options]
+local_scheme = "no-local-version"
+
+[tool.ruff]
+fix = true
+lint.select = [
+  "C4",     # flake8-comprehensions
+  "E",      # pycodestyle errors
+  "F",      # pyflakes errors
+  "I",      # isort
+  "ICN",    # flake8-import-conventions
+  "ISC",    # flake8-implicit-str-concat
+  "LOG",    # flake8-logging
+  "PGH",    # pygrep-hooks
+  "PYI",    # flake8-pyi
+  "RUF022", # unsorted-dunder-all
+  "RUF100", # unused noqa (yesqa)
+  "S",      # flake8-bandit
+  "UP",     # pyupgrade
+  "W",      # pycodestyle warnings
+  "YTT",    # flake8-2020
+]
+lint.ignore = [
+  "S101", # Use of assert detected
+  "S404", # subprocess module is possibly insecure
+  "S603", # subprocess call: check for execution of untrusted input
+]
+lint.isort.required-imports = [ "from __future__ import annotations" ]
+
+[tool.pyproject-fmt]
+max_supported_python = "3.14"

@@ -1,9 +1,15 @@
 # .coveragerc to control coverage.py
-[run]
-branch = True
 
 [report]
-exclude_also =
-    ^\s*if TYPE_CHECKING:
-    : \.\.\.(\s*#.*)?$
-    ^ +\.\.\.$
+# Regexes for lines to exclude from consideration
+exclude_lines =
+    # Have to re-enable the standard pragma:
+    pragma: no cover
+
+    # Don't complain if non-runnable code isn't run:
+    if __name__ == .__main__.:
+    def cherry_pick_cli
+
+[run]
+omit =
+    cherry_picker/__main__.py
