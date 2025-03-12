@@ -1,36 +1,155 @@
-django-comments-xtd |gha-tests-badge|
-=====================================
+linuxmuster.net documentation
+#############################
 
-.. |gha-tests-badge| image:: https://github.com/danirus/django-comments-xtd/workflows/tests/badge.svg
-.. _gha-tests-badge: https://github.com/danirus/django-comments-xtd/actions/workflows/ci-pipeline.yml
+.. image:: https://github.com/linuxmuster-docs/main/workflows/VerifyDocs/badge.svg
+    :target: https://github.com/linuxmuster-docs/main/workflows/VerifyDocs/badge.svg
+    :alt: Documentation Build Status
 
-A Django pluggable application that adds comments to your project.
 
-.. image:: https://github.com/danirus/django-comments-xtd/blob/master/docs/images/cover.png
+.. image:: http://readthedocs.org/projects/linuxmuster/badge/?version=latest
+    :target: http://docs.linuxmuster.net/de/latest/?badge=latest
+    :alt: Documentation Status
 
-It extends the once official `django-contrib-comments <https://pypi.python.org/pypi/django-contrib-comments>`_ with the following features:
+The full documentation of linuxmuster.net.
 
-#. Thread support, so comments can be nested.
-#. Customizable maximum thread level, either for all models or on a per app.model basis.
-#. Optional notifications on follow-up comments via email.
-#. Mute links to allow cancellation of follow-up notifications.
-#. Comment confirmation via email when users are not authenticated.
-#. Comments hit the database only after they have been confirmed.
-#. Registered users can like/dislike comments and can suggest comments removal.
-#. Template tags to list/render the last N comments posted to any given list of app.model pairs.
-#. Emails sent through threads (can be disable to allow other solutions, like a Celery app).
-#. Fully functional JavaScript plugin using ReactJS, Bootstrap 5.3 and Remarkable.
+Installation
+++++++++++++
+Clone the repository "main" using git
 
-Example sites and tests work under officially Django `supported versions <https://www.djangoproject.com/download/#supported-versions>`_:
+.. code:: bash
 
-* Django 5.1, 5.0, 4.2, 4.1
-* Python 3.13, 3.12, 3.11, 3.10
+   ~$ git clone https://github.com/linuxmuster-docs/main.git  # if you have no ssh-key within github
+   ~$ git clone git@github.com:linuxmuster-docs/main.git # if you have a ssh-key within github
 
-Additional Dependencies:
+Install sphinx, e.g. under Ubuntu 22.04, do
 
-* django-contrib-comments >=2.2
-* djangorestframework >=3.12,<3.16
+.. code:: bash
 
-Checkout the Docker image `danirus/django-comments-xtd-demo <https://hub.docker.com/r/danirus/django-comments-xtd-demo/>`_.
+   ~$  sudo apt install git python3-sphinx texlive texlive-latex-extra texlive-lang-german
 
-`Read The Docs <http://readthedocs.org/docs/django-comments-xtd/>`_.
+Make a local copy of your documentation using
+
+.. code:: bash
+
+   ~$ cd main
+   ~/main$ make clean
+   ~/main$ make html
+
+Later, if you work again on the repository, update it with
+
+.. code:: bash
+
+   ~/main$ git pull
+
+
+
+Contribute to the documentation
++++++++++++++++++++++++++++++++
+
+Fork the repository "main" within the github-webinterface_
+
+.. _github-webinterface: https://github.com/linuxmuster-docs/main
+
+* Clone your fork
+
+  .. code:: bash
+
+     ~$ git clone https://github.com/mein-github-konto/main.git docs
+     ~$ cd docs
+     ~/docs$ make html
+
+* Make changes in your fork
+* Commit your changes to your fork
+
+  .. code:: bash
+
+     ~/docs$ git commit -a -m"bugfix for bug in ticket #314 ..."
+
+* Push your changes to your fork on github
+
+  .. code:: bash
+
+     ~/docs$ git push
+
+* Create a new pull-request on github
+* If you are done and the pull-request was merged, you can delete your fork and create a new one.
+
+Update your fork
+----------------
+
+Instead of deleting and creating a new fork you can bring your own fork up-to-date the following way:
+
+* Any changes you made you have to stash away for a while:
+
+  .. code:: bash
+
+     ~/docs$ git stash
+
+* Add a remote tracking branch once:
+
+  .. code:: bash
+
+     ~/docs$ git remote add upstream https://github.com/linuxmuster-docs/main.git
+
+* Fetch and merge the remote master
+
+  .. code:: bash
+
+     ~/docs$ git fetch upstream
+     ~/docs$ git merge upstream/master
+
+* (If the merge does not end in an fast-forward result, you better delete and refork.) Push your changes into your fork.
+
+  .. code:: bash
+
+     ~/docs$ git push
+
+* Now you can get your stashed away changes:
+
+  .. code:: bash
+
+     ~/docs$ git stash pop
+
+Guidelines for documentation
+++++++++++++++++++++++++++++
+
+The structure guide and style guide provide information on the design of our documentation. See our Guidelines
+https://docs.linuxmuster.net/de/latest/appendix/contribute/guidelines.html
+
+Translation
++++++++++++
+
+We use `Transifex <https://www.transifex.com/linuxmusternet/official-documentation/dashboard/>`__ to translate the documentation. Get started there!
+
+Build documentation in English
+++++++++++++++++++++++++++++++
+
+First you have to install ``sphinx-intl`` and the ``transifex-client``.
+
+.. code:: bash
+
+   $ pip install sphinx-intl
+   $ pip install transifex-client
+
+Make sure that ``sphinx-intl`` and ``transifex-client`` are in your PATH!
+
+Then run to following commands (inside the document root):
+
+.. code:: bash
+
+   $ make gettext
+   $ tx init
+   $ sphinx-intl update -p build/locale -l en
+   $ sphinx-intl update-txconfig-resources --pot-dir build/locale --transifex-project-name official-documentation
+   $ tx pull -l en
+   $ make -e SPHINXOPTS="-D language='en'" html
+
+Read the `Internationalization chapter <http://www.sphinx-doc.org/en/stable/intl.html>`__ in the offical sphinx documentation for a more detailed description.
+
+
+Further reading
++++++++++++++++
+
+See the documentation on linuxmuster.net_.
+
+.. _linuxmuster.net: https://docs.linuxmuster.net/de/latest/appendix/contribute/index.html
