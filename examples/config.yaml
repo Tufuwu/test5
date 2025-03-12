@@ -1,0 +1,4 @@
+# put this file in your ~/.config/automlbenchmark directory
+# to override default configs
+---
+project_repository: https://github.com/openml/automlbenchmark

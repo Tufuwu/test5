@@ -1,8 +1,0 @@
-<package>
-  <description brief="$INPUTNAME model">
-  </description>
-  $AUTHOR
-  $MAINTAINER
-  $URL
-  <activity>active</activity>
-</package>
