@@ -1,6 +1,8 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
+*.pyc
 venv/
+etip/db.sqlite3
+
 .idea
 .vscode
+
+.env

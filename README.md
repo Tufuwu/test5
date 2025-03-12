@@ -1,76 +1,123 @@
-# εxodus core
+# ETIP - εxodus tracker investigation platform
 
-[![Build Status](https://github.com/Exodus-Privacy/exodus-core/actions/workflows/main.yml/badge.svg?branch=v1)](https://github.com/Exodus-Privacy/exodus-core/actions/workflows/main.yml) [![CodeQL](https://github.com/Exodus-Privacy/exodus-core/actions/workflows/codeql.yml/badge.svg)](https://github.com/Exodus-Privacy/exodus-core/actions/workflows/codeql.yml)
+[![Build Status](https://github.com/Exodus-Privacy/etip/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/Exodus-Privacy/etip/actions/workflows/main.yml)
 
-Contains:
+ETIP is meant to ease investigations on tracker detection. For the moment, it offers few features:
 
-* Static analysis
-* Network analysis
-* Connection helper
+* track all modifications on trackers
+* detect rules collisions for both network and code signature
 
-## Installation
+## Contribute to the identification of trackers
 
-exodus-core is available from [PyPI](https://pypi.org/project/exodus-core):
+If you wish to help us identify new trackers, you can **request an ETIP account** by sending a username and an email address to [etip@exodus-privacy.eu.org](mailto:etip@exodus-privacy.eu.org).
 
-```shell
-pip install exodus-core
+## Contributing to ETIP development
+
+If you want to contribute to this project, you can refer to [this documentation](CONTRIBUTING.md).
+
+## Development environment
+
+### Requirements
+
+You need [pipenv](https://packaging.python.org/en/latest/tutorials/managing-dependencies/#managing-dependencies) to run this project locally
+
+```sh
+pip install pipenv
 ```
 
-## Include it to your project
+### Installation
 
-Add the following line in your `requirements.txt` (replace 'XX' by the desired subversion):
+Clone the project
 
-```text
-exodus-core==XX
+```sh
+git clone https://github.com/Exodus-Privacy/etip.git
 ```
 
-## Local usage
+Install dependencies in pipenv environment
 
-Clone this repository:
-
-```shell
-git clone https://github.com/Exodus-Privacy/exodus-core.git
-cd exodus-core
+```sh
+cd etip
+pipenv install --dev
 ```
 
-### Using Docker
+Create the database
 
-Build the Docker image:
+```sh
+echo "DJANGO_SETTINGS_MODULE=etip.settings.dev" > .env
 
-```shell
-docker build -t exodus-core .
+# enter into python environment
+pipenv shell
+
+cd etip/
+python manage.py migrate
+
+# Import tracker definitions from the official instance of εxodus
+python manage.py import_trackers
+
+# Import predefined tracker categories
+python manage.py import_categories
 ```
 
-Run tests:
+Create admin user
 
-```shell
-docker run -it --rm exodus-core /bin/bash
-python -m unittest discover -s exodus_core -p "test_*.py"
+```sh
+python manage.py createsuperuser
 ```
 
-### Manual installation
+### Run the tests
 
-Install `dexdump`:
-
-```shell
-sudo apt-get install dexdump
+```sh
+python manage.py test
 ```
 
-Create Python `virtualenv`:
+### Start the server
 
-```shell
-virtualenv venv -p python3
-source venv/bin/activate
+```sh
+python manage.py runserver
 ```
 
-Install dependencies:
+### Useful commands
 
-```shell
-pip install -r requirements.txt
+Some admin commands are available to help administrate the ETIP database.
+
+#### Compare with Exodus
+
+This command retrieves trackers data from an εxodus instance and looks for differences with trackers in the local database.
+
+```sh
+python manage.py compare_with_exodus
 ```
 
-Run tests:
+Note: for now, it only compares with local trackers having the flag `is_in_exodus`.
 
-```shell
-python -m unittest discover -s exodus_core -p "test_*.py"
+The default εxodus instance queried is the public one available at <https://reports.exodus-privacy.eu.org> (see `--exodus-hostname` parameter).
+
+## Administration API
+
+An API is available to help administrate the ETIP database.
+
+### Authenticate
+
+```sh
+POST /api/get-auth-token/
+```
+
+Example:
+
+```sh
+curl -X POST http://localhost:8000/api/get-auth-token/ --data "username=admin&password=testtest"
+```
+
+You need to include your token as an `Authorization` header in all subsequent requests.
+
+### Get trackers
+
+```sh
+GET /api/trackers/
+```
+
+Example:
+
+```sh
+curl -X GET http://localhost:8000/api/trackers/ -H 'Authorization: Token <your-token>'
 ```
