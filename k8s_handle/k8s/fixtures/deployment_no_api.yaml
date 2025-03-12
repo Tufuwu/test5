@@ -1,6 +1,0 @@
-apiVersion: test
-kind: Deployment
-metadata:
-  name: ololo
-spec:
-  replicas: 1

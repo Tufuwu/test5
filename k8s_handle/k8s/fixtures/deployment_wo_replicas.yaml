@@ -1,7 +1,0 @@
-apiVersion: test/test
-kind: Deployment
-metadata:
-  name: test1
-spec:
-  revisionHistoryLimit: 3
-

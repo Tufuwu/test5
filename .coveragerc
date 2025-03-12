@@ -1,2 +1,0 @@
-[report]
-omit = .tox/*,templates/*,templates_tests/*,tests/*,*mocks.py,k8s/test_*

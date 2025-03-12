@@ -1,4 +1,0 @@
-apiVersion: test/test
-kind:
-metadata:
-  name: ololo
