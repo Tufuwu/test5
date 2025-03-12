@@ -1,5 +1,0 @@
-#!/usr/bin/python3
-import full_offline_backup_for_todoist
-
-if __name__ == '__main__':
-    full_offline_backup_for_todoist.main()

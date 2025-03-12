@@ -1,0 +1,5 @@
+# requirements to run development steps
+
+# also change in tox.ini
+tox>=3.0.0
+ruff>=0.3.0

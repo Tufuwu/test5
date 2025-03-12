@@ -1,63 +1,85 @@
-# full-offline-backup-for-todoist
+# CMakeLint
 
-[![Build Status](https://github.com/joanbm/full-offline-backup-for-todoist/actions/workflows/run-tests.yml/badge.svg?branch=master)](https://github.com/joanbm/full-offline-backup-for-todoist/actions/workflows/run-tests.yml)
+[![Build Status](https://travis-ci.org/cmake-lint/cmake-lint.svg?branch=develop)](https://travis-ci.org/cmake-lint/cmake-lint)
+![PyPI](https://img.shields.io/pypi/v/cmakelint.svg)
+![PyPI - Downloads](https://img.shields.io/pypi/dd/cmakelint.svg)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/cmakelint.svg)
 
-[![Coverage Status](https://coveralls.io/repos/github/joanbm/full-offline-backup-for-todoist/badge.svg)](https://coveralls.io/github/joanbm/full-offline-backup-for-todoist)
+cmakelint parses CMake files and reports style issues.
 
-## Quick description
+cmakelint requires Python.
 
-It is a utility that allows you to download a complete backup of your Todoist tasks, including all attachments, to your local computer, so you remain in control of all your data.
+## Installation
 
-## What is the main aim of this tool?
+To install cmakelint from PyPI, run:
 
-With Todoist Premium, you can **attach files or photos to tasks as comments**, which can be very convenient for everyday use, e.g. you can attach a photo of a bill to a task about paying it.
+.. code-block:: bash
 
-Furthermore, Todoist has a **backup functionality**, which allows exporting the task data to a local computer in the form of a ZIP file, e.g. for offline usage or in the event of an incident with Todoist's servers.
+    $ pip install cmakelint
 
-Unfortunately, the two don't mix: **The backup functionality doesn't back up any of the attachments assigned to tasks**. Instead, only a URL to download the attachment is included in the backup, which isn't useful or ideal for most scenarios.
+## Usage
 
-This tool aims to allow you to make a complete backup, including all attachments, so you can easily keep all your task data secure on your own computer.
+    Syntax: cmakelint [--config=file] [--filter=-x,+y] <file> [file] ...
+    filter=-x,+y,...
+      Specify a comma separated list of filters to apply
 
-## Full feature list
+    config=file
+      Use the given file for configuration. By default the file
+      $PWD/.cmakelintrc, ~/.config/cmakelintrc, $XDG_CONFIG_DIR/cmakelintrc or
+      ~/.cmakelintrc is used if it exists. Use the value "None" to use no
+      configuration file (./None for a file called literally None) Only the
+      option "filter=" is currently supported in this file.
 
-* Can download the backups from Todoist's servers through the Todoist API.
+Run the `--filter=` option with no filter to see available options. Currently
+these are:
 
-* Can download all attachments of the tasks associated with your Todoist backup.
+    convention/filename
+    linelength
+    package/consistency
+    readability/logic
+    readability/mixedcase
+    readability/wonkycase
+    syntax
+    whitespace/eol
+    whitespace/extra
+    whitespace/indent
+    whitespace/mismatch
+    whitespace/newline
+    whitespace/tabs
 
-* Can be easily automated to download your backups periodically.
+An example .cmakelintrc file would be as follows:
 
-## Status
+    filter=-whitespace/indent
 
-Stable, but not tested under every possible scenario under the sun.
+With this file in your home directory, running these commands would have the
+same effect:
 
-## Requirements
+    cmakelint.py CMakeLists.txt
+    cmakelint.py --filter=-whitespace/indent CMakeLists.txt
 
-* Python 3 (tested with Python 3.8+). No additional dependencies needed.
+Filters can optionally be directly enabled/disabled from within a CMake file,
+overriding the configuration from file or CLI argument:
 
-## Usage examples
+```
+# lint_cmake: <+ or -><filter name>
+# e.g.:
+# lint_cmake: -readability/wonkycase
+# add multiple filters as list:
+# lint_cmake: <+/-><filter1>, <+/-><filter2>
+```
 
-Download the repository and open a terminal at the root folder.
+cmakelint can also be run with [pre-commit](https://pre-commit.com). Add the following configuration block to your `.pre-commit-config.yaml`:
 
-To create a backup from Todoist's servers, without including attachments (you will be asked for your Todoist API Token through the command line):
+``` yaml
+  - repo: https://github.com/cmake-lint/cmake-lint
+    hooks:
+      - id: cmakelint
+```
 
-``python3 -m full_offline_backup_for_todoist download``
+# Output status codes
 
-To create a backup from Todoist's servers, including attachments, and with tracing/progress info:
+The program should exit with the following status codes:
 
-``python3 -m full_offline_backup_for_todoist --verbose download --with-attachments``
-
-Print full help:
-
-``python3 -m full_offline_backup_for_todoist -h``
-
-## How to get my Todoist API token?
-
-The easiest way to get one is to open the **web version of Todoist**, go to the **Settings** section, then to the **Integrations** sections, and you will see an API token there in the **"Token API"** section.
-
-## How can I automate the backup process?
-
-To automate the backup process, you can use any automation tool you want (e.g. cron, Jenkins) that can run the utility. In order to pass the credentials non-interactively, you can set the `TODOIST_TOKEN` environment variable before running it from your automation tool.
-
-# Disclaimer
-
-This is **NOT** an official application. This application is not created by, affiliated with, or supported by Doist.
+* 0 if everything went fine
+* 1 if an error message was issued
+* 32 on usage error
