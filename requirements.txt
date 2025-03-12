@@ -1,0 +1,17 @@
+beautifulsoup4
+pywin32; sys_platform == 'win32'
+dbus-python; sys_platform == 'linux'
+applescript>=2020.6.12; sys_platform == 'darwin'
+sip
+# PyQt6-stubs
+PyQt6
+requests>=2.32.0
+psutil; sys_platform == 'win32'
+unidecode
+pylrc>=0.1.2
+pathvalidate
+diskcache
+sentry-sdk
+azapi>=3.0.7
+setuptools>=70.0.0 # not directly required, pinned by Snyk to avoid a vulnerability
+urllib3>=2.2.2 # not directly required, pinned by Snyk to avoid a vulnerability

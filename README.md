@@ -1,76 +1,88 @@
-# <img alt="Pymoca" src="https://raw.githubusercontent.com/pymoca/pymoca/refs/heads/master/branding/icons/pymocalogo.svg" height="60">
-A Modelica to computer algebra system (CAS) translator written in Python.
+# Spotify Lyrics
+[![Build](https://github.com/SimonIT/spotifylyrics/workflows/Build/badge.svg)](https://github.com/SimonIT/spotifylyrics/actions?query=workflow%3ABuild)
+[![Current Release](https://img.shields.io/github/release/SimonIT/spotifylyrics.svg)](https://github.com/SimonIT/spotifylyrics/releases)
+[![License](https://img.shields.io/github/license/SimonIT/spotifylyrics.svg)](https://github.com/SimonIT/spotifylyrics/blob/master/LICENSE)
+[![GitHub All Releases](https://img.shields.io/github/downloads/SimonIT/spotifylyrics/total)](https://github.com/SimonIT/spotifylyrics/releases)
 
-[![CI](https://github.com/pymoca/pymoca/workflows/CI/badge.svg)](https://github.com/pymoca/pymoca/actions?query=workflow%3ACI)
-[![Coverage](https://codecov.io/gh/pymoca/pymoca/branch/master/graph/badge.svg)](https://codecov.io/gh/pymoca/pymoca)
-[![DOI](https://zenodo.org/badge/20664755.svg)](https://zenodo.org/badge/latestdoi/20664755)
+Fetches and displays lyrics to currently playing song in the Spotify desktop client.
 
-## Overview
-Pymoca can be used in applications that need to translate [Modelica](https://modelica.org) mathematical models into other forms. Pymoca can "flatten" a model containing a connected set of components defined by object-oriented Modelica classes into a set of variables and simultaneous equations that are easier to further process for analysis or simulation. It is particularly suited to provide Modelica models in symbolic form to [computer algebra systems](https://en.wikipedia.org/wiki/Computer_algebra_system). A common use in this context is to provide differential and algebraic equations for use in [optimal control problems](https://en.wikipedia.org/wiki/Optimal_control). Pymoca can translate Modelica to [CasADi](https://web.casadi.org), [SymPy](https://www.sympy.org), and [ModelicaXML](https://github.com/modelica-association/ModelicaXML), but most development and usage has been with CasADi.
 
-## Install
+The lyrics are fetched from these sites:
 
-For parser support without backend dependencies:
-```bash
-pip install pymoca
+- rentanadviser.com (synchronized)
+- megalobiz.com (synchronized)
+- lyricsify.com (synchronized)
+- rclyricsband.com (synchronized)
+- musixmatch.com
+- songmeanings.com
+- songlyrics.com
+- genius.com
+- versuri.ro
+- AZLyrics.com
+
+# How to
+
+You can grab the latest release in the [release section](https://github.com/SimonIT/spotifylyrics/releases).
+
+## Windows
+
+Download the .exe file.
+
+Just double click and start playing songs in spotify.
+
+It is possible that a warning of windows smartscreen appears. It's because the exe is unsigned (see [#22](https://github.com/SimonIT/spotifylyrics/issues/22)). You can allow the program to open by clicking on "More info" and "Run anyway".
+
+If you get an error about api-ms-win-crt-runtime-l1-1-0.dll missing, you need this:
+
+https://www.microsoft.com/en-us/download/details.aspx?id=48145
+
+If the window opens and closes immidiatly, feel free to help fxing the problem in [#21](https://github.com/SimonIT/spotifylyrics/issues/21).
+
+## Linux
+
+Download the file without any file ending.
+
+Make it executable via terminal with `chmod +x SpotifyLyrics` or via you file manager.
+
+Now you can double click the executable and start playing songs in spotify.
+
+## MacOS
+
+Download the .app.zip file.
+
+Extract the zip so you got a SpotifyLyrics.app directory.
+
+Make a right click on the SpotifyLyrics.app. Click on open and and you can bypass the warning. The program should open and you can play your songs in spotify.
+
+# Running from source
+If you want to run from source you need:
+
+* Python 3.6 (probably any version greater than Python 3.6)
+* `pip install -r requirements.txt`
+
+## Ubuntu/Debian example:
+```
+sudo apt install python3-pip git
+git clone https://github.com/SimonIT/spotifylyrics.git
+cd spotifylyrics/
+sudo pip3 install -r requirements.txt
+./SpotifyLyrics.pyw
 ```
 
-Other options are:
-```bash
-pip install "pymoca[casadi]"    # CasADi backend dependencies
-pip install "pymoca[sympy]"     # SymPy backend dependencies
-pip install "pymoca[lxml]"      # ModelicaXML backend dependencies
+# How to load lyrics from hard drive
+You can store lyrics on you hard drive which can automatically loaded.
 
-pip install "pymoca[examples]"  # To run Jupyter notebook examples in the repo
+You have to put them on windows in `C:\Users\<User>\AppData\Roaming\SpotifyLyrics\lyrics` and on the other OS's in `/home/<User>/.SpotifyLyrics/lyrics`. Replace `<User>` with your username.
+  
+There you can put `.lrc` files with synced text (You can make them for example on [lrcgenerator.com](https://lrcgenerator.com/) or [www.megalobiz.com](https://www.megalobiz.com/lrc/maker)) or simple `.txt` files with non-synced text.
+ 
+**Important: The file names must include the artist and the name of the song**
 
-pip install "pymoca[all]"       # All of the above
-```
+# Theming
 
-## Usage
+You can customize the design of SpotifyLyrics.
+To do so create a file called _theme.ini_ inside `C:\Users\<User>\AppData\Roaming\SpotifyLyrics` or `/home/<User>/.SpotifyLyrics`.
+Then put some style information in it. You can find an example [here](https://github.com/SimonIT/spotifylyrics/blob/master/example-theme.ini).
 
-Pymoca reads and understands Modelica code (`pymoca.parser`) and provides access to an internal representation of the code called an Abstract Syntax Tree or AST (`pymoca.ast`). The AST is further processed to generate output in various formats (`pymoca.backends`). The `pymoca.tree` module provides functionality to transform the AST into a form that can be more easily used by the backends to generate the target output. In particular, `pymoca.tree` provides classes and functions to convert a hierarchical, object-oriented Modelica model of connected components into a "flat" system of equations and associated variables, parameters, and constants. Pymoca error checking is not always complete or easy to understand, so it is better to develop the Modelica code with other tools and then use Pymoca for translation.
-
-The [test suite](https://github.com/pymoca/pymoca/tree/master/test) contains examples showing how to use Pymoca and the subset of Modelica that it currently supports.
-
-Here is an example using a simple spring and damper model from the test suite:
-
-```Python
-from pprint import pprint
-
-import pymoca.parser
-import pymoca.backends.casadi.generator as casadi_backend
-
-
-MODELICA_MODEL = """
-model Spring
-    Real x, v_x;
-    parameter Real c = 0.1;
-    parameter Real k = 2;
-equation
-    der(x) = v_x;
-    der(v_x) = -k*x - c*v_x;
-end Spring;
-"""
-
-print("Modelica Model:\n", MODELICA_MODEL)
-
-print("\nEquations from the parsed AST in a JSON representation:")
-ast = pymoca.parser.parse(MODELICA_MODEL)
-pprint(ast.to_json(ast.classes["Spring"].equations))
-
-print("\nGenerated CasADi model:")
-casadi_model = casadi_backend.generate(ast, "Spring")
-print(casadi_model)
-```
-
-Some more interesting examples are in Jupyter notebooks:
-
-* [Casadi Example](https://github.com/pymoca/pymoca/blob/master/test/notebooks/Casadi.ipynb)
-* [Sympy Example](https://github.com/pymoca/pymoca/blob/master/test/notebooks/Spring.ipynb)
-
-## Roadmap
-
-See the [GitHub Projects](https://github.com/orgs/pymoca/projects) for plans. In particular, see the [Info Panel in the Modelica Flattening project](https://github.com/orgs/pymoca/projects/1/views/1?pane=info) for an overview of a project getting some current focus. Breaking API changes are expected.
-
-<!--- vim:ts=4:sw=4:expandtab:
-!-->
+# Screenshot
+![example-img](https://i.imgur.com/2dUN17q.png)
