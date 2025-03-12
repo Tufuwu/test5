@@ -1,3 +1,0 @@
-django
-django-dynamic-preferences
-django-debug-toolbar
