@@ -1,32 +1,30 @@
 ---
 name: Bug report
-about: Create a report to help us improve
+about: Create a report to help us improve PySDL2
+title: ''
+labels: ''
+assignees: ''
 
 ---
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+<!--Thanks for contributing!-->
+<!--Please note that this template is only meant to be a guideline: you can omit any sections you don't think are relevant to your bug, or use your own template structure if you'd prefer. -->
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+**What doesn't work?**
+A quick description of what goes wrong, and how. If there are any relevant error messages or screenshots, please insert them here!
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+**How To Reproduce**
+Any code that reproduces the bug, e.g.:
+```python
+import sdl2
+sdl2.SDL_Init(0)  # this line crashes the Python session
+```
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
-
-**Details (please complete the following information):**
- - OS: [e.g. iOS]
- - Python version [e.g 3.7]
- - Django version [e. 2.1]
- - django-advanced-filters version [e.g 1.1]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
+**Platform (if relevant):**
+ - OS: [e.g. Windows 10 64-bit, Manjaro Linux ARM]
+ - Python Version: [e.g. 3.6, PyPy 2.7]
+ - SDL2 Version: [e.g. 2.0.14]
+ - Using pysdl2-dll: [Yes / No]
 
 **Additional context**
-Add any other context about the problem here, including traceback and additional log files.
+Add any other context about the problem here.

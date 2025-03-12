@@ -1,3 +1,7 @@
-include *.rst
-recursive-include advanced_filters/static *
-recursive-include advanced_filters/templates *
+graft doc
+graft util
+graft examples
+include *.bat Makefile
+include *.txt *.rst *.md
+prune doc/html
+prune doc/python.inv
