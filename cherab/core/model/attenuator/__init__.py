@@ -1,1 +1,0 @@
-from .singleray import SingleRayAttenuator
