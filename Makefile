@@ -1,56 +1,79 @@
-PYTHON=python3
-SETUPFLAGS=
-COMPILEFLAGS=
-INSTALLFLAGS=
+SHELL = /bin/bash
+MANAGE = python manage.py
+define USAGE=
+@echo -e
+@echo -e "Usage:"
+@echo -e "\tmake black [arg=--<arg>]                 -- black formatting"
+@echo -e "\tmake flake                               -- run flake8"
+@echo -e "\tmake celery                              -- start celery worker"
+@echo -e "\tmake serve                               -- start source server"
+@echo -e "\tmake serve_target                        -- start target server"
+@echo -e "\tmake collectstatic                       -- run collectstatic"
+@echo -e "\tmake test [arg=<test_object>]            -- run all tests or specify module/class/function"
+@echo -e "\tmake manage_target arg=<target_command>  -- run management command on target site, arg is mandatory"
+@echo -e "\tmake spectacular                         -- generate OpenAPI schemas with drf-spectacular"
+@echo -e
+endef
 
-.PHONY: inplace all rebuild test_inplace test fulltests clean distclean
-.PHONY: sdist install black
+# Argument passed from commandline, optional for some rules, mandatory for others.
+arg =
 
-all: inplace black README.html README.md
+# Port of target site, can be overriden by passing the parameter on the commandline.
+target_port = 8001
 
-README.md: README.txt CHANGES.txt
-	pandoc --from=rst --to=gfm README.txt > $@
-	pandoc --from=rst --to=gfm CHANGES.txt >> $@
-	sed -i ':a;N;$$!ba;s/\n\[!/[!/g' $@
 
-README.html: README.txt CHANGES.txt void.css
-	@echo | cat README.txt - CHANGES.txt | \
-	    rst2html --verbose --exit-status=1 --stylesheet=void.css \
-            > README.html
-
-inplace:
-	$(PYTHON) setup.py $(SETUPFLAGS) build_ext -i $(COMPILEFLAGS)
-
-rebuild: clean all
-
-test_inplace: inplace
-	$(PYTHON) -m tests
-
-test: test_inplace
-
+.PHONY: black
 black:
-	black $(CURDIR) || true
-
-clean:
-	@find . \( -name '*.o' -or -name '*.so' -or -name '*.sl' -or \
-	           -name '*.py[cod]' -or -name README.html \) \
-	    -and -type f -delete
-	@rm -f .coverage .coverage.* coverage.xml
-
-distclean: clean
-	@rm -rf build
-	@rm -rf dist
-	@find . \( -name '~*' -or -name '*.orig' -or -name '*.bak' -or \
-	          -name 'core*' \) -and -type f  -delete
-
-whitespace:
-	@find \( -name '*.rst' -or -name '*.py' -or -name '*.xml' \) | \
-	    xargs sed -i 's/[ \t]*$$//'
+	black . -l 80 --skip-string-normalization --exclude ".git|.venv|.tox|build|env|src|docs|migrations|versioneer.py" $(arg)
 
 
-packages: README.html README.md
-	$(PYTHON) setup.py packages
+.PHONY: flake
+flake:
+	flake8 .
 
-install:
-	$(PYTHON) setup.py $(SETUPFLAGS) build $(COMPILEFLAGS)
-	$(PYTHON) setup.py install $(INSTALLFLAGS)
+
+.PHONY: celery
+celery:
+	celery -A config worker -l info --beat
+
+
+.PHONY: serve
+serve:
+	$(MANAGE) runserver --settings=config.settings.local
+
+
+.PHONY: serve_target
+serve_target:
+	$(MANAGE) runserver 0.0.0.0:$(target_port) --settings=config.settings.local_target
+
+
+.PHONY: collectstatic
+collectstatic:
+	$(MANAGE) collectstatic --no-input
+
+
+.PHONY: test
+test: collectstatic
+	$(MANAGE) test -v 2 --parallel --settings=config.settings.test $(arg)
+
+
+.PHONY: manage_target
+manage_target:
+ifeq ($(arg),)
+	@echo -e
+	@echo -e "ERROR:\tPlease provide \`arg=<target_command>\`"
+	$(USAGE)
+else
+	$(MANAGE) $(arg) --settings=config.settings.local_target
+endif
+
+
+.PHONY: spectacular
+spectacular:
+	$(MANAGE) spectacular --color $(arg)
+
+
+.PHONY: usage
+usage:
+	$(USAGE)
+

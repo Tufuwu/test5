@@ -1,10 +1,9 @@
 [run]
-branch = True
-source =
-    defusedxml/
-    tests.py
+omit = *migrations*, *tests*, *config*, *docs*, manage.py, *env/lib/*,
+       *templates/bootstrap4/*, *__init__.py, src/*, *env/src/*, *staticfiles/*,
+       versioneer.py, setup.py, htmlcov/*, /home/travis/virtualenv/*
+plugins =
+    django_coverage_plugin
 
-[paths]
-source =
-   defusedxml/
-   .tox/py*/lib/python*/site-packages/defusedxml/
+[report]
+exclude_lines =
