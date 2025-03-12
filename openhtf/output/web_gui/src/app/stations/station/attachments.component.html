@@ -1,0 +1,62 @@
+<!--
+ Copyright 2022 Google LLC
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<div *ngIf="test" class="htf-layout-widget">
+
+  <div class="htf-layout-widget-header">
+    <div>Attachments</div>
+    <div class="u-flex-grow"></div>
+    <button
+      *ngIf="test.attachments.length > 0"
+      type="button"
+      class="htf-rounded-button-grey"
+      (click)="toggleExpanded()">
+      {{ expanded? 'Collapse' : 'Expand' }}
+    </button>
+  </div>
+
+  <div
+    *ngIf="test.attachments.length === 0"
+    class="htf-layout-widget-body htf-support-text">
+    There are no attachments yet.
+  </div>
+
+  <div
+    *ngIf="!expanded && test.attachments.length > 0"
+    class="htf-layout-widget-body htf-support-text">
+    Expand to view
+    {{ test.attachments.length }}
+    {{ test.attachments.length === 1 ? 'attachment' : 'attachments' }}.
+  </div>
+
+  <ul *ngIf="expanded && test.attachments.length > 0">
+    <li
+      *ngFor="let attachment of test.attachments"
+      [ngSwitch]="linkForAttachment(attachment)">
+      <span *ngSwitchCase="null">{{ attachment.name }}</span>
+      <a
+        *ngSwitchDefault
+        [href]="linkForAttachment(attachment)"
+        target="_blank">
+        {{ attachment.name }}
+      </a>
+      <span class="htf-support-text">&nbsp;{{ attachment.mimeType }}</span>
+      <span class="u-flex-grow"></span>
+      <span class="htf-support-text">From phase: {{ attachment.phaseName }}</span>
+    </li>
+  </ul>
+
+</div>

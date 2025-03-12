@@ -1,0 +1,51 @@
+/**
+ * Copyright 2022 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@import 'mixins';
+@import 'vars';
+
+.component-info {
+  border: 1px solid $theme-dark-grey;
+  display: inline-block;
+  margin-bottom: 10px;
+  padding: 5px;
+  position: relative;
+}
+
+.component-info:not(.is-root)::before {
+  border-bottom: 1px solid $theme-dark-grey;
+  border-left: 1px solid $theme-dark-grey;
+  content: '';
+  height: calc(100% + 11px);
+  left: -21px;
+  position: absolute;
+  top: calc(-50% - 11px);
+  width: 20px;
+}
+
+.component-info:not(.is-root).is-first::before {
+  height: calc(50% + 11px);
+  top: -11px;
+}
+
+ul {
+  @include htf-unstyle-list;
+  padding-left: 40px;
+}
+
+.serial-number {
+  font-weight: bold;
+}
