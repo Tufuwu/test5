@@ -1,70 +1,67 @@
-mlinspect
-================================
+# st_package_reviewer
 
-[![mlinspect](https://img.shields.io/badge/🔎-mlinspect-green)](https://github.com/stefan-grafberger/mlinspect)
-[![GitHub license](https://img.shields.io/badge/License-Apache%202.0-yellowgreen.svg)](https://github.com/stefan-grafberger/mlinspect/blob/master/LICENSE)
-[![Build Status](https://github.com/stefan-grafberger/mlinspect/actions/workflows/build.yml/badge.svg)](https://github.com/stefan-grafberger/mlinspect/actions/workflows/build.yml)
-[![codecov](https://codecov.io/gh/stefan-grafberger/mlinspect/branch/master/graph/badge.svg?token=KTMNPBV1ZZ)](https://codecov.io/gh/stefan-grafberger/mlinspect)
+[![Build Status](https://travis-ci.org/packagecontrol/st_package_reviewer.svg?branch=master)](https://travis-ci.org/packagecontrol/st_package_reviewer)
+[![Coverage Status](https://coveralls.io/repos/github/packagecontrol/st_package_reviewer/badge.svg?branch=master)](https://coveralls.io/github/packagecontrol/st_package_reviewer?branch=master)
+[![PyPI](https://img.shields.io/pypi/v/st-package-reviewer.svg)](https://pypi.python.org/pypi/st-package-reviewer)
+[![Python Versions](https://img.shields.io/pypi/pyversions/st-package-reviewer.svg)](https://pypi.python.org/pypi/st-package-reviewer)
 
-Inspect ML Pipelines in Python in the form of a DAG
+A tool to review packages for [Sublime Text][]
+(and its package manager [Package Control][]).
+Supports passing local file paths
+or URLs to GitHub repositories.
 
-## Run mlinspect locally
+This README focuses on installation and usage of the tool.
+For how to *resolve* failures or warnings
+reported by the tool,
+[refer to the wiki][wiki].
 
-Prerequisite: Python 3.10
 
-1. Clone this repository
-2. Set up the environment
+## Installation
 
-	`cd mlinspect` <br>
-	`python -m venv venv` <br>
-	`source venv/bin/activate` <br>
+Requires **Python 3.8** or higher.
 
-3. If you want to use the visualisation functions we provide, install graphviz which can not be installed via pip
-
-    `Linux: ` `apt-get install graphviz` <br>
-    `MAC OS: ` `brew install graphviz` <br>
-	
-4. Install pip dependencies 
-
-    `SETUPTOOLS_USE_DISTUTILS=stdlib pip install -e .[dev]` <br>
-
-5. To ensure everything works, you can run the tests (without graphviz, the visualisation test will fail)
-
-    `python setup.py test` <br>
-    
-## How to use mlinspect
-mlinspect makes it easy to analyze your pipeline and automatically check for common issues.
-```python
-from mlinspect import PipelineInspector
-from mlinspect.inspections import MaterializeFirstOutputRows
-from mlinspect.checks import NoBiasIntroducedFor
-
-IPYNB_PATH = ...
-
-inspector_result = PipelineInspector\
-        .on_pipeline_from_ipynb_file(IPYNB_PATH)\
-        .add_required_inspection(MaterializeFirstOutputRows(5))\
-        .add_check(NoBiasIntroducedFor(['race']))\
-        .execute()
-
-extracted_dag = inspector_result.dag
-dag_node_to_inspection_results = inspector_result.dag_node_to_inspection_results
-check_to_check_results = inspector_result.check_to_check_results
+```bash
+$ pip install st-package-reviewer
 ```
 
-## Detailed Example
-We prepared a [demo notebook](demo/feature_overview/feature_overview.ipynb) to showcase mlinspect and its features.
 
-## Supported libraries and API functions
-mlinspect already supports a selection of API functions from `pandas` and `scikit-learn`. Extending mlinspect to support more and more API functions and libraries will be an ongoing effort. However, mlinspect won't just crash when it encounters functions it doesn't recognize yet. For more information, please see [here](mlinspect/monkeypatching/README.md).
+## Usage
 
-## Notes
-* For debugging in PyCharm, set the pytest flag `--no-cov` ([Link](https://stackoverflow.com/questions/34870962/how-to-debug-py-test-in-pycharm-when-coverage-is-enabled))
+```
+usage: st_package_reviewer [-h] [--version] [--clip] [--repo-only] [-w] [-v]
+                           [--debug]
+                           [path_or_URL [path_or_URL ...]]
 
-## Publications
-* [Stefan Grafberger, Paul Groth, Julia Stoyanovich, Sebastian Schelter (2022). Data Distribution Debugging in Machine Learning Pipelines. The VLDB Journal — The International Journal on Very Large Data Bases (Special Issue on Data Science for Responsible Data Management).](https://stefan-grafberger.com/mlinspect-journal.pdf)
-* [Stefan Grafberger, Shubha Guha, Julia Stoyanovich, Sebastian Schelter (2021). mlinspect: a Data Distribution Debugger for Machine Learning Pipelines. ACM SIGMOD (demo).](https://stefan-grafberger.com/mlinspect-demo.pdf)
-* [Stefan Grafberger, Julia Stoyanovich, Sebastian Schelter (2020). Lightweight Inspection of Data Preprocessing in Native Machine Learning Pipelines. Conference on Innovative Data Systems Research (CIDR).](https://stefan-grafberger.com/mlinspect-cidr.pdf)
+Check a Sublime Text package for common errors.
 
-## License
-This library is licensed under the Apache 2.0 License.
+positional arguments:
+  path_or_URL           URL to the repository or path to the package to be checked. If not provided, runs in interactive mode.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --version             show program's version number and exit
+  --clip                Copy report to clipboard.
+  --repo-only           Do not check the package itself and only its repository.
+  -w, --fail-on-warnings
+                        Return a non-zero exit code for warnings as well.
+  -v, --verbose         Increase verbosity.
+  --debug               Enter pdb on exceptions. Implies --verbose.
+
+Return values:
+    0: No errors
+    -1: Invalid command line arguments
+
+Additional return values in non-interactive mode (a combination of bit flags):
+    1: Package check finished with failures
+    2: Repository check finished with failures
+    4: Unable to download repository
+
+Interactive mode:
+    Enter package paths or repository URLS continuously.
+    Type `c` to copy the last report to your clipboard.
+```
+
+
+[Sublime Text]: https://sublimetext.com/
+[Package Control]: https://packagecontrol.io/
+[wiki]: https://github.com/packagecontrol/st_package_reviewer/wiki
