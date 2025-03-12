@@ -1,56 +1,88 @@
-[build-system]
-requires = ["setuptools>=65", "setuptools_scm[toml]>=6.2"]
-build-backend = "setuptools.build_meta"
-
 [project]
-name = "DeepXDE"
-dynamic = ["version"]
-description = "A library for scientific machine learning"
+name = "mqtt-exporter"
+version = "1.6.1"
+description = "Simple generic MQTT Prometheus exporter for IoT working out of the box"
 readme = "README.md"
-license = {text = "LGPL-2.1"}
+license = { text = "MIT License" }
 authors = [
-    { name = "Lu Lu", email = "lululxvi@gmail.com" },
+    { name = "Kevin Petremann", email = "kpetrem@gmail.com" },
 ]
-requires-python = ">=3.9"
-keywords = [
-    "Deep learning",
-    "Differential equations",
-    "Machine learning",
-    "Neural networks",
-    "Physics-informed neural networks",
-    "Scientific computing",
-    "Scientific machine learning",
-]
+keywords = ["iot", "mqtt", "prometheus"]
 classifiers = [
-    "Development Status :: 5 - Production/Stable",
-    "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: GNU Lesser General Public License v2 (LGPLv2)",
-    "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
-    "Topic :: Scientific/Engineering",
-    "Topic :: Scientific/Engineering :: Artificial Intelligence",
-    "Topic :: Scientific/Engineering :: Mathematics",
+  "Development Status :: 5 - Production/Stable",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
 ]
-dependencies = [
-    "matplotlib",
-    "numpy",
-    "scikit-learn",
-    "scikit-optimize>=0.9.0",
-    "scipy",
-]
+dynamic = ["dependencies"]
+
+[tool.setuptools.dynamic]
+dependencies = { file = ["requirements/base.txt"] }
 
 [project.urls]
-Homepage = "https://github.com/lululxvi/deepxde"
-"Bug Tracker" = "https://github.com/lululxvi/deepxde/issues"
-Changelog = "https://github.com/lululxvi/deepxde/releases"
-Documentation = "https://deepxde.readthedocs.io"
+Homepage = "https://github.com/kpetremann/mqtt-exporter"
 
-[tool.setuptools.packages.find]
-where = ["."]
-exclude = ["docker", "docs*", "examples*"]
+[project.scripts]
+mqtt-exporter = "mqtt_exporter.main:main"
 
-[tool.setuptools_scm]
-write_to = "deepxde/_version.py"
+[tool.setuptools]
+packages = ["mqtt_exporter"]
+
+[tool.black]
+line-length = 100
+exclude = "venv/"
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+skip_gitignore = true
+skip = ".bzr,.direnv,.eggs,.git,.hg,.mypy_cache,.nox,.pants.d,.svn,.tox,.venv,_build,buck-out,build,dist,node_modules,venv,migrations,urls.py"
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = [
+    "E",     # pycodestyle errors
+    "W",     # pycodestyle warnings
+    "F",     # pyflakes
+    "C",     # flake8-comprehensions
+    "B",     # flake8-bugbear
+    "C4",    # flake8-comprehensions
+    "G",     # flake8-logging-format
+    "S",     # bandit
+    "PL"     # pylint
+]
+ignore = [
+    "E501",     # line too long, handled by black
+    "C901",     # function is too complex
+    "PLR2004",  # magic value used in comparison
+    "PLR1711",  # useless `return` statement at end of function
+    "PLC1901",  # compare-to-empty-string
+    "PLR0911",  # too many return statements
+    "PLR0912",  # too many branches
+    "PLR0915",  # too many statements
+    "B009",     # do not call getattr with a constant attribute value
+    "B904",     # raise without from inside except
+    "S104",     # possible binding to all interfaces
+]
+pylint.max-args = 10
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]
+"tests/*.py" = ["E402", "S", "PL"]
+
+[tool.mypy]
+# error whenever it encounters a function definition without type annotations
+disallow_untyped_defs = true
+# error whenever a function with type annotations calls a function defined without annotations
+disallow_untyped_calls = true
+# stop treating arguments with a None default value as having an implicit Optional type
+no_implicit_optional = true
+# error whenever your code uses an unnecessary cast that can safely be removed
+warn_redundant_casts = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "strict"
