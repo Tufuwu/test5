@@ -1,56 +1,43 @@
-.PHONY: clean-cache clean-build docs clean
+# Helpers
+IS_DARWIN := $(filter Darwin,$(shell uname -s))
 
-help:
-	@echo "clean - remove all build, test, coverage and Python artifacts"
-	@echo "clean-build - remove build artifacts"
-	@echo "clean-cache - remove Python file artifacts"
-	@echo "clean-sites - remove deploy directory from starter site"
-	@echo "clean-test - remove test and coverage artifacts"
-	@echo "docs - generate HTML documentation"
+define set_env
+	sed $(if $(IS_DARWIN),-i "",-i) -e "s/^#*\($(1)=\).*/$(if $(2),,#)\1$(2)/" .env
+endef
 
-clean: clean-build clean-cache clean-sites clean-test
 
-clean-build:
-	rm -fr build/
-	rm -fr dist/
-	rm -fr .eggs/
-	rm -fr *.egg-info
 
-clean-cache:
-	find . -name '__pycache__' -type d -exec rm -fr {} +
-	find . -name '.pytest_cache' -type d -exec rm -fr {} +
-	find . -name '.ruff_cache' -type d -exec rm -fr {} +
-	find . -name '*.pyc' -exec rm -f {} +
-	find . -name '*.pyo' -exec rm -f {} +
-	find . -name '*~' -exec rm -f {} +
+# Environment recipes
+.PHONY: default
+default: init up
 
-clean-sites:
-	find logya/sites/ -type d -name public -exec rm -rf {} +
+.PHONY: init
+init:
+	test -f .env || cp .env.example .env
+	$(call set_env,USER_ID,$(shell id -u))
 
-clean-test:
-	rm -fr t/
-	rm -f .coverage
-	rm -fr htmlcov/
+.PHONY: up
+up:
+	DOCKER_BUILDKIT=1 docker compose up -d --build
 
-docs:
-	hatch run logya gen -d logya/sites/docs
+.PHONY: down
+down:
+	docker compose down
 
-logo:
-	convert images/wordmark.svg -define icon:auto-resize=64,48,32,16 logya/sites/docs/static/favicon.ico
-	convert images/logo.svg -resize x40 -transparent white logya/sites/docs/static/img/logya-small.png
+.PHONY: shell
+shell:
+	$(EXEC) zsh
 
-	cp logya/sites/docs/static/favicon.ico logya/sites/base/static/favicon.ico
-	cp logya/sites/docs/static/favicon.ico logya/sites/i18n/static/favicon.ico
+# Project recipes
+.PHONY: build
+build:
+	$(EXEC) ./scripts/set-versions.sh $(NETBOX_VERSION) $(NETBOX_DOCKER_VERSION)
+	./scripts/fetch-spec.sh $$(cat api/netbox_version) $$(cat api/netbox_docker_version)
+	$(EXEC) ./scripts/fix-spec.py
+	./scripts/generate-code.sh
+	$(EXEC) go mod tidy
+	$(EXEC) goimports -w .
 
-	cp logya/sites/docs/static/img/logya-small.png logya/sites/base/static/img/logya-small.png
-
-# Upgrade packages and requirements files
-requirements:
-	pip freeze --local > requirements.txt
-	sed -i 's/==/>=/g' requirements.txt
-	pip install -r requirements.txt --upgrade
-	pip freeze --local > requirements.txt
-
-	rm -f requirements.tmp
-	grep -f requirements-base.txt requirements.txt > requirements.tmp
-	mv requirements.tmp requirements.txt
+.PHONY: test
+test:
+	$(EXEC) go test -v ./...

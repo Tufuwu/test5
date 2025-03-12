@@ -1,29 +1,45 @@
-name: Python package
+---
+name: main
 
 on:
   push:
     branches:
       - master
+  pull_request:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     strategy:
-      max-parallel: 4
+      fail-fast: false
       matrix:
-        python-version: ["3.9", "3.10"]
-
+        go: [ '1.11.x', '1.12.x', '1.13.x' ]
     steps:
-    - uses: actions/checkout@v1
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v1
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements_dev.txt
-    - name: Test with pytest
-      run: |
-        pytest
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: License check
+        run: ./scripts/licensecheck.sh
+
+      - name: Go installation
+        uses: actions/setup-go@v1.1.2
+        with:
+          go-version: ${{ matrix.go }}
+
+      - name: Go dependencies installation
+        run: go get -d ./...
+
+      - name: Golint installation
+        run: go get -u golang.org/x/lint/golint
+
+      - name: Build
+        run: go build ./...
+
+      - name: Lint
+        run: ./scripts/golint.sh
+
+      - name: Vet
+        run: go vet ./...
+
+      - name: Test
+        run: go test -v ./...
